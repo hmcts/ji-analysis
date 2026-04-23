@@ -2,3 +2,6 @@
 build/
 _bmad/*
 .venv/
+
+.DS_Store
+*/.DS_Store
