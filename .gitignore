@@ -1,3 +1,4 @@
 .claude/skills/bmad-*
 build/
 _bmad/*
+.venv/
