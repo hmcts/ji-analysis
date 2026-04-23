@@ -31,7 +31,7 @@ Give it a pile of requirements docs, design specs, or capability documents and i
 The skill requires the following tools on your PATH. Install them all before first use:
 
 ```sh
-# Java 17+ (required by structurizr-site-generatr)
+# Java 25+ (required by structurizr-site-generatr)
 brew install openjdk@25
 
 # Python 3.10+ (required for document conversion)
