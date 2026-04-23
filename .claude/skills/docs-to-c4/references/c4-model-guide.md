@@ -33,15 +33,8 @@ A runtime process / deployable thing. Typical examples and their technology labe
 
 | Container | Technology examples |
 |-----------|---------------------|
-| Web application (browser) | `Single-Page App`, `React / Vite`, `Next.js 14 (SSR)` |
-| Mobile app | `iOS (Swift)`, `Android (Kotlin)`, `React Native` |
-| API / Backend service | `Node.js / Express`, `Go net/http`, `Django / Gunicorn` |
-| Background worker | `Python / Celery`, `Go worker`, `Node.js / BullMQ` |
-| Relational database | `PostgreSQL 15`, `MySQL 8`, `Amazon RDS Aurora` |
-| NoSQL / cache | `DynamoDB`, `MongoDB Atlas`, `Redis 7` |
-| Message broker | `Apache Kafka`, `RabbitMQ`, `AWS SNS/SQS` |
-| Object storage | `Amazon S3`, `Azure Blob Storage` |
-| Serverless / function | `AWS Lambda`, `Cloudflare Worker` |
+
+TODO - once specific HMCTS examples are available, update this list with real ones from the docs.
 
 A container is not a container image. The C4 word predates Docker.
 
