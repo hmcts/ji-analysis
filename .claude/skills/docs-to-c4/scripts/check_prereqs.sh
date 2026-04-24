@@ -9,9 +9,9 @@ fail() {
   exit "${2:-1}"
 }
 
-# --- Java 17+ ---
+# --- Java 25+ ---
 if ! command -v java >/dev/null 2>&1; then
-  fail "java not found on PATH. Install Java 17+ (macOS: 'brew install openjdk@17'; or https://adoptium.net/)." 1
+  fail "java not found on PATH. Install Java 25+ (macOS: 'brew install openjdk@25'; or https://adoptium.net/)." 1
 fi
 
 # `java -version` writes to stderr. Parse the first line.
@@ -23,8 +23,8 @@ if ! [[ "$JAVA_MAJOR" =~ ^[0-9]+$ ]]; then
   fail "Could not parse Java version from: $JAVA_RAW" 1
 fi
 
-if [ "$JAVA_MAJOR" -lt 17 ]; then
-  fail "Java $JAVA_MAJOR found, but 17+ is required. Upgrade with 'brew install openjdk@17' or install from adoptium.net." 1
+if [ "$JAVA_MAJOR" -lt 25 ]; then
+  fail "Java $JAVA_MAJOR found, but 25+ is required. Upgrade with 'brew install openjdk@25' or install from adoptium.net." 1
 fi
 
 # --- Python 3 (for convert_docs_to_md) ---

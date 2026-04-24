@@ -62,7 +62,7 @@ Expected output:
 
 ```
 OK — prerequisites satisfied.
-  java: openjdk version "21.0.9" 2025-10-21
+  java: openjdk version "25" 2025-09-16
   python3: Python 3.14.0
   structurizr-site-generatr: /opt/homebrew/bin/structurizr-site-generatr
   bmad-distillator: /path/to/.claude/skills/bmad-distillator
@@ -113,7 +113,7 @@ sequenceDiagram
     User->>Skill: /docs-to-c4 <input_folder>
 
     Note over Skill: Step 1 — Preflight checks
-    Skill->>Prereqs: Check Java 17+, Python 3, structurizr-site-generatr, bmad-distillator
+    Skill->>Prereqs: Check Java 25+, Python 3, structurizr-site-generatr, bmad-distillator
     Prereqs-->>Skill: All prerequisites satisfied
 
     Note over Skill: Step 2 — Validate input folder
