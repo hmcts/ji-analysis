@@ -184,7 +184,7 @@ The skill is idempotent. Re-running it on the same input folder should produce a
 
 | Failure | What to do |
 |---------|------------|
-| Java missing / <17 | Stop. Tell user to `brew install openjdk@17` (macOS) or install from adoptium.net. |
+| Java missing / <25 | Stop. Tell user to `brew install openjdk@25` (macOS) or install from adoptium.net. |
 | `structurizr-site-generatr` missing | Stop. Tell user to `brew tap avisi-cloud/tools && brew install structurizr-site-generatr` or download from https://github.com/avisi-cloud/structurizr-site-generatr/releases. |
 | `bmad-distillator` skill not available | Stop. Tell user this skill depends on `bmad-distillator` and must be installed alongside it. |
 | Document conversion fails | Surface the error from `convert_docs_to_md.sh`. Common cause: missing Python 3. If only some files fail, continue with the ones that converted. |
