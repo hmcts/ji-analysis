@@ -5,3 +5,7 @@ _bmad/*
 
 .DS_Store
 */.DS_Store
+docs/architecture/asis/data-dependencies.md
+docs/architecture/asis/data-dependencies.pdf
+docs/architecture/asis/integration-dependencies.md
+docs/architecture/asis/integration-dependencies.pdf
