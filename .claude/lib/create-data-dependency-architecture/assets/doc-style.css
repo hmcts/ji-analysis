@@ -1,0 +1,272 @@
+/* doc-style.css — house style for ji-analysis architecture PDFs.
+ *
+ * Applied at PDF time by scripts/python/md_to_pdf.py via pandoc + weasyprint.
+ * Edit this file to evolve the house style; do not duplicate the rules in
+ * individual documents.
+ *
+ * Design tokens are kept in :root so they can be overridden at the document
+ * level if a one-off variation is genuinely needed.
+ */
+
+:root {
+  --font-sans: "Helvetica Neue", Helvetica, Arial, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+
+  --color-ink: #1f2937;          /* body text */
+  --color-heading: #1a1f36;      /* H1-H4, strong */
+  --color-muted: #6b7280;        /* subtitles, captions, metadata */
+  --color-rule: #e5e7eb;         /* light dividers, table cells */
+  --color-rule-strong: #1a1f36;  /* table header underline */
+  --color-link: #2563eb;
+  --color-code-bg: #f3f4f6;
+  --color-quote-bar: #d1d5db;
+  --color-quote-text: #4b5563;
+  --color-row-alt: #f6f8fa;      /* zebra-stripe even rows */
+  --color-th-text: #ffffff;      /* white header text on dark header */
+}
+
+@page {
+  size: A4;
+  margin: 2cm 1.25cm;
+  @bottom-right {
+    content: counter(page);
+    font-family: var(--font-sans);
+    font-size: 9pt;
+    color: var(--color-muted);
+  }
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 11pt;
+  line-height: 1.55;
+  color: var(--color-ink);
+}
+
+/* ─── Title block (pandoc renders YAML title/subtitle/author here) ─── */
+
+header#title-block-header {
+  margin: 0 0 2em 0;
+}
+
+header#title-block-header h1.title {
+  font-size: 28pt;
+  font-weight: 600;
+  text-align: center;
+  color: var(--color-heading);
+  margin: 0 0 0.4em 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+header#title-block-header p.subtitle {
+  font-size: 12pt;
+  text-align: center;
+  color: var(--color-muted);
+  margin: 0 0 1.5em 0;
+  font-weight: 400;
+}
+
+header#title-block-header p.author,
+header#title-block-header p.date {
+  font-size: 10pt;
+  text-align: center;
+  color: var(--color-muted);
+  margin: 0.2em 0;
+}
+
+/* ─── Headings ─── */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: inherit;
+  color: var(--color-heading);
+  font-weight: 600;
+  line-height: 1.25;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+h1 {
+  font-size: 22pt;
+  margin: 1.6em 0 0.6em;
+  page-break-before: auto;
+}
+
+h2 {
+  font-size: 16pt;
+  margin: 1.4em 0 0.5em;
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid var(--color-rule);
+}
+
+h3 {
+  font-size: 13pt;
+  margin: 1.2em 0 0.4em;
+}
+
+h4 {
+  font-size: 11pt;
+  margin: 1em 0 0.3em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Body text ─── */
+
+p {
+  margin: 0 0 0.8em;
+  orphans: 3;
+  widows: 3;
+}
+
+strong, b {
+  color: var(--color-heading);
+  font-weight: 600;
+}
+
+em, i { font-style: italic; }
+
+ul, ol {
+  margin: 0 0 0.8em 1.2em;
+  padding: 0;
+}
+
+li {
+  margin: 0.2em 0;
+}
+
+li > p { margin: 0.2em 0; }
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* ─── Code ─── */
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+pre {
+  font-family: var(--font-mono);
+  background: var(--color-code-bg);
+  padding: 0.8em 1em;
+  font-size: 9pt;
+  line-height: 1.4;
+  border-radius: 4px;
+  page-break-inside: avoid;
+}
+pre code { background: transparent; padding: 0; font-size: inherit; }
+
+/* ─── Tables ─── */
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  font-size: 8.5pt;
+  line-height: 1.35;
+  page-break-inside: auto;
+}
+
+table thead {
+  background: var(--color-heading);
+}
+table thead tr {
+  border-bottom: 2px solid var(--color-rule-strong);
+}
+
+table tbody tr {
+  border-bottom: 1px solid var(--color-rule);
+}
+/* Zebra striping: even body rows get a subtle tint, header is exempt
+ * (rule scoped to tbody so the dark thead is never overlaid). */
+table tbody tr:nth-child(even) {
+  background: var(--color-row-alt);
+}
+table tbody tr:last-child {
+  border-bottom: 2px solid var(--color-rule-strong);
+}
+
+table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-th-text);
+  padding: 0.3em 0.5em;
+  vertical-align: top;
+}
+
+table td {
+  padding: 0.3em 0.5em;
+  vertical-align: top;
+}
+
+/* Numeric "#" column stays narrow and never wraps. */
+table th:first-child, table td:first-child {
+  white-space: nowrap;
+  width: 1%;
+}
+
+table tr {
+  page-break-inside: avoid;
+}
+
+/* Column widths for the At-a-Glance summary table are NOT controlled
+ * here. Pandoc's pipe-table reader emits <colgroup><col style="width:X%">
+ * derived from the relative width of the `---` separator dashes in the
+ * markdown header separator row. The skill's template and the
+ * OUTPUT-STRUCTURE.md spec mandate a specific dash-width pattern that
+ * allocates 35% to the Data column. Don't fight pandoc here. */
+
+/* ─── Blockquotes (we use these for source citations) ─── */
+
+blockquote {
+  border-left: 3px solid var(--color-quote-bar);
+  margin: 0.8em 0;
+  padding: 0.2em 0.9em;
+  color: var(--color-quote-text);
+  font-size: 0.95em;
+}
+blockquote p { margin: 0.3em 0; }
+
+/* ─── Images & figures (Mermaid PNGs are embedded as plain images) ─── */
+
+img {
+  max-width: 100%;
+  display: block;
+  margin: 1em auto;
+}
+
+figure {
+  margin: 1em 0;
+  text-align: center;
+  page-break-inside: avoid;
+}
+
+figcaption {
+  font-size: 9.5pt;
+  color: var(--color-muted);
+  font-style: italic;
+  text-align: center;
+  margin-top: 0.4em;
+}
+
+/* When pandoc emits an alt-text caption for an image inside a paragraph */
+p > img + em,
+p:has(> img) {
+  text-align: center;
+}
+
+/* ─── Horizontal rules ─── */
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-rule);
+  margin: 2em 0;
+}

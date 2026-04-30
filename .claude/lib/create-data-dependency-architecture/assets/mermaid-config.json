@@ -1,0 +1,23 @@
+{
+  "_comment": "House Mermaid config for ji-analysis. Applied at PNG-render time by the skill's scripts/python/md_to_pdf.py via mmdc --configFile. Theme is 'default' (pastel purple nodes, cream subgraph backgrounds). Override per-document only when genuinely needed.",
+  "theme": "default",
+  "themeVariables": {
+    "fontFamily": "Helvetica, Arial, sans-serif",
+    "fontSize": "16px",
+    "primaryTextColor": "#1a1f36",
+    "lineColor": "#1a1f36"
+  },
+  "flowchart": {
+    "curve": "basis",
+    "padding": 16,
+    "useMaxWidth": false,
+    "htmlLabels": true,
+    "nodeSpacing": 50,
+    "rankSpacing": 60
+  },
+  "sequence": {
+    "actorFontFamily": "Helvetica, Arial, sans-serif",
+    "noteFontFamily": "Helvetica, Arial, sans-serif",
+    "messageFontFamily": "Helvetica, Arial, sans-serif"
+  }
+}
