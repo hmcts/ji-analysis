@@ -245,4 +245,4 @@ Tables (the `#` column in *At a Glance*) and diagrams (the `1. Home` style node 
 
 # Style enforcement
 
-The output is rendered with the **shared** house stylesheet (`.claude/lib/create-data-dependency-architecture/assets/doc-style.css`) and Mermaid theme (`.claude/lib/create-data-dependency-architecture/assets/mermaid-config.json`). Authors should never bake colour, font or border choices into the document — the stylesheet handles all visual concerns. If a one-off override seems necessary, raise it as a stylesheet change so every doc benefits (this affects both the data-dependency skill and this one).
+The output is rendered with the **shared** house stylesheet (`.claude/lib/_shared/assets/doc-style.css`) and Mermaid theme (`.claude/lib/_shared/assets/mermaid-config.json`) — owned by `_shared/`, consumed by every PDF-producing skill in this repo. Authors should never bake colour, font or border choices into the document — the stylesheet handles all visual concerns. If a one-off override seems necessary, raise it as a stylesheet change in `_shared/` so every doc benefits.

@@ -187,9 +187,9 @@ Optional `## Appendix` — one short bullet per non-obvious structural decision 
 ## 8. Building the PDF
 
 ```bash
-.claude/lib/create-data-dependency-architecture/scripts/build-pdf.sh <input-folder>/output-functional-modules/functional-modules.md
+.claude/lib/_shared/scripts/build-pdf.sh <input-folder>/output-functional-modules/functional-modules.md
 ```
 
 This produces `functional-modules.pdf` next to the source. Mermaid PNGs and the rewritten build markdown are written to `functional-modules.assets/` for inspection if anything looks off.
 
-The build script lives in the **data-dependency skill** by design (see [`LESSONS-LEARNED.md`](LESSONS-LEARNED.md) F1). Don't copy it into this skill.
+The build script lives in **`_shared/`** by design (see [`LESSONS-LEARNED.md`](LESSONS-LEARNED.md) F1 and `.claude/lib/_shared/README.md`). Don't copy it into this skill.

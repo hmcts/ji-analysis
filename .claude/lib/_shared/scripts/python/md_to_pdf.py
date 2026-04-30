@@ -8,11 +8,11 @@ Pipeline:
     1. Parse YAML front-matter (if any) for title / subtitle / author.
        If no YAML title is present, fall back to the first leading # H1.
     2. Find each ```mermaid ... ``` fenced block, render to PNG via `mmdc`
-       using the house Mermaid config (<skill>/assets/mermaid-config.json),
+       using the house Mermaid config (<_shared>/assets/mermaid-config.json),
        and substitute the block with a Markdown image reference.
     3. Run `pandoc --wrap=none --pdf-engine=weasyprint` against the
        rewritten markdown, with the house stylesheet
-       (<skill>/assets/doc-style.css) applied.
+       (<_shared>/assets/doc-style.css) applied.
 
 `--wrap=none` is required: pandoc's HTML5 writer otherwise inserts newlines
 inside long text content (including SVG <text> nodes), which weasyprint
@@ -36,11 +36,11 @@ import sys
 from pathlib import Path
 
 
-# Skill layout: this script lives at <skill>/scripts/python/md_to_pdf.py, with
-# style and mermaid config at <skill>/assets/. Three .parent hops resolve to
-# the skill root.
-SKILL_ROOT = Path(__file__).resolve().parent.parent.parent
-ASSETS = SKILL_ROOT / "assets"
+# Shared lib layout: this script lives at .claude/lib/_shared/scripts/python/
+# md_to_pdf.py, with style and mermaid config at .claude/lib/_shared/assets/.
+# Three .parent hops resolve to the shared lib root (_shared/).
+LIB_ROOT = Path(__file__).resolve().parent.parent.parent
+ASSETS = LIB_ROOT / "assets"
 DOC_CSS = ASSETS / "doc-style.css"
 MERMAID_CONFIG = ASSETS / "mermaid-config.json"
 

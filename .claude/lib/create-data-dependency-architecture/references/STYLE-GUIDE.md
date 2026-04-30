@@ -3,13 +3,13 @@ title: "Architecture Documentation — Style Guide"
 subtitle: "House conventions for Markdown-sourced architecture PDFs in this repo"
 ---
 
-This is a short style guide for any architecture document rendered to PDF via the build pipeline at `.claude/lib/create-data-dependency-architecture/scripts/build-pdf.sh`. The pipeline writes outputs alongside the input data (`<input-folder>/output/`), never inside the project running it. The goal is **once-set, never-reinvented styling**: authors focus on content, the build applies the look.
+This is a short style guide for any architecture document rendered to PDF via the **shared** build pipeline at `.claude/lib/_shared/scripts/build-pdf.sh`. The pipeline writes outputs alongside the input data (`<input-folder>/output/`), never inside the project running it. The goal is **once-set, never-reinvented styling**: authors focus on content, the build applies the look.
 
-The visual style is fully codified in the build pipeline:
+The visual style is fully codified in `_shared/`:
 
-- `assets/doc-style.css` — typography, headings, tables, captions, page setup (consumed by WeasyPrint).
-- `assets/mermaid-config.json` — Mermaid theme, fonts and flowchart layout (consumed by `mmdc`).
-- `scripts/md_to_pdf.py` — wires both into the pandoc + weasyprint + mmdc pipeline.
+- `.claude/lib/_shared/assets/doc-style.css` — typography, headings, tables, captions, page setup (consumed by WeasyPrint).
+- `.claude/lib/_shared/assets/mermaid-config.json` — Mermaid theme, fonts and flowchart layout (consumed by `mmdc`).
+- `.claude/lib/_shared/scripts/python/md_to_pdf.py` — wires both into the pandoc + weasyprint + mmdc pipeline.
 
 If the rules below feel restrictive, **edit the stylesheet, not the document**. A one-off override defeats the purpose of having a house style.
 
@@ -95,7 +95,7 @@ All architecture diagrams are authored as Mermaid fenced blocks (`` ```mermaid `
 
 ### 5.1 Theme
 
-**Use the Mermaid `default` theme** (the pastel one). It's set in `assets/mermaid-config.json` and applied automatically by the build. Don't hand-craft a `classDef` palette per document — that's exactly the "reinvent every time" anti-pattern this guide is here to prevent.
+**Use the Mermaid `default` theme** (the pastel one). It's set in `.claude/lib/_shared/assets/mermaid-config.json` and applied automatically by the build. Don't hand-craft a `classDef` palette per document — that's exactly the "reinvent every time" anti-pattern this guide is here to prevent.
 
 ### 5.2 Group with `subgraph`
 
@@ -181,7 +181,7 @@ If you find yourself wanting to override these, raise it as a stylesheet change 
 ## 8. Building the PDF
 
 ```bash
-.claude/lib/create-data-dependency-architecture/scripts/build-pdf.sh <input-folder>/output/<file>.md
+.claude/lib/_shared/scripts/build-pdf.sh <input-folder>/output/<file>.md
 ```
 
 This produces `<file>.pdf` next to the source. Mermaid PNGs and the rewritten build markdown are written to `<file>.assets/` for inspection if anything looks off.

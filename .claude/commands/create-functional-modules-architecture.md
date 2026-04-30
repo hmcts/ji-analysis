@@ -7,11 +7,11 @@ argument-hint: "<input_folder> [system_name]"
 
 The input folder for this run is: **$ARGUMENTS**
 
-Read the full pipeline specification at `.claude/lib/create-functional-modules-architecture/SKILL.md` and execute the five phases against the input folder above. The skill reuses the data-dependency skill's build pipeline and house style by path indirection (no duplicated assets):
+Read the full pipeline specification at `.claude/lib/create-functional-modules-architecture/SKILL.md` and execute the five phases against the input folder above. The skill consumes the shared house pipeline at `.claude/lib/_shared/` (owned by `_shared/`, not by this skill — see `.claude/lib/_shared/README.md`):
 
-- Shared house style → `.claude/lib/create-data-dependency-architecture/assets/doc-style.css` (WeasyPrint stylesheet) and `.claude/lib/create-data-dependency-architecture/assets/mermaid-config.json` (Mermaid theme)
-- Shared distiller → `.claude/lib/create-data-dependency-architecture/scripts/distil-binary-data.sh` (top-level-only binary → text)
-- Shared PDF builder → `.claude/lib/create-data-dependency-architecture/scripts/build-pdf.sh` + `scripts/python/md_to_pdf.py` (pre-renders Mermaid → PNG, then `pandoc --wrap=none --pdf-engine=weasyprint`)
+- Shared house style → `.claude/lib/_shared/assets/doc-style.css` (WeasyPrint stylesheet) and `.claude/lib/_shared/assets/mermaid-config.json` (Mermaid theme)
+- Shared distiller → `.claude/lib/_shared/scripts/distil-binary-data.sh` (top-level-only binary → text)
+- Shared PDF builder → `.claude/lib/_shared/scripts/build-pdf.sh` + `.claude/lib/_shared/scripts/python/md_to_pdf.py` (pre-renders Mermaid → PNG, then `pandoc --wrap=none --pdf-engine=weasyprint`)
 
 Skill-local files (in `.claude/lib/create-functional-modules-architecture/`):
 

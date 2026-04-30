@@ -1,10 +1,10 @@
 # Lessons learned (read this before "fixing" the pipeline)
 
-This file captures the *non-obvious* settings and gotchas specific to the `create-functional-modules-architecture` skill. The build-pipeline lessons (pandoc flags, Mermaid quirks, anchor stripping) are inherited verbatim from the sibling `create-data-dependency-architecture` skill — see its [`LESSONS-LEARNED.md`](../../create-data-dependency-architecture/references/LESSONS-LEARNED.md) for the full list and treat the rules as load-bearing for both skills.
+This file captures the *non-obvious* settings and gotchas specific to the `create-functional-modules-architecture` skill. The build-pipeline lessons (pandoc flags, Mermaid quirks, anchor stripping) are inherited verbatim from the shared house pipeline at `.claude/lib/_shared/`; the canonical write-up of those lessons currently lives in [`../../create-data-dependency-architecture/references/LESSONS-LEARNED.md`](../../create-data-dependency-architecture/references/LESSONS-LEARNED.md). Treat them as load-bearing for both skills (and for `check-for-owasp-top10`).
 
-## Inherited from the data-dependency skill (do not re-derive)
+## Inherited from the shared pipeline (do not re-derive)
 
-These rules were established in the data-dependency skill and apply to every document this skill produces. Do not "fix" them in the build pipeline.
+These rules were established for the shared pipeline at `.claude/lib/_shared/` and apply to every document this skill produces. Do not "fix" them in the build pipeline.
 
 - **Pandoc must be invoked with `--wrap=none`.** Long lines get wrapped inside SVG `<text>` and HTML attributes otherwise, breaking diagrams and tables.
 - **PDF engine is WeasyPrint, not LaTeX.** LaTeX engines can't render inline SVG without significant plumbing.
@@ -23,15 +23,15 @@ These rules were established in the data-dependency skill and apply to every doc
 
 ## New lessons specific to this skill
 
-### F1. Reuse the data-dependency skill's assets and scripts by path indirection — don't copy
+### F1. Consume `_shared/` by absolute path — don't copy
 
-This skill's `SKILL.md` references the data-skill's `assets/doc-style.css`, `assets/mermaid-config.json`, `scripts/distil-binary-data.sh` and `scripts/build-pdf.sh` by absolute path inside the repo (`.claude/lib/create-data-dependency-architecture/...`). They are **not duplicated** into this skill's directory.
+This skill's `SKILL.md` references `.claude/lib/_shared/assets/doc-style.css`, `assets/mermaid-config.json`, `scripts/distil-binary-data.sh` and `scripts/build-pdf.sh` by absolute repo-rooted path. They are **not duplicated** into this skill's directory; they are owned by `_shared/` (see `.claude/lib/_shared/README.md`).
 
-> **Why**: duplication invites drift. A fix to `doc-style.css` for the data-dependency PDF would not propagate, and the two PDFs would visually diverge across runs. Path indirection costs nothing and guarantees they stay in sync.
+> **Why**: duplication invites drift. A fix to `doc-style.css` would not propagate, and the various PDFs (data-dep / functional-modules / OWASP) would visually diverge across runs. Single ownership in `_shared/` costs nothing and guarantees they stay in sync.
 
-> **Trade-off**: if the data-skill's scripts move or are renamed, this skill stops working until paths are updated. Mitigation: the move would be a single global rename. Acceptable.
+> **Trade-off**: if `_shared/` is moved or renamed, every consuming skill stops working until the absolute paths are updated. Mitigation: the move would be a single global rename. Acceptable.
 
-> **What to do if you're tempted to copy**: don't. Edit the shared file in the data-dependency skill — both skills benefit. If the change is genuinely module-specific (and not generic style), put it in this skill's `templates/` or `references/` instead, *not* in copied assets.
+> **What to do if you're tempted to copy**: don't. Edit the file in `_shared/` — every consuming skill benefits. If the change is genuinely module-specific (and not generic style), put it in this skill's `templates/` or `references/` instead, *not* in copied assets.
 
 ### F2. The discovery floor is a module-keyword scan — not a clone of `find-manual-flows.sh`
 

@@ -10,7 +10,7 @@ This skill turns a folder of source documents about a system into a styled PDF c
 The output is **deterministic** in both content shape and visual style:
 
 - Content shape is fixed by [`references/OUTPUT-STRUCTURE.md`](references/OUTPUT-STRUCTURE.md) — the same sections, in the same order, with the same `Attribute / Detail` table under every module.
-- Visual style is the **same house style** as the sibling `create-data-dependency-architecture` skill: `assets/doc-style.css` (typography, headings, tables, captions, page setup) and `assets/mermaid-config.json` (Mermaid theme + fonts), reused by **path indirection** rather than duplicated. There are no per-skill style copies.
+- Visual style is the **same house style** used by every PDF-producing skill in this repo: `.claude/lib/_shared/assets/doc-style.css` (typography, headings, tables, captions, page setup) and `.claude/lib/_shared/assets/mermaid-config.json` (Mermaid theme + fonts). Owned by `_shared/`, not by this skill — see `.claude/lib/_shared/README.md`. There are no per-skill style copies.
 - The hard-won pipeline settings are documented in [`references/LESSONS-LEARNED.md`](references/LESSONS-LEARNED.md) — read that file before "fixing" anything; most rules are non-obvious and load-bearing.
 
 ## When to use
@@ -51,21 +51,21 @@ If any are missing, surface it to the user immediately rather than producing par
 
 ### Python dependencies — installed automatically into a venv
 
-`weasyprint` (the WeasyPrint PDF engine) and any other Python package the build pipeline needs are **not** host requirements. They are listed in `.claude/lib/create-data-dependency-architecture/scripts/python/requirements.txt` and are installed into a per-skill virtual environment at `.claude/lib/create-data-dependency-architecture/scripts/python/.venv/` by `build-pdf.sh` on first run (and refreshed whenever `requirements.txt` is newer than the install marker). The venv's `bin/` is prepended to `PATH` for the duration of the build so pandoc finds the venv-installed `weasyprint`.
+`weasyprint` (the WeasyPrint PDF engine) and any other Python package the build pipeline needs are **not** host requirements. They are listed in `.claude/lib/_shared/scripts/python/requirements.txt` and are installed into a per-skill virtual environment at `.claude/lib/_shared/scripts/python/.venv/` by `build-pdf.sh` on first run (and refreshed whenever `requirements.txt` is newer than the install marker). The venv's `bin/` is prepended to `PATH` for the duration of the build so pandoc finds the venv-installed `weasyprint`.
 
 **Don't ask the user to install `weasyprint` system-wide** — it is purely a venv concern. If a Python dependency is missing, fix it in `requirements.txt`, not by asking the user to brew/pip install it on the host.
 
-## Shared assets and scripts (path indirection)
+## Shared assets and scripts
 
-This skill **reuses** the data-dependency skill's shared files rather than duplicating them. The following files live in the sibling skill and are invoked from this skill by absolute path:
+This skill consumes the shared house pipeline at `.claude/lib/_shared/` rather than shipping its own copies. The following files are owned by `_shared/` (see `.claude/lib/_shared/README.md`) and called from this skill by absolute path:
 
 | Shared file | Lives at | Used in phase |
 |----|----|----|
-| `distil-binary-data.sh` | `.claude/lib/create-data-dependency-architecture/scripts/distil-binary-data.sh` | Phase 1 |
-| `build-pdf.sh` | `.claude/lib/create-data-dependency-architecture/scripts/build-pdf.sh` | Phase 4 |
-| `md_to_pdf.py` (+ `requirements.txt`, `.venv/`) | `.claude/lib/create-data-dependency-architecture/scripts/python/` | Phase 4 |
-| `doc-style.css` | `.claude/lib/create-data-dependency-architecture/assets/doc-style.css` | Phase 4 |
-| `mermaid-config.json` | `.claude/lib/create-data-dependency-architecture/assets/mermaid-config.json` | Phase 4 |
+| `distil-binary-data.sh` | `.claude/lib/_shared/scripts/distil-binary-data.sh` | Phase 1 |
+| `build-pdf.sh` | `.claude/lib/_shared/scripts/build-pdf.sh` | Phase 4 |
+| `md_to_pdf.py` (+ `requirements.txt`, `.venv/`) | `.claude/lib/_shared/scripts/python/` | Phase 4 |
+| `doc-style.css` | `.claude/lib/_shared/assets/doc-style.css` | Phase 4 |
+| `mermaid-config.json` | `.claude/lib/_shared/assets/mermaid-config.json` | Phase 4 |
 
 Skill-local files in `.claude/lib/create-functional-modules-architecture/`:
 
@@ -73,7 +73,7 @@ Skill-local files in `.claude/lib/create-functional-modules-architecture/`:
 - `templates/functional-modules.template.md` — output skeleton
 - `references/OUTPUT-STRUCTURE.md`, `references/STYLE-GUIDE.md`, `references/LESSONS-LEARNED.md`
 
-If the path indirection ever breaks (the data-skill scripts move or are renamed), this skill stops working until the paths are updated. That trade-off is intentional — see `references/LESSONS-LEARNED.md` LESSON F1.
+If `_shared/` is moved or renamed, this skill stops working until the paths are updated — see `references/LESSONS-LEARNED.md` LESSON F1.
 
 ## Pipeline
 
@@ -84,13 +84,13 @@ Run these phases in order. Do not skip phases; do not parallelise (each phase ne
 Run the shared distiller:
 
 ```bash
-.claude/lib/create-data-dependency-architecture/scripts/distil-binary-data.sh <input-folder>
+.claude/lib/_shared/scripts/distil-binary-data.sh <input-folder>
 ```
 
 Note the **second positional argument** — the distiller's default output is the data-skill's `<input-folder>/output/extracted-text/`; this skill explicitly redirects to its own dedicated `output-functional-modules/` tree so the two skills' outputs never mix. Each skill keeps its own extracted-text cache; re-running the distiller is cheap and idempotent. The full command for Phase 1 is:
 
 ```bash
-.claude/lib/create-data-dependency-architecture/scripts/distil-binary-data.sh \
+.claude/lib/_shared/scripts/distil-binary-data.sh \
   <input-folder> \
   <input-folder>/output-functional-modules/extracted-text
 ```
@@ -261,7 +261,7 @@ Save the markdown to the user-supplied output path (default `<input-folder>/outp
 Run the **shared** PDF builder:
 
 ```bash
-.claude/lib/create-data-dependency-architecture/scripts/build-pdf.sh <input-folder>/output-functional-modules/functional-modules.md
+.claude/lib/_shared/scripts/build-pdf.sh <input-folder>/output-functional-modules/functional-modules.md
 ```
 
 The wrapper invokes the shared `md_to_pdf.py` which:
@@ -310,10 +310,11 @@ If pandoc emits any "No anchor #..." errors, find the matching `[label](#wrong-i
     └── LESSONS-LEARNED.md                  # critical settings + gotchas
 ```
 
-Shared (lives in the data-dependency skill, used here by path indirection):
+Shared (owned by `_shared/`, consumed here by absolute path):
 
 ```
-.claude/lib/create-data-dependency-architecture/
+.claude/lib/_shared/
+├── README.md
 ├── assets/
 │   ├── doc-style.css
 │   └── mermaid-config.json

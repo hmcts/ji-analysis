@@ -8,7 +8,7 @@ This file captures the *non-obvious* settings and gotchas that came out of build
 
 Pandoc's HTML5 writer wraps long lines at ~72 columns by default. That wrapping happens **inside** SVG `<text>` content and inside Markdown HTML attributes, where it inserts literal newlines. Downstream renderers (WeasyPrint specifically) then render those as either dropped inter-word spaces *or* literal `\n` glyphs depending on context.
 
-> **Always pass `--wrap=none`.** It's baked into `scripts/md_to_pdf.py`; do not remove it.
+> **Always pass `--wrap=none`.** It's baked into `.claude/lib/_shared/scripts/python/md_to_pdf.py`; do not remove it.
 
 ### 2. Use WeasyPrint, not LaTeX, as the PDF engine
 
@@ -20,7 +20,7 @@ LaTeX engines (`pdflatex`, `xelatex`, `tectonic`) cannot render inline SVG witho
 
 We tried inline SVG (Mermaid → embedded `<svg>` in Markdown). WeasyPrint's CSS engine treats SVG presentation properties (`fill`, `stroke`, `text-anchor`, `dominant-baseline`) as CSS and silently drops them, producing colourless boxes with collapsed text. Even when those are inlined as XML attributes, multi-line text in `<text>` nodes ends up missing inter-word spaces (see lesson 1).
 
-> The fix is to render each `mermaid` block to a PNG via `mmdc` *before* pandoc runs, and substitute the block with a Markdown image reference. `scripts/md_to_pdf.py` does this in one pass.
+> The fix is to render each `mermaid` block to a PNG via `mmdc` *before* pandoc runs, and substitute the block with a Markdown image reference. `.claude/lib/_shared/scripts/python/md_to_pdf.py` does this in one pass.
 
 ### 4. Use `<br/>` in Mermaid node labels — never `\n`
 
@@ -55,7 +55,7 @@ The same stripping applies to embedded punctuation, but **with no replacement hy
 
 ### 6. Use the `default` theme via `--configFile`
 
-Don't hand-craft a `classDef` palette per document — that's the "reinvent every time" anti-pattern. The house theme lives in `assets/mermaid-config.json` (theme `default`, Helvetica fontFamily) and is passed to mmdc via `--configFile`. The default theme produces pastel-purple nodes with cream subgraph backgrounds.
+Don't hand-craft a `classDef` palette per document — that's the "reinvent every time" anti-pattern. The house theme lives in `.claude/lib/_shared/assets/mermaid-config.json` (theme `default`, Helvetica fontFamily) and is passed to mmdc via `--configFile`. The default theme produces pastel-purple nodes with cream subgraph backgrounds.
 
 ### 7. Use `subgraph` clustering, not flat node lists
 

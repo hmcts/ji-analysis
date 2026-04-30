@@ -10,7 +10,7 @@ This skill turns a folder of source documents about a system into a styled PDF c
 The output is **deterministic** in both content shape and visual style:
 
 - Content shape is fixed by [`references/OUTPUT-STRUCTURE.md`](references/OUTPUT-STRUCTURE.md) — the same sections, in the same order, with the same Attribute / Detail table under every dependency.
-- Visual style is fixed by [`assets/doc-style.css`](assets/doc-style.css) (typography, headings, tables, captions, page setup) and [`assets/mermaid-config.json`](assets/mermaid-config.json) (Mermaid theme + fonts).
+- Visual style is fixed by the **shared** house assets at `.claude/lib/_shared/assets/doc-style.css` (typography, headings, tables, captions, page setup) and `.claude/lib/_shared/assets/mermaid-config.json` (Mermaid theme + fonts). These are owned by `_shared/`, not by this skill — see `.claude/lib/_shared/README.md`.
 - The hard-won settings that make the pipeline work are documented in [`references/LESSONS-LEARNED.md`](references/LESSONS-LEARNED.md). Read that file before "fixing" the build script — most of the rules are non-obvious and load-bearing.
 
 ## When to use
@@ -49,7 +49,7 @@ Run these phases in order. Do not skip phases; do not parallelise (each phase ne
 
 ### Phase 1 — Distil binaries to plain text
 
-Run `scripts/distil-binary-data.sh <input-folder> <output-folder>` with:
+Run the **shared** distiller at `.claude/lib/_shared/scripts/distil-binary-data.sh <input-folder> <output-folder>` with:
 
 - `<input-folder>` = the user-supplied source folder.
 - `<output-folder>` = `<input-folder>/output/extracted-text/` (the script's default if you omit the second argument). Outputs sit alongside the input data so tooling and data stay separated — the running project never accumulates per-run artefacts.
@@ -229,14 +229,14 @@ Save the markdown to the user-supplied output path (default `<input-folder>/outp
 
 ### Phase 4 — Render the PDF
 
-Run `scripts/build-pdf.sh <path-to-markdown>`.
+Run the **shared** build pipeline at `.claude/lib/_shared/scripts/build-pdf.sh <path-to-markdown>`.
 
-The wrapper invokes `scripts/md_to_pdf.py` which:
+The wrapper invokes `.claude/lib/_shared/scripts/python/md_to_pdf.py` which:
 
 1. Parses YAML front matter for title / subtitle (or strips a leading `# H1` if no YAML title is present).
-2. Pre-renders each ` ```mermaid ` block to a PNG via `mmdc --configFile=assets/mermaid-config.json` (this is what makes the diagram colours and fonts deterministic — see [LESSON 6](references/LESSONS-LEARNED.md)).
+2. Pre-renders each ` ```mermaid ` block to a PNG via `mmdc --configFile=<_shared>/assets/mermaid-config.json` (this is what makes the diagram colours and fonts deterministic — see [LESSON 6](references/LESSONS-LEARNED.md)).
 3. Substitutes each block with a Markdown image reference into a working copy of the markdown.
-4. Runs `pandoc --wrap=none --pdf-engine=weasyprint --css=assets/doc-style.css` against the working copy.
+4. Runs `pandoc --wrap=none --pdf-engine=weasyprint --css=<_shared>/assets/doc-style.css` against the working copy.
 5. Writes `<input>.pdf` next to the source markdown, plus a sibling `<input>.assets/` folder containing the rendered Mermaid PNGs and the rewritten build markdown (kept for inspection).
 
 `--wrap=none` is mandatory — see [LESSON 1](references/LESSONS-LEARNED.md). Don't remove it.
@@ -254,9 +254,9 @@ If pandoc emits any "No anchor #..." errors, find the matching `[label](#wrong-i
 
 If the target repository does **not** already have the build pipeline (`scripts/build-pdf.sh`, `scripts/python/md_to_pdf.py`, `scripts/python/requirements.txt`, `scripts/styles/doc-style.css`, `scripts/styles/mermaid-config.json`):
 
-1. Copy this skill's `scripts/build-pdf.sh` to the repo at `scripts/build-pdf.sh`.
-2. Copy this skill's `scripts/python/md_to_pdf.py` and `scripts/python/requirements.txt` to the repo at `scripts/python/md_to_pdf.py` and `scripts/python/requirements.txt`.
-3. Copy this skill's `assets/doc-style.css` and `assets/mermaid-config.json` to the repo at `scripts/styles/doc-style.css` and `scripts/styles/mermaid-config.json`.
+1. Copy `.claude/lib/_shared/scripts/build-pdf.sh` to the repo at `scripts/build-pdf.sh`.
+2. Copy `.claude/lib/_shared/scripts/python/md_to_pdf.py` and `.claude/lib/_shared/scripts/python/requirements.txt` to the repo at `scripts/python/md_to_pdf.py` and `scripts/python/requirements.txt`.
+3. Copy `.claude/lib/_shared/assets/doc-style.css` and `.claude/lib/_shared/assets/mermaid-config.json` to the repo at `scripts/styles/doc-style.css` and `scripts/styles/mermaid-config.json`.
 4. `chmod +x scripts/build-pdf.sh`.
 5. Run from the repo's copy thereafter — `scripts/build-pdf.sh` will create `scripts/python/.venv/` on first run and install `requirements.txt` into it. Add `scripts/python/.venv/` to the repo's `.gitignore`.
 
@@ -278,26 +278,32 @@ If the repo already has these files, **don't overwrite them** — the user may h
 ## Command file layout
 
 ```
-.claude/lib/create-data-dependency-architecture/
-├── SKILL.md                              # this file
-├── assets/
-│   ├── doc-style.css                     # weasyprint stylesheet
-│   └── mermaid-config.json               # mermaid theme/fonts
-├── scripts/
-│   ├── build-pdf.sh                      # venv-bootstrapping shell wrapper
-│   ├── distil-binary-data.sh             # binary → text extractor (pure shell)
-│   ├── find-manual-flows.sh              # Phase 2a discovery floor (pure shell)
-│   └── python/
-│       ├── md_to_pdf.py                  # the actual builder
-│       ├── requirements.txt              # pip deps (weasyprint)
-│       └── .venv/                        # auto-created on first build, gitignored
-├── templates/
-│   └── data-dependencies.template.md     # skeleton with placeholders
-└── references/
-    ├── OUTPUT-STRUCTURE.md               # exact, deterministic content shape
-    ├── STYLE-GUIDE.md                    # author-facing house style for the pipeline
-    └── LESSONS-LEARNED.md                # critical settings + gotchas
+.claude/lib/
+├── _shared/                              # owned by _shared, used by this skill
+│   ├── README.md
+│   ├── assets/
+│   │   ├── doc-style.css                 # weasyprint stylesheet
+│   │   └── mermaid-config.json           # mermaid theme/fonts
+│   └── scripts/
+│       ├── build-pdf.sh                  # venv-bootstrapping shell wrapper
+│       ├── distil-binary-data.sh         # binary → text extractor (pure shell)
+│       └── python/
+│           ├── md_to_pdf.py              # the actual builder
+│           ├── requirements.txt          # pip deps (weasyprint)
+│           └── .venv/                    # auto-created on first build, gitignored
+└── create-data-dependency-architecture/  # owned by this skill
+    ├── SKILL.md                          # this file
+    ├── scripts/
+    │   └── find-manual-flows.sh          # Phase 2a discovery floor (skill-specific)
+    ├── templates/
+    │   └── data-dependencies.template.md # skeleton with placeholders
+    └── references/
+        ├── OUTPUT-STRUCTURE.md           # exact, deterministic content shape
+        ├── STYLE-GUIDE.md                # author-facing house style for the pipeline
+        └── LESSONS-LEARNED.md            # critical settings + gotchas
 ```
+
+The build pipeline (`build-pdf.sh`, `md_to_pdf.py`, `requirements.txt`), the visual assets (`doc-style.css`, `mermaid-config.json`) and the binary distiller (`distil-binary-data.sh`) all moved out of this skill into `.claude/lib/_shared/` so the same canonical location is consumed by `create-functional-modules-architecture` and `check-for-owasp-top10` too. There is no duplication and no ambiguity about ownership — see `.claude/lib/_shared/README.md`.
 
 ## What goes where — tooling vs data
 

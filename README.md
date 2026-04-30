@@ -1,4 +1,15 @@
-# JI Analysis 
+# JI Analysis
+
+A Claude Code repository providing four slash commands for analysing and documenting software systems:
+
+| Slash command | What it does |
+|---|---|
+| [`/docs-to-c4`](#slash-command--docs-to-c4) | Turn a folder of mixed-format documents into a browsable C4 architecture model (Structurizr DSL + static site) |
+| [`/create-data-dependency-architecture`](#slash-command--create-data-dependency-architecture) | Catalogue a system's inbound and outbound data dependencies as a styled PDF |
+| [`/create-functional-modules-architecture`](#slash-command--create-functional-modules-architecture) | Catalogue a system's functional modules (one detail section per module) as a styled PDF |
+| [`/check-for-owasp-top10`](#slash-command--check-for-owasp-top10) | Audit a codebase against the OWASP Top 10 for Agentic Applications 2026 and produce a Markdown + PDF report with a colour-coded *Risk Status Board* headline diagram |
+
+The three PDF-producing commands share a single house style (Helvetica typography, dark-navy headers, zebra rows, A4 with narrow margins) and a shared build pipeline at [`.claude/lib/_shared/`](.claude/lib/_shared/README.md) — the same `doc-style.css`, `mermaid-config.json`, `build-pdf.sh`, `md_to_pdf.py` and `distil-binary-data.sh` are owned by `_shared/` and consumed by all three skills. There is no per-skill duplication.
 
 ## Table of Contents
 
@@ -31,7 +42,19 @@
   - [Re-running the command](#re-running-the-command-1)
   - [Command file structure](#command-file-structure-1)
 - [Slash command — Create Functional Modules Architecture](#slash-command--create-functional-modules-architecture)
-  - [Contribute to This Repository](#contribute-to-this-repository)
+- [Slash command — Check for OWASP Top 10](#slash-command--check-for-owasp-top10)
+  - [Purpose](#purpose-2)
+  - [Overview](#overview-2)
+  - [Supported platform](#supported-platform-2)
+  - [Prerequisites](#prerequisites-2)
+  - [Usage](#usage-2)
+  - [How it works](#how-it-works-2)
+  - [Output structure](#output-structure-2)
+  - [Output document shape](#output-document-shape-1)
+  - [Re-running the command](#re-running-the-command-2)
+  - [Command file structure](#command-file-structure-2)
+- [Shared build pipeline](#shared-build-pipeline)
+- [Contribute to This Repository](#contribute-to-this-repository)
 - [License](#license)
 
 ## Slash command — Docs to C4
@@ -272,7 +295,7 @@ The quality of the output reflects the quality of the input documentation — th
 
 ### Overview
 
-A Claude Code slash command that turns a folder of mixed-format documents (.docx, .doc, .pdf, .md, .txt) into a styled, reviewable PDF that catalogues the system's inbound and outbound data flows.
+A Claude Code slash command that turns a folder of mixed-format documents (.docx, .doc, .pdf, .pptx, .md, .txt) into a styled, reviewable PDF that catalogues the system's inbound and outbound data flows.
 
 Give it a folder of capability documents, requirements specs and operational guides and it produces:
 
@@ -309,15 +332,15 @@ brew install poppler
 # textutil ships with macOS — used for legacy .doc files
 ```
 
-WeasyPrint (the PDF rendering engine pandoc uses via `--pdf-engine=weasyprint`) is **not** installed system-wide — the skill's `build-pdf.sh` creates a Python virtual environment under `.claude/lib/create-data-dependency-architecture/scripts/python/.venv/` on first run and installs WeasyPrint there from the skill's `requirements.txt`, then prepends the venv's `bin/` to `PATH` so pandoc finds it. No manual pip install required; deleting `.venv/` and re-running rebuilds it.
+WeasyPrint (the PDF rendering engine pandoc uses via `--pdf-engine=weasyprint`) is **not** installed system-wide — the shared `build-pdf.sh` creates a Python virtual environment under `.claude/lib/_shared/scripts/python/.venv/` on first run and installs WeasyPrint there from `requirements.txt`, then prepends the venv's `bin/` to `PATH` so pandoc finds it. No manual pip install required; deleting `.venv/` and re-running rebuilds it.
 
-`textutil` is built into macOS and used to extract text from the legacy `.doc` binary format. On Linux, swap in `libreoffice --headless --convert-to txt` or `antiword`.
+`textutil` is built into macOS and used to extract text from the legacy `.doc` binary format. On Linux, swap in `libreoffice --headless --convert-to txt` or `antiword`. PowerPoint `.pptx` files are handled by pandoc directly — no extra dependency.
 
 ## Installation
 
-The slash command entry-point lives at `.claude/commands/create-data-dependency-architecture.md`; the implementation (CSS, Mermaid config, build scripts, template, references) lives at `.claude/lib/create-data-dependency-architecture/`. Both are auto-discovered by Claude Code when you open a session in this project directory. There is no separate bootstrap step — the command is fully self-contained.
+The slash command entry-point lives at `.claude/commands/create-data-dependency-architecture.md`; the skill-specific files (template, references, the manual-flow keyword scanner) live at `.claude/lib/create-data-dependency-architecture/`; the **shared** PDF pipeline (CSS, Mermaid config, build scripts, distiller) lives at [`.claude/lib/_shared/`](.claude/lib/_shared/README.md). All three are auto-discovered by Claude Code when you open a session in this project directory. There is no separate bootstrap step — the command is fully self-contained.
 
-If you want to call the build pipeline from outside a Claude session (e.g. as part of a docs-build CI step), invoke `.claude/lib/create-data-dependency-architecture/scripts/build-pdf.sh` directly — it bootstraps its own venv from the sibling `scripts/python/requirements.txt` and reads the house style from `.claude/lib/create-data-dependency-architecture/assets/`. There is no longer a duplicate copy at the repo root.
+If you want to call the build pipeline from outside a Claude session (e.g. as part of a docs-build CI step), invoke `.claude/lib/_shared/scripts/build-pdf.sh` directly — it bootstraps its own venv from `.claude/lib/_shared/scripts/python/requirements.txt` and reads the house style from `.claude/lib/_shared/assets/`.
 
 ## Usage
 
@@ -417,34 +440,43 @@ The command is **deterministic** — running it again on the same input folder p
 
 ## Command file structure
 
+The skill's own files are minimal — most of the heavy lifting comes from [`_shared/`](.claude/lib/_shared/README.md):
+
 ```
 .claude/
 ├── commands/
 │   └── create-data-dependency-architecture.md  # Slash command entry-point
 └── lib/
+    ├── _shared/                                # Shared house pipeline (consumed by this
+    │   │                                         skill, the functional-modules skill, and
+    │   │                                         the OWASP skill — see _shared/README.md)
+    │   ├── README.md
+    │   ├── assets/
+    │   │   ├── doc-style.css                   # House CSS (Helvetica, dark headers,
+    │   │   │                                     zebra rows, 8.5pt tables, A4 with
+    │   │   │                                     2cm × 1.25cm margins)
+    │   │   └── mermaid-config.json             # Mermaid theme: default + Helvetica
+    │   └── scripts/
+    │       ├── build-pdf.sh                    # Venv-bootstrapping shell wrapper
+    │       ├── distil-binary-data.sh           # Top-level-only binary -> text extractor
+    │       │                                     (.docx, .pptx, .doc, .pdf, .md, .txt)
+    │       └── python/
+    │           ├── md_to_pdf.py                # Pre-renders Mermaid -> PNG, then
+    │           │                                 pandoc --wrap=none -> WeasyPrint
+    │           ├── requirements.txt            # pip deps (weasyprint)
+    │           └── .venv/                      # auto-created on first build (gitignored)
     └── create-data-dependency-architecture/
-        ├── SKILL.md                              # Pipeline specification (5 phases)
-        ├── assets/
-        │   ├── doc-style.css                     # House CSS (Helvetica, dark headers,
-        │   │                                       zebra rows, 8.5pt tables, A4 with
-        │   │                                       2cm × 1.25cm margins)
-        │   └── mermaid-config.json               # Mermaid theme: default + Helvetica
+        ├── SKILL.md                            # Pipeline specification (5 phases)
         ├── scripts/
-        │   ├── build-pdf.sh                      # Venv-bootstrapping shell wrapper
-        │   ├── distil-binary-data.sh             # Top-level-only binary -> text extractor
-        │   └── python/
-        │       ├── md_to_pdf.py                  # Pre-renders Mermaid -> PNG, then
-        │       │                                   pandoc --wrap=none -> WeasyPrint
-        │       ├── requirements.txt              # pip deps (weasyprint)
-        │       └── .venv/                        # auto-created on first build (gitignored)
+        │   └── find-manual-flows.sh            # Phase 2a discovery floor (skill-specific)
         ├── templates/
-        │   └── data-dependencies.template.md     # Output skeleton with placeholders
+        │   └── data-dependencies.template.md   # Output skeleton with placeholders
         └── references/
-            ├── OUTPUT-STRUCTURE.md               # Deterministic content shape spec
-            ├── STYLE-GUIDE.md                    # Author-facing house style for the pipeline
-            └── LESSONS-LEARNED.md                # Critical settings + non-obvious gotchas
-                                                  # (e.g. markdown separator-dash widths
-                                                  # drive pandoc colgroup widths)
+            ├── OUTPUT-STRUCTURE.md             # Deterministic content shape spec
+            ├── STYLE-GUIDE.md                  # Author-facing house style for the pipeline
+            └── LESSONS-LEARNED.md              # Critical settings + non-obvious gotchas
+                                                # (e.g. markdown separator-dash widths
+                                                # drive pandoc colgroup widths)
 ```
 
 ## Slash command — Create Functional Modules Architecture
