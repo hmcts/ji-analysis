@@ -7,7 +7,7 @@ A Claude Code repository providing four slash commands for analysing and documen
 | [`/docs-to-c4`](#slash-command--docs-to-c4) | Turn a folder of mixed-format documents into a browsable C4 architecture model (Structurizr DSL + static site) |
 | [`/create-data-dependency-architecture`](#slash-command--create-data-dependency-architecture) | Catalogue a system's inbound and outbound data dependencies as a styled PDF |
 | [`/create-functional-modules-architecture`](#slash-command--create-functional-modules-architecture) | Catalogue a system's functional modules (one detail section per module) as a styled PDF |
-| [`/check-for-owasp-top10`](#slash-command--check-for-owasp-top10) | Audit a codebase against the OWASP Top 10 for Agentic Applications 2026 and produce a Markdown + PDF report with a colour-coded *Risk Status Board* headline diagram |
+| [`/check-for-owasp-top10`](#slash-command--check-for-owasp-top-10) | Audit a codebase against the OWASP Top 10 for Agentic Applications 2026 and produce a Markdown + PDF report with a colour-coded *Risk Status Board* headline diagram |
 
 The three PDF-producing commands share a single house style (Helvetica typography, dark-navy headers, zebra rows, A4 with narrow margins) and a shared build pipeline at [`.claude/lib/_shared/`](.claude/lib/_shared/README.md) — the same `doc-style.css`, `mermaid-config.json`, `build-pdf.sh`, `md_to_pdf.py` and `distil-binary-data.sh` are owned by `_shared/` and consumed by all three skills. There is no per-skill duplication.
 
@@ -42,7 +42,7 @@ The three PDF-producing commands share a single house style (Helvetica typograph
   - [Re-running the command](#re-running-the-command-1)
   - [Command file structure](#command-file-structure-1)
 - [Slash command — Create Functional Modules Architecture](#slash-command--create-functional-modules-architecture)
-- [Slash command — Check for OWASP Top 10](#slash-command--check-for-owasp-top10)
+- [Slash command — Check for OWASP Top 10](#slash-command--check-for-owasp-top-10)
   - [Purpose](#purpose-2)
   - [Overview](#overview-2)
   - [Supported platform](#supported-platform-2)
@@ -491,7 +491,186 @@ Spec: `.claude/lib/create-functional-modules-architecture/SKILL.md`. Slash-comma
 
 Output lands in `<input_folder>/output-functional-modules/` (deliberately a different top-level folder from the data-dependency skill's `<input_folder>/output/` so the two skills' artefacts never mix).
 
-### Contribute to This Repository
+## Slash command — Check for OWASP Top 10
+
+### Purpose
+
+This command audits a codebase against the **OWASP Top 10 for Agentic Applications 2026** (the December 2025 release from the OWASP GenAI Security Project — Agentic Security Initiative) and produces a deterministic Markdown + PDF report. Rather than running yet another generic SAST tool over an agentic application, this command evaluates the code against the ten ASI risks specifically — agent goal hijack, tool misuse, identity & privilege abuse, agentic supply chain, unexpected code execution, memory & context poisoning, insecure inter-agent communication, cascading failures, human-agent trust exploitation, and rogue agents.
+
+Verdicts are **evidence-based**: every claim in the report traces to a `file:line` reference in the code. When evidence is absent, the verdict is `Unknown` — never silently `Mitigated`.
+
+### Overview
+
+A Claude Code slash command that scans a folder of source code and produces:
+
+- A **Markdown report** at `<input_folder>/security/owasp/owasp-agentic-top10-report.md`, diff-friendly for review
+- A **rendered PDF** at the same path with `.pdf` extension, in the shared house style
+- A **headline *Risk Status Board* diagram** — a 2×5 grid of ASI tiles tinted by verdict (red Exposed, amber Partial, green Mitigated, dark grey Unknown, light grey Not applicable) so the posture is readable at a glance before any prose
+- A **codified rules reference** at `.claude/lib/check-for-owasp-top10/references/OWASP-AGENTIC-TOP10.md` distilling the source PDF into per-ASI "what to look for in code" + verdict rubric
+- A **scan artefacts folder** at `<input_folder>/security/owasp/scan/` (file inventory, fingerprint hits, LOC) so the discovery floor is byte-stable across re-runs
+
+### Supported platform
+
+| Platform | Status |
+|----------|--------|
+| macOS (Apple Silicon & Intel) | Supported |
+| Linux | Should work — `ripgrep` recommended for fast fingerprint scans; `grep -rn` fallback included |
+| Windows | Not tested |
+
+## Prerequisites
+
+The command requires the following tools on your PATH:
+
+```sh
+# Bash, find, awk, wc, sort — all standard
+
+# ripgrep (recommended; falls back to grep if missing)
+brew install ripgrep
+
+# For Phase 5 (PDF rendering), the same tools the data-dependency skill needs:
+brew install python@3 pandoc
+npm install -g @mermaid-js/mermaid-cli
+```
+
+WeasyPrint is auto-installed into the shared venv at `.claude/lib/_shared/scripts/python/.venv/` on first PDF build. If a PDF-rendering tool is missing the skill still produces the Markdown report and tells you which tool was missing.
+
+## Usage
+
+From within a Claude Code session in this project:
+
+```
+/check-for-owasp-top10 /path/to/your/codebase
+```
+
+The command runs end-to-end on demand. The codebase is read-only; only `<input_folder>/security/owasp/` is written to.
+
+## How it works
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Skill as check-for-owasp-top10
+    participant Scan as scan-codebase.sh
+    participant Claude as Claude (analysis)
+    participant Build as _shared/build-pdf.sh
+
+    User->>Skill: /check-for-owasp-top10 <input_folder>
+
+    Note over Skill: Phase 1 — Verify input + bootstrap
+    Skill->>Skill: mkdir security/owasp/scan/<br/>capture date + git short SHA
+
+    Note over Skill: Phase 2 — Deterministic scan
+    Skill->>Scan: <input_folder>
+    Note over Scan: Inventory code files,<br/>count by directory + extension,<br/>grep ~50 agentic-app fingerprints<br/>(Anthropic / OpenAI / LangChain /<br/>MCP / vector stores / RCE patterns)
+    Scan-->>Skill: inventory.txt, fingerprint-hits.txt,<br/>loc.txt, inventory-counts.txt
+
+    Note over Skill: Phase 3 — Read and evaluate
+    Skill->>Claude: codified rules + fingerprint hits
+    Note over Claude: For each ASI01-10:<br/>locate code-grounded evidence,<br/>assign verdict (Mitigated /<br/>Partial / Exposed / Unknown /<br/>Not applicable) with file:line refs
+    Claude-->>Skill: per-ASI verdicts + evidence
+
+    Note over Skill: Phase 4 — Author markdown
+    Skill->>Skill: fill template (YAML title,<br/>Risk Status Board Mermaid block,<br/>codebase fingerprint,<br/>At-a-Glance table,<br/>per-ASI 6-row Attribute|Detail tables)
+
+    Note over Skill: Phase 5 — Render PDF
+    Skill->>Build: <output>.md
+    Build-->>Skill: <output>.pdf with rendered<br/>colour-coded Risk Status Board
+
+    Note over Skill: Phase 6 — Verify
+    Skill-->>User: Verdict counts + top finding +<br/>output paths
+```
+
+## Output structure
+
+```
+<input_folder>/
+├── ...source code (untouched)...
+└── security/
+    └── owasp/
+        ├── scan/
+        │   ├── inventory.txt                       # Sorted list of code files scanned
+        │   ├── inventory-counts.txt                # Counts by top-level dir + extension
+        │   ├── loc.txt                             # Total lines of code
+        │   └── fingerprint-hits.txt                # Agentic-app pattern matches
+        ├── owasp-agentic-top10-report.md           # Phase 4 markdown deliverable
+        ├── owasp-agentic-top10-report.pdf          # Phase 5 PDF deliverable
+        └── owasp-agentic-top10-report.assets/      # Build artefacts (kept for inspection)
+            ├── build.md
+            └── diagram-1.png                       # Risk Status Board (the headline visual)
+```
+
+The codebase under review is never modified. The repo running the command is never written to.
+
+## Output document shape
+
+Every report produced by this command has the same structure, in the same order:
+
+| Section | What it contains |
+|---------|------------------|
+| **Title block** | YAML-driven title + subtitle + review date, centred, dark navy |
+| **Lead paragraph** | What the report measures, scope and limitations of the review |
+| **Executive Summary** | 3–5 bullets: per-verdict counts, top finding by name, biggest systemic gap, biggest mitigation, agentic-fingerprint sentence |
+| **Risk Status Board** | The headline Mermaid diagram — 2×5 grid of ASI tiles, colour-coded by verdict, fixed palette across all OWASP reports |
+| **Codebase Fingerprint** | `Attribute / Detail` table: path, languages, file count, LOC, frameworks detected, vector stores, MCP/A2A surfaces, tools registered, external integrations, review date / commit |
+| **At a Glance** | 5-column summary table covering all ten ASI entries (number, title, verdict, severity, headline) |
+| **Per-ASI detail entries** | One section per ASI01–ASI10, each with a 6-row Attribute / Detail table (Verdict, Severity, Affirmative evidence, Risk signals, Coverage gap, Recommendation) and a sources blockquote |
+| **Codebase scan summary** | Top-level directories scanned, exclusion patterns, tools used, unread files |
+| **Limitations of static review** | What this report cannot assess (runtime behaviour, network policy, IAM, prompt content, behavioural alignment) |
+| **References** | Pointers to the OWASP source and the codified rules |
+
+## Re-running the command
+
+The command is **idempotent** — running it again on the same codebase replaces all four output files (markdown, PDF, build markdown, diagram PNG). The scan artefacts are byte-stable across re-runs, so any churn in the report reflects either changes in the codebase or in the per-ASI evaluation, not in the scan.
+
+To preserve a previous report, commit / archive `<input_folder>/security/owasp/owasp-agentic-top10-report.md` before re-running.
+
+## Command file structure
+
+```
+.claude/
+├── commands/
+│   └── check-for-owasp-top10.md                 # Slash command entry-point
+└── lib/
+    ├── _shared/                                 # Shared house pipeline (Phase 5 PDF render)
+    │   └── ...                                  # See _shared/README.md
+    └── check-for-owasp-top10/
+        ├── SKILL.md                             # Pipeline specification (6 phases)
+        ├── scripts/
+        │   └── scan-codebase.sh                 # Phase 2 inventory + fingerprint scan
+        ├── templates/
+        │   └── report.template.md               # Output skeleton (incl. Risk Status Board)
+        └── references/
+            ├── OWASP-AGENTIC-TOP10.md           # Codified rules — what to look for, verdict rubric
+            ├── OUTPUT-STRUCTURE.md              # Deterministic content shape (incl. headline-diagram spec)
+            └── owasp-top10-source-extract.txt   # Plain-text extraction of the source PDF
+```
+
+## Shared build pipeline
+
+Three of the four slash commands (`create-data-dependency-architecture`, `create-functional-modules-architecture`, `check-for-owasp-top10`) consume a single shared library at [`.claude/lib/_shared/`](.claude/lib/_shared/README.md):
+
+```
+.claude/lib/_shared/
+├── README.md                       # Ownership / consumer map
+├── assets/
+│   ├── doc-style.css               # House CSS — every PDF this repo produces uses it
+│   └── mermaid-config.json         # House Mermaid theme — every diagram uses it
+└── scripts/
+    ├── build-pdf.sh                # Venv-bootstrapping wrapper around md_to_pdf.py
+    ├── distil-binary-data.sh       # Binary -> plain-text extractor
+    │                                 (.docx, .pptx, .doc, .pdf, .md, .markdown, .txt)
+    └── python/
+        ├── md_to_pdf.py            # Pre-renders Mermaid -> PNG, then pandoc + WeasyPrint
+        └── requirements.txt        # pip deps (weasyprint)
+```
+
+The `_shared/` library is **not a slash command**. The leading underscore signals "supporting library, not a skill" and sorts before any real skill folder. Editing `doc-style.css` here updates the visual style of every PDF this repo's commands produce; editing it in any single skill is forbidden by the skill specs because there are no per-skill copies.
+
+The single documented divergence is the OWASP report's *Risk Status Board* `classDef` palette — that's data-driven (verdict colour conveys risk level) and lives inside the report markdown, not in the shared CSS.
+
+The `docs-to-c4` command is independent — it has its own toolchain (Java + structurizr-site-generatr) and does not consume `_shared/`.
+
+## Contribute to This Repository
 
 Contributions are welcome! Please see the [CONTRIBUTING.md](.github/CONTRIBUTING.md) file for guidelines.
 
