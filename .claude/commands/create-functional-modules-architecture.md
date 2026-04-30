@@ -15,7 +15,7 @@ Read the full pipeline specification at `.claude/lib/create-functional-modules-a
 
 Skill-local files (in `.claude/lib/create-functional-modules-architecture/`):
 
-- `scripts/find-modules.sh` — module-keyword scan; produces `output/module-candidates.txt` as the Phase 2 discovery floor
+- `scripts/find-modules.sh` — module-keyword scan; produces `output-functional-modules/module-candidates.txt` as the Phase 2 discovery floor
 - `templates/functional-modules.template.md` — output skeleton
 - `references/OUTPUT-STRUCTURE.md` — deterministic content shape
 - `references/STYLE-GUIDE.md` — author-facing house style for module-level docs
