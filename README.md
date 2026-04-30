@@ -1,5 +1,39 @@
 # JI Analysis 
 
+## Table of Contents
+
+- [Slash command — Docs to C4](#slash-command--docs-to-c4)
+  - [Purpose](#purpose)
+  - [Overview](#overview)
+  - [Supported platform](#supported-platform)
+  - [Prerequisites](#prerequisites)
+    - [BMAD plugin](#bmad-plugin)
+    - [Verify prerequisites](#verify-prerequisites)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [How it works](#how-it-works)
+  - [Output structure](#output-structure)
+  - [Viewing the model](#viewing-the-model)
+  - [C4 views generated](#c4-views-generated)
+  - [Supported input formats](#supported-input-formats)
+  - [Re-running the command](#re-running-the-command)
+  - [Command file structure](#command-file-structure)
+- [Slash command — Create Data Dependency Architecture](#slash-command--create-data-dependency-architecture)
+  - [Purpose](#purpose-1)
+  - [Overview](#overview-1)
+  - [Supported platform](#supported-platform-1)
+  - [Prerequisites](#prerequisites-1)
+  - [Installation](#installation-1)
+  - [Usage](#usage-1)
+  - [How it works](#how-it-works-1)
+  - [Output structure](#output-structure-1)
+  - [Output document shape](#output-document-shape)
+  - [Re-running the command](#re-running-the-command-1)
+  - [Command file structure](#command-file-structure-1)
+- [Slash command — Create Functional Modules Architecture](#slash-command--create-functional-modules-architecture)
+  - [Contribute to This Repository](#contribute-to-this-repository)
+- [License](#license)
+
 ## Slash command — Docs to C4
 
 ### Purpose
