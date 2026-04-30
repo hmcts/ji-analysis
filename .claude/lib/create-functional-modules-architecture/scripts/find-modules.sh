@@ -31,7 +31,7 @@ OUTPUT_FILE="$INPUT_FOLDER/output-functional-modules/module-candidates.txt"
 
 if [ ! -d "$EXTRACTED_DIR" ]; then
     echo "error: extracted-text folder not found at $EXTRACTED_DIR" >&2
-    echo "       run scripts/distil-binary-data.sh <input-folder> first" >&2
+    echo "       run .claude/lib/_shared/scripts/distil-binary-data.sh <input-folder> <input-folder>/output-functional-modules/extracted-text first" >&2
     exit 3
 fi
 

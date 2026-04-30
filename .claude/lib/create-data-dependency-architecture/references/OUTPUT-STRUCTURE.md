@@ -254,4 +254,4 @@ This keeps the prose readable, and stops it going stale when row numbers shift b
 
 # Style enforcement
 
-The output is rendered with the house stylesheet (`assets/doc-style.css`) and Mermaid theme (`assets/mermaid-config.json`). Authors should never bake colour, font or border choices into the document — the stylesheet handles all visual concerns. If a one-off override seems necessary, raise it as a stylesheet change so every doc benefits.
+The output is rendered with the **shared** house stylesheet (`.claude/lib/_shared/assets/doc-style.css`) and Mermaid theme (`.claude/lib/_shared/assets/mermaid-config.json`) — owned by `_shared/`, consumed by every PDF-producing skill in this repo. Authors should never bake colour, font or border choices into the document — the stylesheet handles all visual concerns. If a one-off override seems necessary, raise it as a stylesheet change in `_shared/` so every doc benefits.

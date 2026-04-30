@@ -15,7 +15,7 @@
 #   - Skips macOS .DS_Store and dotfiles.
 #
 # Tool selection (in order of preference, per file type):
-#   .docx                  → pandoc (always present in this skill's environment)
+#   .docx                  → pandoc (a host requirement of every consuming skill)
 #   .pptx                  → pandoc (built-in pptx reader; renders speaker text + bullets as plain text)
 #   .doc                   → textutil (macOS) — handles legacy Word binary
 #   .pdf                   → pdftotext (poppler) — falls back to skip if missing
@@ -23,11 +23,17 @@
 #   anything else          → skipped with a warning
 #
 # Why text and not bmad-distillator directly?
-#   The skill's analysis phase reads these .txt files instead of the binaries
-#   so that (a) Claude does not load the binaries into context, and (b) the
-#   distillation step is deterministic and inspectable. If bmad-distillator is
-#   available locally and produces richer markdown, it can be used in addition
-#   to or in place of this script — the SKILL.md describes the policy.
+#   Consuming skills' analysis phases read these .txt files instead of the
+#   binaries so that (a) Claude does not load the binaries into context, and
+#   (b) the distillation step is deterministic and inspectable. If
+#   bmad-distillator is available locally and produces richer markdown, it
+#   can be used in addition to or in place of this script — the consuming
+#   skill's SKILL.md describes the policy.
+#
+# Ownership: this script lives in .claude/lib/_shared/scripts/ and is owned
+# by _shared/. It is consumed by both create-data-dependency-architecture
+# and create-functional-modules-architecture by absolute path. See
+# .claude/lib/_shared/README.md.
 
 set -euo pipefail
 

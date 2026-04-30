@@ -87,7 +87,7 @@ Run the shared distiller:
 .claude/lib/_shared/scripts/distil-binary-data.sh <input-folder>
 ```
 
-Note the **second positional argument** — the distiller's default output is the data-skill's `<input-folder>/output/extracted-text/`; this skill explicitly redirects to its own dedicated `output-functional-modules/` tree so the two skills' outputs never mix. Each skill keeps its own extracted-text cache; re-running the distiller is cheap and idempotent. The full command for Phase 1 is:
+Note the **second positional argument** — the distiller's default output is `<input-folder>/output/extracted-text/` (the convention used by the data-dependency skill); this skill explicitly redirects to its own dedicated `output-functional-modules/` tree so the two skills' outputs never mix. Each skill keeps its own extracted-text cache; re-running the distiller is cheap and idempotent. The full command for Phase 1 is:
 
 ```bash
 .claude/lib/_shared/scripts/distil-binary-data.sh \
@@ -267,9 +267,9 @@ Run the **shared** PDF builder:
 The wrapper invokes the shared `md_to_pdf.py` which:
 
 1. Parses YAML front matter for title / subtitle (or strips a leading `# H1` if no YAML title is present).
-2. Pre-renders each ` ```mermaid ` block to a PNG via `mmdc --configFile=assets/mermaid-config.json` (this is what makes the diagram colours and fonts deterministic).
+2. Pre-renders each ` ```mermaid ` block to a PNG via `mmdc --configFile=<_shared>/assets/mermaid-config.json` (this is what makes the diagram colours and fonts deterministic).
 3. Substitutes each block with a Markdown image reference into a working copy of the markdown.
-4. Runs `pandoc --wrap=none --pdf-engine=weasyprint --css=assets/doc-style.css` against the working copy.
+4. Runs `pandoc --wrap=none --pdf-engine=weasyprint --css=<_shared>/assets/doc-style.css` against the working copy.
 5. Writes `<input>.pdf` next to the source markdown, plus a sibling `<input>.assets/` folder containing the rendered Mermaid PNGs and the rewritten build markdown (kept for inspection).
 
 `--wrap=none` is mandatory. Don't remove it.
@@ -292,7 +292,7 @@ If pandoc emits any "No anchor #..." errors, find the matching `[label](#wrong-i
 - **Don't** refer to modules by number in prose. Use names. Numbers are for the *At a Glance* table and the diagram only.
 - **Don't** narrate authoring conventions in the body. Structural notes belong in `## Appendix`.
 - **Don't** duplicate the data-dependency catalogue here. Where a module produces or consumes data that's already catalogued in `data-dependencies.md`, link to that document by anchor; do not re-state the data-flow detail.
-- **Don't** copy the data-skill's `assets/` or `scripts/` folders into this skill — the path indirection is intentional and load-bearing.
+- **Don't** copy `_shared/`'s `assets/` or `scripts/` into this skill — those assets are owned by `_shared/` and consumed by absolute path; duplicating them invites drift across the PDF-producing skills.
 - **Don't** commit, push or open PRs. The user handles git externally.
 
 ## Command file layout

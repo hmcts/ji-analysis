@@ -3,7 +3,7 @@ title: "Functional Modules Architecture — Style Guide"
 subtitle: "Author-facing house style for module-by-module catalogue PDFs"
 ---
 
-This is the author-facing style guide for documents produced by the `create-functional-modules-architecture` skill. The pipeline shares its house style with the sibling `create-data-dependency-architecture` skill (same `assets/doc-style.css`, same `assets/mermaid-config.json`, same `build-pdf.sh`), so this guide repeats only the *module-specific* prose conventions; the typographic / layout rules are inherited verbatim from the data-dependency skill's [`STYLE-GUIDE.md`](../../create-data-dependency-architecture/references/STYLE-GUIDE.md).
+This is the author-facing style guide for documents produced by the `create-functional-modules-architecture` skill. The pipeline consumes the **shared** house style at `.claude/lib/_shared/` (same `assets/doc-style.css`, same `assets/mermaid-config.json`, same `scripts/build-pdf.sh`) — owned by `_shared/`, used by every PDF-producing skill in this repo. This guide therefore repeats only the *module-specific* prose conventions; the typographic / layout rules are inherited verbatim from the canonical write-up at [`../../create-data-dependency-architecture/references/STYLE-GUIDE.md`](../../create-data-dependency-architecture/references/STYLE-GUIDE.md), which itself documents the `_shared/` pipeline.
 
 The goal is **once-set, never-reinvented styling**: authors focus on content, the build applies the look. If a rule below feels restrictive, edit the stylesheet (a single change benefits both skills), not the document.
 

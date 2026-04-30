@@ -122,12 +122,12 @@ Run the **shared** house build pipeline (the same one used by `create-data-depen
   <input-folder>/security/owasp/owasp-agentic-top10-report.md
 ```
 
-The wrapper invokes `scripts/python/md_to_pdf.py` which:
+The wrapper invokes `.claude/lib/_shared/scripts/python/md_to_pdf.py` which:
 
 1. Parses YAML front matter for title / subtitle.
-2. Pre-renders each ` ```mermaid ` block (including the *Risk Status Board*) to a PNG via `mmdc --configFile=assets/mermaid-config.json`. The classDef colour palette in the headline diagram **is honoured** — `mmdc` respects per-node classDef styling on top of the default theme.
+2. Pre-renders each ` ```mermaid ` block (including the *Risk Status Board*) to a PNG via `mmdc --configFile=<_shared>/assets/mermaid-config.json`. The classDef colour palette in the headline diagram **is honoured** — `mmdc` respects per-node classDef styling on top of the default theme.
 3. Substitutes each block with a Markdown image reference into a working copy of the markdown.
-4. Runs `pandoc --wrap=none --pdf-engine=weasyprint --css=assets/doc-style.css` against the working copy.
+4. Runs `pandoc --wrap=none --pdf-engine=weasyprint --css=<_shared>/assets/doc-style.css` against the working copy.
 5. Writes `<input>.pdf` next to the source markdown, plus a sibling `<input>.assets/` folder containing the rendered Mermaid PNGs and the rewritten build markdown.
 
 The resulting layout is identical to the data-dependency skill's PDFs — Helvetica throughout, 11 pt body / 8.5 pt tables, dark-navy headers with white text, zebra rows, A4 with 2 cm × 1.25 cm margins, page numbers bottom-right. **No skill-specific stylesheet** — the OWASP skill consumes the shared house style verbatim. The only difference is the headline diagram's classDef palette, which is data-dependent (verdict colours), not branding.

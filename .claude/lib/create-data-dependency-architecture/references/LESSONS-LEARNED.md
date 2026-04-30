@@ -124,7 +124,7 @@ These artefacts make re-runs reproducible (the same map, the same enumeration, t
 
 ### 13. Extract text first; don't load binaries into Claude's context
 
-The original ji-analysis session had ~6 MB of binary docs to analyse. Loading them into context wasted tokens and produced lower-quality reads than working from already-extracted plain text. The skill's `distil-binary-data.sh` writes UTF-8 `.txt` files into `<input-folder>/output/extracted-text/` and the analysis works from those.
+The original ji-analysis session had ~6 MB of binary docs to analyse. Loading them into context wasted tokens and produced lower-quality reads than working from already-extracted plain text. The shared `.claude/lib/_shared/scripts/distil-binary-data.sh` writes UTF-8 `.txt` files into `<input-folder>/output/extracted-text/` and the analysis works from those.
 
 ### 14. Top-level only — never descend into subfolders of the input
 

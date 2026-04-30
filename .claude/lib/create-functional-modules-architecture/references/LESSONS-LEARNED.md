@@ -25,7 +25,7 @@ These rules were established for the shared pipeline at `.claude/lib/_shared/` a
 
 ### F1. Consume `_shared/` by absolute path — don't copy
 
-This skill's `SKILL.md` references `.claude/lib/_shared/assets/doc-style.css`, `assets/mermaid-config.json`, `scripts/distil-binary-data.sh` and `scripts/build-pdf.sh` by absolute repo-rooted path. They are **not duplicated** into this skill's directory; they are owned by `_shared/` (see `.claude/lib/_shared/README.md`).
+This skill's `SKILL.md` references `.claude/lib/_shared/assets/doc-style.css`, `.claude/lib/_shared/assets/mermaid-config.json`, `.claude/lib/_shared/scripts/distil-binary-data.sh` and `.claude/lib/_shared/scripts/build-pdf.sh` by absolute repo-rooted path. They are **not duplicated** into this skill's directory; they are owned by `_shared/` (see `.claude/lib/_shared/README.md`).
 
 > **Why**: duplication invites drift. A fix to `doc-style.css` would not propagate, and the various PDFs (data-dep / functional-modules / OWASP) would visually diverge across runs. Single ownership in `_shared/` costs nothing and guarantees they stay in sync.
 
@@ -66,9 +66,9 @@ The data-skill writes everything (its `extracted-text/`, `phase-2d-checks.md`, t
 
 > **Why per-skill output folders rather than a shared `output/` with skill-prefixed filenames**: filename prefixes (`module-*.md`, `system-*.md`) almost work, but the build-pipeline writes assets folders alongside the source markdown (`<stem>.assets/`), and those would still need disambiguation; and the user has to mentally partition a flat directory of 14 files instead of two clearly-named subdirectories. Per-skill subdirectories are cleaner, cheaper, and easier to delete (`rm -rf output-functional-modules/` re-cleans this skill's run without touching anything the data-skill produced).
 
-> **The cost — duplicated `extracted-text/`**: yes, both skills produce their own copy of the same plain-text extractions if both are run against the same input folder. Distillation is fast, content-agnostic and idempotent; the duplication is acceptable. If a future user wants to share the cache, the data-skill's `distil-binary-data.sh` already accepts an explicit second argument, so a one-line wrapper could point both skills at a shared `<input-folder>/extracted-text/` — but that's not the current default and not worth doing pre-emptively.
+> **The cost — duplicated `extracted-text/`**: yes, both skills produce their own copy of the same plain-text extractions if both are run against the same input folder. Distillation is fast, content-agnostic and idempotent; the duplication is acceptable. If a future user wants to share the cache, the shared `.claude/lib/_shared/scripts/distil-binary-data.sh` already accepts an explicit second argument, so a one-line wrapper could point both skills at a shared `<input-folder>/extracted-text/` — but that's not the current default and not worth doing pre-emptively.
 
-> **The Phase 1 invocation must pass the explicit output folder**: `distil-binary-data.sh <input-folder> <input-folder>/output-functional-modules/extracted-text`. If the second argument is omitted, the script writes to the data-skill's default `<input-folder>/output/extracted-text/` — which would mix the two skills' outputs. SKILL.md spells this out explicitly; the spec enforces it.
+> **The Phase 1 invocation must pass the explicit output folder**: `.claude/lib/_shared/scripts/distil-binary-data.sh <input-folder> <input-folder>/output-functional-modules/extracted-text`. If the second argument is omitted, the script writes to its default `<input-folder>/output/extracted-text/` — which is what the data-dependency skill consumes, and would mix the two skills' outputs. SKILL.md spells this out explicitly; the spec enforces it.
 
 ### F6. Modules are application surfaces — not external systems and not user roles
 
