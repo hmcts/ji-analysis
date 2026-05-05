@@ -66,12 +66,12 @@ Facilitator approach: divergent ideation first (lots of API candidates, multiple
 
 ### Phase 2 architecture decisions (locked-in)
 
-- **REST-first integration.** All cross-context coordination is synchronous REST (request/response). No domain event stream, no message bus, no webhooks/subscriptions in this design. Spine contexts call each other directly when they need to coordinate; read-model services pull from the spine.
+- **REST-first integration.** All cross-context coordination is synchronous REST (request/response). No domain event stream, no message bus, no webhooks/subscriptions in this design. Domain services call each other directly when they need to coordinate; read-model services pull from them.
 - **No webhook / subscription surface** for now. Outgoing consumers (finance, MI, future tribunals) call JI's read APIs.
 - **Audit is out of scope** for this exercise — re-introduce later if regulatory scope demands it.
 - **Replay-via-event-stream is dropped as a standard** (no event stream exists).
 - **Booking initiates the vacancy fill.** `POST /bookings` accepts an optional `vacancyId`; on creation, Booking calls `Vacancy.markFilled` synchronously. Vacancy is the *demand* record; Booking is the *supply commitment* and orchestrates the linkage.
-- **Itinerary uses Strategy A — federate at request time.** Itinerary holds no data of its own; every read fans out to the spine in parallel and composes the answer. Strategy C (polled cache) is the fallback if Forward Look misses the ≤ 30 s NFR.
+- **Itinerary uses Strategy A — federate at request time.** Itinerary holds no data of its own; every read fans out to the domain services in parallel and composes the answer. Strategy C (polled cache) is the fallback if Forward Look misses the ≤ 30 s NFR.
 - **Reporting / MI Feed uses Strategy A — pull-based.** JI exposes the MI APIs; clients (DA&I, leadership tooling) consolidate, transmit, or transform the data themselves. JI does not push, batch, or pre-aggregate.
 
 ### Phase 3 refinements (locked-in)
@@ -103,18 +103,18 @@ Four techniques run in a progressive arc — divergent → analytical → conver
 
 | # | Service | Cluster | Owns data | Style |
 |---|---|---|---|---|
-| 1 | **Judge** | Spine | ✓ (incl. working pattern, tickets, jurisdictional split) | Write |
-| 2 | **Absence** | Spine | ✓ | Write |
-| 3 | **Vacancy** | Spine | ✓ | Write |
-| 4 | **Booking** | Spine | ✓ (incl. verification) | Write — orchestrates vacancy fill |
-| 5 | **Sitting** | Spine | ✓ (incl. verification, RFC unlock) | Write |
-| 6 | **Payment** | Spine | ✓ (incl. reconciliation lifecycle) | Write — exposes JFEPS-shaped schedule |
-| 7 | **Authorisation** | Cross-cutting | ✓ (role + scope mappings; not user accounts) | Gate — every spine call consults it |
+| 1 | **Judge** | Domain | ✓ (incl. working pattern, tickets, jurisdictional split) | Write |
+| 2 | **Absence** | Domain | ✓ | Write |
+| 3 | **Vacancy** | Domain | ✓ | Write |
+| 4 | **Booking** | Domain | ✓ (incl. verification) | Write — orchestrates vacancy fill |
+| 5 | **Sitting** | Domain | ✓ (incl. verification, RFC unlock) | Write |
+| 6 | **Payment** | Domain | ✓ (incl. reconciliation lifecycle) | Write — exposes JFEPS-shaped schedule |
+| 7 | **Authorisation** | Cross-cutting | ✓ (role + scope mappings; not user accounts) | Gate — every domain call consults it |
 | 8 | **Reference Data** | Cross-cutting | ✓ (org tree + vocabularies + calendar) | Read-mostly |
 | 9 | **Notification** | Cross-cutting | ✓ (delivery log) | Side-effect |
 | 10 | **Configuration** | Cross-cutting | ✓ (typed policy values) | Policy |
-| 11 | **Itinerary** | Read model | ✗ (federated over spine) | Strategy A — fan-out at request |
-| 12 | **Reporting / MI Feed** | Read model | ✗ (federated over spine) | Strategy A — pull-based |
+| 11 | **Itinerary** | Read model | ✗ (federated over the domain services) | Strategy A — fan-out at request |
+| 12 | **Reporting / MI Feed** | Read model | ✗ (federated over the domain services) | Strategy A — pull-based |
 
 ### Architecture standards (apply to every service)
 
@@ -130,7 +130,7 @@ Four techniques run in a progressive arc — divergent → analytical → conver
 - Active matching / allocation (deferred post-MVP)
 - Bi-temporal history (deferred)
 - Snapshots / replay store
-- Search service (indices layered atop spine APIs)
+- Search service (indices layered atop domain APIs)
 - Conflict-rules engine (constraints stay inside owning services)
 - Incoming integrations (eLinks, HR systems) — separate workstream
 
@@ -143,10 +143,10 @@ Four techniques run in a progressive arc — divergent → analytical → conver
 | **0 — Foundations** | Reference Data, Authorisation (with SSO), Configuration, Notification | Cross-cutting capabilities live; APEX increasingly defers to them |
 | **1 — First user-visible API** | **MI Feed** (federated read over Oracle, strangler-style) | DA&I gets a real API; aggregate-only contract validated |
 | **2 — Itinerary read API** | **Itinerary** (Strategy A; Strategy C cache as fallback if NFR misses) | Read-side primitives ready for any future UI client |
-| **3 — First spine extraction** | **Judge** (smallest blast radius, tests pattern-regenerate REST coordination) | Write-side decomposition begins |
+| **3 — First domain extraction** | **Judge** (smallest blast radius, tests pattern-regenerate REST coordination) | Write-side decomposition begins |
 | **4 — Operational chain** | **Absence → Vacancy → Booking**, with **Sitting** in parallel | Most operationally critical chain extracted |
 | **5 — Payment** | **Payment** (incl. Reconciliation) | Highest-stakes context, last because it benefits from prior validation |
-| **6 — Decommission APEX** | — | Spine writes flow through new APIs; APEX retires |
+| **6 — Decommission APEX** | — | Domain writes flow through new APIs; APEX retires |
 
 ### First API to extract: **Reference Data**
 ### First user-visible API: **MI Feed** (after Foundations)
@@ -157,7 +157,7 @@ Four techniques run in a progressive arc — divergent → analytical → conver
 
 - **The 12 modules in the source doc are not 12 services.** The single most consequential reframe was treating Itineraries as read models, not write surfaces; folding sub-contexts (Working Pattern, Verification, Reconciliation, User Creation Request) into their parent contexts; and dropping speculative services (Conflict, Search, Document Generation, Matching).
 - **Outgoing-data-as-API was the design forcing function.** Once you said "we expose APIs and let consumers decide what to do with the data," the read models locked into pull-based, federated, aggregate-only shapes. This single principle eliminated a lot of speculative push/event/webhook complexity.
-- **REST-first removed an entire class of services.** Domain Event Stream, Webhook/Subscription, Replay store, and parts of the Audit story all collapsed once the integration style was decided. The system is meaningfully simpler — at the cost of synchronous coupling between spine writes and read-model freshness, which we accepted as a tradeoff.
+- **REST-first removed an entire class of services.** Domain Event Stream, Webhook/Subscription, Replay store, and parts of the Audit story all collapsed once the integration style was decided. The system is meaningfully simpler — at the cost of synchronous coupling between domain writes and read-model freshness, which we accepted as a tradeoff.
 - **Identity vs Authorisation is a clean separation worth naming.** SSO owns who-you-are; JI owns what-you-can-do-here. This eliminates user accounts, password lifecycles, and user-creation workflows from JI's responsibility surface — a substantial scope reduction.
 - **Reference Data is the unsung hero.** Almost every other service depends on it. Extracting it first is the right call partly because it's safe, partly because it forces the API-as-a-Product standards to be defined before any business-critical surface adopts them.
 
@@ -167,12 +167,12 @@ Four techniques run in a progressive arc — divergent → analytical → conver
 
 Selected high-leverage concepts that emerged during ideation:
 
-**[Architecture #1]: REST-first synchronous spine**
-*Concept:* Spine contexts coordinate via direct REST calls (Absence calls Vacancy on approve; Booking calls Payment on confirm). No event bus, no message queue, no webhook fabric.
+**[Architecture #1]: REST-first synchronous coordination**
+*Concept:* Domain services coordinate via direct REST calls (Absence calls Vacancy on approve; Booking calls Payment on confirm). No event bus, no message queue, no webhook fabric.
 *Novelty:* Inverts the usual microservices reflex toward eventual-consistency. Trades simplicity-of-coupling for simplicity-of-reasoning. Forces side-effect dependencies to be explicit and version-able.
 
 **[Architecture #2]: Strategy-A federated read models**
-*Concept:* Itinerary and MI Feed hold no data of their own. Every read fans out to the spine in parallel and assembles the answer. Cache (Strategy C) is a planned fallback, not a default.
+*Concept:* Itinerary and MI Feed hold no data of their own. Every read fans out to the domain services in parallel and assembles the answer. Cache (Strategy C) is a planned fallback, not a default.
 *Novelty:* Rejects CQRS-by-default. Lower build cost, higher live-freshness, at the cost of stacked latency. Accepts the 30-s NFR risk with a documented escape hatch.
 
 **[Architecture #3]: Booking-orchestrated vacancy fill**
@@ -192,7 +192,7 @@ Selected high-leverage concepts that emerged during ideation:
 *Novelty:* Resists the urge to fragment reference data along source-doc lines. Easier to operate, easier to govern.
 
 **[Process #1]: Strangler-fig with read-model-first sequencing**
-*Concept:* Extract Reference Data as a foundation; then ship MI Feed (read-only over Oracle) as the first user-visible API; then layer in Itinerary and the spine in dependency order.
+*Concept:* Extract Reference Data as a foundation; then ship MI Feed (read-only over Oracle) as the first user-visible API; then layer in Itinerary and the domain services in dependency order.
 *Novelty:* Defers the riskiest decision (APEX/API write coexistence) until after the architecture has been proven on read paths. Gives an external consumer (DA&I) early evidence the migration is real.
 
 ---
