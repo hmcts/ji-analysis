@@ -124,7 +124,7 @@ Per `nji_mock_auth` DB role. **Never deployed to production**; production deploy
 
 | Table | Type | Purpose |
 |---|---|---|
-| `mock_oauth_clients` | Dev-only | OAuth client registrations (Spring Authorization Server backend). At MVP this only holds the SPA client registration for the human `authorization_code` flow — **no service-principal registrations**, since at MVP all NJI runtime calls are user-initiated and inter-service auth is by JWT propagation, not by `client_credentials`. *(Narrowed v2.5, 2026-05-07.)* |
+| `mock_oauth_clients` | Dev-only | OAuth client registrations (Spring Authorization Server backend). Holds **(a)** the SPA client for human `authorization_code` flow, and **(b)** service-principal client registrations for **batch / scheduled components** that need a service identity (initially: `nji-payment-batch`). User-initiated runtime calls between services use **JWT propagation** (no service principal needed); batch / scheduled components — which have no upstream user context — use OAuth `client_credentials` against this mock issuer. *(v2.5 narrowing reverted in v2.6 to support the payment batch.)* |
 | `mock_user_roster` | Dev-only | Test user roster mirroring a representative subset of `auth_users` for realistic Authorisation testing (G5.2) |
 
 ## Inventory totals

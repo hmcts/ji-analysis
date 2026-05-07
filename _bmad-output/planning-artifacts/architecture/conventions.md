@@ -184,9 +184,12 @@ nji-ui/
 - Method names mirror the operation: `notificationClient.sendBookingAcknowledgement(bookingId)`, not `notificationClient.post(...)`. **Domain language, not HTTP language.**
 - Clients handle: JWT propagation, correlation-ID propagation, retry on 5xx (idempotent operations only), circuit-breaker (open if dependency is down).
 
-**JWT propagation (token forwarding) — the only inter-service auth at MVP:**
+**Inter-service authentication at MVP — two patterns:**
 
-NJI does *not* issue or use service-principal tokens at MVP. Every runtime request into NJI services is user-initiated, so the user's JWT (issued by HMCTS IdP at SSO) is the relevant security context end-to-end. Inter-service calls forward that JWT as-is.
+1. **JWT propagation (token forwarding)** — for **user-initiated** flows (the majority at MVP). The user's JWT (issued by HMCTS IdP at SSO) is the relevant security context end-to-end. Inter-service calls forward that JWT as-is.
+2. **Service-principal authentication (OAuth `client_credentials`)** — for **batch / scheduled** components without an upstream user. The MVP-relevant case is `nji-payment-batch`.
+
+**JWT propagation (token forwarding) — for user-initiated flows:**
 
 - **Mechanism:** every outbound `RestClient` registers a `ClientHttpRequestInterceptor` that:
   1. Reads the inbound request's `Authorization: Bearer <user-jwt>` header from the request-scoped `AuthDetails` bean (populated by `JWTFilter`).
@@ -194,8 +197,17 @@ NJI does *not* issue or use service-principal tokens at MVP. Every runtime reque
   3. Allows the call to proceed.
 - **Downstream service** validates the forwarded JWT via its own `JWTFilter` (signature check against IdP's JWKS, then `POST /authz/check`) — same path as for direct user requests.
 - **Implementation footprint per service:** ~10–15 lines (one `Configuration` class wiring the interceptor onto the shared `RestClient` builder).
-- **What's *not* used:** OAuth `client_credentials` grant; service-principal registrations; service-token store; mTLS.
-- **Limit:** propagation requires a request-scoped user JWT to exist. **Background, scheduled, or async flows have no user context** and would need a service-identity mechanism — explicitly out of scope at MVP. If introduced post-MVP, see `gaps.md` G7 for the open question.
+- **Limit:** propagation requires a request-scoped user JWT to exist. Background, scheduled, or async flows have no user context — those use the service-principal pattern below.
+
+**Service-principal authentication (for batch / scheduled components):**
+
+The MVP-relevant case is the **payment-processing batch** (`nji-payment-batch`), which runs on a schedule and has no upstream user context. It uses OAuth `client_credentials`:
+
+- **Client registration**: a service-principal entry exists in the OIDC issuer's client store. In non-prod that's `mock_oauth_clients` on `nji-mock-auth`; in production it's whichever issuer is chosen per [`./gaps.md` G7.1](./gaps.md) (default recommendation: Azure Workload Identity, which substitutes managed-identity tokens for client-secret-based ones).
+- **Token acquisition**: at run start (or on token expiry), the batch component does `POST /oauth2/token` with `grant_type=client_credentials`. Spring Boot 4's `OAuth2AuthorizedClientManager` handles caching + refresh.
+- **Outbound calls**: the resulting service JWT is attached as `Authorization: Bearer …` to outbound HTTP calls (e.g. to the Notification API). The receiving service's `JWTFilter` validates it via the same JWKS path used for human user JWTs — same code path; only the principal's "kind" claim differs.
+- **Authorisation**: service principals have records in `auth_users` with a kind flag (e.g. `principal_kind = service`) distinguishing them from humans. `nji-authorisation` resolves their permissions the same way as human users.
+- **Scheduling**: implementation choice between Spring `@Scheduled` (in-process; runs inside the same JVM as the synchronous service API) and a Kubernetes CronJob (separate pod; scales independently). Either is acceptable at MVP — the batch's external observable behaviour is the same.
 
 **Correlation ID propagation:**
 

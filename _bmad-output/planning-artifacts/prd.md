@@ -195,7 +195,7 @@ The MVP is the smallest deliverable that supports phased per-region rollout (D8)
 
 ### Journey 1 — RSU Admin: cover-creation through payment (the canonical operational cycle)
 
-**Persona:** Sam, an RSU Admin in a regional office. Sam runs the daily operational rhythm — converting absences into vacancies, allocating fee-paid judges, confirming bookings, generating payment schedules. Today Sam does this in APEX, juggling tabs, copying between screens, and sending payment files via email.
+**Persona:** Sam, an RSU Admin in a regional office. Sam runs the daily operational rhythm — converting absences into vacancies, allocating fee-paid judges, confirming bookings, reconciling payments after they've been processed. Today Sam does this in APEX, juggling tabs, copying between screens, and sending payment files via email. *(In NJI, payment-schedule generation is a scheduled batch — Sam confirms bookings/sittings (which marks them eligible) and reconciles payments (after Liberata has paid); the batch handles the JFEPS Excel generation and dispatch in between, with no Sam click required.)*
 
 **Opening scene.** A Court office logs an absence request for a salaried judge — leave with cover required. The request lands in Sam's "Outstanding Actions" tile on the Home dashboard.
 
@@ -206,7 +206,7 @@ The MVP is the smallest deliverable that supports phased per-region rollout (D8)
 3. Sam advertises the vacancy out-of-system using their own mailing list (advertising is not automated — same as APEX). A fee-paid judge replies confirming availability.
 4. Sam opens the vacancy, clicks *Create Booking*, picks the fee-paid judge, fills the booking session details. The system creates the booking and synchronously marks the vacancy as filled (R5 — Booking orchestrates `Vacancy.markFilled`). An acknowledgement email is queued to the booked judge.
 5. The Court confirms the sitting after it occurs. The booking moves to *Confirmed* status and becomes eligible for payment.
-6. At end-of-week, Sam runs *Process Payments*. The system displays the proposed schedule, Sam picks an authoriser, the system emails the JFEPS-compatible Excel to the authoriser. Same email mechanism as APEX, same JFEPS shape, no change for finance.
+6. *(End-of-week — no Sam action.)* The **payment-processing batch** runs on its schedule, picks up the now-confirmed bookings/sittings that don't yet have a payment record, generates the JFEPS-compatible Excel schedule, and emails it to the configured Payment Authoriser. Sam doesn't trigger this — it just happens. *(Revised v2.6, 2026-05-07: payment processing was reframed from RSU-clicks-*Process Payments* to a scheduled batch — see architecture changelog v2.6. The user-facing Sam touchpoints are confirming bookings/sittings (which marks them eligible) and reconciling payments (when Liberata has paid). Not the schedule generation itself.)*
 
 **Critical moment.** Step 2 — the absence-to-vacancy auto-creation. In APEX this is a manual click-through dance across multiple screens; on NJI the workflow is one click and the vacancy lands pre-populated.
 
@@ -594,11 +594,11 @@ This section is the binding capability contract for NJI. UX, architecture, and e
 
 ### Payment & Reconciliation
 
-- **FR41**: Authorised users can list confirmed bookings and salaried sittings eligible for payment, filterable by Region/Office, judge, date range, and payment status (pending, requested, paid).
-- **FR42**: Authorised users can mark eligible bookings as *payment requested* individually or in bulk.
-- **FR43**: NJI generates JFEPS-compatible payment schedules and dispatches them as Excel attachments to a chosen Payment Authoriser via email; the Payment Authoriser forwards to Liberata out-of-system.
+- **FR41** *(revised v2.6, 2026-05-07)*: Authorised users can list confirmed bookings and salaried sittings, filterable by Region/Office, judge, date range, and payment status (pending, requested, paid, reconciled). The **payment-eligible** subset is the read-only union of confirmed bookings + sittings whose payment record does not yet exist; this is the input the scheduled batch consumes.
+- **FR42** *(revised v2.6)*: NJI's **payment-processing batch** (`nji-payment-batch`, scheduled on a configurable cron — typically end-of-week) automatically marks eligible bookings as *payment requested* and creates the corresponding `payments` + `payment_schedules` records. **No user click is required** — the batch identifies the eligible set via SQL JOIN over confirmed bookings + sittings without an existing payment record. Authorised users can also list and review the generated schedule before / after dispatch.
+- **FR43** *(revised v2.6)*: The **payment batch** generates JFEPS-compatible payment schedules and dispatches them as Excel attachments to a configured Payment Authoriser via email (using its service-principal identity to call the Notification API); the Payment Authoriser forwards to Liberata out-of-system. Schedule generation and dispatch are batch-driven, not user-initiated.
 - **FR44**: NJI exposes the payment schedule via API with content-type negotiation (`application/vnd.hmcts.jfeps+json` or `+xlsx`); the JFEPS shape evolves independently of Payment internals.
-- **FR45**: NJI prevents double submission of the same booking for payment.
+- **FR45**: NJI prevents double submission of the same booking for payment. The batch's natural-key unique constraint on `(payment_cycle_id, booking_id)` rejects duplicate creates; re-runs of the same cycle are idempotent.
 - **FR46**: Authorised users (Finance, RSU) can flag payments as reconciled, capturing notes for mismatches; once fully reconciled, a payment cannot be re-requested for the same booking.
 - **FR47**: NJI does not store or expose bank details for any judge — those remain in the finance system.
 
@@ -642,7 +642,7 @@ Page-level NFRs are carried from the APEX baseline (`functional-modules.md` cros
 
 - **NFR10 — Transport encryption:** Latest TLS only on every endpoint; HTTP-only endpoints rejected.
 - **NFR11 — Data-at-rest encryption:** All personal data (judge records, user/role records, working patterns, payroll numbers, payment metadata) encrypted at rest.
-- **NFR12 — Authentication** *(revised v2.5, 2026-05-07)*: All human users authenticated via HMCTS IdP SSO (per FR1). **Inter-service authentication at MVP is via JWT propagation** — the user's JWT (issued by HMCTS IdP) is forwarded by the upstream service's outbound HTTP client and validated by the downstream service's `JWTFilter` against the IdP's JWKS endpoint. **No NJI service principals, no OAuth `client_credentials`, no mTLS at MVP** because the architecture assumes all runtime calls are user-initiated (per A35). A separate service-identity mechanism is a **post-MVP open question** that re-opens if non-user-initiated flows are introduced (see architecture `gaps.md` G7).
+- **NFR12 — Authentication** *(revised v2.6, 2026-05-07)*: All human users authenticated via HMCTS IdP SSO (per FR1). **Inter-service authentication for user-initiated calls is via JWT propagation** — the user's JWT (issued by HMCTS IdP) is forwarded by the upstream service's outbound HTTP client and validated by the downstream service's `JWTFilter` against the IdP's JWKS endpoint. **Inter-service authentication for batch / scheduled components** (initially: the payment batch `nji-payment-batch`) is via OAuth 2.0 `client_credentials` against `nji-mock-auth` in non-prod; production issuer is a deferred decision per architecture `gaps.md` G7.1 (default recommendation: Azure Workload Identity, given the AKS deployment).
 - **NFR13 — Authorisation enforcement:** Every API call resolves the principal's roles + Region/Area scope through the Authorisation service; no operation bypasses this check.
 - **NFR14 — Forbidden data scope:** No bank details stored or exposed by any service (PAY-NFR-05). No case-level data in any read model or report (REP-BR-NFR-03).
 - **NFR15 — Government Functional Standard 7 alignment:** NJI aligns with HMCTS / MoJ Government Functional Standard 7 — Security, including protective marking, access control, and secure development practices.

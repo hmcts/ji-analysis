@@ -102,7 +102,7 @@ The Architecture document resolves the 7 architecture-phase TBDs from the PRD:
 |---|---|---|
 | Rate limit policy | TBD | Azure API Management at ingress; 100 req/sec/principal default; 10 req/sec/principal for MI Feed; 200 req/sec burst |
 | UI framework family | TBD | React + TypeScript + GOV.UK Design System + Vite |
-| Service-to-service auth | Resolved v2.5 (2026-05-07) | **JWT propagation at MVP** — no service principals, no `client_credentials`, no mTLS. Inter-service calls forward the inbound user JWT. Service-identity question reopens post-MVP if non-user-initiated flows arrive (see architecture `gaps.md` G7). |
+| Service-to-service auth | Resolved v2.6 (2026-05-07) | **Two patterns at MVP**: (1) **JWT propagation** for user-initiated flows — outbound calls forward the inbound user JWT; (2) **Service-principal OAuth `client_credentials`** for the **payment-processing batch** (`nji-payment-batch`) which has no upstream user — non-prod via `nji-mock-auth` (`mock_oauth_clients`), production issuer per `gaps.md` G7.1 (default recommendation: Azure Workload Identity). No mTLS at MVP. *(v2.5 had narrowed this to JWT propagation only; v2.6 widened it again to support the batch.)* |
 | Log retention | TBD | 30 days hot in App Insights; 90 days cold in Log Analytics archive |
 | API versioning specifics | TBD | URI prefix major versioning (`/v1/`); 6-month internal / 12-month external deprecation; `Sunset` header per RFC 8594 |
 | Historical-data access | TBD | Read-only APEX bridge for 12 months post-region-cutover; one-shot extract thereafter |
@@ -114,14 +114,14 @@ The Architecture's Step 7 validation table maps every PRD FR capability area to 
 
 | FR group | Architectural support |
 |---|---|
-| Identity & Authorisation (FR1–FR5) | Authorisation service + per-service custom JWTFilter (HMCTS template pattern) + OIDC integration for human users (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + JWT propagation interceptor on outbound HTTP clients (no service-token flow at MVP per v2.5; FR5 reframed as post-MVP) |
+| Identity & Authorisation (FR1–FR5) | Authorisation service + per-service custom JWTFilter (HMCTS template pattern) + OIDC integration for human users (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + JWT propagation interceptor on outbound HTTP clients for user-initiated flows + OAuth `client_credentials` (via `nji-mock-auth`) for the payment batch service principal (`nji-payment-batch`) per v2.6. FR5 (full programmatic service-account directory) remains post-MVP. |
 | Foundational Data Management (FR6–FR9) | Reference Data and Notification services; direct SQL access to Reference Data tables (no caching at MVP per Principle 2). Configuration: per-service Spring profiles + Key Vault; shared `configuration_values` infrastructure table (no API) for cross-service policy values, schema-managed by `nji-architecture` Flyway baseline. *(Revised v2.2, 2026-05-07.)* |
 | Judge Records & Working Patterns (FR10–FR18) | Judge service (Phase 1); working-pattern engine owned by Judge |
 | Absence Workflow (FR19–FR22) | Absence service (Phase 2); approval workflow with auto-vacancy creation per R4 |
 | Vacancy & Cover (FR23–FR28) | Vacancy service (Phase 3); `markFilled` direct DB UPDATE (per Principle 1 simple-cross-service-write rule) |
 | Booking Management (FR29–FR34) | Booking service (Phase 4); idempotency-key handling for retryable creates |
 | Sitting Management (FR35–FR40) | Sitting service (Phase 5); generated from Judge working patterns |
-| Payment & Reconciliation (FR41–FR47) | Payment service (Phase 6) with JFEPS-Excel versioned content-type via Notification |
+| Payment & Reconciliation (FR41–FR47) | Payment service (Phase 6) — **scheduled batch** (`nji-payment-batch`) authenticates as a service principal via OAuth `client_credentials`, picks up confirmed-but-unpaid bookings/sittings, generates the JFEPS-shaped Excel, dispatches it to the Payment Authoriser via Notification → HMCTS Email; reconciliation marked manually by RSU at MVP (per v2.6 reframing — FR41–45 are batch-driven, not user-initiated). See `architecture/sequence-diagrams/payment-batch-flow.md`. |
 | Itineraries & Reporting (FR48–FR54) | Itinerary + MI Feed services (Phases 7–8); SQL JOINs across schemas (replaces Strategy A) |
 | Platform Operations & Migration (FR55–FR61) | Per-service implementations (HMCTS Crime SpringBoot template scaffolding) + Phase 0 migration via Flyway |
 
@@ -130,7 +130,7 @@ The Architecture's Step 7 validation table maps every PRD FR capability area to 
 | NFR group | Architectural support |
 |---|---|
 | Performance (NFR1–NFR9) | APEX-baseline page-level NFRs achievable; Forward Look NFR8 trivially achievable via indexed SQL JOINs over the shared DB; AKS HPA for capacity NFR9 |
-| Security (NFR10–NFR16) | TLS 1.3 ingress; PostgreSQL encryption-at-rest; custom JWTFilter; Azure Key Vault; GFS-7 alignment via HMCTS template defaults |
+| Security (NFR10–NFR16) | TLS 1.3 ingress; PostgreSQL encryption-at-rest; custom JWTFilter; Azure Key Vault; GFS-7 alignment via HMCTS template defaults; NFR12 (auth) covers both inter-service patterns — JWT propagation for user-initiated, service-principal `client_credentials` for the payment batch (per v2.6) |
 | Accessibility (NFR17–NFR19) | GOV.UK Design System; axe-core in CI; React Hook Form |
 | Integration (NFR20–NFR24) | OIDC (mock + real); JFEPS unchanged; HMCTS email; MI Feed REST contract; no eLinks integration |
 | Observability (NFR25–NFR29) | Logstash JSON logs + OpenTelemetry → Application Insights; correlation-ID MDC; Spring Actuator probes |

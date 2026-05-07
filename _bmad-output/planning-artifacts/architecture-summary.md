@@ -65,7 +65,7 @@ This file describes **what is built and how it runs**. For decision rationale, a
 | Container orchestration | Azure Kubernetes Service — single production cluster in UK South with multi-AZ node pools |
 | Ingress | Azure API Management — Premium SKU, zone-redundant |
 | Identity provider | HMCTS IdP via OIDC `authorization_code` (production, human users only); `nji-mock-auth` in dev / CI / integration; JWKS endpoint provides JWT-signature public keys to every NJI service |
-| Service-to-service auth | **MVP: JWT propagation** (forward inbound user JWT to downstream services via `RestClient` interceptor). No service principals, no `client_credentials`, no mTLS. |
+| Service-to-service auth | **User-initiated**: JWT propagation via `RestClient` interceptor (forward inbound user JWT). **Batch / scheduled** (payment batch only at MVP): OAuth `client_credentials` against `nji-mock-auth`; production issuer per G7.1 (default recommendation: Azure Workload Identity). |
 | Per-request auth | Custom `JWTFilter` (HMCTS Crime template pattern, `io.jsonwebtoken:jjwt`) — validates JWT signature against IdP JWKS, then calls `nji-authorisation` for authz |
 | Secrets | Azure Key Vault (zone-redundant) |
 | Observability | Logback + Logstash JSON encoder → OpenTelemetry → Azure Application Insights / Log Analytics |
@@ -86,7 +86,7 @@ Full per-table inventory: [`./architecture/data-tables.md`](./architecture/data-
 
 ## Authentication & Authorisation
 
-**MVP assumption (locked v2.5):** every runtime request into NJI services is **user-initiated**. The auth model is therefore:
+**MVP assumption (revised v2.6):** *most* runtime requests into NJI services are user-initiated, with one documented exception — the **payment-processing batch** (`nji-payment-batch`), which runs on a schedule and authenticates as a service principal. The auth model is therefore:
 
 1. **User authenticates at HMCTS IdP** (SSO) → IdP issues a JWT.
 2. **User uses the JWT** to call the NJI UI; UI forwards the bearer token through APIM to the target NJI service.
@@ -98,14 +98,20 @@ In detail:
 - **End-user authentication** — HMCTS IdP via OIDC `authorization_code` flow; single sign-on; JWT issued. Mock auth (`nji-mock-auth`, Spring Authorization Server) is the OIDC issuer in non-production environments; cutover to real HMCTS IdP is a Spring profile change (issuer-url + JWKS URL flip — no code change).
 - **JWT signature validation against HMCTS IdP** — every NJI service's custom `JWTFilter` (per HMCTS Crime template, `io.jsonwebtoken:jjwt` based) validates the JWT signature and issuer by fetching public keys from the IdP's **JWKS endpoint** (`/oauth2/jwks` on mock auth; HMCTS IdP's published JWKS URL in production). Validation happens **before the request reaches the service's controller** — it is the gate that enforces "user has a valid authenticated session" before any NJI API resource is exposed. Public keys are cached per the issuer's cache headers.
 - **End-user authorisation** — after JWT validation, the same `JWTFilter` calls `POST /authz/check` against `nji-authorisation` to resolve role + Region/Area scope + per-region activation flag (FR58). Authorisation context lives in a request-scoped `AuthDetails` bean.
-- **Inter-service authentication via JWT propagation** — the per-service Spring Boot `RestClient` interceptor copies the inbound `Authorization: Bearer <user-jwt>` header to outbound calls. Downstream service's `JWTFilter` validates the same user JWT. **No OAuth `client_credentials`, no NJI service principals, no mTLS at the application tier.** This is the only inter-service auth mechanism at MVP.
+- **Inter-service authentication for user-initiated calls — JWT propagation** — the per-service Spring Boot `RestClient` interceptor copies the inbound `Authorization: Bearer <user-jwt>` header to outbound calls. Downstream service's `JWTFilter` validates the same user JWT.
+- **Inter-service authentication for batch / scheduled components — OAuth `client_credentials`** — the payment batch (`nji-payment-batch`) authenticates as a service principal against `nji-mock-auth` (non-prod) using OAuth `client_credentials`, then includes the resulting service JWT as `Authorization: Bearer …` on its outbound calls (e.g. to Notification). Production service-auth issuer is a deferred decision (default recommendation: Azure Workload Identity — see `architecture/gaps.md` G7.1).
 - **APEX ⇄ IdP identity reconciliation** — email primary, employee number fallback. Performed by the Phase 0 data-seeding scripts (dev/CI) and the operator-initiated production ETL.
+
+**MVP non-user-initiated flow** (the one in scope at MVP):
+
+- **Payment-processing batch** (`nji-payment-batch`) — runs on a schedule (cron, e.g. weekly), authenticates as a service principal, picks up confirmed bookings/sittings without payment records, generates the JFEPS Excel, and dispatches via Notification → HMCTS Email → Payment Authoriser. End-to-end sequence diagram: [`./architecture/sequence-diagrams/payment-batch-flow.md`](./architecture/sequence-diagrams/payment-batch-flow.md).
 
 **Out of scope at MVP** (post-MVP open items):
 
-- Any non-user-initiated runtime flow (background jobs, scheduled aggregations, async messaging) — would re-open the service-identity question.
-- DA&I post-MVP MI Feed integration — auth model TBD; see [`./architecture/gaps.md` G7](./architecture/gaps.md).
+- Other non-user-initiated runtime flows (additional scheduled jobs, async messaging, event bus) — would use the same service-principal pattern as the payment batch.
+- DA&I post-MVP MI Feed integration — auth model TBD; see [`./architecture/gaps.md` G7.2](./architecture/gaps.md).
 - Production data migration via the operator-initiated ETL pattern — works for MVP but flagged for post-MVP refinement (better automation, audit trail) — see [`./architecture/gaps.md` G4.7](./architecture/gaps.md).
+- Production service-auth issuer — `nji-mock-auth` covers Phase 0–8; production decision deferred per G7.1 (default recommendation: Azure Workload Identity).
 
 ## API patterns
 
@@ -129,6 +135,7 @@ In detail:
 | User request | User (with JWT) → `nji-ui` → APIM (rate limits, routing) → service |
 | Per-request JWT validation | Each NJI service's `JWTFilter` validates the inbound JWT signature against **HMCTS IdP's JWKS endpoint** before any controller is invoked |
 | Cross-service call (within a user request) | Upstream service's outbound `RestClient` interceptor copies the inbound `Authorization: Bearer <user-jwt>` header to the downstream call; downstream service's `JWTFilter` validates the same user JWT (token propagation / forwarding pattern). No separate service identity. |
+| Batch / scheduled flow (no user context) | Batch component (e.g. `nji-payment-batch`) authenticates as a service principal via OAuth `client_credentials` against the OIDC issuer (`nji-mock-auth` non-prod); attaches the resulting service JWT to outbound calls (Notification, etc.); receiving services validate via the same JWKS path. **MVP scope: payment batch only.** |
 | Per-request authz | After JWT validation, the same `JWTFilter` calls `POST /authz/check` against `nji-authorisation` |
 | Reference Data reads | Direct SQL (per-service `SELECT` grant); no API call |
 | Reference Data writes | Via `nji-reference-data` API (admin / Phase 0 seeding) |
@@ -171,7 +178,7 @@ A standalone programme deliverable, **not a runtime service**:
 
 | System | Direction | Purpose |
 |---|---|---|
-| HMCTS IdP | inbound (human authN only) + JWKS used by NJI services for JWT signature validation | OIDC `authorization_code` flow for human users; every NJI service's `JWTFilter` validates inbound user JWTs against IdP JWKS before allowing access to NJI APIs. **No service-principal token issuance at MVP.** |
+| HMCTS IdP | inbound (human authN only) + JWKS used by NJI services for JWT signature validation | OIDC `authorization_code` flow for human users; every NJI service's `JWTFilter` validates inbound user JWTs against IdP JWKS before allowing access to NJI APIs. **Service-principal token issuance** for the payment batch is handled by `nji-mock-auth` in non-prod; production decision per G7.1. |
 | HMCTS Email | outbound | Booking / absence acknowledgements; JFEPS payment schedules |
 | JFEPS / Liberata | outbound (via authoriser email upload) | Payment processing |
 | DA&I | inbound (post-MVP REST) | MI consumer for aggregate reports |

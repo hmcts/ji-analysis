@@ -18,6 +18,13 @@ workflowCompleted: false
 **Date:** 2026-05-05
 **Project:** ji-analysis (NJI — New JI)
 
+> ⚠️ **Superseded — historical snapshot.** Superseded by [`./implementation-readiness-report-2026-05-06.md`](./implementation-readiness-report-2026-05-06.md). Two areas of this report have since been revised by **architecture v2.6 (2026-05-07)** and should be read against the current PRD/architecture rather than this snapshot:
+>
+> 1. **FR41–FR45 (Payment)** — reframed as a **scheduled batch flow** (`nji-payment-batch`), not user-initiated. RSU/Sam confirms bookings/sittings; the batch picks up confirmed-but-unpaid records on its next scheduled run, generates the JFEPS Excel, and dispatches it to the Payment Authoriser. See `architecture/sequence-diagrams/payment-batch-flow.md`.
+> 2. **NFR12 / Service-to-service auth** — v2.5 narrowed this to "JWT propagation only, no service principals." v2.6 widened it back: **two patterns at MVP** — JWT propagation for user-initiated flows AND OAuth `client_credentials` (against `nji-mock-auth` in non-prod) for the payment batch. Production issuer per `gaps.md` G7.1 (default recommendation: Azure Workload Identity).
+>
+> All other content in this report remains accurate as of 2026-05-05.
+
 ## Document Inventory
 
 ### PRD Documents
