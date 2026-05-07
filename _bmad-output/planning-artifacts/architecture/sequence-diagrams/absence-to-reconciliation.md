@@ -86,11 +86,11 @@ sequenceDiagram
         UI->>Bk: POST /v1/bookings/{id}/confirm
         Bk->>Bk: UPDATE bookings SET status = 'confirmed'
         Bk-->>UI: 200
-        UI-->>Court: confirmed; eligible for payment
+        UI-->>Court: confirmed — eligible for payment
     end
 
     rect rgb(240, 232, 250)
-        Note over RSU,PA: Phase 5 — Payment processed; JFEPS schedule emailed (RSU)
+        Note over RSU,PA: Phase 5 — Payment processed and JFEPS schedule emailed (RSU)
         RSU->>UI: navigate to Process Payments
         RSU->>UI: select payment authoriser, click Process
         UI->>Pay: POST /v1/payments/process (cycleId, runDate, authoriserId)
@@ -113,7 +113,7 @@ sequenceDiagram
     end
 
     rect rgb(250, 250, 232)
-        Note over RSU,Pay: Phase 7 — Reconciliation (RSU; manual at MVP)
+        Note over RSU,Pay: Phase 7 — Reconciliation by RSU (manual at MVP)
         Note right of RSU: At MVP reconciliation is a manual "mark as reconciled" action — there is no automated reconciliation feed from Liberata. Automated reconciliation is on the post-MVP roadmap.
         RSU->>UI: open Unreconciled Payments tile
         RSU->>UI: mark payment reconciled
