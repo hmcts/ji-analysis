@@ -33,9 +33,9 @@ sequenceDiagram
     participant Notif as nji-notification
     participant Email as HMCTS Email
     participant JFEPS as JFEPS / Liberata
-    participant Judge as Judge<br/>(salaried for absence ack;<br/>fee-paid for booking ack)
+    participant Judge as Judge
 
-    Note over Court,JFEPS: All UI→service calls flow through Azure APIM. Each service's JWTFilter validates the JWT against HMCTS IdP JWKS, then calls nji-authorisation per request. These cross-cutting steps are omitted below for clarity.
+    Note over Court,Judge: All UI→service calls flow through Azure APIM. Each service's JWTFilter validates the JWT against HMCTS IdP JWKS, then calls nji-authorisation per request. These cross-cutting steps are omitted below for clarity. The "Judge" lifeline represents the salaried judge in Phase 1 (whose absence is being logged) and the fee-paid judge in Phase 3 (booked to provide cover) — different people in practice.
 
     rect rgb(232, 240, 250)
         Note over Court,Judge: Phase 1 — Absence logged on behalf of judge (Court User)
