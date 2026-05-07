@@ -18,6 +18,7 @@ The flow is split into **seven phases** — each one driven by a different user 
 - Cross-service calls forward the user's JWT (token propagation; no service principals at MVP).
 
 ```mermaid
+%%{init: {'sequence': {'actorFontSize': 18, 'actorFontWeight': 'bold', 'messageFontSize': 18, 'noteFontSize': 16}}}%%
 sequenceDiagram
     autonumber
 
