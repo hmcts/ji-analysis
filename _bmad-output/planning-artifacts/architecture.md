@@ -24,7 +24,7 @@ _This document builds collaboratively through step-by-step discovery. Sections a
 
 ![NJI System Context — high-level service map and key interactions](./architecture/diagrams/system-context.png)
 
-*Birds-eye view of the NJI service set, key interactions, and external integrations. Source: [`./architecture/diagrams/system-context.dot`](./architecture/diagrams/system-context.dot) (regenerate with `scripts/render_diagram.sh ./_bmad-output/planning-artifacts/architecture/diagrams/system-context.dot`). The diagram is intentionally high-level — for low-level detail (controllers, JPA entities, DB columns, JWT claim shapes) consult the relevant section in this document or its siblings.*
+*Birds-eye view of the NJI service set, key interactions, and external integrations. Source: [`./architecture/diagrams/system-context.dot`](./architecture/diagrams/system-context.dot). The diagram is intentionally high-level — for low-level detail (controllers, JPA entities, DB columns, JWT claim shapes) consult the relevant section in this document or its siblings.*
 
 ## How this document is structured
 
