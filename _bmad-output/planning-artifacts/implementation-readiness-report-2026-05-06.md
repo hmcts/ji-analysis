@@ -115,7 +115,7 @@ The Architecture's Step 7 validation table maps every PRD FR capability area to 
 | FR group | Architectural support |
 |---|---|
 | Identity & Authorisation (FR1–FR5) | Authorisation service + per-service custom JWTFilter (HMCTS template pattern) + OIDC integration (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + service-token client_credentials flow |
-| Foundational Data Management (FR6–FR9) | Reference Data, Configuration, Notification services; direct SQL access to `reference_data.*` tables (no caching at MVP per Principle 2) |
+| Foundational Data Management (FR6–FR9) | Reference Data and Notification services; direct SQL access to Reference Data tables (no caching at MVP per Principle 2). Configuration: per-service Spring profiles + Key Vault; shared `configuration_values` infrastructure table (no API) for cross-service policy values, schema-managed by `nji-architecture` Flyway baseline. *(Revised v2.2, 2026-05-07.)* |
 | Judge Records & Working Patterns (FR10–FR18) | Judge service (Phase 1); working-pattern engine owned by Judge |
 | Absence Workflow (FR19–FR22) | Absence service (Phase 2); approval workflow with auto-vacancy creation per R4 |
 | Vacancy & Cover (FR23–FR28) | Vacancy service (Phase 3); `markFilled` direct DB UPDATE (per Principle 1 simple-cross-service-write rule) |
@@ -217,7 +217,7 @@ The candidate-epic mapping is now better-grounded thanks to the Architecture. Wh
 | Candidate epic | Maps to | Phase | Architecture support |
 |---|---|---|---|
 | Identity & Authorisation (incl. Phase 0 user/role migration) | FR1–FR5, FR57, FR58 | Phase 0 | `nji-authorisation` repo + per-service `JWTFilter` + `nji-mock-auth` repo |
-| Reference Data + Configuration + Notification | FR6–FR9 | Phase 0 | `nji-reference-data`, `nji-configuration`, `nji-notification` repos |
+| Reference Data + Notification + shared `configuration_values` table | FR6–FR9 | Phase 0 | `nji-reference-data`, `nji-notification` repos + shared infrastructure table managed by `nji-architecture` Flyway baseline (no separate configuration service per arch v2.2) |
 | API Platform + Deployment + Logging | FR59, FR60, NFR25–NFR28, NFR39, NFR40 | Phase 0 | NJI scaffolding script + per-service Helm + OpenTelemetry config |
 | Judge Records & Working Patterns | FR10–FR18 | Phase 1 | `nji-judge` repo |
 | Absence Workflow | FR19–FR22 | Phase 2 | `nji-absence` repo |

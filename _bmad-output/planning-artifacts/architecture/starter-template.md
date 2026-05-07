@@ -38,14 +38,14 @@ The team should produce a small **NJI scaffolding script** (a thin wrapper over 
 
 ## Build Tool: Gradle
 
-**Selected: Gradle** for all 12 services and the scaffolding script itself.
+**Selected: Gradle** for all 11 services and the scaffolding script itself.
 
 Rationale:
 
 - More flexible for the per-service repo + occasional cross-repo conventions pattern.
 - Faster incremental builds; better for the per-service Postman collection generation and OpenAPI artefact publication.
 - Aligns with the HMCTS starter's typical default (HMCTS Java templates have used Gradle).
-- Settled once for all 12 services for consistency.
+- Settled once for all 11 services for consistency.
 
 ## Architectural Decisions Provided by Starter
 

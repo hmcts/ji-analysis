@@ -41,7 +41,7 @@ Assumptions that affect implementation correctness (rather than just convenience
 | **A21** | CI/CD platform is Azure DevOps Pipelines or GitHub Actions per HMCTS standard | Reversible | HMCTS standard |
 | **A22** | HMCTS-approved security tooling is available and integrated at platform level | Reversible | HMCTS infrastructure |
 | **A23** | The locked decisions D1–D9 from the PRD are programme-approved and binding | Load-bearing | Per PRD |
-| **A24** | The 12-service decomposition from the brainstorming session is programme-approved and binding | Load-bearing | Per PRD |
+| **A24** | The 11-service decomposition (revised v2.2, 2026-05-07 — `nji-configuration` dropped in favour of Spring profiles + Key Vault and a shared `configuration_values` infrastructure table) is programme-approved and binding | Load-bearing | Per PRD |
 | **A25** | The team has Java + Spring Boot + Kubernetes + React + TypeScript skills available, or budget for upskilling | Reversible | Programme staffing |
 | **A26** | Mock auth implementation (Spring Authorization Server-based) provides full OIDC contract parity with HMCTS IdP for the AuthN paths NJI services use, including `client_credentials` for service principals | Load-bearing | Phase 0 deliverable; integration tests verify contract parity |
 | **A27** | Mock auth never runs in production; CI lint and Spring profile validation prevent this | Load-bearing — critical for production security | Phase 0 deliverable; enforced by CI rules |

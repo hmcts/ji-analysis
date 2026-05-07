@@ -24,7 +24,7 @@ _This document builds collaboratively through step-by-step discovery. Sections a
 
 ![NJI System Context — high-level service map and key interactions](./architecture/diagrams/system-context.png)
 
-*Birds-eye view of the NJI service set, key interactions, and external integrations. Source: [`./architecture/diagrams/system-context.dot`](./architecture/diagrams/system-context.dot). The diagram is intentionally high-level — for low-level detail (controllers, JPA entities, DB columns, JWT claim shapes) consult the relevant section in this document or its siblings.*
+*Birds-eye view of the NJI service set, key interactions, and external integrations. The diagram is intentionally high-level — for low-level detail (controllers, JPA entities, DB columns, JWT claim shapes) consult the relevant section in this document or its siblings.*
 
 ## How this document is structured
 
@@ -38,7 +38,7 @@ _This document builds collaboratively through step-by-step discovery. Sections a
 | [`./architecture/repo-structure.md`](./architecture/repo-structure.md) | Per-service / UI / `nji-architecture` repo directory structures, file organisation patterns, local development workflow, deployment-pipeline ASCII diagram |
 | [`./architecture/gaps.md`](./architecture/gaps.md) | Documented Gaps register — G1–G6 series with mitigations and owners |
 | [`./architecture/assumptions.md`](./architecture/assumptions.md) | Assumptions register — A1–A33 with type (load-bearing / reversible / aspirational) and verification path |
-| [`./architecture/changelog.md`](./architecture/changelog.md) | Version history v1.0 → v2.1, including a *pre-v1.8 anchor → current location* table for older changelog entries that reference moved sections |
+| [`./architecture/changelog.md`](./architecture/changelog.md) | Version history v1.0 → v2.2, including a *pre-v1.8 anchor → current location* table for older changelog entries that reference moved sections |
 
 Refactor history: the single-file `architecture.md` was split into the index + sibling structure above in v1.8 (Strategy B). Pre-v1.8 changelog entries reference section anchors that moved to siblings; the [`./architecture/changelog.md`](./architecture/changelog.md) header has a redirect table.
 
@@ -48,10 +48,10 @@ Refactor history: the single-file `architecture.md` was split into the index + s
 
 **Functional Requirements (61 across 9 capability areas):**
 
-NJI's functional surface is the **12-service decomposition** locked in the brainstorming session, organised in three clusters:
+NJI's functional surface is the **11-service decomposition** locked in the brainstorming session (revised v2.2 2026-05-07 — `nji-configuration` was dropped; per-service config now lives in Spring profiles + Key Vault, with a shared `configuration_values` infrastructure table for cross-service policy values), organised in three clusters:
 
 - **Domain services (write surfaces)** — Judge, Absence, Vacancy, Booking, Sitting, Payment. These own state, enforce business rules, and form the canonical operational chain (Manage Judges → Absence → Vacancy → Booking → Sitting → Payment → Reconciliation).
-- **Cross-cutting services** — Reference Data (single-writer), Authorisation (gates every call), Configuration (typed policy), Notification (transactional email).
+- **Cross-cutting services** — Reference Data (single-writer), Authorisation (gates every call), Notification (transactional email). *(Per-service config is Spring profiles + Key Vault; cross-service policy values live in a shared `configuration_values` table — no dedicated configuration service.)*
 - **Read-model services** — Itinerary, MI Feed (SQL-based reads via JOINs over the shared database).
 
 Architectural implications of the FR set:
@@ -75,9 +75,9 @@ Architectural implications of the FR set:
 
 **Scale & Complexity:**
 
-- **Primary domain:** API backend (12 services) with first-class UI (modern stack replacing APEX layouts per D4).
-- **Complexity level:** High — driven by financial integration criticality (JFEPS / Liberata, where errors mean unpaid judges), 12 services with cross-cutting authorisation, multi-region phased rollout, regulatory environment (judicial, UK government), and behavioural-parity demand (verified by manual UAT) on a brownfield rebuild.
-- **Estimated architectural components:** 12 services + 1 modern UI + cross-cutting platform layer (deployment, observability, secret management) + per-service deployment artefacts.
+- **Primary domain:** API backend (11 services) with first-class UI (modern stack replacing APEX layouts per D4).
+- **Complexity level:** High — driven by financial integration criticality (JFEPS / Liberata, where errors mean unpaid judges), 11 services with cross-cutting authorisation, multi-region phased rollout, regulatory environment (judicial, UK government), and behavioural-parity demand (verified by manual UAT) on a brownfield rebuild.
+- **Estimated architectural components:** 11 services + 1 modern UI + cross-cutting platform layer (deployment, observability, secret management) + per-service deployment artefacts.
 
 ### Technical Constraints & Dependencies
 
@@ -147,7 +147,7 @@ Before evaluating starter options, this architecture takes two foundational prin
 
 The shared database is **one global PostgreSQL instance with a single shared schema** (per Step 4 Data Architecture). Cross-service access is gated by **per-service DB roles with explicit grants on tables**. Table ownership is encoded by a **table-name convention** (entity-plural for primary domain tables, service-prefix for service-internal tables) and enforced by ArchUnit-style fitness functions in CI. The "API as only boundary" pattern is preserved for everything that isn't a single-field update or a cross-service read — i.e. for everything where coupling on the data shape is more expensive than coupling on the contract.
 
-**Why one schema, not schema-per-service:** schema-per-service was originally proposed as architectural isolation for "future independent service evolution." For 12 services owned by one team operating in one tightly-related judicial-scheduling domain, that future is hypothetical. Schema-per-service would be premature optimisation — paying upfront cost (12 schemas + 12 sets of grants + cross-schema FK overhead + per-PR coordination) for a problem we may never have. Single shared schema is simpler Day 1 and supports the same DB-level access control via per-service roles.
+**Why one schema, not schema-per-service:** schema-per-service was originally proposed as architectural isolation for "future independent service evolution." For 11 services owned by one team operating in one tightly-related judicial-scheduling domain, that future is hypothetical. Schema-per-service would be premature optimisation — paying upfront cost (11 schemas + 11 sets of grants + cross-schema FK overhead + per-PR coordination) for a problem we may never have. Single shared schema is simpler Day 1 and supports the same DB-level access control via per-service roles.
 
 **Why per-service DB roles, not a single shared role:** per-service roles are the **forward-compatibility hook** if we ever need to introduce schema-per-service or extract a service. They cost ~10 minutes per role to set up Day 1; retrofitting them later requires auditing every service's actual table access (which is more expensive than starting with them). Per-service roles also give us:
 
@@ -164,7 +164,7 @@ What is shared:
 - **The PostgreSQL database** (one global instance, single shared schema, per-service DB roles with explicit table grants) — for simple data access and read-model federation.
 - **API contracts** (OpenAPI documents per service, RFC 7807 error envelope conventions, content-type negotiation patterns) — shared by specification, not by runtime code.
 - **API spec Maven artefacts.** Each NJI service publishes its OpenAPI spec (and optionally generated server interfaces) as a Maven artefact (`uk.gov.hmcts.nji:api-nji-{service}:{version}`). Consumers pull in the artefact at compile time for type-safe contract consumption. **This is consistent with the principle**: the artefact is contract, not runtime code. (Pattern adopted from HMCTS Crime template's `uk.gov.hmcts.cp:api-hmcts-crime-template:2.0.2` artefact.)
-- **Runtime infrastructure services** (Authorisation, Reference Data, Configuration, Notification) — shared by API call (workflows) and by direct DB read (simple lookups), not by code.
+- **Runtime infrastructure services** (Authorisation, Reference Data, Notification) — shared by API call (workflows) and by direct DB read (simple lookups), not by code. *(Per-service configuration uses Spring profiles + Key Vault; a shared `configuration_values` table holds cross-service policy values, schema-managed by `nji-architecture`'s Flyway baseline.)*
 - **Scaffolding templates** (the HMCTS Crime SpringBoot template described below) — shared at scaffold time, then forked into per-service copies.
 - **CI/CD and operational conventions** (Gradle build idioms, OpenTelemetry → Application Insights ingestion contract, Flyway migration baseline) — shared by convention and tooling, not by library.
 
@@ -177,7 +177,7 @@ What is duplicated, by design:
 - Per-service `@ControllerAdvice` translating `DataIntegrityViolationException` (unique-violation kind) → `409 Conflict` and `OptimisticLockingFailureException` → `412 Precondition Failed` for retry safety. *(No idempotency-key store; native DB constructs.)*
 - *(removed 2026-05-06)* Per-service behavioural-parity automated test harness — retracted. Behavioural-parity verification is **manual UAT performed by APEX-experienced users** (FR61 / NFR41 revised); UAT scripts live under `docs/uat/` per service, not as runtime test code.
 
-Estimated duplication: ~300–500 lines of boilerplate per service × 12 services. Mitigation: the HMCTS starter encodes most of this; new services start with the boilerplate already present and tailor it as needed.
+Estimated duplication: ~300–500 lines of boilerplate per service × 11 services. Mitigation: the HMCTS starter encodes most of this; new services start with the boilerplate already present and tailor it as needed.
 
 #### Principle 2: No Premature Optimization
 
@@ -195,7 +195,7 @@ Each of these tools is introduced if and only if a measurement-backed need appea
 
 ### Primary Technology Domain
 
-API backend (Java + Spring Boot 4) on Kubernetes (Azure Kubernetes Service), deployed to Azure UK regions. The 12-service decomposition produces **12 independently-deployable Spring Boot services**, each scaffolded once from the HMCTS starter and thereafter owned independently.
+API backend (Java + Spring Boot 4) on Kubernetes (Azure Kubernetes Service), deployed to Azure UK regions. The 11-service decomposition produces **11 independently-deployable Spring Boot services**, each scaffolded once from the HMCTS starter and thereafter owned independently.
 
 UI framework is a separate decision (Step 4 Frontend Architecture) and uses its own starter.
 
@@ -264,7 +264,7 @@ UI framework is a separate decision (Step 4 Frontend Architecture) and uses its 
 
 - **One global PostgreSQL Flexible Server instance** for the entire NJI application (not per-region, not per-service). Sized for the full bounded user population.
 - **One logical database** within that instance.
-- **One shared schema** (e.g. `nji` or the default `public`) containing all NJI tables. **No schema-per-service.** Rationale: 12 services built sequentially by one team operating in one tightly-related domain do not need schema-level isolation; the upfront cost (12 schemas, cross-schema grants, cross-schema FK overhead, per-PR coordination) buys nothing concrete at MVP. Future schema-per-service is a reversible refactor if/when evidence justifies it.
+- **One shared schema** (e.g. `nji` or the default `public`) containing all NJI tables. **No schema-per-service.** Rationale: 11 services built sequentially by one team operating in one tightly-related domain do not need schema-level isolation; the upfront cost (11 schemas, cross-schema grants, cross-schema FK overhead, per-PR coordination) buys nothing concrete at MVP. Future schema-per-service is a reversible refactor if/when evidence justifies it.
 - **Table ownership encoded by table-name convention** (see *Table naming and ownership* below).
 - **Per-service DB roles with explicit grants** (see *Per-service DB roles* below).
 
@@ -309,7 +309,7 @@ UI framework is a separate decision (Step 4 Frontend Architecture) and uses its 
 
 > **Per-table inventory moved to [`./architecture/data-tables.md`](./architecture/data-tables.md) in v1.8.**
 >
-> What lives there: the per-service breakdown of all 39 NJI-owned tables (15 Reference Data including the 12 vocabulary tables; 5 Authorisation; 1 Configuration; 1 Notification; 5 Judge; 1 Absence; 2 Vacancy; 2 Booking; 1 Sitting; 4 Payment; 0 Itinerary; 0 MI Feed; 2 dev-only Mock auth) with column-level grant notes and consumer mapping.
+> What lives there: the per-service breakdown of NJI-owned tables (15 Reference Data including the 12 vocabulary tables; 5 Authorisation; 1 Notification; 5 Judge; 1 Absence; 2 Vacancy; 1 Booking; 1 Sitting; 3 Payment; 0 Itinerary; 0 MI Feed; 2 dev-only Mock auth) plus 1 shared infrastructure table (`configuration_values`, schema-managed by `nji-architecture` Flyway baseline) with column-level grant notes and consumer mapping.
 >
 > What stays here in `architecture.md`: the architectural framing — single shared schema, per-service DB roles with explicit grants, table-name convention (entity-plural for primary; service-prefix for ambiguous), ArchUnit-style fitness functions enforcing ownership. The fitness function operates against the [`./architecture/data-tables.md`](./architecture/data-tables.md) inventory: every table created by Flyway must appear there with the matching owning service.
 >
@@ -685,7 +685,7 @@ This is a deliberate choice over Azure-region active/active because: (a) NJI's b
 
 1. **Phase 0 prerequisites** — Azure subscription + UK regions provisioned; shared global PostgreSQL Flexible Server provisioned with single shared schema and per-service DB roles (broad grants Day 1; tighten as code matures); HMCTS Crime SpringBoot template forked into NJI scaffolding script with Gradle (Groovy DSL), Flyway migration baseline, Spring profiles defaults, OpenTelemetry → Application Insights ingestion, GOV.UK Design System UI baseline. *(HMCTS IdP feature confirmation deferred to pre-Phase-9; see point 8.)*
 2. **Phase 0 mock authentication** — `nji-mock-auth` deployed as a Spring Authorization Server-based service issuing OIDC tokens for a fixed roster of test users mirroring representative APEX users + roles + Region/Area scopes. Used by all subsequent phases for all authentication.
-3. **Phase 0 services** — Reference Data, Authorisation, Configuration, Notification — built per the HMCTS starter pattern, each with its own DB role + table set (in the shared schema), OpenAPI spec, Postman collection, Helm chart. All services configured to validate JWTs against the mock auth issuer.
+3. **Phase 0 services** — Reference Data, Authorisation, Notification — built per the HMCTS starter pattern, each with its own DB role + table set (in the shared schema), OpenAPI spec, Postman collection, Helm chart. All services configured to validate JWTs against the mock auth issuer. *(A shared `configuration_values` table is created by an `nji-architecture` Flyway baseline migration in the same shared schema; SELECT-granted to every NJI service role; no API service.)*
 4. **Phase 0 Authorisation seeded** via the **Phase 0 Data Migration ETL** (`nji-architecture/migration/`) — reads APEX user-record and role-mapping dumps, transforms each row into NJI shape, reconciles each APEX user to an HMCTS IdP principal by email + employee number (TBD #7 resolved), and **loads via the Authorisation API**. Phase 0 reconciliation report produced. Mock auth users mirror this migrated set so that Authorisation testing exercises realistic data.
 5. **Phase 0 API gateway** — Azure API Management deployed with default rate-limit policies (TBD #1). Configured to forward bearer tokens transparently; APIM is issuer-agnostic.
 6. **Phase 0 UI shell** — Vite + React + GOV.UK Design System scaffolding deployed to Azure Static Web Apps as a stub Home / navigation shell. UI's OIDC client points at mock auth in dev/integration.
@@ -759,7 +759,6 @@ What stays cross-repo:
 | **`nji-mock-auth`** | 0 | OIDC issuer for dev / CI / integration. **Never deployed to production.** | Issue JWTs for a fixed test-user roster; honour OAuth 2.0 `client_credentials` for service principals; expose `/oauth2/authorize`, `/oauth2/token`, `/oauth2/jwks`, `/oauth2/userinfo`; refuse to start with `production` Spring profile (G5.3). |
 | **`nji-reference-data`** | 0 | Owns the 15 Reference Data tables (regions, offices, calendar periods + 12 vocabularies). | CRUD for `regions` / `offices` / `calendar_periods`; CRUD for the 12 vocabulary tables (judge / work / court / ticket / session / absence / working-pattern types; booking / sitting / fee-payment / payment / reconciliation statuses); accept Phase 0 ETL writes; reads happen via direct SQL by other services (not via this API). |
 | **`nji-authorisation`** | 0 | Owns the 5 Authorisation tables; **the per-request authz authority** for every NJI service. | Manage `auth_users`, the 12 `auth_roles`, `auth_user_roles`, `auth_user_region_scopes`, `auth_user_activation_flags`; expose `POST /authz/check` (called by every service's `JWTFilter` per request); enforce per-region phased activation (FR58); reconcile principals to HMCTS IdP by email + employee number (D9); accept Phase 0 ETL writes. |
-| **`nji-configuration`** | 0 | Typed runtime configuration store (D1). | CRUD for typed configuration values; read API used by other services for runtime policy values; per-environment scoping. |
 | **`nji-notification`** | 0 | Outbound transactional email dispatch. | Send booking acknowledgement emails (FR32); send absence acknowledgement emails; send JFEPS-shaped payment-schedule emails to Payment Authorisers (FR43); record dispatch log; retry on transient failure. |
 | **`nji-judge`** | 1 | Judge profile + working patterns + tickets + jurisdictional split. | CRUD judge profiles (FR10, FR11); manage working patterns and per-day breakdown (FR12); generate forward sittings from working patterns; manage judge tickets (FR15); manage jurisdictional splits with 100% sum constraint (FR16); fee-payment-status maintenance. |
 | **`nji-absence`** | 2 | Absence records + approval workflow. | Create / approve / NTBF-flag / sickness-extend absences (FR19–FR22); on approval, call Vacancy service to create cover-required vacancies (R4); send acknowledgements via Notification. |
@@ -771,7 +770,7 @@ What stays cross-repo:
 | **`nji-mi-feed`** | 8 | Aggregate management-information read model. **No own tables** — SQL JOINs across all NJI domain tables. | Standard reports (utilisation, sittings, payments) with the same parameter shape as APEX; aggregate-only contract — **no case-level data** (NFR23 / REP-BR-NFR-03); copy-to-Excel and PDF export; DA&I consumer interface (post-MVP). |
 | **`nji-ui`** | 0–8 | Single SPA repo, modules per domain (per Step 5 layout). | Per-phase UI module replicating APEX functional surface (Judge / Absence / Vacancy / Booking / Sitting / Payment / Itinerary / Reports); role-scoped Home dashboard with Outstanding-Actions tiles (FR55); SSO via HMCTS IdP / mock auth; GOV.UK Design System with WCAG 2.2 AA (NFR17); module-per-domain so each phase ships UI + API end-to-end (D4). |
 
-**15 repos total** (12 production services + UI + architecture + mock-auth). The `nji-architecture` repo holds the scaffolding script and the Phase 0 Data Migration ETL. `nji-mock-auth` is a development/integration-only service and never deploys to production.
+**14 repos total** (11 production services + UI + architecture + mock-auth). The `nji-architecture` repo holds the scaffolding script, the Phase 0 Data Migration ETL, and the Flyway baseline that creates shared infrastructure tables (e.g. `configuration_values`). `nji-mock-auth` is a development/integration-only service and never deploys to production.
 
 **Where the Phase 0 ETL is *not* found:** it is not a Spring Boot service, not a deployed runtime, not in any per-service `db/migration/V*__*.sql` Flyway file, and not co-owned by any single domain service. It is a Phase 0 programme deliverable with named owners per Risk #13.
 
@@ -831,7 +830,7 @@ What stays cross-repo:
 | Capability area (FR group) | Lives in |
 |---|---|
 | Identity & Authorisation (FR1–FR5) | `nji-authorisation` repo + per-service `config/JWTFilter.java`, `config/AuthDetails.java`, and `client/AuthorisationClient.java` |
-| Foundational Data Management (FR6–FR9) | `nji-reference-data`, `nji-configuration`, `nji-notification` repos + per-service direct JPA reads from the 15 Reference Data tables (see *Authoritative Table Ownership Mapping* in Step 4); no client class needed for Reference Data — reads-via-SQL, writes-via-API |
+| Foundational Data Management (FR6–FR9) | `nji-reference-data`, `nji-notification` repos + per-service direct JPA reads from the 15 Reference Data tables (see *Authoritative Table Ownership Mapping* in Step 4); no client class needed for Reference Data — reads-via-SQL, writes-via-API. **Configuration**: per-service via Spring profiles + Key Vault; shared `configuration_values` table (no API) for cross-service policy values, schema-managed by `nji-architecture` Flyway baseline. |
 | Judge Records & Working Patterns (FR10–FR18) | `nji-judge` repo |
 | Absence Workflow (FR19–FR22) | `nji-absence` repo |
 | Vacancy & Cover (FR23–FR28) | `nji-vacancy` repo. Booking marks `vacancies.filled = true` (and `filled_at`) via direct DB UPDATE within Booking's transaction — Booking has UPDATE grant on those columns of `vacancies` (per Principle 1, this is a "simple cross-service write"). No `markFilled` API endpoint at MVP. |
@@ -884,7 +883,8 @@ What stays cross-repo:
 ┌──────────────────────────────────────────────┐
 │  Authorisation (gates every call)            │
 │  Reference Data (read direct from Reference Data tables (15 in total — see *Authoritative Table Ownership Mapping* in Step 4: `regions`, `offices`, `calendar_periods`, plus the 12 vocabulary tables))│
-│  Configuration (read-mostly)                 │
+│  configuration_values (shared infra table;    │
+│    read-only via direct SQL; no API)         │
 │  Notification (write-only, email send)       │
 └──────────────────────────────────────────────┘
 ```
@@ -1066,7 +1066,7 @@ All 7 architecture-phase TBDs from the PRD are resolved:
 
 **Structure Completeness:**
 
-- Complete polyrepo layout defined: 15 repos with per-repo directory trees.
+- Complete polyrepo layout defined: 14 repos with per-repo directory trees.
 - Per-service standard layout defined down to file level (controllers, services, repositories, config, error, exception, dto, client, helm, postman, api-spec, docs).
 - UI repo layout defined with per-domain modules and shared utilities.
 - Architecture repo layout defined for ADRs, scaffolding, and aggregated API specs.
@@ -1109,7 +1109,7 @@ No issues were found that required resolution. The architecture is internally co
 **Requirements Analysis**
 
 - [x] Project context thoroughly analyzed (Step 2)
-- [x] Scale and complexity assessed (Step 2 — high complexity, 12 services, ~11 user roles)
+- [x] Scale and complexity assessed (Step 2 — high complexity, 11 services, ~11 user roles)
 - [x] Technical constraints identified (Step 2 — locked stack, locked architecture decisions, external system dependencies)
 - [x] Cross-cutting concerns mapped (Step 2 — 8 functional cross-cutting concerns)
 
@@ -1183,7 +1183,7 @@ Drivers of high confidence:
 **AI Agent Guidelines:**
 
 - Follow all architectural decisions exactly as documented in Steps 3–6.
-- Use implementation patterns from Step 5 consistently across all 12 services and the UI.
+- Use implementation patterns from Step 5 consistently across all 11 services and the UI.
 - Respect the two foundational principles (Step 3): **(1) API for workflows; shared DB for simple data access**, with cross-service writes governed by per-service DB role grants on tables; **(2) No premature optimization**. No shared runtime library; boilerplate duplication is acceptable.
 - Per-service work happens in the service's own repo; cross-service work happens via API contracts.
 - All authentication in Phase 0–8 flows through `nji-mock-auth`; never integrate against real HMCTS IdP until pre-Phase-9 cutover.
@@ -1194,7 +1194,7 @@ Drivers of high confidence:
 1. **Confirm Phase 0 prerequisites** (Azure subscription + UK regions; HMCTS Java/Spring Boot starter availability; HMCTS Email infrastructure transport).
 2. **Build the NJI scaffolding script** in `nji-architecture/scaffolding/nji-scaffold.sh`, layered on top of the HMCTS starter, with NJI conventions baked in.
 3. **Scaffold and ship `nji-mock-auth`** as the first Phase 0 service. Spring Authorization Server-based; refuses to start with production profile.
-4. **Scaffold and ship the four Phase 0 cross-cutting services in order:** Reference Data, Authorisation, Configuration, Notification. **In parallel, build the Phase 0 Data Migration ETL** (`nji-architecture/migration/`) that reads APEX dumps and loads NJI Reference Data + Users/Roles via the Reference Data API and Authorisation API. The mock-auth user roster is generated from the same migration output (a sanitised subset, per G5.2).
+4. **Scaffold and ship the three Phase 0 cross-cutting services in order:** Reference Data, Authorisation, Notification. *(Configuration is not a service — it's per-service Spring profiles + Key Vault, plus a shared `configuration_values` table created by `nji-architecture`'s Flyway baseline migration.)* **In parallel, build the Phase 0 Data Migration ETL** (`nji-architecture/migration/`) that reads APEX dumps and loads NJI Reference Data + Users/Roles via the Reference Data API and Authorisation API. The mock-auth user roster is generated from the same migration output (a sanitised subset, per G5.2).
 5. **Deploy Phase 0 to dev**, exercise the API-as-Product standards (versioning, `/capabilities`, RFC 7807, OpenAPI), validate Postman collections, and run the automated test suite (unit, integration, contract). Manual APEX-vs-NJI UAT (FR61 / NFR41 revised) begins per domain service from Phase 1 onwards — Phase 0 capabilities are platform-level and have no APEX equivalent to compare against.
 6. **Resolve programme-management dependencies** (pilot region selection, capacity numbers, ops hours, migration owners) before Phase 9 readiness.
 7. **Begin Phase 1 (Judge service)** following the same scaffolding pattern, expanding the per-service implementation across Phases 2–8 in dependency order.
@@ -1206,4 +1206,4 @@ Drivers of high confidence:
 >
 > The full version history (v1.0 → v1.8) lives in the sibling. The changelog file also includes a *pre-v1.8 anchor → current location* redirect table for older changelog entries that reference section anchors that moved into siblings.
 >
-> **Latest version:** v2.1 — Dropped custom `*_idempotency_keys` tables and `IdempotencyFilter` boilerplate; retry safety now uses PostgreSQL + JPA native primitives (natural-key unique constraints, `@Version` optimistic locking, `SELECT … FOR UPDATE` pessimistic row locking). Inventory dropped from 39 to 37 tables. Design rule captured: prefer native platform constructs over custom entities. See the sibling for the full row.
+> **Latest version:** v2.2 — Dropped the dedicated `nji-configuration` service; `configuration_values` demoted to a shared infrastructure table (no API). Per-service config now uses Spring profiles + Key Vault. **Decomposition: 12 → 11 services; repos: 15 → 14.** Same design rule as v2.1: use native platform constructs over custom services. See the sibling for the full row.

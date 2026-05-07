@@ -67,7 +67,7 @@ workflowCompleted: false
 
 - **FR6**: RSU users can view and maintain Reference Data lists — Regions, Offices, judicial vocabularies, calendar / financial-year boundaries — with named-owner sign-off on changes.
 - **FR7**: Every NJI service can read Reference Data via a versioned API; Reference Data is the single writer (no duplicates anywhere in the system).
-- **FR8**: Authorised administrators can read and update typed Configuration policy values (e.g. session timeout warnings, batch schedules, feature flags).
+- **FR8** *(revised v2.2, 2026-05-07)*: Cross-service runtime policy values (e.g. session timeout warnings, batch schedules, feature flags) live in a shared `configuration_values` infrastructure table, schema-managed by `nji-architecture`'s Flyway baseline migration. Updates via Flyway / admin SQL — no API service. Per-service config that's scoped to one service uses Spring profiles + Key Vault.
 - **FR9**: NJI dispatches transactional emails (booking acknowledgements, absence acknowledgements, payment schedules) via HMCTS email infrastructure, with a delivery log retained.
 
 #### Judge Records & Working Patterns (9 FRs)
@@ -252,7 +252,7 @@ The PRD captures programme-level decisions, technical constraints, and integrati
 
 The PRD is structurally complete and dense. Initial signals:
 
-- **Capability coverage:** 61 FRs across 9 areas covering all 12 services in the locked decomposition. Cross-checked in Step 11 polish against the brainstorming source — nothing dropped.
+- **Capability coverage:** 61 FRs across 9 areas covering all 11 services in the locked decomposition (revised v2.2, 2026-05-07 — `nji-configuration` dropped). Cross-checked in Step 11 polish against the brainstorming source — nothing dropped.
 - **Quality-attribute coverage:** 42 NFRs across 8 categories. All page-level NFRs from `functional-modules.md` cross-cutting NFRs are reflected.
 - **Decision traceability:** 9 locked decisions (D1–D9) consolidated in a Decisions Log section; each referenced inline where it shapes an FR/NFR.
 - **Source traceability:** every section can be traced back to either the brainstorming session, the as-is functional-modules.md, the data/integration dependencies docs, or an explicit user decision in conversation.
@@ -350,7 +350,7 @@ When `bmad-create-epics-and-stories` is run, the following should be expected as
 | Candidate epic | Maps to | Phase |
 |---|---|---|
 | Identity & Authorisation (incl. Phase 0 user/role migration) | FR1–FR5, FR57, FR58, NFR12, NFR13, NFR16 | Phase 0 |
-| Reference Data + Configuration + Notification (Phase 0 cross-cutting) | FR6–FR9 | Phase 0 |
+| Reference Data + Notification (Phase 0 cross-cutting) + shared `configuration_values` table | FR6–FR9 | Phase 0 |
 | API Platform + Deployment (Phase 0 cross-cutting) | FR59, FR60, NFR25–NFR28, NFR39, NFR40 | Phase 0 |
 | Judge Records & Working Patterns | FR10–FR18 | Phase 1 |
 | Absence Workflow | FR19–FR22 | Phase 2 |
@@ -393,7 +393,7 @@ If the question is *"is the PRD ready to feed the next workflows?"* — the answ
 
 ### Recommended Next Steps
 
-1. **Run `bmad-create-architecture`** — formalise the 12-service contracts, resolve the 12 explicit TBDs surfaced in the PRD (rate limits, UI stack, service-to-service auth, capacity numbers, ops hours, log retention, versioning policy, pilot region, cross-region handling, historical-data access, migration owners, identity-key scheme).
+1. **Run `bmad-create-architecture`** — formalise the 11-service contracts (revised v2.2 — `nji-configuration` dropped), resolve the 12 explicit TBDs surfaced in the PRD (rate limits, UI stack, service-to-service auth, capacity numbers, ops hours, log retention, versioning policy, pilot region, cross-region handling, historical-data access, migration owners, identity-key scheme).
 2. **Run `bmad-create-ux-design`** — derive component patterns, screen flows, and interaction models from the 5 user journeys and FR55/FR56, constrained by D4 (replicate APEX layouts) and NFR17/18/19 (WCAG 2.2 AA, assistive-tech compatibility, regulatory accessibility statement).
 3. **Run `bmad-create-epics-and-stories`** — translate the 61 FRs into deliverable epics aligned with Phase 0 → 9+ build sequence; use the candidate-epic mapping in this report's *Epic Quality Review* section as a starting point.
 4. **Re-run `bmad-check-implementation-readiness`** once Architecture, UX, and Epics artefacts exist. The PRD's FR/NFR list captured in this report's *PRD Analysis* section is the authoritative input for the re-run.
@@ -402,7 +402,7 @@ If the question is *"is the PRD ready to feed the next workflows?"* — the answ
 
 The PRD shows the following positive readiness signals:
 
-- **Capability completeness:** 61 FRs across 9 capability areas covering all 12 services; brainstorming reconciliation completed in PRD Step 11 found nothing dropped.
+- **Capability completeness:** 61 FRs across 9 capability areas covering all 11 services (revised v2.2 — `nji-configuration` dropped); brainstorming reconciliation completed in PRD Step 11 found nothing dropped.
 - **Quality-attribute completeness:** 42 NFRs across 8 categories; all page-level NFRs from the as-is functional-modules cross-cutting NFRs reflected.
 - **Decision traceability:** 9 locked decisions (D1–D9) consolidated in a Decisions Log appendix and referenced inline.
 - **Source traceability:** every section traceable to the brainstorming session, the as-is docs, or an explicit user decision in conversation.

@@ -26,7 +26,7 @@ classification:
   domainNotes: 'UK HMCTS — judicial operations; CSV''s US-specific compliance terms (FedRAMP, Section 508) translate to UK equivalents (HMCTS/WCAG accessibility, GDS service standard, UK GDPR, FOI/transparency).'
   complexity: 'high'
   projectContext: 'brownfield-rebuild'
-  classificationRationale: 'Comparative Analysis Matrix during Advanced Elicitation: api_backend (24) vs web_app (22) vs saas_b2b (18); govtech (29) vs legaltech (10). api_backend reflects the 12-service API decomposition as the durable product surface; UX/journeys override is required because D4 makes UI replication in scope.'
+  classificationRationale: 'Comparative Analysis Matrix during Advanced Elicitation: api_backend (24) vs web_app (22) vs saas_b2b (18); govtech (29) vs legaltech (10). api_backend reflects the 11-service API decomposition as the durable product surface; UX/journeys override is required because D4 makes UI replication in scope.'
 ---
 
 # Product Requirements Document - ji-analysis
@@ -36,7 +36,7 @@ classification:
 
 ## Document Map
 
-This PRD describes NJI (New JI) — a greenfield rebuild of HMCTS's Judicial Itineraries system on a 12-service API-driven architecture with a modern UI, deployed on Azure, replacing the unsupported Oracle APEX (OPT) platform. The build is in isolation from APEX; cutover is phased per region.
+This PRD describes NJI (New JI) — a greenfield rebuild of HMCTS's Judicial Itineraries system on an 11-service API-driven architecture with a modern UI, deployed on Azure, replacing the unsupported Oracle APEX (OPT) platform. The build is in isolation from APEX; cutover is phased per region.
 
 The document is organised so each section answers a distinct question:
 
@@ -48,7 +48,7 @@ The document is organised so each section answers a distinct question:
 | Product Scope | What's in MVP, what's growth, what's vision? |
 | User Journeys | How do real users flow through NJI to do their work? |
 | Domain-Specific Requirements | What UK govtech compliance / technical / integration constraints apply? |
-| API Backend Specific Requirements | What does the 12-service API surface look like? |
+| API Backend Specific Requirements | What does the 11-service API surface look like? |
 | Project Scoping & Phased Development | How do MVP philosophy, build phases, and rollout waves fit together? |
 | Functional Requirements (FR1–FR61) | The binding capability contract. |
 | Non-Functional Requirements (NFR1–NFR42) | The binding quality-attribute contract. |
@@ -59,7 +59,7 @@ The document is organised so each section answers a distinct question:
 
 JI (Judicial Itineraries) is HMCTS's system for planning, allocating, confirming, and paying for judicial sittings across Civil, Family, and Crown Courts. It is owned today by an unsupported Oracle APEX (OPT) platform and Board-endorsed for full replacement.
 
-This PRD describes the **greenfield rebuild** of JI — referred to throughout as **NJI (New JI)** — as a modern API-driven application. NJI replicates the functional surface of the existing APEX system on a 12-service decomposition (Domain / Cross-cutting / Read-model clusters), with a modern UI replacing the legacy APEX UI, and exposes first-class APIs that the wider HMCTS ecosystem (DA&I, finance, future Tribunals tooling, Actuals programme, Scheduling & Listing reforms) consumes directly — replacing today's brittle export-file-by-email integration model.
+This PRD describes the **greenfield rebuild** of JI — referred to throughout as **NJI (New JI)** — as a modern API-driven application. NJI replicates the functional surface of the existing APEX system on a 11-service decomposition (Domain / Cross-cutting / Read-model clusters), with a modern UI replacing the legacy APEX UI, and exposes first-class APIs that the wider HMCTS ecosystem (DA&I, finance, future Tribunals tooling, Actuals programme, Scheduling & Listing reforms) consumes directly — replacing today's brittle export-file-by-email integration model.
 
 **Target users (~11 roles, scoped by Region and Area):**
 
@@ -99,7 +99,7 @@ This is a deliberately simplified greenfield rebuild, not a strangler decomposit
 
 | Dimension | Value |
 |---|---|
-| **Project Type** | `api_backend` — the 12-service API decomposition is the durable product surface |
+| **Project Type** | `api_backend` — the 11-service API decomposition is the durable product surface |
 | **Project Type override** | `ux_ui`, `visual_design`, `user_journeys` remain in scope per D4 (modern UI replicates APEX layouts using a modern UI stack) |
 | **Domain** | `govtech` (UK HMCTS — judicial operations) |
 | **Domain notes** | UK-translated compliance: HMCTS / WCAG accessibility, GDS service standard, UK GDPR, FOI / transparency. CSV's US-specific concerns (FedRAMP, Section 508) do not apply. |
@@ -129,7 +129,7 @@ For each role on NJI, the equivalent legacy workflow can be completed without re
 
 ### Technical Success
 
-- **All 12 services live** — Reference Data, Authorisation (with SSO), Configuration, Notification, Judge, Absence, Vacancy, Booking, Sitting, Payment, Itinerary, MI Feed deployed and operating per Phase 0 → 8.
+- **All 11 services live** — Reference Data, Authorisation (with SSO), Notification, Judge, Absence, Vacancy, Booking, Sitting, Payment, Itinerary, MI Feed deployed and operating per Phase 0 → 8. *(Per-service configuration uses Spring profiles + Azure Key Vault; cross-service policy values live in a shared `configuration_values` infrastructure table — no dedicated configuration service. Revised v2.2 2026-05-07.)*
 - **Phase 0 migration correctness** — 100% of in-scope APEX Reference Data lists ETL'd into NJI Reference Data tables and signed off by RSU / judicial-team owners (D3, Risk #13). 100% of active APEX user records loaded into NJI Authorisation and successfully mapped to IdP principals (D9, Risk #14); records that don't reconcile have an explicit handling decision (drop / hold / manual map), zero migrated as ambiguous.
 - **Behavioural parity with APEX** (D5, revised 2026-05-06) — every domain service has a **manual UAT script walked through by APEX-experienced users** (RSU, Court, Judge, Judges' Clerks, Finance, MI) who compare NJI's behaviour against APEX behaviour they reproduce interactively in APEX; the UAT sign-off is a wave gate before each rollout wave.
 - **API-as-Product standards** in force from Phase 0 — every domain and read-model service exposes a versioned contract, `/capabilities`, and a documented deprecation policy.
@@ -157,8 +157,8 @@ For each role on NJI, the equivalent legacy workflow can be completed without re
 
 The MVP is the smallest deliverable that supports phased per-region rollout (D8). It comprises:
 
-- **Phase 0 Foundations** (D1, D7, D9): Reference Data + Users/Roles migrated from APEX; Authorisation with SSO; Configuration; Notification; API contracts (versioned + paper contracts for Itinerary / MI Feed); deployment platform (CI/CD); structured logging conventions (D7); stub Home / navigation shell.
-- **All 12 services built** (Phases 1–8): Judge, Absence, Vacancy, Booking, Sitting, Payment (incl. Reconciliation), Itinerary, MI Feed.
+- **Phase 0 Foundations** (D1, D7, D9): Reference Data + Users/Roles migrated from APEX; Authorisation with SSO; Notification; API contracts (versioned + paper contracts for Itinerary / MI Feed); deployment platform (CI/CD); structured logging conventions (D7); stub Home / navigation shell. *(Per-service configuration via Spring profiles + Key Vault; shared `configuration_values` infrastructure table managed by `nji-architecture` Flyway baseline.)*
+- **All 11 services built** (Phases 0–8): Reference Data, Authorisation, Notification (Phase 0); Judge, Absence, Vacancy, Booking, Sitting, Payment (incl. Reconciliation) (Phases 1–6); Itinerary, MI Feed (Phases 7–8). *(Per-service config is Spring profiles + Key Vault; cross-service policy values use the shared `configuration_values` infrastructure table — no separate configuration service per arch v2.2.)*
 - **Modern UI for all 11 user roles** replicating APEX layouts (D4) — every domain phase delivers its corresponding APEX module(s) end-to-end.
 - **Phase 9 — Pilot rollout (wave 1)**: one region migrates, all applicable roles, with feature-parity gating per Risk #3.
 - **Behavioural parity with APEX** verified through **manual UAT performed by APEX-experienced users** (D5 revised) for every domain service. There is no automated APEX-comparison test harness in the MVP.
@@ -292,7 +292,7 @@ The MVP is the smallest deliverable that supports phased per-region rollout (D8)
 
 ### Journey Requirements Summary
 
-The five journeys reveal these capability areas (mapped to the 12-service decomposition):
+The five journeys reveal these capability areas (mapped to the 11-service decomposition):
 
 | Capability area | Services / decisions involved |
 |---|---|
@@ -368,13 +368,13 @@ The five journeys reveal these capability areas (mapped to the 12-service decomp
 
 ### Project-Type Overview
 
-JI is decomposed into 12 services across three clusters:
+JI is decomposed into 11 services across three clusters (revised v2.2 — `nji-configuration` was dropped; cross-service policy values live in a shared `configuration_values` infrastructure table):
 
 - **Domain services** (write surfaces): Judge, Absence, Vacancy, Booking, Sitting, Payment.
-- **Cross-cutting services**: Reference Data, Authorisation, Configuration, Notification.
+- **Cross-cutting services**: Reference Data, Authorisation, Notification. *(Configuration is not a service — it's per-service Spring profiles + Key Vault, with a shared `configuration_values` infrastructure table for cross-service policy values.)*
 - **Read-model services** (federated): Itinerary, MI Feed.
 
-Every service is API-first, exposes a versioned contract, and is callable by both the modern UI (per D4) and external consumers (DA&I, future programmes per the strategic-platform vision). The 12-service decomposition is the durable product surface.
+Every service is API-first, exposes a versioned contract, and is callable by both the modern UI (per D4) and external consumers (DA&I, future programmes per the strategic-platform vision). The 11-service decomposition is the durable product surface.
 
 ### Technical Architecture Considerations
 
@@ -393,7 +393,7 @@ Endpoint shape is illustrative — definitive contracts are produced as Phase 0 
 |---|---|
 | Reference Data | `GET /reference-data/regions`, `/offices`, `/judicial-vocabularies`, `/calendar`; admin-gated `POST/PUT` writes |
 | Authorisation | `POST /authz/check`, `GET /users/{id}/effective-permissions` |
-| Configuration | `GET /config/{key}` (read-mostly typed policy values) |
+| Configuration | Per-service: Spring profiles + `application.yml` + Azure Key Vault. Cross-service policy values: shared `configuration_values` table (read-only via direct SQL; no API). |
 | Notification | `POST /notifications/send` (transactional emails: booking ack, absence ack, payment schedule) |
 
 **Domain services (Phases 1–6):**
@@ -469,7 +469,7 @@ Canonical representation: **JSON** for all REST endpoints. Specific resource sch
 ### Implementation Considerations
 
 - **Stack alignment** (per Step 5 Technology Stack): Java 25 + Spring Boot 4 + Kubernetes on Azure provides first-class support for every requirement above — Spring Web for REST endpoints, Spring Security for AuthZ integration, Spring Actuator for `/capabilities` and Kubernetes probes, springdoc-openapi for OpenAPI generation, Azure API Management for cross-cutting concerns (rate limits, header injection, deprecation header policy) if needed.
-- **Per-service deployment unit.** Each of the 12 services is a containerised Spring Boot app on Kubernetes; per-region rollout (D8) is enabled by region-scoped namespaces / clusters or by service-instance-level region targeting (architecture-phase choice).
+- **Per-service deployment unit.** Each of the 11 services is a containerised Spring Boot app on Kubernetes; per-region rollout (D8) is enabled by region-scoped namespaces / clusters or by service-instance-level region targeting (architecture-phase choice).
 - **Phase 0 platform smoke-test** (per the executive summary) — Reference Data exercises every API-as-Product standard (versioning, content-type negotiation, `/capabilities`, RFC 7807 errors) before any domain service is built. Phase 0 is not just foundations; it's the standards-validation phase.
 
 ## Project Scoping & Phased Development
@@ -543,7 +543,7 @@ This section is the binding capability contract for NJI. UX, architecture, and e
 
 - **FR6**: RSU users can view and maintain Reference Data lists — Regions, Offices, judicial vocabularies, calendar / financial-year boundaries — with named-owner sign-off on changes.
 - **FR7**: Every NJI service can read Reference Data via a versioned API; Reference Data is the single writer (no duplicates anywhere in the system).
-- **FR8**: Authorised administrators can read and update typed Configuration policy values (e.g. session timeout warnings, batch schedules, feature flags).
+- **FR8** *(revised v2.2, 2026-05-07)*: Cross-service runtime policy values (e.g. session timeout warnings, batch schedules, feature flags) are stored in a shared `configuration_values` infrastructure table, schema-managed by `nji-architecture`'s Flyway baseline migration and SELECT-granted to every NJI service DB role. Updates are made via Flyway migrations or direct admin SQL — no API service. Per-service configuration scoped to a single service uses Spring profiles + `application.yml` + Azure Key Vault.
 - **FR9**: NJI dispatches transactional emails (booking acknowledgements, absence acknowledgements, payment schedules) via HMCTS email infrastructure, with a delivery log retained.
 
 ### Judge Records & Working Patterns
@@ -688,7 +688,7 @@ Page-level NFRs are carried from the APEX baseline (`functional-modules.md` cros
 ### Maintainability
 
 - **NFR39 — API-as-Product standards:** Every service exposes versioned contracts, `/capabilities`, RFC 7807 error envelopes, and a published OpenAPI specification (per FR59). Versioning and deprecation policy is a Phase 0 deliverable.
-- **NFR40 — Per-service deployment unit:** Each of the 12 services is independently deployable on Kubernetes; rolling updates per service per region without coupling.
+- **NFR40 — Per-service deployment unit:** Each of the 11 services is independently deployable on Kubernetes; rolling updates per service per region without coupling.
 - **NFR41 — Behavioural-parity UAT suite:** Every domain service has a **manual UAT script** (per FR61) maintained alongside the service. APEX-experienced users walk through the script comparing NJI vs APEX before each rollout wave's cutover; sign-off (per role per region) is the wave gate. There is no automated parity test suite — automated CI tests are unit, integration (Testcontainers), and contract tests only.
 - **NFR42 — Postman collections:** Each phase produces a Postman collection that exercises the phase's endpoints; collections are versioned alongside the services.
 
@@ -698,7 +698,7 @@ These are the 9 locked decisions taken during the 2026-05-05 brainstorming follo
 
 | ID | Decision | Implication |
 |---|---|---|
-| **D1** | Phase 0 Foundations scope locked: Reference Data, Authorisation (with SSO), Configuration, Notification, API contracts, deployment platform, structured logging conventions. Audit & metrics/trace observability post-MVP. | Sets what must be in place before any domain service is built. |
+| **D1** | Phase 0 Foundations scope locked: Reference Data, Authorisation (with SSO), Notification, API contracts, deployment platform, structured logging conventions, shared `configuration_values` infrastructure table (no dedicated configuration service per v2.2). Audit & metrics/trace observability post-MVP. | Sets what must be in place before any domain service is built. |
 | **D2** | Cutover strategy: phased rollout. Migrated users do not use APEX; non-migrated users do not use NJI. | No dual-write coexistence; risk amortised across waves. |
 | **D3** | Data migration: **Reference Data only (extended by D9)**. No transactional data migration. The migration is a Phase 0 ETL — read APEX dumps → transform to NJI shape → load via NJI Reference Data API. NJI tables are NJI's own design; APEX's schema is the data source, not the target shape. | Each region migrates onto a clean transactional state; historical data stays in APEX. The ETL lives at `nji-architecture/migration/` and is separate from Flyway DDL. |
 | **D4** | Feature-parity gate is functional + UI-replicates-APEX (modern UI stack, no redesign). | UX/visual_design/user_journeys are in scope (override on `api_backend` classification). |
@@ -745,7 +745,7 @@ These are the 9 locked decisions taken during the 2026-05-05 brainstorming follo
 
 Source documents consulted during PRD generation (also recorded in this PRD's `inputDocuments` frontmatter):
 
-- `_bmad-output/brainstorming/brainstorming-session-2026-05-05-1600.md` — the 9 locked decisions, 12-service decomposition, migration table, and risk register
+- `_bmad-output/brainstorming/brainstorming-session-2026-05-05-1600.md` — the 9 locked decisions, 11-service decomposition, migration table, and risk register
 - `docs/architecture/asis/functional-modules.md` — catalogue of the 12 functional modules in the existing Oracle APEX JI system
 - `docs/architecture/asis/data-dependencies.md` — JI's external data dependencies (eLinks, HR, JFEPS, Liberata, DA&I, HMCTS Email)
 - `docs/architecture/asis/integration-dependencies.md` — JI's integration flows and mechanisms

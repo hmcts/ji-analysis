@@ -53,11 +53,13 @@ NJI-owned tables, designed by NJI. Seeded in Phase 0 by the Phase 0 Data Migrati
 | `auth_user_region_scopes` | Domain | Per-user Region/Area scope assignments |
 | `auth_user_activation_flags` | Domain | Per-user "active in NJI" flag (FR58 — per-region phased activation) |
 
-## Configuration service (`nji-configuration`) — 1 table
+## Shared infrastructure tables (no owning service) — 1 table
+
+Schema-managed by `nji-architecture`'s Flyway baseline migration; SELECT-granted to every NJI service DB role; writes are admin / Flyway-only (no API). *(Introduced in v2.2, 2026-05-07 — replaces the dedicated `nji-configuration` service.)*
 
 | Table | Type | Purpose |
 |---|---|---|
-| `configuration_values` | Domain | Typed configuration key-value store (D1 — typed policy values) |
+| `configuration_values` | Shared infra | Typed cross-service policy values (D1 — runtime policy keys that need to be visible to multiple services). Per-service configuration that is scoped to a single service uses Spring profiles + `application.yml` + Azure Key Vault, **not** this table. |
 
 ## Notification service (`nji-notification`) — 1 table
 
@@ -129,7 +131,6 @@ Per `nji_mock_auth` DB role. **Never deployed to production**; production deploy
 
 - **Reference Data:** 15 tables (3 domain + 12 vocabulary)
 - **Authorisation:** 5 tables
-- **Configuration:** 1 table
 - **Notification:** 1 table
 - **Judge:** 5 tables
 - **Absence:** 1 table
@@ -138,12 +139,13 @@ Per `nji_mock_auth` DB role. **Never deployed to production**; production deploy
 - **Sitting:** 1 table
 - **Payment:** 3 tables
 - **Itinerary, MI Feed:** 0 tables (read models)
+- **Shared infrastructure:** 1 table (`configuration_values`; no owning service)
 - **Mock auth:** 2 tables (dev/integration only)
 
-**Total: 37 tables** across the shared schema (35 in production scope + 2 dev-only).
+**Total: 37 tables** across the shared schema (34 service-owned production + 1 shared infrastructure + 2 dev-only).
 
 **Retry safety convention:** every NJI domain table that supports create has a `uq_{table}_{columns}` unique constraint on its natural key, and every entity that supports update has a `version` column for JPA `@Version` optimistic locking. There are *no* per-service `*_idempotency_keys` tables — those were dropped in v2.1 in favour of these PostgreSQL-native primitives. See [`./conventions.md` → "Retry safety and concurrency control"](./conventions.md) for the pattern.
 
 **On APEX SQL dump validation:** when the dump arrives in Phase 0 (per A32 + A33 in [`./assumptions.md`](./assumptions.md); G4.6 in [`./gaps.md`](./gaps.md)), the validation focus is on the **Phase 0 Data Migration ETL's input/output mapping**, not on this NJI table inventory. NJI's shape is fixed by NJI design; the dump can surface (a) APEX fields the migration tool didn't anticipate (mapping gap → update the tool), or (b) APEX values not yet in NJI vocabularies (vocabulary row insertion via the Reference Data API; no schema change). If a fundamental mismatch surfaces — e.g. an APEX-side data structure NJI has no place for at all — that is an architectural decision (do we add a new NJI table?), and it lands via PR against the architecture document set, exactly as any other architectural change would.
 
-**Fitness function** (Step 4 *ArchUnit-style fitness functions* in [`../architecture.md`](../architecture.md)) operates against this inventory: every table created by Flyway DDL must appear here with the matching owning service; DB role grants must align. The Phase 0 ETL is *not* in scope for the fitness function — it's an external programme that calls NJI APIs.
+**Fitness function** (Step 4 *ArchUnit-style fitness functions* in [`../architecture.md`](../architecture.md)) operates against this inventory: every table created by Flyway DDL must appear here with the matching owning service (or under "Shared infrastructure"); DB role grants must align. The Phase 0 ETL is *not* in scope for the fitness function — it's an external programme that calls NJI APIs.

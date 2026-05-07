@@ -20,7 +20,7 @@
 //   - Strict top-to-bottom tier stack: Users → UI → APIM → Cross-cutting →
 //     Domain → Read-models → Data tier.
 //   - Each tier cluster lays its services in a multi-row × multi-column grid
-//     (cross-cutting 2×2; domain 2×3; read-models 1×2) to reduce horizontal
+//     (cross-cutting 1×3; domain 2×3; read-models 1×2) to reduce horizontal
 //     stretch.
 //   - External systems float to the side of the spine via natural edge pull.
 //
@@ -91,14 +91,10 @@ digraph nji_system_context {
 
     authz   [label=<<b>nji-authorisation</b><br/>per-request authz authority<br/>users · roles · region scope · activation>, fillcolor="#cfe6f7"];
     refdata [label=<<b>nji-reference-data</b><br/>regions · offices · calendar periods<br/>+ 12 vocabularies>, fillcolor="#cfe6f7"];
-    config  [label=<<b>nji-configuration</b><br/>typed runtime config>, fillcolor="#cfe6f7"];
     notify  [label=<<b>nji-notification</b><br/>outbound transactional email>, fillcolor="#cfe6f7"];
 
-    // Grid: row 1 = authz, refdata; row 2 = config, notify
-    { rank=same; authz; refdata; }
-    { rank=same; config; notify; }
-    authz   -> config [style=invis, weight=20];
-    refdata -> notify [style=invis, weight=20];
+    // Grid: 1 row × 3 columns
+    { rank=same; authz; refdata; notify; }
   }
 
   // ============== Tier 5: Domain (Phases 1–6) — 2×3 grid ==============
@@ -181,11 +177,12 @@ digraph nji_system_context {
 
   users   -> ui      [style=invis, weight=200];
   ui      -> apim    [style=invis, weight=200];
-  // APIM connects into the top row of cross-cutting (authz/refdata)
+  // APIM connects into the cross-cutting row (authz/refdata/notify)
   apim    -> authz   [style=invis, weight=200];
-  // Bottom row of cross-cutting (config/notify) connects into top row of domain (judge/absence/vacancy)
-  config  -> judge   [style=invis, weight=200];
-  notify  -> absence [style=invis, weight=200];
+  // Cross-cutting row connects into top row of domain (judge/absence/vacancy)
+  authz   -> judge   [style=invis, weight=200];
+  refdata -> absence [style=invis, weight=200];
+  notify  -> vacancy [style=invis, weight=200];
   // Bottom row of domain (booking/sitting/payment) connects into read-models
   sitting -> itinerary [style=invis, weight=200];
   payment -> mifeed  [style=invis, weight=200];

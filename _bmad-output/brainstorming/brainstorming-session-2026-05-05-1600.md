@@ -39,7 +39,7 @@ supersedes:
 
 **Cluster terminology (carried from updated 2026-05-01 artefact):** Domain services / Cross-cutting services / Read-model services. *The term "Spine" is not reintroduced.*
 
-**Out of scope for re-sequencing:** Phase 0 Foundations stay first. The 12-service decomposition itself is locked from the prior session.
+**Out of scope for re-sequencing:** Phase 0 Foundations stay first. The 12-service decomposition itself is locked from the prior session. *(Note: revised to **11-service decomposition** in architecture v2.2, 2026-05-07 — `nji-configuration` was dropped in favour of per-service Spring profiles + Key Vault and a shared `configuration_values` infrastructure table. Sequencing logic below is unaffected.)*
 
 ### Why this session re-runs the analysis
 
@@ -57,7 +57,7 @@ These decisions were taken in conversation immediately after the analytical sect
 
 ### D1 — Phase 0 Foundations scope (locked)
 
-**In scope:** Reference Data, Authorisation (with SSO), Configuration, Notification, **API contracts** (versioned contracts for every domain service plus paper contracts for Itinerary and MI Feed to constrain downstream design), **deployment platform** (continuous deploy from Phase 1 onwards).
+**In scope:** Reference Data, Authorisation (with SSO), Notification, **shared `configuration_values` infrastructure table** (no dedicated configuration service per architecture v2.2, 2026-05-07; per-service config uses Spring profiles + Key Vault), **API contracts** (versioned contracts for every domain service plus paper contracts for Itinerary and MI Feed to constrain downstream design), **deployment platform** (continuous deploy from Phase 1 onwards).
 
 **Reference Data migration from APEX is part of Phase 0** — the only data migration the programme will undertake.
 
@@ -170,7 +170,7 @@ The remaining open questions are:
 |---|---|---|
 | R1 | **Reference Data → every domain service.** | Prior session line 50; functional-modules.md cross-cutting NFRs. |
 | R2 | **Authorisation → every user-facing or write API.** | Prior session locked-in decision: SSO-delegated AuthN, JI-owned AuthZ. |
-| R3 | **Notification & Configuration → most domain services** (booking ack, payment authoriser email, absence ack). | functional-modules.md §4.5–4.8. |
+| R3 | **Notification → most domain services** (booking ack, payment authoriser email, absence ack); **shared `configuration_values` table** (read-only direct SQL) for cross-service policy values. | functional-modules.md §4.5–4.8. |
 | R4 | **Absence → Vacancy.** Approved absences requiring cover auto-create vacancies. | functional-modules.md line 244. |
 | R5 | **Vacancy → Booking.** `POST /bookings` orchestrates `Vacancy.markFilled` synchronously. | Prior session Architecture #3. |
 | R6 | **Judge → Sitting / Vacancy / Booking.** Working patterns, jurisdictional split, tickets, fee-payment status all originate in Judge. | functional-modules.md §4.2. |
@@ -225,7 +225,7 @@ Two viable variants under greenfield (both respecting Phase 0 Foundations and th
 
 | Phase | Cluster | Services | Notes |
 |---|---|---|---|
-| 0 | Cross-cutting | Reference Data, Authorisation (with SSO), Configuration, Notification | Foundations |
+| 0 | Cross-cutting | Reference Data, Authorisation (with SSO), Notification (shared `configuration_values` table is part of Phase 0 schema baseline; no separate service per arch v2.2) | Foundations |
 | 1 | Domain | **Judge** (incl. working pattern, tickets, jurisdictional split) | Chain head; working patterns generate forward sittings (the Sitting *records* exist as domain data even before the Sitting service does) |
 | 2 | Domain | **Absence** | Sequential after Judge |
 | 3 | Domain | **Vacancy** | Sequential after Absence (R4) |
@@ -243,7 +243,7 @@ Two viable variants under greenfield (both respecting Phase 0 Foundations and th
 
 | Phase | Cluster | Services | Notes |
 |---|---|---|---|
-| 0 | Cross-cutting | Reference Data, Authorisation (with SSO), Configuration, Notification | Foundations |
+| 0 | Cross-cutting | Reference Data, Authorisation (with SSO), Notification (shared `configuration_values` table is part of Phase 0 schema baseline; no separate service per arch v2.2) | Foundations |
 | 1 | Domain | **Judge** | Chain head |
 | 2 | Domain | **Absence** | Track 1 |
 | 3 | Domain | **Vacancy** | Track 1 (after R4) |
@@ -293,7 +293,7 @@ Rationale:
 
 The interesting decisions for the programme have now been taken (see [Decisions taken (2026-05-05 follow-up)](#decisions-taken-2026-05-05-follow-up)):
 
-- **Phase 0 Foundations scope:** Reference Data, Authorisation (SSO), Configuration, Notification, API contracts, deployment platform, Reference Data migration. Audit + Observability deferred post-MVP. *(D1)*
+- **Phase 0 Foundations scope:** Reference Data, Authorisation (SSO), Notification, shared `configuration_values` infrastructure table (no separate configuration service per arch v2.2), API contracts, deployment platform, Reference Data migration. Audit + Observability deferred post-MVP. *(D1)*
 - **Cutover strategy:** Phased rollout per region / user subset; no contention because migrated users abandon APEX. *(D2)*
 - **Data migration:** Reference Data only, in Phase 0. No transactional data migration. *(D3)*
 - **Feature parity gate:** Functional parity per workflow; UI replicates APEX layout using a modern UI stack; no UI redesign. *(D4)*
@@ -309,7 +309,7 @@ Each domain phase below bundles **API + UI** for its corresponding APEX module(s
 
 | Phase | Cluster | Scope | Outcome |
 |---|---|---|---|
-| **0 — Foundations** | Cross-cutting | Reference Data (incl. one-shot migration from APEX), Authorisation (with SSO; **users + roles + Region/Area scope migrated from APEX per D9**), Configuration, Notification, **API contracts** (versioned contracts for every domain service + paper contracts for Itinerary & MI Feed), **deployment platform** (CI/CD; continuous deploy from Phase 1 onwards), **stub Home / navigation shell** so each subsequent phase plugs in a working module, **structured logging conventions** (consistent fields, correlation IDs, request/error categorisation) per D7 so logs are usable as the only operational signal during MVP. *Formal Audit & metrics/trace observability are post-MVP per D1; user-action auditing on the post-MVP roadmap per D7.* | Cross-cutting capabilities live with realistic data; Authorisation testable end-to-end with migrated APEX users from day 1; API-as-Product standards battle-tested on Reference Data writes; pipeline ready to deploy every subsequent phase as it lands; logging conventions in place for every service from Phase 1 |
+| **0 — Foundations** | Cross-cutting | Reference Data (incl. one-shot migration from APEX), Authorisation (with SSO; **users + roles + Region/Area scope migrated from APEX per D9**), Notification, **shared `configuration_values` infrastructure table** (Flyway baseline managed by `nji-architecture`; no dedicated configuration service per arch v2.2), **API contracts** (versioned contracts for every domain service + paper contracts for Itinerary & MI Feed), **deployment platform** (CI/CD; continuous deploy from Phase 1 onwards), **stub Home / navigation shell** so each subsequent phase plugs in a working module, **structured logging conventions** (consistent fields, correlation IDs, request/error categorisation) per D7 so logs are usable as the only operational signal during MVP. *Formal Audit & metrics/trace observability are post-MVP per D1; user-action auditing on the post-MVP roadmap per D7.* | Cross-cutting capabilities live with realistic data; Authorisation testable end-to-end with migrated APEX users from day 1; API-as-Product standards battle-tested on Reference Data writes; pipeline ready to deploy every subsequent phase as it lands; logging conventions in place for every service from Phase 1 |
 | **1 — Judge** | Domain | **Judge** API (incl. working pattern, tickets, jurisdictional split) **+ Manage Judges UI** (search, filter, profile, working-pattern editor, ticket maintenance). Home dashboard tile for *judges* lights up. | Chain head; working-pattern engine generates forward sittings (records exist; service surface comes in Phase 5). First end-to-end demoable module |
 | **2 — Absence** | Domain | **Absence** API + **Absences UI** (list, create, approve/NTBF flag, sickness extension). Home tile for *absences*. | Cover-creation upstream; approval workflow; auto-creates vacancies (R4 wired in Phase 3) |
 | **3 — Vacancy** | Domain | **Vacancy** API + **Vacancies UI** (list, edit daily breakdown, mark filled, weekly-by-court quick links). Home tile for *vacancies*. | Demand-side modelled; standalone + absence-derived; cover requirements visible to RSU |
@@ -344,7 +344,7 @@ The risk register reflects D1–D6. Big-bang cutover risk drops out (rollout is 
 | 2 | **Historical-data access for migrated users** | Per D3, transactional history stays in APEX. Decide: read-only APEX access for migrated users (operational), or a one-page export at migration time, or no access. Document the choice and communicate to users at migration |
 | 3 | **Feature-parity gating per rollout wave** | Each rollout wave needs an explicit feature-parity checklist for the scope of that wave (which user roles, which workflows, which Region/Office). Gate the wave on the checklist; do not generalise readiness from one wave to the next without verification |
 | 4 | **API contract churn cascading downstream** | Versioned contracts from Phase 0 (D1); contract tests between consecutive phases; a frozen contract for any service before its consumer's phase begins. More acute under Variant β parallelism |
-| 5 | **Scope creep during build** | Lock the 12-service decomposition; new requirements get triaged against post-MVP backlog by default; only changes to existing in-flight services are entertained mid-phase |
+| 5 | **Scope creep during build** | Lock the 11-service decomposition (revised v2.2, 2026-05-07 — `nji-configuration` dropped); new requirements get triaged against post-MVP backlog by default; only changes to existing in-flight services are entertained mid-phase |
 | 6 | **SSO availability** | SSO must be live in Phase 0 — every UI demo from Phase 1 onwards depends on it. Treat SSO as a Phase 0 hard dependency, with a contingency plan (mock SSO for internal demo) if HMCTS IdP integration slips |
 | 7 | **Audit minimum: log-based only for MVP (D7)** | Per D7, MVP audit is application logs (request, error). No structured before/after audit trail. **Roadmap commitment:** user-action auditing in a post-MVP iteration. The remaining accepted gap is structured user-action audit during the pilot — regulatory or compliance questions about "who changed what when" during a pilot incident will rely on log triage, not a structured audit trail. Acceptable if pilot incidents are rare and contained; reassess before broad GA |
 | 8 | **Observability minimum: log-based only for MVP (D7)** | Per D7, MVP observability is application logs. No metrics platform, no traces, no dashboards. Mean-time-to-diagnose for pilot incidents is bounded by log-grep effectiveness. Mitigation: structured logging (consistent fields, correlation IDs, request/error categorisation) so logs are usable as the only signal source. Define logging conventions in Phase 0 |
@@ -408,7 +408,7 @@ The risk register reflects D1–D6. Big-bang cutover risk drops out (rollout is 
 
 ### Decisions taken (recorded above as D1–D9)
 
-- ✅ **Phase 0 scope locked** — Reference Data + Authorisation/SSO + Configuration + Notification + API contracts + deployment platform + Reference Data migration + Users/Roles migration + structured logging conventions. Formal Audit & metrics/trace observability post-MVP. *(D1, extended by D9)*
+- ✅ **Phase 0 scope locked** — Reference Data + Authorisation/SSO + Notification + shared `configuration_values` infrastructure table (no separate configuration service per arch v2.2) + API contracts + deployment platform + Reference Data migration + Users/Roles migration + structured logging conventions. Formal Audit & metrics/trace observability post-MVP. *(D1, extended by D9)*
 - ✅ **Cutover strategy: phased rollout.** *(D2)*
 - ✅ **Data migration: Reference Data + Users/Roles** (Phase 0). No transactional data migration. *(D3 + D9)*
 - ✅ **Feature parity gate is functional + UI-replicates-APEX** (modern UI stack, no redesign). *(D4)*

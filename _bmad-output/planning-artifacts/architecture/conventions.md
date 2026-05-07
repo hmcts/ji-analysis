@@ -11,7 +11,7 @@ extracted_in: architecture.md v1.8 — Strategy B refactor
 
 ## Pattern Categories Defined
 
-**Critical Conflict Points Identified:** ~30 areas where AI agents could make different choices that would cause integration friction across the 12 services and the UI.
+**Critical Conflict Points Identified:** ~30 areas where AI agents could make different choices that would cause integration friction across the 11 services and the UI.
 
 This document is the consistency contract. Every NJI service follows these patterns; consistency is enforced by code review, CI lint, contract tests, and ArchUnit fitness functions — *not* by a shared library.
 
@@ -130,7 +130,7 @@ nji-ui/
 └── package.json
 ```
 
-**Why module-per-domain (not by-type):** the 12-service backend decomposition implies 12-ish UI domain modules; each module is self-contained (pages + components + hooks + generated client) so a domain phase's UI work is one folder. Easier to onboard, easier to delete or rewrite per region's customisation if ever needed.
+**Why module-per-domain (not by-type):** the 11-service backend decomposition implies ~10 UI domain modules (the cross-cutting Notification and Authorisation services are not UI-fronted; the cross-cutting Reference Data is admin-screen-fronted only); each module is self-contained (pages + components + hooks + generated client) so a domain phase's UI work is one folder. Easier to onboard, easier to delete or rewrite per region's customisation if ever needed.
 
 ## Format Patterns
 
