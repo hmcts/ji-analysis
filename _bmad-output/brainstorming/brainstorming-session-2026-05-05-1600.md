@@ -69,13 +69,15 @@ A region or subset of users moves to the new platform first; the rest remain on 
 
 Implication: each rollout wave is a discrete cutover for a defined user/region scope, gated on full feature parity for that scope.
 
-### D3 — Data migration (locked): Reference Data only *(extended by D9)*
+### D3 — Data migration (locked, mechanism clarified 2026-05-06): Reference Data only *(extended by D9)*
 
 Reference Data migrates in Phase 0. **No transactional data migration.** Each user/region migrates onto a clean transactional state in the new system; their historical transactional data remains in APEX (read-only, queried out-of-band if needed).
 
 Implication: the cutover gate is functional ("can the user transact going forward?"), not data-completeness ("can the user see their last 5 years of bookings?"). Historical data access strategy is a separate, smaller decision.
 
-*Extended by D9: in addition to Reference Data, user records and their role/scope mappings are also migrated from APEX in Phase 0 to seed the Authorisation service.*
+**Mechanism (clarified 2026-05-06):** the migration is an **ETL** that reads APEX dumps, transforms each row into the new system's own (independently-designed) shape, and **loads via the new system's APIs** (Reference Data API for vocabularies and lists; Authorisation API per D9). The new system's tables are designed by the new system; APEX's schema is the data source, not the target shape. The ETL is *not* a database-migration tool (Flyway etc.) seeding APEX rows directly into the new schema — it is a separate Phase 0 programme deliverable.
+
+*Extended by D9: in addition to Reference Data, user records and their role/scope mappings are also ETL'd from APEX in Phase 0 and loaded into the Authorisation service via its API.*
 
 ### D4 — Feature parity gate (locked): functional, not screen-by-screen
 
@@ -83,9 +85,13 @@ Feature parity is the cutover gate. **No UI redesign**: the working assumption i
 
 Implication: each domain phase includes the modern-UI replication of its corresponding APEX module(s), demoable to users at the end of the phase.
 
-### D5 — APEX as behavioural reference (locked)
+### D5 — APEX as behavioural reference (locked, revised)
 
-APEX is the *behavioural reference*, including edge cases not in `functional-modules.md`. Acceptance tests for each domain service include "matches APEX behaviour" cases — real APEX runs as the oracle; the new app is the system under test.
+APEX is the *behavioural reference*, including edge cases not in `functional-modules.md`. Behavioural parity is verified by **manual user acceptance testing (UAT)** performed by users who have hands-on experience with the existing Oracle APEX JI application — RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, and MI users. These users compare NJI's behaviour against APEX behaviour as they reproduce it interactively in APEX, and sign off on parity per service phase before that wave's cutover.
+
+There is **no automated APEX-as-oracle test harness**, no programmatic comparison against a running APEX instance, and no `@ApexOracle` test base class. Automated testing inside NJI is the standard pyramid (unit, integration with Testcontainers, contract); APEX-comparison parity is exclusively a manual UAT activity owned by the user community.
+
+*Revised on 2026-05-06: an earlier version of D5 proposed automated parity tests with real APEX as the oracle. That mechanism was retracted because (a) APEX runs in a separate environment with no programmatic test hook, (b) maintaining an automated comparison harness against a system the project does not co-manage (D6) is fragile, and (c) the users who know APEX behaviour are the right oracle, not a synthetic harness. See changelog entry for the corresponding architecture revision.*
 
 ### D6 — APEX maintenance posture (locked): out of scope for this project
 
@@ -109,9 +115,11 @@ Implication: per-wave feature parity (Risk #3) is defined as "every workflow use
 
 Cross-region workflows (Risk #1) remain a transitional concern between waves — any workflow that crosses a migrated region and a non-migrated region needs an explicit handling decision per wave.
 
-### D9 — Users + roles migrated from APEX to seed Authorisation (locked)
+### D9 — Users + roles ETL'd from APEX into Authorisation (locked; mechanism clarified 2026-05-06)
 
-**In addition to Reference Data (D3),** APEX user records and their role / Region / Area scope mappings are migrated into the new Authorisation service in Phase 0. The Authorisation layer is built on real APEX-derived data from day 1, not seeded by hand or by stub.
+**In addition to Reference Data (D3),** APEX user records and their role / Region / Area scope mappings are extracted from APEX, transformed into the new system's shape, and **loaded into the new Authorisation service's tables via its API** in Phase 0. The Authorisation layer is built on real APEX-derived data from day 1, not seeded by hand or by stub.
+
+The new system owns the Authorisation tables and their shape (`auth_users`, `auth_roles`, `auth_user_roles`, `auth_user_region_scopes`, `auth_user_activation_flags`); APEX's user-record shape is whatever it is; the ETL is the mapping between them.
 
 **Scope of the migration:** for every active APEX user — identifier (email / username / employee ID), assigned role(s) from the 12 documented roles in `functional-modules.md` line 497, Region / Office scope, active/inactive flag.
 
@@ -289,7 +297,7 @@ The interesting decisions for the programme have now been taken (see [Decisions 
 - **Cutover strategy:** Phased rollout per region / user subset; no contention because migrated users abandon APEX. *(D2)*
 - **Data migration:** Reference Data only, in Phase 0. No transactional data migration. *(D3)*
 - **Feature parity gate:** Functional parity per workflow; UI replicates APEX layout using a modern UI stack; no UI redesign. *(D4)*
-- **APEX role:** Behavioural reference for acceptance testing, not a co-managed system. *(D5, D6)*
+- **APEX role:** Behavioural reference verified by **manual UAT** performed by APEX-experienced users; not a co-managed system, not an automated test oracle. *(D5 revised, D6)*
 
 These decisions reshape the migration table (UI work is now in-scope per phase; cutover becomes a sequence of rollout waves rather than a single event) and the risk register (cutover risk drops; feature parity per rollout wave rises).
 
@@ -342,8 +350,8 @@ The risk register reflects D1–D6. Big-bang cutover risk drops out (rollout is 
 | 8 | **Observability minimum: log-based only for MVP (D7)** | Per D7, MVP observability is application logs. No metrics platform, no traces, no dashboards. Mean-time-to-diagnose for pilot incidents is bounded by log-grep effectiveness. Mitigation: structured logging (consistent fields, correlation IDs, request/error categorisation) so logs are usable as the only signal source. Define logging conventions in Phase 0 |
 | 9 | **Forward Look ≤ 30 s NFR breach under Strategy A** | Strategy C cache pre-designed; switch on if needed during Itinerary construction (Phase 7) |
 | 10 | **Read-model API gap discovered late** | Phase 0 paper contracts for Itinerary + MI Feed (D1) constrain domain API design across Phases 1–6, so Phase 7–8 federation has no surprises |
-| 11 | **Behavioural divergence from APEX** | Per D5, treat APEX as the behavioural reference. For each domain service, write acceptance tests that verify behavioural parity with APEX, not just functional parity. Run the comparisons during build using real APEX as oracle |
-| 12 | **UI replication scope** | Per D4, modern-UI replication of as-is APEX layouts. Risk: subtle APEX UX behaviours (validation messages, in-line errors, keyboard shortcuts, the *Select Report* copy-paste pattern) are easy to under-spec. Mitigation: include UX behavioural cases in the per-phase APEX-as-oracle tests, not just data-flow cases |
+| 11 | **Behavioural divergence from APEX** | Per D5 (revised), treat APEX as the behavioural reference verified by **manual UAT performed by APEX-experienced users**. For each domain service, the per-phase UAT script names the workflows / edge cases users are expected to compare in APEX vs NJI, with sign-off captured per role per region before the wave gate. There is no automated APEX-as-oracle harness |
+| 12 | **UI replication scope** | Per D4, modern-UI replication of as-is APEX layouts. Risk: subtle APEX UX behaviours (validation messages, in-line errors, keyboard shortcuts, the *Select Report* copy-paste pattern) are easy to under-spec. Mitigation: include UX behavioural cases in the per-phase **manual UAT scripts** users walk through (alongside data-flow cases), with APEX-experienced users running the side-by-side comparison |
 | 13 | **Phase 0 migration correctness — Reference Data + Users/Roles** | Reference Data (D3) and Users + Roles (D9) are migrated from APEX in Phase 0. Errors cascade into every domain service (for Reference Data) and into every authorisation decision (for Users/Roles). Treat as two discrete sign-off deliverables: (a) RSU / judicial-team owners verify controlled lists; (b) named owners (likely RSU + OPT Support) verify role + Region/Area assignments per migrated user against APEX |
 | 14 | **APEX-to-IdP identity mapping (D9)** | D9 migrates APEX user records keyed to an IdP-resolvable identifier (email / employee ID). Risk: APEX records that don't cleanly map to an IdP principal — leavers, shared accounts, accounts with mismatched email between APEX and the IdP. Mitigation: pre-migration reconciliation report (APEX user list ⇄ IdP principal list) with explicit handling rules for unmatched records (drop / hold / manual map). Run reconciliation in Phase 0 before going live; rerun before each rollout wave for the in-scope region's users |
 
@@ -363,7 +371,7 @@ The risk register reflects D1–D6. Big-bang cutover risk drops out (rollout is 
 - **The prior session's "read-model-first" recommendation was strangler-specific.** It traded some calendar time for risk reduction during APEX coexistence. With no APEX coexistence, there is nothing to trade for — read-model-first becomes pure cost (read models federate over domain services that don't exist yet).
 - **"Smallest blast radius first," "MI Feed as first user-visible API," and "DA&I early evidence"** are all strangler-era artefacts. None survive greenfield analysis. This is not a criticism of the prior session — those concerns were real under the prior premise; they just don't apply now.
 - **The interesting decisions move out of sequencing and into Phase 0 Foundations and Cutover.** Sequencing is largely mechanical under greenfield. Phase 0 scope (Audit, observability, contract-testing, deployment platform) and Cutover strategy (big-bang vs phased) are now the high-leverage decisions.
-- **APEX as a behavioural reference** is more important than its role as a system to migrate from. The new system needs to *match the behaviour* APEX exhibits today — including edge cases not in `functional-modules.md`. That implies acceptance tests written against APEX behaviour, not just against the functional spec.
+- **APEX as a behavioural reference** is more important than its role as a system to migrate from. The new system needs to *match the behaviour* APEX exhibits today — including edge cases not in `functional-modules.md`. That implies **manual UAT scripts written against APEX behaviour** (executed by APEX-experienced users), not just functional verification against the spec. *Note: an earlier insight bullet here proposed automated parity tests; that has been replaced by manual UAT under the revised D5.*
 
 ---
 
@@ -381,12 +389,13 @@ The risk register reflects D1–D6. Big-bang cutover risk drops out (rollout is 
 *Concept (retracted):* Originally proposed Audit as a Phase 0 capability so writes are auditable from Phase 1 onwards.
 *Status:* Per D1, Audit is explicitly post-MVP. The accepted-risk equivalents (Risk #7, Risk #8) replace this idea. Decision-makers should revisit Audit + Observability before broad GA, but the MVP and pilot waves proceed without them.
 
-**[Sequencing #4]: APEX as behavioural reference, not migration host (locked as D5)**
-*Concept:* Treat APEX as the source-of-truth for *behaviour* (including edge cases not in the functional spec) but not as a host for any part of the migrating system. Acceptance tests for each domain service include "matches APEX behaviour" cases — use real APEX as the oracle, the new app as the system under test, and run the comparisons during build. Extend to UX behaviours under D4 (validation messages, keyboard patterns, *Select Report* copy-paste).
-*Novelty:* Reframes APEX from a system being decomposed into a system being *replicated*. Captures undocumented behaviour without depending on whether the documentation is complete.
+**[Sequencing #4]: APEX as behavioural reference, not migration host (locked as D5; revised 2026-05-06)**
+*Concept:* Treat APEX as the source-of-truth for *behaviour* (including edge cases not in the functional spec) but not as a host for any part of the migrating system. Behavioural parity is verified by **manual UAT performed by users who use the existing APEX application** — RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, MI users — comparing NJI's behaviour against APEX behaviour they reproduce interactively in APEX. UAT scripts include UX behaviours under D4 (validation messages, keyboard patterns, *Select Report* copy-paste) alongside functional and data-flow cases.
+*Novelty:* Reframes APEX from a system being decomposed into a system being *replicated*. Captures undocumented behaviour without depending on whether the documentation is complete or whether an automated harness can reach a system the project does not co-manage (D6). The users themselves are the oracle.
+*What was retracted:* Earlier framing proposed automated "APEX-as-oracle" tests in CI with the new app as the system under test. That was retracted on 2026-05-06 — APEX has no programmatic test hook, the project does not co-manage APEX (D6), and an automated harness against an external system is fragile. Manual UAT by APEX-experienced users replaces it.
 
 **[Sequencing #5]: Per-wave feature-parity gating (refined under D2 + D4 + D8)**
-*Concept:* Each rollout wave (Phase 9, 10, …) is its own go/no-go decision with a feature-parity checklist scoped to **the region and all its applicable user roles** (per D8). The checklist is derived from `functional-modules.md` user actions, mapped to the new APIs and modern-UI replicas. UI fidelity is part of the gate (per D4 — replicate APEX layouts), but cosmetic divergence is permitted; functional and behavioural parity are the binding criteria. Cross-region workflows that touch the in-scope region are checked separately (Risk #1).
+*Concept:* Each rollout wave (Phase 9, 10, …) is its own go/no-go decision with a feature-parity checklist scoped to **the region and all its applicable user roles** (per D8). The checklist is derived from `functional-modules.md` user actions, mapped to the new APIs and modern-UI replicas, **and from the manual UAT scripts walked through by APEX-experienced users (per D5 revised)**. UI fidelity is part of the gate (per D4 — replicate APEX layouts), but cosmetic divergence is permitted; functional and behavioural parity (the latter signed off by users via manual UAT) are the binding criteria. Cross-region workflows that touch the in-scope region are checked separately (Risk #1).
 *Novelty:* Replaces the prior idea of a single big-bang cutover gate with an incremental gate that adapts to each wave's scope. The first wave can be deliberately a small region so the gate is contained and the first cutover is rehearsed before scope expands to larger regions.
 
 **[Sequencing #6]: Phased rollout boundary — by region with full role coverage (locked as D8)**
@@ -403,7 +412,7 @@ The risk register reflects D1–D6. Big-bang cutover risk drops out (rollout is 
 - ✅ **Cutover strategy: phased rollout.** *(D2)*
 - ✅ **Data migration: Reference Data + Users/Roles** (Phase 0). No transactional data migration. *(D3 + D9)*
 - ✅ **Feature parity gate is functional + UI-replicates-APEX** (modern UI stack, no redesign). *(D4)*
-- ✅ **APEX is behavioural reference**, not migration host. *(D5)*
+- ✅ **APEX is behavioural reference**, verified via **manual UAT by APEX-experienced users**; not migration host, not an automated oracle. *(D5 revised)*
 - ✅ **APEX maintenance is out of project scope.** *(D6)*
 - ✅ **Audit / Observability MVP minimum: log-based** (request, error). User-action auditing on the post-MVP roadmap. *(D7)*
 - ✅ **Rollout boundary: by region, all applicable user roles.** A region migrates only once every in-region role's functionality is complete. *(D8)*
@@ -430,7 +439,7 @@ The risk register reflects D1–D6. Big-bang cutover risk drops out (rollout is 
 - **Techniques used:** Five Whys, Constraint Mapping, Decision Tree Mapping
 - **Variants generated:** 2 (Strict Sequential α, Sitting-Parallel β); plus a vertical-slice packaging variation noted but not endorsed
 - **Recommendation:** Variant α as default; β as capacity-conditional upgrade
-- **Decisions locked in conversation (D1–D9):** Phase 0 scope (D1); phased rollout (D2); ref-data-only migration *(extended by D9)* (D3); functional + APEX-replica UI parity gate (D4); APEX as behavioural reference (D5); APEX maintenance out of scope (D6); log-based audit/observability minimum with user-action audit on post-MVP roadmap (D7); rollout boundary by region with full role coverage (D8); users + roles migrated from APEX to seed Authorisation, keyed to SSO IdP principal (D9)
+- **Decisions locked in conversation (D1–D9):** Phase 0 scope (D1); phased rollout (D2); ref-data-only migration *(extended by D9)* (D3); functional + APEX-replica UI parity gate (D4); APEX as behavioural reference verified via **manual UAT by APEX-experienced users** (D5 revised 2026-05-06); APEX maintenance out of scope (D6); log-based audit/observability minimum with user-action audit on post-MVP roadmap (D7); rollout boundary by region with full role coverage (D8); users + roles migrated from APEX to seed Authorisation, keyed to SSO IdP principal (D9)
 - **Source documents consulted:**
   - `_bmad-output/brainstorming/brainstorming-session-2026-05-01-1400.md` (12-service decomposition; lines 139–149 superseded)
   - `_bmad-output/brainstorming/brainstorming-session-2026-05-05-1500.md` (entirely superseded — built on retracted strangler assumption)

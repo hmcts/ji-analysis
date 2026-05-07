@@ -1,0 +1,337 @@
+---
+parent: ../architecture.md
+title: Repository Directory Structures, File Organisation, Local Development Workflow
+last_updated: 2026-05-06
+extracted_in: architecture.md v1.8 — Strategy B refactor
+---
+
+# Repository Directory Structures, File Organisation, Local Development Workflow
+
+> Sibling of [`../architecture.md`](../architecture.md). The parent file's *Project Structure & Boundaries* (Step 6) keeps the architectural decisions (polyrepo strategy, repository list, architectural boundaries, integration points, data flows, region rollout flow); this file keeps the per-repo directory inventory and developer-facing build/run/deploy commands.
+
+## Complete Project Directory Structure — per backend service
+
+```
+nji-{service}/
+├── README.md                                    (service-specific overview, runbook, contacts)
+├── settings.gradle
+├── build.gradle                             (Gradle Groovy DSL (per HMCTS template))
+├── gradle.properties
+├── gradlew, gradlew.bat                         (Gradle Wrapper, committed)
+├── gradle/wrapper/
+├── .github/
+│   ├── CODEOWNERS                               (NJI team + service-specific reviewers)
+│   ├── PULL_REQUEST_TEMPLATE.md                 (patterns checklist)
+│   └── workflows/
+│       ├── ci.yml                               (build + test + lint + ArchUnit + Spectral)
+│       ├── deploy-dev.yml
+│       ├── deploy-staging.yml
+│       └── deploy-production.yml                (per-region per-wave gated)
+├── src/main/java/uk/gov/hmcts/nji/{service}/
+│   ├── {Service}Application.java
+│   ├── controller/
+│   │   ├── {Resource}Controller.java
+│   │   ├── CapabilitiesController.java         (@RestController at root /capabilities; consumer-facing API-as-Product contract endpoint, distinct from Actuator)
+│   │   └── HealthController.java
+│   ├── service/
+│   │   └── {Resource}Service.java
+│   ├── repository/
+│   │   └── {Resource}Repository.java
+│   ├── domain/
+│   │   ├── {Resource}.java                      (@Entity)
+│   │   └── {ValueObject}.java
+│   ├── dto/
+│   │   ├── {Resource}Dto.java                   (response shape)
+│   │   └── {Resource}Request.java               (request shape)
+│   ├── client/
+│   │   ├── AuthorisationClient.java             (per-service; called by JWTFilter for per-request authz)
+│   │   └── {OtherService}Client.java            (other service-to-service API clients, e.g. for workflows; no ReferenceDataClient — Reference Data is read directly via JPA from the shared schema)
+│   ├── config/
+│   │   ├── JWTFilter.java                       (custom JWT filter, per HMCTS template)
+│   │   ├── AuthDetails.java                     (request-scoped bean populated by JWTFilter)
+│   │   ├── OpenApiConfig.java                   (Swagger Core + Maven-published spec artefact)
+│   │   └── CorrelationIdFilter.java
+│                                                 (no IdempotencyFilter — retry safety is via DB-native unique constraints + @Version + pessimistic locking, not a custom filter)
+│   ├── error/
+│   │   ├── GlobalExceptionHandler.java          (@ControllerAdvice; RFC 7807)
+│   │   └── ProblemDetailFactory.java
+│   └── exception/
+│       ├── {Resource}NotFoundException.java
+│       ├── BusinessRuleViolation.java
+│       └── DependencyException.java
+├── src/main/resources/
+│   ├── application.yml
+│   ├── application-dev.yml
+│   ├── application-staging.yml
+│   ├── application-production.yml
+│   ├── logback-spring.xml                       (JSON logging + correlation-ID MDC)
+│   └── db/migration/                            (Flyway)
+│       ├── V1__init.sql
+│       ├── V2__add_judges_table.sql
+│       └── ...
+├── src/test/java/uk/gov/hmcts/nji/{service}/
+│   ├── controller/                              (unit tests, mocked deps)
+│   ├── service/
+│   ├── repository/                              (integration tests, Testcontainers)
+│   └── client/
+├── helm/
+│   ├── Chart.yaml
+│   ├── values.yaml                              (defaults)
+│   ├── values-dev.yaml
+│   ├── values-staging.yaml
+│   ├── values-production.yaml                   (UK South production — multi-AZ node pool selection, zone-spread anti-affinity, min replicas)
+│   ├── values-dr-uk-west.yaml                   (cold-DR; only present if DR is in scope per G3.6)
+│   └── templates/
+│       ├── deployment.yaml                      (incl. topologySpreadConstraints for AZ spread)
+│       ├── service.yaml
+│       ├── ingress.yaml
+│       ├── configmap.yaml
+│       └── hpa.yaml
+├── postman/
+│   ├── nji-{service}-phase{N}.postman_collection.json
+│   └── README.md                                (how to run; environment files)
+├── api-spec/
+│   └── openapi.yaml                             (committed snapshot, regenerated on release)
+├── docs/
+│   ├── README.md                                (service-specific architecture)
+│   ├── decisions/                               (service-specific ADRs)
+│   │   └── ADR-001-database-schema.md
+│   ├── runbook.md                               (incident response per service)
+│   ├── api/                                     (extended API docs beyond OpenAPI)
+│   └── uat/                                     (manual UAT scripts: APEX-vs-NJI behavioural-parity walkthroughs per FR61 / NFR41 revised; domain services only)
+├── .gitignore
+└── .editorconfig
+```
+
+## Complete Project Directory Structure — UI repo
+
+```
+nji-ui/
+├── README.md
+├── package.json
+├── package-lock.json (or yarn.lock / pnpm-lock.yaml)
+├── tsconfig.json
+├── vite.config.ts
+├── playwright.config.ts
+├── vitest.config.ts
+├── eslint.config.js
+├── .prettierrc
+├── index.html
+├── public/
+│   ├── favicon.ico
+│   └── assets/
+├── src/
+│   ├── main.tsx                                 (entry point; root render + StrictMode)
+│   ├── App.tsx                                  (router root + auth wrapper + ErrorBoundary)
+│   ├── routes.tsx                               (all route definitions)
+│   ├── modules/                                 (per-domain UI modules)
+│   │   ├── home/
+│   │   │   ├── pages/HomePage.tsx
+│   │   │   └── index.ts
+│   │   ├── judge/
+│   │   │   ├── pages/JudgeListPage.tsx
+│   │   │   ├── pages/JudgeDetailPage.tsx
+│   │   │   ├── components/JudgeCard.tsx
+│   │   │   ├── components/WorkingPatternEditor.tsx
+│   │   │   ├── hooks/useJudgeList.ts
+│   │   │   ├── hooks/useJudge.ts
+│   │   │   ├── api/                             (generated TypeScript client from Judge OpenAPI)
+│   │   │   └── index.ts
+│   │   ├── absence/
+│   │   ├── vacancy/
+│   │   ├── booking/
+│   │   ├── sitting/
+│   │   ├── payment/
+│   │   ├── itinerary/
+│   │   └── reports/
+│   ├── shared/
+│   │   ├── components/
+│   │   │   ├── Layout.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── ErrorBoundary.tsx
+│   │   │   └── ErrorMessage.tsx
+│   │   ├── hooks/
+│   │   │   ├── useAuth.ts
+│   │   │   └── useCorrelationId.ts
+│   │   ├── auth/
+│   │   │   ├── HmctsIdpProvider.tsx             (OIDC client wrapper)
+│   │   │   └── ProtectedRoute.tsx
+│   │   └── api/
+│   │       ├── httpClient.ts                    (TanStack Query setup; auth header attachment)
+│   │       └── errorHandling.ts                 (RFC 7807 → display)
+│   └── styles/
+│       ├── govuk.scss                           (GOV.UK Design System imports)
+│       └── overrides.scss                       (HMCTS / NJI extensions)
+├── tests/
+│   ├── unit/                                    (Vitest)
+│   └── e2e/                                     (Playwright; one suite per phase)
+│       ├── phase-1-judge.spec.ts
+│       ├── phase-2-absence.spec.ts
+│       └── ...
+├── api-clients/                                 (generated; regenerated in CI from per-service OpenAPI)
+│   ├── judge-client/
+│   ├── absence-client/
+│   └── ...
+├── helm/                                        (Helm chart for Static Web App / CDN deployment)
+├── .github/
+│   ├── CODEOWNERS
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── workflows/
+│       ├── ci.yml                               (build + test + lint + axe-core)
+│       └── deploy-{env}.yml
+└── docs/
+    ├── README.md
+    └── decisions/                               (UI-specific ADRs)
+```
+
+## Complete Project Directory Structure — `nji-architecture` repo
+
+```
+nji-architecture/
+├── README.md
+├── architecture.md                              (the index document — see ../architecture.md)
+├── architecture/                                (sibling files referenced by architecture.md)
+│   ├── gaps.md
+│   ├── assumptions.md
+│   ├── changelog.md
+│   ├── conventions.md
+│   ├── repo-structure.md
+│   ├── starter-template.md
+│   └── data-tables.md
+├── prd.md                                       (mirror of PRD; canonical lives in planning-artifacts)
+├── decisions/                                   (programme-level ADRs)
+│   ├── ADR-001-greenfield-not-strangler.md
+│   ├── ADR-002-no-shared-library.md
+│   ├── ADR-003-rest-first-no-event-bus.md
+│   └── ...
+├── api-specs/                                   (aggregated per-service OpenAPI specs; mirror)
+│   ├── reference-data/openapi.yaml
+│   ├── authorisation/openapi.yaml
+│   └── ...
+├── diagrams/                                    (C4 model, sequence diagrams, deployment topology)
+├── scaffolding/
+│   ├── README.md
+│   ├── nji-scaffold.sh                          (creates new service from HMCTS starter)
+│   ├── templates/                               (service-specific overlays applied by the script)
+│   └── conventions/
+├── migration/                                   (Phase 0 Data Migration ETL — APEX → NJI APIs)
+│   ├── README.md                                (mapping notes, run procedure, sign-off checklist)
+│   ├── reference-data/                          (extract + transform + POST to nji-reference-data)
+│   │   ├── extract-apex.sql                     (selects against APEX schema; produces CSV/JSON)
+│   │   ├── transform.py (or .ts / .java)        (APEX shape → NJI shape per data-tables.md)
+│   │   └── load.py                              (calls Reference Data API: POST /v1/regions etc.)
+│   ├── users-roles/                             (extract + reconcile to IdP + POST to nji-authorisation)
+│   │   ├── extract-apex.sql
+│   │   ├── reconcile.py                         (email-then-employee-number match against IdP principals; produces matched / employee-matched / unmatched buckets)
+│   │   ├── transform.py
+│   │   └── load.py                              (calls Authorisation API)
+│   ├── reports/                                 (per-run reconciliation reports for sign-off)
+│   └── tests/                                   (golden-input → expected-output cases)
+└── runbooks/
+    ├── incident-response.md
+    └── per-region-rollout-playbook.md
+```
+
+**Why `migration/` lives here, not as a separate service or as Flyway files:**
+
+- The migration is a **one-shot programme deliverable** (Phase 0; re-run per wave for incremental user activation). It is not a runtime service, so it has no `controller/` / `service/` / `repository/` shape.
+- It is **owned by the architecture team** (and the named Phase 0 owners per Risk #13), not by any single domain service. Living under `nji-architecture/` keeps that ownership visible.
+- It **calls NJI APIs** (Reference Data API, Authorisation API) — it does not write directly to NJI tables. Per the v1.6 decision, writes go via the API so validation, idempotency, and any audit-logging hooks fire.
+- It is **separate from Flyway**. Flyway in NJI is for NJI's DDL (creating tables, adding columns, granting permissions). The ETL is for moving APEX data into NJI tables that Flyway has already created.
+
+## File Organisation Patterns
+
+**Configuration files:**
+
+- Per-service: `application.yml` defaults + per-profile overrides + Logback config.
+- Per-environment: Helm `values-{env}.yaml` files; secrets externalised to Azure Key Vault.
+- No environment-specific code branches; everything controlled by Spring profiles.
+
+**Test organisation:**
+
+- Unit tests: `src/test/java/.../{layer}/...` mirroring main package layout.
+- Integration tests: same location, `*IT.java` suffix, Testcontainers PostgreSQL.
+- Contract tests (Pact or equivalent): `src/test/java/.../contract/`.
+- Manual UAT scripts (FR61 / NFR41 revised 2026-05-06): `docs/uat/` per domain service — markdown walkthroughs for APEX-experienced users to follow side-by-side against APEX. Not part of automated CI.
+- E2E tests: separate `tests/e2e/` directory in `nji-ui` repo, Playwright per phase.
+
+**Asset organisation (UI):**
+
+- `public/` for static assets shipped as-is (favicon, robots.txt).
+- `src/styles/` for SCSS sources; Vite compiles to bundled CSS.
+- Per-module assets stay within the module (`modules/judge/assets/`).
+
+## Development Workflow Integration
+
+**Local development per service:**
+
+```bash
+# Clone the service repo
+git clone https://github.com/hmcts/nji-{service}.git
+cd nji-{service}
+
+# Run locally (uses Testcontainers for DB and stub Authorisation in dev profile)
+./gradlew bootRun --args='--spring.profiles.active=dev'
+
+# Run tests
+./gradlew check        # all checks (unit + integration + ArchUnit + lint)
+./gradlew test         # unit only
+./gradlew integrationTest
+
+# Build container image
+./gradlew jib          # or ./gradlew bootBuildImage
+```
+
+**Local development for UI:**
+
+```bash
+git clone https://github.com/hmcts/nji-ui.git
+cd nji-ui
+
+# Install dependencies
+npm install   # or yarn / pnpm
+
+# Regenerate API clients from latest committed OpenAPI specs
+npm run generate-clients
+
+# Run dev server (proxies to local backend services or stubs)
+npm run dev
+
+# Run tests
+npm run test         # Vitest
+npm run test:e2e     # Playwright
+```
+
+**Build / Deploy flow per service:**
+
+```
+git push origin feature/...
+       │
+       ▼
+[GitHub Actions / Azure DevOps]
+   ├─ Build (Gradle)
+   ├─ Test (unit + integration)
+   ├─ Lint (Spotless + Checkstyle + ArchUnit)
+   ├─ OpenAPI lint (Spectral)
+   └─ Helm chart lint
+       │
+PR merge to main
+       │
+       ▼
+[Auto-deploy to dev]
+   ├─ Build container image → Azure Container Registry
+   └─ Helm upgrade → AKS (dev)
+       │
+Manual approval
+       │
+       ▼
+[Deploy to staging]
+       │
+Manual approval (per region/wave)
+       │
+       ▼
+[Deploy to production-uk-south] (or per-region)
+   └─ Manual UAT sign-off by APEX-experienced users runs as gate (FR61 / NFR41 revised)
+```
+
+> The architectural rules for the per-region production gate (manual UAT, automated tests, migration sign-off, programme sign-off) and the rollback path live in [`../architecture.md`](../architecture.md) under *Region rollout flow (Phase 9+)*.
