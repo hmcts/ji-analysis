@@ -61,7 +61,7 @@ workflowCompleted: false
 - **FR2**: NJI's Authorisation service maps each authenticated principal to one or more roles and a Region/Area scope, and authorises every system call against that mapping.
 - **FR3**: Authorised users can retrieve their effective permissions for their authenticated session.
 - **FR4**: System administrators can update role and Region/Area assignments for migrated and new users.
-- **FR5**: External (machine-to-machine) consumers can authenticate via service principals issued by the HMCTS IdP, with their authorisation scoped through the same Authorisation service.
+- **FR5** *(reframed as post-MVP per architecture v2.5, 2026-05-07)*: External machine-to-machine consumers — no longer in MVP scope. Every MVP runtime request is user-initiated. The mechanism for genuine machine-to-machine authentication is a post-MVP open question (see architecture `gaps.md` G7).
 
 #### Foundational Data Management (4 FRs)
 
@@ -166,7 +166,7 @@ workflowCompleted: false
 
 - **NFR10**: Latest TLS only on every endpoint; HTTP-only rejected.
 - **NFR11**: Personal data encrypted at rest.
-- **NFR12**: Human users via HMCTS IdP SSO; service-to-service via mTLS or service token.
+- **NFR12** *(revised v2.5, 2026-05-07)*: Human users via HMCTS IdP SSO; **inter-service auth via JWT propagation** (no service principals, no `client_credentials`, no mTLS at MVP).
 - **NFR13**: Authorisation enforcement on every API call.
 - **NFR14**: No bank details, no case-level data in any service or schema.
 - **NFR15**: Government Functional Standard 7 alignment.

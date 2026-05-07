@@ -180,9 +180,22 @@ nji-ui/
 **Service-to-service call pattern:**
 
 - Each service has a `client/` package with one Spring `@Component` per called service (e.g. `BookingService`'s repo contains `VacancyClient` for calling Vacancy).
-- Clients are typed Java interfaces wrapping Spring Boot 4's `RestClient` configured with the service-token authentication interceptor and correlation-ID propagator.
+- Clients are typed Java interfaces wrapping Spring Boot 4's `RestClient` configured with the JWT-propagation interceptor (below) and correlation-ID propagator.
 - Method names mirror the operation: `notificationClient.sendBookingAcknowledgement(bookingId)`, not `notificationClient.post(...)`. **Domain language, not HTTP language.**
-- Clients handle: token attachment, correlation-ID propagation, retry on 5xx (idempotent operations only), circuit-breaker (open if dependency is down).
+- Clients handle: JWT propagation, correlation-ID propagation, retry on 5xx (idempotent operations only), circuit-breaker (open if dependency is down).
+
+**JWT propagation (token forwarding) — the only inter-service auth at MVP:**
+
+NJI does *not* issue or use service-principal tokens at MVP. Every runtime request into NJI services is user-initiated, so the user's JWT (issued by HMCTS IdP at SSO) is the relevant security context end-to-end. Inter-service calls forward that JWT as-is.
+
+- **Mechanism:** every outbound `RestClient` registers a `ClientHttpRequestInterceptor` that:
+  1. Reads the inbound request's `Authorization: Bearer <user-jwt>` header from the request-scoped `AuthDetails` bean (populated by `JWTFilter`).
+  2. Attaches the same `Authorization` header to the outbound request.
+  3. Allows the call to proceed.
+- **Downstream service** validates the forwarded JWT via its own `JWTFilter` (signature check against IdP's JWKS, then `POST /authz/check`) — same path as for direct user requests.
+- **Implementation footprint per service:** ~10–15 lines (one `Configuration` class wiring the interceptor onto the shared `RestClient` builder).
+- **What's *not* used:** OAuth `client_credentials` grant; service-principal registrations; service-token store; mTLS.
+- **Limit:** propagation requires a request-scoped user JWT to exist. **Background, scheduled, or async flows have no user context** and would need a service-identity mechanism — explicitly out of scope at MVP. If introduced post-MVP, see `gaps.md` G7 for the open question.
 
 **Correlation ID propagation:**
 

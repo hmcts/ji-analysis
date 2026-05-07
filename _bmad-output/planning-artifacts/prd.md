@@ -537,7 +537,7 @@ This section is the binding capability contract for NJI. UX, architecture, and e
 - **FR2**: NJI's Authorisation service maps each authenticated principal to one or more roles and a Region/Area scope, and authorises every system call against that mapping.
 - **FR3**: Authorised users can retrieve their effective permissions for their authenticated session.
 - **FR4**: System administrators can update role and Region/Area assignments for migrated and new users.
-- **FR5**: External (machine-to-machine) consumers can authenticate via service principals issued by the HMCTS IdP, with their authorisation scoped through the same Authorisation service.
+- **FR5** *(reframed v2.5, 2026-05-07 as post-MVP)*: External machine-to-machine consumers (e.g. DA&I post-MVP MI Feed) require an authentication mechanism. **At MVP, no machine-to-machine consumers are in scope** — every NJI runtime request is user-initiated, including planned DA&I integration (DA&I would authenticate as a human-equivalent identity at HMCTS IdP if onboarded post-MVP). The mechanism for genuine service-principal authentication (for non-user-initiated flows) is **a post-MVP open question** — see architecture changelog v2.5 and `architecture/gaps.md` G7. Options to be evaluated when the requirement arrives include an NJI-internal service-auth issuer, Azure Workload Identity, mTLS, and (if HMCTS IdP supports it) `client_credentials` against HMCTS IdP.
 
 ### Foundational Data Management
 
@@ -642,7 +642,7 @@ Page-level NFRs are carried from the APEX baseline (`functional-modules.md` cros
 
 - **NFR10 — Transport encryption:** Latest TLS only on every endpoint; HTTP-only endpoints rejected.
 - **NFR11 — Data-at-rest encryption:** All personal data (judge records, user/role records, working patterns, payroll numbers, payment metadata) encrypted at rest.
-- **NFR12 — Authentication:** All human users authenticated via HMCTS IdP SSO (per FR1). Service-to-service authentication (mTLS or service token) enforced for internal calls; mechanism is an architecture-phase choice.
+- **NFR12 — Authentication** *(revised v2.5, 2026-05-07)*: All human users authenticated via HMCTS IdP SSO (per FR1). **Inter-service authentication at MVP is via JWT propagation** — the user's JWT (issued by HMCTS IdP) is forwarded by the upstream service's outbound HTTP client and validated by the downstream service's `JWTFilter` against the IdP's JWKS endpoint. **No NJI service principals, no OAuth `client_credentials`, no mTLS at MVP** because the architecture assumes all runtime calls are user-initiated (per A35). A separate service-identity mechanism is a **post-MVP open question** that re-opens if non-user-initiated flows are introduced (see architecture `gaps.md` G7).
 - **NFR13 — Authorisation enforcement:** Every API call resolves the principal's roles + Region/Area scope through the Authorisation service; no operation bypasses this check.
 - **NFR14 — Forbidden data scope:** No bank details stored or exposed by any service (PAY-NFR-05). No case-level data in any read model or report (REP-BR-NFR-03).
 - **NFR15 — Government Functional Standard 7 alignment:** NJI aligns with HMCTS / MoJ Government Functional Standard 7 — Security, including protective marking, access control, and secure development practices.

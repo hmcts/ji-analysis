@@ -38,7 +38,7 @@ _This document builds collaboratively through step-by-step discovery. Sections a
 | [`./architecture/repo-structure.md`](./architecture/repo-structure.md) | Per-service / UI / `nji-architecture` repo directory structures, file organisation patterns, local development workflow, deployment-pipeline ASCII diagram |
 | [`./architecture/gaps.md`](./architecture/gaps.md) | Documented Gaps register — G1–G6 series with mitigations and owners |
 | [`./architecture/assumptions.md`](./architecture/assumptions.md) | Assumptions register — A1–A33 with type (load-bearing / reversible / aspirational) and verification path |
-| [`./architecture/changelog.md`](./architecture/changelog.md) | Version history v1.0 → v2.3, including a *pre-v1.8 anchor → current location* table for older changelog entries that reference moved sections |
+| [`./architecture/changelog.md`](./architecture/changelog.md) | Version history v1.0 → v2.5, including a *pre-v1.8 anchor → current location* table for older changelog entries that reference moved sections |
 
 Refactor history: the single-file `architecture.md` was split into the index + sibling structure above in v1.8 (Strategy B). Pre-v1.8 changelog entries reference section anchors that moved to siblings; the [`./architecture/changelog.md`](./architecture/changelog.md) header has a redirect table.
 
@@ -368,10 +368,10 @@ NJI's pre-production phases (0 through 8) use a **Mock Authentication Service** 
 
 **Mock Authentication Service (`nji-mock-auth`, Phase 0 deliverable):**
 
-- Exposes the OIDC contract used by NJI services: `/oauth2/authorize`, `/oauth2/token`, `/oauth2/jwks`, `/oauth2/userinfo`.
+- Exposes the OIDC `authorization_code` flow used by human users: `/oauth2/authorize`, `/oauth2/token`, `/oauth2/jwks`, `/oauth2/userinfo`.
 - Issues JWTs for a fixed roster of test users covering all 11 user roles × representative Region/Area combinations.
-- Supports OAuth 2.0 `client_credentials` grant for service-to-service tokens.
-- Mirrors the user records that the Phase 0 ETL has loaded into NJI Authorisation (or a representative subset) to exercise Authorisation flows realistically.
+- **No `client_credentials` grant** — at MVP all NJI runtime calls are user-initiated and inter-service auth is via JWT propagation, so no service principals are issued.
+- Mirrors the user records that the Phase 0 dev/CI seed scripts have loaded into NJI Authorisation (or a representative subset) to exercise Authorisation flows realistically.
 - Implemented as a Spring Authorization Server-based service; deployed to AKS dev / integration clusters alongside other Phase 0 services.
 - **Production safeguard:** the mock service refuses to start when the `production` Spring profile is active. CI lint enforces that production deployment manifests reference the real-IdP issuer URL only.
 
@@ -395,7 +395,7 @@ NJI's pre-production phases (0 through 8) use a **Mock Authentication Service** 
 
 - **Cutover triggers** (must be confirmed before integration begins):
   - HMCTS IdP confirmed to support OIDC for human-user authentication (G1.1).
-  - HMCTS IdP confirmed to support OAuth 2.0 `client_credentials` grant for service principals (G1.2).
+  - *(Retired v2.5)* HMCTS IdP support for OAuth 2.0 `client_credentials` grant — no longer required because at MVP all NJI runtime calls are user-initiated and inter-service auth is via JWT propagation. See [`./architecture/gaps.md` G1.2](./architecture/gaps.md) for the closure note.
   - HMCTS IdP confirmed to expose principal export / query API for migration reconciliation (G1.3).
 - **Cutover mechanism:** a configuration change. Every NJI service's OIDC `issuer-url` switches from mock auth to HMCTS IdP via Spring profile flip — **no code change**. The OIDC client library and JWT validation are issuer-agnostic.
 - **Migration alignment:** the user records that the Phase 0 ETL loads into the NJI Authorisation tables (per D9 + identity-key scheme) are keyed by email and employee number. These keys are issuer-agnostic; switching from mock to real IdP requires only that real IdP principals carry the same email / employee number values. The migration is the ETL described in *Phase 0 Data Migration from APEX* — APEX records are read, transformed, and loaded into NJI's `auth_users` / `auth_user_roles` / `auth_user_region_scopes` via the NJI Authorisation API.
@@ -416,15 +416,17 @@ NJI's pre-production phases (0 through 8) use a **Mock Authentication Service** 
 - Filter caches authorisation decisions for the request lifecycle (avoids duplicate calls within a single request); does not cache across requests by default. Cache TTL is a per-service tuning parameter.
 - Implementation pattern (custom filter) follows HMCTS Crime template; behaviour (per-request authz lookup) is NJI-specific and required by FR58.
 
-**Service-to-service authentication: OAuth 2.0 client_credentials flow against the OIDC issuer. (Resolves PRD TBD #3.)**
+**Service-to-service authentication at MVP: JWT propagation (token forwarding) — no service principals.**
 
-- The issuer is **mock auth (`nji-mock-auth`) in Phase 0–8** dev/CI/integration; **HMCTS IdP from pre-Phase-9** cutover onwards. The flow is identical against either issuer.
-- Each NJI service is registered as a service principal in the active issuer (mock initially; HMCTS IdP after cutover).
-- At startup (and on token expiry) each service obtains a service token via `client_credentials` grant.
-- Service-to-service calls include `Authorization: Bearer <service-token>`.
-- Receiving services validate the token signature against the issuer's public keys and resolve the calling service's authorisation through the same Authorisation service path used for human users (with service-principal-specific permissions).
-- **Why this over mTLS:** piggybacks on the existing OIDC investment, keeps service identities and human identities in the same trust store, no separate certificate management, no AKS service-mesh complexity. mTLS is a fallback if HMCTS IdP cannot issue service principals at cutover.
-- **Dependency:** HMCTS IdP must support client_credentials grant **before pre-Phase-9 cutover**; mock auth provides client_credentials in the meantime.
+*MVP assumption (locked v2.5, 2026-05-07):* every runtime request into NJI services is **user-initiated**. NJI does not issue or validate service-principal tokens at MVP.
+
+- **Mechanism**: when a user-initiated request flows through one NJI service to another (e.g. Booking → Vacancy, Domain → Authorisation, Domain → Notification), the upstream service's outbound HTTP client copies the inbound `Authorization: Bearer <user-jwt>` header to the outbound call. The downstream service's `JWTFilter` validates the same user JWT against the IdP's JWKS (just as the upstream service did) and resolves authz via `POST /authz/check`.
+- **No OAuth `client_credentials` grant**, no NJI service principals, no service-token store, no mTLS at the application tier.
+- **Implementation**: per-service Spring Boot 4 `RestClient` interceptor (~10 lines per service repo) that copies the request-scoped `AuthDetails` token to outbound calls. Documented in [`./architecture/conventions.md` → "JWT propagation"](./architecture/conventions.md).
+- **Why this works**: NJI's runtime call paths all trace to a user request (per the MVP assumption). The user's identity is the relevant security context end-to-end; a separate service identity adds no value while introducing a service-token issuer + key-rotation surface.
+- **What's out of scope at MVP**: any flow without a user context (background jobs, scheduled aggregations, async messaging, cron-driven reconciliation). These would need a service identity; if introduced post-MVP they re-open the service-auth question.
+- **Phase 0 data seeding (dev/CI environments only at MVP)**: one-off scripts seed Reference Data and a representative user roster in dev/CI environments — they do **not** call the runtime API and do **not** require service auth. *(Production / pilot-region data migration is a Phase 0 deliverable that runs operator-initiated — the named programme operator authenticates at HMCTS IdP and runs the ETL with their JWT; documented as MVP-acceptable but flagged for post-MVP refinement; see [`./architecture/gaps.md` G4.7](./architecture/gaps.md).)*
+- **Resolves PRD TBD #3** with "no separate service-to-service auth at MVP". The earlier OAuth `client_credentials` decision and its mTLS fallback are retracted; HMCTS IdP is assumed only to handle human OIDC SSO.
 
 **APEX ⇄ IdP identity-key scheme: email primary, employee number fallback. (Resolves PRD TBD #7.)**
 
@@ -686,11 +688,11 @@ This is a deliberate choice over Azure-region active/active because: (a) NJI's b
 1. **Phase 0 prerequisites** — Azure subscription + UK regions provisioned; shared global PostgreSQL Flexible Server provisioned with single shared schema and per-service DB roles (broad grants Day 1; tighten as code matures); HMCTS Crime SpringBoot template forked into NJI scaffolding script with Gradle (Groovy DSL), Flyway migration baseline, Spring profiles defaults, OpenTelemetry → Application Insights ingestion, GOV.UK Design System UI baseline. *(HMCTS IdP feature confirmation deferred to pre-Phase-9; see point 8.)*
 2. **Phase 0 mock authentication** — `nji-mock-auth` deployed as a Spring Authorization Server-based service issuing OIDC tokens for a fixed roster of test users mirroring representative APEX users + roles + Region/Area scopes. Used by all subsequent phases for all authentication.
 3. **Phase 0 services** — Reference Data, Authorisation, Notification — built per the HMCTS starter pattern, each with its own DB role + table set (in the shared schema), OpenAPI spec, Postman collection, Helm chart. All services configured to validate JWTs against the mock auth issuer. *(A shared `configuration_values` table is created by an `nji-architecture` Flyway baseline migration in the same shared schema; SELECT-granted to every NJI service role; no API service.)*
-4. **Phase 0 Authorisation seeded** via the **Phase 0 Data Migration ETL** (`nji-architecture/migration/`) — reads APEX user-record and role-mapping dumps, transforms each row into NJI shape, reconciles each APEX user to an HMCTS IdP principal by email + employee number (TBD #7 resolved), and **loads via the Authorisation API**. Phase 0 reconciliation report produced. Mock auth users mirror this migrated set so that Authorisation testing exercises realistic data.
+4. **Dev/CI environments seeded by one-off scripts** — Reference Data and a representative user roster (a subset of APEX users + role/scope mappings) are seeded into the shared schema in dev/CI environments via small one-off scripts run during environment provisioning. These scripts run outside the runtime API path. *(For pilot-region production seeding, the **Phase 0 Data Migration ETL** at `nji-architecture/migration/` runs **operator-initiated** — a named programme operator authenticates at HMCTS IdP and runs the ETL with their JWT, calling the Reference Data and Authorisation APIs. This pattern is MVP-acceptable; flagged for post-MVP refinement at [`./architecture/gaps.md` G4.7](./architecture/gaps.md).)* Mock-auth users mirror the dev/CI seeded set so that Authorisation testing exercises realistic data.
 5. **Phase 0 API gateway** — Azure API Management deployed with default rate-limit policies (TBD #1). Configured to forward bearer tokens transparently; APIM is issuer-agnostic.
 6. **Phase 0 UI shell** — Vite + React + GOV.UK Design System scaffolding deployed to Azure Static Web Apps as a stub Home / navigation shell. UI's OIDC client points at mock auth in dev/integration.
 7. **Phases 1–8** — domain services per the brainstorming-session phase sequence (Judge → Absence → Vacancy → Booking → Sitting → Payment → Itinerary → MI Feed); each adds its own tables (in the shared schema, owned via Flyway DDL migrations and DB role grants), OpenAPI spec, Postman collection, UI module replicating its APEX equivalent. **No further APEX-data migration in Phases 1–8** — D3 caps data migration at Reference Data + Users/Roles only; all transactional data starts fresh on NJI per region cutover. All authentication continues to flow through mock auth.
-8. **Pre-Phase-9 — Real HMCTS IdP integration cutover** — confirm G1.1, G1.2, G1.3 (HMCTS IdP supports OIDC + client_credentials + principal export). Switch staging environment's OIDC `issuer-url` from mock auth to HMCTS IdP via Spring profile change. Run reconciliation pass against real IdP principals. Re-execute the full automated test suite (unit + integration + contract) against staging with real IdP, **and re-walk the per-service manual UAT scripts (FR61 / NFR41 revised) with APEX-experienced users** before opening pilot region.
+8. **Pre-Phase-9 — Real HMCTS IdP integration cutover** — confirm G1.1 (HMCTS IdP supports OIDC for human authN) and G1.3 (principal export for migration reconciliation). *(G1.2 — `client_credentials` grant — is no longer required at MVP per v2.5; closed.)* Switch staging environment's OIDC `issuer-url` from mock auth to HMCTS IdP via Spring profile change. Run reconciliation pass against real IdP principals. Re-execute the full automated test suite (unit + integration + contract) against staging with real IdP, **and re-walk the per-service manual UAT scripts (FR61 / NFR41 revised) with APEX-experienced users** before opening pilot region.
 9. **Phase 9+** — per-region rollout waves on production with real HMCTS IdP. Application Insights log retention and APEX read-only bridge activated per region.
 
 **Cross-Component Dependencies:**
@@ -707,7 +709,7 @@ This is a deliberate choice over Azure-region active/active because: (a) NJI's b
 |---|---|---|
 | 1 | Rate limit policy | Azure API Management at ingress; 100 req/sec/principal default per endpoint; 10 req/sec/principal for MI Feed at MVP; 200 req/sec burst protection |
 | 2 | UI framework family | React + TypeScript with GOV.UK Design System component library and Vite build tooling |
-| 3 | Service-to-service auth | OAuth 2.0 client_credentials against HMCTS IdP; mTLS as fallback if IdP cannot issue service principals |
+| 3 | Service-to-service auth | **MVP: JWT propagation (token forwarding)** — no service principals at MVP; the assumption is every runtime call is user-initiated and the user's JWT rides every downstream call. Service-identity question re-opens post-MVP if/when async, scheduled, or DA&I flows arrive (see G7 in [`./architecture/gaps.md`](./architecture/gaps.md)). |
 | 4 | Log retention | 30 days hot in Application Insights; 90 days cold in Log Analytics archive; pre-GA review against HMCTS retention policy |
 | 5 | API versioning | URI prefix major versioning (`/v1/...`); 6-month internal / 12-month external deprecation windows; `Deprecation` + `Sunset` headers per RFC 8594 |
 | 6 | Historical-data access | Read-only APEX bridge for 12 months post-region-cutover; one-shot extract thereafter; programme to confirm window length |
@@ -756,7 +758,7 @@ What stays cross-repo:
 | Repo | Phase | Purpose | Key Functions |
 |---|---|---|---|
 | **`nji-architecture`** | 0 | Architecture index + siblings, ADRs, programme-level diagrams, scaffolding script, **Phase 0 Data Migration ETL** under `migration/`. | Maintain architecture docs and ADRs; generate new service repos from HMCTS starter via `nji-scaffold.sh`; run the APEX → NJI ETL (Reference Data + Users/Roles via NJI APIs); produce Phase 0 reconciliation reports; re-run ETL per rollout wave. |
-| **`nji-mock-auth`** | 0 | OIDC issuer for dev / CI / integration. **Never deployed to production.** | Issue JWTs for a fixed test-user roster; honour OAuth 2.0 `client_credentials` for service principals; expose `/oauth2/authorize`, `/oauth2/token`, `/oauth2/jwks`, `/oauth2/userinfo`; refuse to start with `production` Spring profile (G5.3). |
+| **`nji-mock-auth`** | 0 | OIDC issuer for dev / CI / integration (human users only). **Never deployed to production.** | Issue JWTs for a fixed test-user roster via OIDC `authorization_code` flow; expose `/oauth2/authorize`, `/oauth2/token`, `/oauth2/jwks`, `/oauth2/userinfo`; refuse to start with `production` Spring profile (G5.3). *(No `client_credentials` grant at MVP — service-to-service auth is via JWT propagation, not service principals.)* |
 | **`nji-reference-data`** | 0 | Owns the 15 Reference Data tables (regions, offices, calendar periods + 12 vocabularies). | CRUD for `regions` / `offices` / `calendar_periods`; CRUD for the 12 vocabulary tables (judge / work / court / ticket / session / absence / working-pattern types; booking / sitting / fee-payment / payment / reconciliation statuses); accept Phase 0 ETL writes; reads happen via direct SQL by other services (not via this API). |
 | **`nji-authorisation`** | 0 | Owns the 5 Authorisation tables; **the per-request authz authority** for every NJI service. | Manage `auth_users`, the 12 `auth_roles`, `auth_user_roles`, `auth_user_region_scopes`, `auth_user_activation_flags`; expose `POST /authz/check` (called by every service's `JWTFilter` per request); enforce per-region phased activation (FR58); reconcile principals to HMCTS IdP by email + employee number (D9); accept Phase 0 ETL writes. |
 | **`nji-notification`** | 0 | Outbound transactional email dispatch. | Send booking acknowledgement emails (FR32); send absence acknowledgement emails; send JFEPS-shaped payment-schedule emails to Payment Authorisers (FR43); record dispatch log; retry on transient failure. |
@@ -901,7 +903,7 @@ What stays cross-repo:
 
 | External system | Direction | NJI service interacting | Pattern |
 |---|---|---|---|
-| HMCTS IdP | inbound (AuthN) + token issuance for service-to-service | **Every NJI service** (each service's `JWTFilter` validates inbound JWT signatures against the IdP's **JWKS endpoint** before request reaches controller); **Authorisation** (authz mapping after JWTFilter passes); service principals (token acquisition) | OIDC. JWT signature validation via JWKS public keys (`io.jsonwebtoken:jjwt`); OAuth 2.0 `client_credentials` grant for service-to-service tokens. **Pre-Phase-9 dependency only** — mock auth (`nji-mock-auth`) covers Phase 0–8 dev/CI/integration; cutover is a Spring profile change (issuer-url + JWKS URL flip) — no code change. |
+| HMCTS IdP | inbound (human authN only) | **Every NJI service** (each service's `JWTFilter` validates inbound user JWT signatures against the IdP's **JWKS endpoint** before request reaches controller); **Authorisation** (authz mapping after JWTFilter passes) | OIDC `authorization_code` flow for human users; JWT signature validation via JWKS public keys (`io.jsonwebtoken:jjwt`); cross-service calls forward the user's JWT (no separate service-principal tokens at MVP). **Pre-Phase-9 dependency only** — mock auth (`nji-mock-auth`) covers Phase 0–8 dev/CI/integration; cutover is a Spring profile change (issuer-url + JWKS URL flip) — no code change. |
 | JFEPS / Liberata | outbound | Payment + Notification | JFEPS-Excel via email to Payment Authoriser; manual upload by authoriser |
 | HMCTS email | outbound | Notification | SMTP / Microsoft Graph (per HMCTS standard) |
 | Azure Application Insights | outbound (logs + traces) | All services | OpenTelemetry → OTel Collector → Application Insights as export target (per HMCTS Crime template) |
@@ -992,7 +994,7 @@ All locked decisions work together without contradictions. The full chain holds:
 - **Stack** (Java 25 + Spring Boot 4.0.6 + Gradle Groovy DSL + PostgreSQL 17 + Flyway + AKS + Azure UK regions + OpenTelemetry → Application Insights + Key Vault + APIM, per HMCTS Crime SpringBoot template) — every component is current GA, mutually compatible, and Azure-native or first-class on Azure.
 - **Foundational principles** (Principle 1: API for workflows + shared DB for simple data access; Principle 2: no premature optimization; no shared runtime library) are consistent with polyrepo, per-service Spring Boot apps, per-service Helm charts, **single shared PostgreSQL DB with per-service roles + table ownership**, per-service OpenAPI specs (published as Maven artefacts), and the boilerplate-duplication pattern in Step 5.
 - **REST-first synchronous (for workflows) + SQL-based read-model federation (for reads over the shared DB)** are coherent: workflows traverse APIs; read models query the shared DB directly. The no-event-bus locked decision is preserved.
-- **Mock-first authentication + OIDC + client_credentials for service-to-service** — provides one consistent authentication model used by both human users and service principals across all environments. The OIDC contract is issuer-agnostic; switching from mock auth (Phase 0–8) to real HMCTS IdP (pre-Phase-9) is a configuration change. Coherent if HMCTS IdP supports OIDC + client_credentials at cutover; mTLS is the documented fallback.
+- **Mock-first authentication + OIDC for human users; JWT propagation for inter-service** — provides one consistent authentication path. The OIDC contract is issuer-agnostic; switching from mock auth (Phase 0–8) to real HMCTS IdP (pre-Phase-9) is a configuration change. Inter-service calls forward the user's JWT — no separate service auth at MVP. Coherent if HMCTS IdP supports OIDC `authorization_code` for human users at cutover.
 - **GOV.UK Design System + WCAG 2.2 AA + axe-core** — coherent set; GDS components are built to WCAG 2.2 AA and pair naturally with axe-core automated testing.
 
 **Pattern Consistency:**
@@ -1022,7 +1024,7 @@ No contradictions found.
 
 | FR group | Covered by |
 |---|---|
-| Identity & Authorisation (FR1–FR5) | Authorisation service + per-service custom `JWTFilter` (HMCTS template pattern) + OIDC integration (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + service-token client_credentials flow |
+| Identity & Authorisation (FR1–FR5) | Authorisation service + per-service custom `JWTFilter` (HMCTS template pattern) + OIDC integration for human users (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + JWT propagation interceptor on outbound HTTP clients (no service-token flow at MVP) |
 | Foundational Data Management (FR6–FR9) | Reference Data, Configuration, Notification services + direct SQL access to Reference Data tables (15 in total — see *Authoritative Table Ownership Mapping* in Step 4: `regions`, `offices`, `calendar_periods`, plus the 12 vocabulary tables) from every other service (no caching at MVP per Principle 2) |
 | Judge Records & Working Patterns (FR10–FR18) | Judge service (Phase 1); working-pattern engine owned by Judge per Step 2 |
 | Absence Workflow (FR19–FR22) | Absence service (Phase 2); approval workflow with auto-vacancy creation per R4 |
@@ -1058,7 +1060,7 @@ All 7 architecture-phase TBDs from the PRD are resolved:
 |---|---|---|
 | 1 | Rate limit policy | Azure API Management; 100 req/sec/principal default; 10 req/sec/principal MI Feed; 200 req/sec burst |
 | 2 | UI framework family | React + TypeScript + GOV.UK Design System + Vite |
-| 3 | Service-to-service auth | OAuth client_credentials (via mock auth Phase 0–8; HMCTS IdP from pre-Phase-9); mTLS as fallback |
+| 3 | Service-to-service auth | **JWT propagation** at MVP (forward inbound user JWT to downstream services). No OAuth `client_credentials`, no NJI service principals, no mTLS. Reopens post-MVP if non-user-initiated flows are introduced (G7). |
 | 4 | Log retention | 30 days hot in App Insights; 90 days cold in Log Analytics archive |
 | 5 | API versioning | URI prefix major versioning (`/v1/`); 6-month internal / 12-month external deprecation |
 | 6 | Historical-data access | Read-only APEX bridge for 12 months post-region-cutover |
@@ -1206,4 +1208,4 @@ Drivers of high confidence:
 >
 > The full version history (v1.0 → v1.8) lives in the sibling. The changelog file also includes a *pre-v1.8 anchor → current location* redirect table for older changelog entries that reference section anchors that moved into siblings.
 >
-> **Latest version:** v2.3 — Made the HMCTS IdP integration with NJI services explicit on the system context diagram and in the docs: every NJI service's `JWTFilter` validates inbound JWT signatures against HMCTS IdP's JWKS endpoint before allowing access; service principals acquire tokens via OAuth client_credentials. New cluster-level edge from Cross-cutting → HMCTS IdP on the diagram; tightened wording in `architecture.md` Step 4 + Step 6 and across `architecture-summary.md`. See the sibling for the full row.
+> **Latest version:** v2.5 — Locked the MVP auth model. HMCTS IdP serves only human OIDC `authorization_code` flow. **All inter-service auth is JWT propagation** (forward the inbound user JWT to downstream calls). No NJI service principals, no `client_credentials`, no mTLS at MVP. New A35 captures the "all runtime calls user-initiated" assumption. G1.2 (HMCTS IdP `client_credentials` requirement) closes; G4.7 (operator-initiated ETL post-MVP refinement) and G7 (service-identity question for any future non-user-initiated flow) capture post-MVP open items. See the sibling for the full row.

@@ -200,12 +200,19 @@ digraph nji_system_context {
   //     mifeed→db SQL JOIN aggregate.
   //   - "Cross-cutting → HMCTS Email" subsumes: notify→email SMTP/Graph.
   //   - "Cross-cutting → HMCTS IdP" subsumes: every NJI service's JWTFilter
-  //     validating inbound JWTs against IdP's JWKS endpoint, plus
-  //     OAuth client_credentials service-token issuance.
+  //     validating inbound user JWTs against IdP's JWKS endpoint.
+  //   - Inter-service auth is via JWT propagation (token forwarding) — the
+  //     upstream service copies the inbound Authorization header to its
+  //     outbound calls. Not drawn (it's a transport pattern, not an edge).
   // Service-level detail lives in architecture.md (integration points).
 
-  // User entry
-  users -> ui   [label="HTTPS\nvia HMCTS IdP SSO (JWT)"];
+  // User entry — explicit SSO authentication first, then JWT-bearing requests
+  // through the UI and APIM. The earlier label "HTTPS via HMCTS IdP SSO (JWT)"
+  // on users→ui has been split: the SSO step is now drawn as a dedicated
+  // users→idp edge so the JWT issuance is no longer implicit.
+  users -> idp  [label="authenticate (SSO)\n→ JWT issued",
+                 style=dashed, color="#3070a0", constraint=false];
+  users -> ui   [label="HTTPS + JWT"];
   ui    -> apim [label="HTTPS + bearer"];
 
   // Ingress — APIM is the gateway for user-facing NJI APIs (Domain primarily;
@@ -228,14 +235,13 @@ digraph nji_system_context {
                    label="Read-models federate\nvia SQL JOIN over\nshared schema",
                    color="#7030a0", penwidth=2.0];
 
-  // Cluster-level dependency: every NJI service validates inbound JWTs
+  // Cluster-level dependency: every NJI service validates inbound user JWTs
   // against HMCTS IdP's JWKS endpoint (via its custom JWTFilter, per the
   // HMCTS Crime template pattern) before the request reaches the controller
-  // layer; service principals also acquire service tokens via OAuth
-  // client_credentials. Drawn from the Cross-cutting cluster boundary as a
-  // representative for "every NJI service ↔ HMCTS IdP".
+  // layer. At MVP all runtime calls are user-initiated and inter-service auth
+  // is via JWT propagation — no service principals, no client_credentials.
   authz -> idp [ltail=cluster_xcutting,
-                label="every NJI service validates\nJWTs against JWKS · service\ntokens via OAuth\nclient_credentials",
+                label="every NJI service validates\nuser JWTs against JWKS\n(human authN only)",
                 style=dashed, color="#3070a0", constraint=false];
 
   // Cluster-level dependency: Cross-cutting (specifically Notification) sends

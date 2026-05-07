@@ -124,7 +124,7 @@ Per `nji_mock_auth` DB role. **Never deployed to production**; production deploy
 
 | Table | Type | Purpose |
 |---|---|---|
-| `mock_oauth_clients` | Dev-only | OAuth client registrations for service principals (Spring Authorization Server backend) |
+| `mock_oauth_clients` | Dev-only | OAuth client registrations (Spring Authorization Server backend). At MVP this only holds the SPA client registration for the human `authorization_code` flow — **no service-principal registrations**, since at MVP all NJI runtime calls are user-initiated and inter-service auth is by JWT propagation, not by `client_credentials`. *(Narrowed v2.5, 2026-05-07.)* |
 | `mock_user_roster` | Dev-only | Test user roster mirroring a representative subset of `auth_users` for realistic Authorisation testing (G5.2) |
 
 ## Inventory totals

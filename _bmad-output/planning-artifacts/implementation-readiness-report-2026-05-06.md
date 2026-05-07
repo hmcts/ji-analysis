@@ -102,7 +102,7 @@ The Architecture document resolves the 7 architecture-phase TBDs from the PRD:
 |---|---|---|
 | Rate limit policy | TBD | Azure API Management at ingress; 100 req/sec/principal default; 10 req/sec/principal for MI Feed; 200 req/sec burst |
 | UI framework family | TBD | React + TypeScript + GOV.UK Design System + Vite |
-| Service-to-service auth | TBD | OAuth 2.0 client_credentials via OIDC issuer (mock auth Phase 0–8; HMCTS IdP from pre-Phase-9); mTLS as fallback |
+| Service-to-service auth | Resolved v2.5 (2026-05-07) | **JWT propagation at MVP** — no service principals, no `client_credentials`, no mTLS. Inter-service calls forward the inbound user JWT. Service-identity question reopens post-MVP if non-user-initiated flows arrive (see architecture `gaps.md` G7). |
 | Log retention | TBD | 30 days hot in App Insights; 90 days cold in Log Analytics archive |
 | API versioning specifics | TBD | URI prefix major versioning (`/v1/`); 6-month internal / 12-month external deprecation; `Sunset` header per RFC 8594 |
 | Historical-data access | TBD | Read-only APEX bridge for 12 months post-region-cutover; one-shot extract thereafter |
@@ -114,7 +114,7 @@ The Architecture's Step 7 validation table maps every PRD FR capability area to 
 
 | FR group | Architectural support |
 |---|---|
-| Identity & Authorisation (FR1–FR5) | Authorisation service + per-service custom JWTFilter (HMCTS template pattern) + OIDC integration (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + service-token client_credentials flow |
+| Identity & Authorisation (FR1–FR5) | Authorisation service + per-service custom JWTFilter (HMCTS template pattern) + OIDC integration for human users (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + JWT propagation interceptor on outbound HTTP clients (no service-token flow at MVP per v2.5; FR5 reframed as post-MVP) |
 | Foundational Data Management (FR6–FR9) | Reference Data and Notification services; direct SQL access to Reference Data tables (no caching at MVP per Principle 2). Configuration: per-service Spring profiles + Key Vault; shared `configuration_values` infrastructure table (no API) for cross-service policy values, schema-managed by `nji-architecture` Flyway baseline. *(Revised v2.2, 2026-05-07.)* |
 | Judge Records & Working Patterns (FR10–FR18) | Judge service (Phase 1); working-pattern engine owned by Judge |
 | Absence Workflow (FR19–FR22) | Absence service (Phase 2); approval workflow with auto-vacancy creation per R4 |
