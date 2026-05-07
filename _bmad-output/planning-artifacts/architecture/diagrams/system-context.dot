@@ -199,6 +199,9 @@ digraph nji_system_context {
   //   - "Read-models → Data tier" subsumes: itinerary→db SQL JOIN,
   //     mifeed→db SQL JOIN aggregate.
   //   - "Cross-cutting → HMCTS Email" subsumes: notify→email SMTP/Graph.
+  //   - "Cross-cutting → HMCTS IdP" subsumes: every NJI service's JWTFilter
+  //     validating inbound JWTs against IdP's JWKS endpoint, plus
+  //     OAuth client_credentials service-token issuance.
   // Service-level detail lives in architecture.md (integration points).
 
   // User entry
@@ -224,6 +227,16 @@ digraph nji_system_context {
   itinerary -> db [ltail=cluster_readmodel,
                    label="Read-models federate\nvia SQL JOIN over\nshared schema",
                    color="#7030a0", penwidth=2.0];
+
+  // Cluster-level dependency: every NJI service validates inbound JWTs
+  // against HMCTS IdP's JWKS endpoint (via its custom JWTFilter, per the
+  // HMCTS Crime template pattern) before the request reaches the controller
+  // layer; service principals also acquire service tokens via OAuth
+  // client_credentials. Drawn from the Cross-cutting cluster boundary as a
+  // representative for "every NJI service ↔ HMCTS IdP".
+  authz -> idp [ltail=cluster_xcutting,
+                label="every NJI service validates\nJWTs against JWKS · service\ntokens via OAuth\nclient_credentials",
+                style=dashed, color="#3070a0", constraint=false];
 
   // Cluster-level dependency: Cross-cutting (specifically Notification) sends
   // outbound email, which is then forwarded to JFEPS by the Payment Authoriser

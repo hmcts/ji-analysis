@@ -38,7 +38,7 @@ _This document builds collaboratively through step-by-step discovery. Sections a
 | [`./architecture/repo-structure.md`](./architecture/repo-structure.md) | Per-service / UI / `nji-architecture` repo directory structures, file organisation patterns, local development workflow, deployment-pipeline ASCII diagram |
 | [`./architecture/gaps.md`](./architecture/gaps.md) | Documented Gaps register — G1–G6 series with mitigations and owners |
 | [`./architecture/assumptions.md`](./architecture/assumptions.md) | Assumptions register — A1–A33 with type (load-bearing / reversible / aspirational) and verification path |
-| [`./architecture/changelog.md`](./architecture/changelog.md) | Version history v1.0 → v2.2, including a *pre-v1.8 anchor → current location* table for older changelog entries that reference moved sections |
+| [`./architecture/changelog.md`](./architecture/changelog.md) | Version history v1.0 → v2.3, including a *pre-v1.8 anchor → current location* table for older changelog entries that reference moved sections |
 
 Refactor history: the single-file `architecture.md` was split into the index + sibling structure above in v1.8 (Strategy B). Pre-v1.8 changelog entries reference section anchors that moved to siblings; the [`./architecture/changelog.md`](./architecture/changelog.md) header has a redirect table.
 
@@ -409,7 +409,7 @@ NJI's pre-production phases (0 through 8) use a **Mock Authentication Service** 
 **End-user authorisation: NJI Authorisation service** (locked).
 
 - Each NJI service implements its own **custom JWT filter** (per HMCTS Crime template's `JWTFilter` pattern, `io.jsonwebtoken:jjwt` based). The filter:
-  1. Validates the JWT signature and issuer (mock auth in Phase 0–8; HMCTS IdP from pre-Phase-9).
+  1. Validates the JWT signature and issuer **by fetching the issuer's JWKS public keys** (`/oauth2/jwks` on mock auth in Phase 0–8; HMCTS IdP's published JWKS endpoint from pre-Phase-9). Public keys are cached per the issuer's published cache headers.
   2. Extracts the principal identity (sub, email, employee number) from JWT claims.
   3. Calls `POST /authz/check` against the NJI Authorisation service to resolve the principal's NJI roles + Region/Area scope + per-region phased activation flag (FR58). **This step diverges from the HMCTS Crime template's claims-only authorisation** — NJI's authz state lives in Authorisation, not in the IdP, so per-request lookup is required.
   4. Stores the resolved authz context in a request-scoped `AuthDetails` bean (matching HMCTS Crime template's pattern).
@@ -901,7 +901,7 @@ What stays cross-repo:
 
 | External system | Direction | NJI service interacting | Pattern |
 |---|---|---|---|
-| HMCTS IdP | inbound (AuthN) + token issuance for service-to-service | All services (token validation); Authorisation (authz mapping) | OIDC; client_credentials grant for service-to-service. **Pre-Phase-9 dependency only** — mock auth (`nji-mock-auth`) covers Phase 0–8 dev/CI/integration. |
+| HMCTS IdP | inbound (AuthN) + token issuance for service-to-service | **Every NJI service** (each service's `JWTFilter` validates inbound JWT signatures against the IdP's **JWKS endpoint** before request reaches controller); **Authorisation** (authz mapping after JWTFilter passes); service principals (token acquisition) | OIDC. JWT signature validation via JWKS public keys (`io.jsonwebtoken:jjwt`); OAuth 2.0 `client_credentials` grant for service-to-service tokens. **Pre-Phase-9 dependency only** — mock auth (`nji-mock-auth`) covers Phase 0–8 dev/CI/integration; cutover is a Spring profile change (issuer-url + JWKS URL flip) — no code change. |
 | JFEPS / Liberata | outbound | Payment + Notification | JFEPS-Excel via email to Payment Authoriser; manual upload by authoriser |
 | HMCTS email | outbound | Notification | SMTP / Microsoft Graph (per HMCTS standard) |
 | Azure Application Insights | outbound (logs + traces) | All services | OpenTelemetry → OTel Collector → Application Insights as export target (per HMCTS Crime template) |
@@ -1206,4 +1206,4 @@ Drivers of high confidence:
 >
 > The full version history (v1.0 → v1.8) lives in the sibling. The changelog file also includes a *pre-v1.8 anchor → current location* redirect table for older changelog entries that reference section anchors that moved into siblings.
 >
-> **Latest version:** v2.2 — Dropped the dedicated `nji-configuration` service; `configuration_values` demoted to a shared infrastructure table (no API). Per-service config now uses Spring profiles + Key Vault. **Decomposition: 12 → 11 services; repos: 15 → 14.** Same design rule as v2.1: use native platform constructs over custom services. See the sibling for the full row.
+> **Latest version:** v2.3 — Made the HMCTS IdP integration with NJI services explicit on the system context diagram and in the docs: every NJI service's `JWTFilter` validates inbound JWT signatures against HMCTS IdP's JWKS endpoint before allowing access; service principals acquire tokens via OAuth client_credentials. New cluster-level edge from Cross-cutting → HMCTS IdP on the diagram; tightened wording in `architecture.md` Step 4 + Step 6 and across `architecture-summary.md`. See the sibling for the full row.

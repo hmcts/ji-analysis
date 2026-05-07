@@ -64,9 +64,9 @@ This file describes **what is built and how it runs**. For decision rationale, a
 | Schema evolution | Flyway (NJI DDL only) |
 | Container orchestration | Azure Kubernetes Service — single production cluster in UK South with multi-AZ node pools |
 | Ingress | Azure API Management — Premium SKU, zone-redundant |
-| Identity provider | HMCTS IdP via OIDC (production); `nji-mock-auth` in dev / CI / integration |
-| Service-to-service auth | OAuth 2.0 client_credentials |
-| Per-request auth | Custom `JWTFilter` (HMCTS Crime template pattern) → `nji-authorisation` |
+| Identity provider | HMCTS IdP via OIDC (production); `nji-mock-auth` in dev / CI / integration; JWKS endpoint provides JWT-signature public keys to every NJI service |
+| Service-to-service auth | OAuth 2.0 client_credentials grant against the same OIDC issuer |
+| Per-request auth | Custom `JWTFilter` (HMCTS Crime template pattern, `io.jsonwebtoken:jjwt`) — validates JWT signature against IdP JWKS, then calls `nji-authorisation` for authz |
 | Secrets | Azure Key Vault (zone-redundant) |
 | Observability | Logback + Logstash JSON encoder → OpenTelemetry → Azure Application Insights / Log Analytics |
 | Frontend stack | React + TypeScript + Vite + GOV.UK Design System |
@@ -86,9 +86,10 @@ Full per-table inventory: [`./architecture/data-tables.md`](./architecture/data-
 
 ## Authentication & Authorisation
 
-- **End-user authentication** — HMCTS IdP via OIDC; single sign-on; JWT issued. Mock auth (`nji-mock-auth`, Spring Authorization Server) is the OIDC issuer in non-production environments; cutover to real HMCTS IdP is a Spring profile change (no code change).
-- **End-user authorisation** — every NJI service implements its own custom `JWTFilter`. The filter validates the JWT and calls `POST /authz/check` against `nji-authorisation` to resolve role + Region/Area scope + per-region activation flag (FR58). Authorisation context lives in a request-scoped `AuthDetails` bean.
-- **Service-to-service authentication** — OAuth 2.0 `client_credentials` grant against the same OIDC issuer; service token attached as `Authorization: Bearer …` to internal calls.
+- **End-user authentication** — HMCTS IdP via OIDC; single sign-on; JWT issued. Mock auth (`nji-mock-auth`, Spring Authorization Server) is the OIDC issuer in non-production environments; cutover to real HMCTS IdP is a Spring profile change (issuer-url + JWKS URL flip — no code change).
+- **JWT signature validation against HMCTS IdP** — every NJI service's custom `JWTFilter` (per HMCTS Crime template, `io.jsonwebtoken:jjwt` based) validates the JWT signature and issuer by fetching public keys from the IdP's **JWKS endpoint** (`/oauth2/jwks` on mock auth; HMCTS IdP's published JWKS URL in production). Validation happens **before the request reaches the service's controller** — it is the gate that enforces "users have a valid authenticated session" before any NJI API resource is exposed. Public keys are cached per the issuer's cache headers.
+- **End-user authorisation** — after JWT validation, the same `JWTFilter` calls `POST /authz/check` against `nji-authorisation` to resolve role + Region/Area scope + per-region activation flag (FR58). Authorisation context lives in a request-scoped `AuthDetails` bean.
+- **Service-to-service authentication** — service principals acquire tokens from the same OIDC issuer via OAuth 2.0 `client_credentials` grant; service token attached as `Authorization: Bearer …` to internal calls; the receiving service's `JWTFilter` validates the service token via the same JWKS path.
 - **APEX ⇄ IdP identity reconciliation** — email primary, employee number fallback. Reconciliation is performed by the Phase 0 Data Migration ETL when seeding `nji-authorisation`.
 
 ## API patterns
@@ -109,8 +110,9 @@ Full per-table inventory: [`./architecture/data-tables.md`](./architecture/data-
 
 | Pattern | Mechanism |
 |---|---|
-| User request | HMCTS IdP SSO → JWT → `nji-ui` → APIM (JWT validation, rate limits) → service |
-| Per-request authz | `JWTFilter` calls `POST /authz/check` against `nji-authorisation` |
+| User request | HMCTS IdP SSO → JWT → `nji-ui` → APIM (rate limits, routing) → service |
+| Per-request JWT validation | Each NJI service's `JWTFilter` validates the inbound JWT signature against **HMCTS IdP's JWKS endpoint** before any controller is invoked |
+| Per-request authz | After JWT validation, the same `JWTFilter` calls `POST /authz/check` against `nji-authorisation` |
 | Reference Data reads | Direct SQL (per-service `SELECT` grant); no API call |
 | Reference Data writes | Via `nji-reference-data` API (admin / Phase 0 seeding) |
 | Cross-service workflow | REST call to the owning service |
@@ -152,7 +154,7 @@ A standalone programme deliverable, **not a runtime service**:
 
 | System | Direction | Purpose |
 |---|---|---|
-| HMCTS IdP | inbound (authN) + service-token issuance | OIDC authentication for users and service principals |
+| HMCTS IdP | inbound (authN) + JWKS used by NJI services for JWT signature validation + service-token issuance via OAuth client_credentials | OIDC authentication for users and service principals; every NJI service's `JWTFilter` validates inbound JWTs against IdP JWKS before allowing access to NJI APIs |
 | HMCTS Email | outbound | Booking / absence acknowledgements; JFEPS payment schedules |
 | JFEPS / Liberata | outbound (via authoriser email upload) | Payment processing |
 | DA&I | inbound (post-MVP REST) | MI consumer for aggregate reports |
