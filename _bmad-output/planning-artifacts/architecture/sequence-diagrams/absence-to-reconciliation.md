@@ -29,67 +29,9 @@ These apply on every Court / RSU → service call but would clutter the diagram:
 - The same `JWTFilter` calls `POST /authz/check` against `nji-authorisation` to resolve role + Region/Area scope + per-region activation flag (FR58).
 - Cross-service calls forward the user's JWT (token propagation; no service principals at MVP).
 
-```mermaid
-%%{init: {'sequence': {'actorFontSize': 16, 'actorFontWeight': 'bold', 'messageFontSize': 15, 'noteFontSize': 13, 'mirrorActors': false, 'actorMargin': 30, 'boxMargin': 6, 'messageMargin': 30}}}%%
-sequenceDiagram
-    autonumber
+![Absence → Vacancy → Booking → Sitting → Reconciliation sequence](./absence-to-reconciliation.png)
 
-    actor Court as Court User
-    actor RSU
-
-    participant Abs as nji-absence
-    participant Vac as nji-vacancy
-    participant Bk as nji-booking
-    participant Pay as nji-payment
-    participant Notif as nji-notification
-
-    rect rgb(232, 240, 250)
-        Note over Court,Notif: Phase 1 — Court User logs absence (with cover request)
-        Court->>Abs: POST /v1/absences
-        Abs->>Abs: validate (FR15)
-        Abs-->>Court: 201 (pending)
-        Abs->>Notif: send absence ack
-        Notif->>Notif: dispatch to salaried judge via HMCTS Email
-    end
-
-    rect rgb(232, 250, 232)
-        Note over Court,Notif: Phase 2 — RSU approves absence, vacancy auto-created (R4)
-        RSU->>Abs: POST /v1/absences/{id}/approve
-        Abs->>Abs: pending to approved
-        Abs->>Vac: POST /v1/vacancies
-        Vac-->>Abs: 201 (needs-allocation)
-        Abs-->>RSU: 200
-    end
-
-    rect rgb(250, 240, 230)
-        Note over Court,Notif: Phase 3 — RSU creates fee-paid booking, vacancy filled in-tx (R5)
-        Note right of RSU: Advertising is out-of-system. RSU records the booking once a fee-paid judge replies.
-        RSU->>Bk: POST /v1/bookings
-        Bk->>Vac: SELECT FOR UPDATE
-        Bk->>Bk: INSERT booking
-        Bk->>Vac: UPDATE filled = true
-        Bk->>Bk: COMMIT
-        Bk-->>RSU: 201 booking
-        Bk->>Notif: send booking ack
-        Notif->>Notif: dispatch to fee-paid judge via HMCTS Email
-    end
-
-    rect rgb(250, 232, 240)
-        Note over Court,Notif: Phase 4 — Court User confirms sitting, booking marked ready for payment
-        Court->>Bk: POST /v1/bookings/{id}/confirm
-        Bk->>Bk: status = ready_for_payment
-        Bk-->>Court: 200
-    end
-
-    Note over Court,Notif: Between Phase 4 and Phase 5, the routine payment-processing batch runs and Liberata pays the judge — out of scope of this diagram (see "What is deliberately NOT in this diagram" above).
-
-    rect rgb(250, 250, 232)
-        Note over Court,Notif: Phase 5 — RSU marks payment reconciled (manual at MVP)
-        RSU->>Pay: POST /v1/payments/{id}/reconcile
-        Pay->>Pay: status = matched
-        Pay-->>RSU: 200
-    end
-```
+*Source: [`./absence-to-reconciliation.mmd`](./absence-to-reconciliation.mmd) (Mermaid). Regenerate with `mmdc -i absence-to-reconciliation.mmd -o absence-to-reconciliation.png -w 2400 -s 2 --backgroundColor white`.*
 
 ## Phase summary
 

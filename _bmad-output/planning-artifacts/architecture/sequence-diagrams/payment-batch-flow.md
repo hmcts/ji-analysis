@@ -36,51 +36,9 @@ The flow is split into **four phases** — phase 1 is in-process automation (sch
 - Notification's `JWTFilter` validates the batch's service-principal JWT against the issuer's JWKS — same mechanism as for human user JWTs.
 - Notification calls `nji-authorisation` `POST /authz/check` to resolve the service principal's permissions (service principals have records in `auth_users` with a kind flag distinguishing them from humans).
 
-```mermaid
-%%{init: {'sequence': {'actorFontSize': 16, 'actorFontWeight': 'bold', 'messageFontSize': 15, 'noteFontSize': 13, 'mirrorActors': false, 'actorMargin': 30, 'boxMargin': 6, 'messageMargin': 30}}}%%
-sequenceDiagram
-    autonumber
+![Payment-batch sequence — Scheduler → Batch → JFEPS Excel → Authoriser → Liberata](./payment-batch-flow.png)
 
-    participant Sched as Scheduler
-    participant Batch as nji-payment-batch
-    participant Auth as nji-mock-auth
-    participant Notif as nji-notification
-    actor PA as Payment Authoriser
-    participant JFEPS as JFEPS / Liberata
-
-    rect rgb(232, 240, 250)
-        Note over Sched,JFEPS: Phase 1 — Scheduler triggers batch, batch acquires service token
-        Sched->>Batch: cron tick (e.g. weekly Friday 17:00)
-        Batch->>Auth: POST /oauth2/token (client_credentials)
-        Auth-->>Batch: service JWT (short-lived)
-    end
-
-    rect rgb(232, 250, 232)
-        Note over Sched,JFEPS: Phase 2 — Batch collects eligible records and persists schedule
-        Note right of Batch: Eligible = confirmed bookings + sittings without an existing payment row.
-        Batch->>Batch: SQL JOIN over bookings + sittings + (LEFT JOIN payments WHERE NULL)
-        Batch->>Batch: generate JFEPS-shaped Excel
-        Batch->>Batch: INSERT payments + payment_schedules
-        Batch->>Batch: UPDATE bookings status = payment_requested (FR42)
-    end
-
-    rect rgb(250, 240, 230)
-        Note over Sched,JFEPS: Phase 3 — Batch dispatches schedule via Notification
-        Batch->>Notif: POST /v1/notifications/send (bearer = service JWT)
-        Notif->>Notif: dispatch JFEPS Excel email to authoriser via HMCTS Email
-        Notif-->>Batch: 202 accepted
-        Notif-->>PA: JFEPS Excel email
-    end
-
-    rect rgb(250, 232, 240)
-        Note over Sched,JFEPS: Phase 4 — Authoriser uploads to Liberata (out-of-band)
-        Note right of PA: Authoriser reviews schedule and uploads to Liberata via the existing JFEPS workflow. NJI is not in the loop.
-        PA->>JFEPS: review and upload Excel
-        JFEPS->>JFEPS: process payments and pay judge
-    end
-
-    Note over Sched,JFEPS: Reconciliation feedback from Liberata back to NJI is manual at MVP — RSU clicks "mark reconciled" in the user-initiated flow (see absence-to-reconciliation diagram, Phase 5). Automated reconciliation is post-MVP.
-```
+*Source: [`./payment-batch-flow.mmd`](./payment-batch-flow.mmd) (Mermaid). Regenerate with `mmdc -i payment-batch-flow.mmd -o payment-batch-flow.png -w 2400 -s 2 --backgroundColor white`.*
 
 ## Phase summary
 
