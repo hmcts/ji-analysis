@@ -916,6 +916,8 @@ What stays cross-repo:
 
 All services share one global PostgreSQL DB (shared schema). Each service writes its own tables; cross-service simple writes go via DB role grants (per Principle 1). Workflows go via API.
 
+> 📐 **Visual sequence**: a Mermaid sequence diagram of this end-to-end flow — split into 7 user-driven phases (Court User logs absence → RSU approves → RSU books fee-paid cover → Court User confirms sitting → RSU processes payment → Payment Authoriser uploads to Liberata → RSU reconciles) — lives at [`./architecture/sequence-diagrams/absence-to-reconciliation.md`](./architecture/sequence-diagrams/absence-to-reconciliation.md). The ASCII flow below is the narrative; the sequence diagram is the same flow rendered visually with explicit phase boundaries and the R4 / R5 / SQL-JOIN / JFEPS-Excel architectural rules called out at each step.
+
 ```
 [Court user]                    raise absence (FR19)
        │
