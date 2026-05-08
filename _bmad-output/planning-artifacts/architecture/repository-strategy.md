@@ -10,11 +10,11 @@ last_updated: 2026-05-07
 
 ## Repository Strategy: Polyrepo
 
-**Decision: 11 service repos + 1 mock-auth repo + 1 UI repo + 1 architecture/scaffolding repo. No monorepo, no Gradle root project.**
+**Decision:** 11 service repos + 1 mock-auth repo + 1 UI repo + 1 architecture/scaffolding repo. No monorepo, no Gradle root project.
 
-A monorepo would either share `build.gradle` config (violates no-shared-coupling), coordinate releases (violates per-region phased rollout independence), or add Bazel-style hermetic build complexity that none of our requirements justify.
+A monorepo would either share `build.gradle` config (breaks no-shared-coupling), coordinate releases (breaks per-region phased rollout independence), or add Bazel-style hermetic build complexity that NJI's requirements don't need.
 
-Polyrepo gives each service its own repo, pipeline, release cadence, CODEOWNERS, branch protection, and review policy. What stays cross-repo: API contracts (OpenAPI specs), the architecture document and ADRs, the scaffolding script, the Phase 0 Data Migration ETL.
+Polyrepo gives each service its own repo, pipeline, release cadence, CODEOWNERS, branch protection, and review policy. What stays cross-repo: API contracts (OpenAPI specs), the architecture documents and ADRs, the scaffolding script, the Phase 0 Data Migration ETL.
 
 ## Repository List
 

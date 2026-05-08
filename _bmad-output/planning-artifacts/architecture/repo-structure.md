@@ -7,7 +7,7 @@ extracted_in: architecture.md v1.8 — Strategy B refactor
 
 # Repository Directory Structures, File Organisation, Local Development Workflow
 
-> Sibling of [`../architecture.md`](../architecture.md). The parent file's *Project Structure & Boundaries* (Step 6) keeps the architectural decisions (polyrepo strategy, repository list, architectural boundaries, integration points, data flows, region rollout flow); this file keeps the per-repo directory inventory and developer-facing build/run/deploy commands.
+> Sibling of [`../architecture.md`](../architecture.md). The parent's *Project Structure & Boundaries* holds the architectural decisions. This file holds the per-repo directory inventory and the developer-facing build/run/deploy commands.
 
 ## Complete Project Directory Structure — per backend service
 

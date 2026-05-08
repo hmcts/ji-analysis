@@ -6,11 +6,11 @@ last_updated: 2026-05-07
 
 # Payment-batch flow
 
-High-level sequence diagram of the **scheduled, non-user-initiated** half of the operational cycle: a scheduler triggers the payment-processing batch, which authenticates as a service principal, picks up the bookings/sittings that are confirmed but not yet paid, generates the JFEPS-compatible Excel schedule, and dispatches it via Notification → HMCTS Email to the Payment Authoriser. The authoriser then uploads to Liberata out-of-band, and Liberata pays the judge.
+Sequence diagram of the scheduled, non-user-initiated half of the operational cycle. A scheduler triggers the payment-processing batch. The batch authenticates as a service principal, picks up bookings/sittings that are confirmed but unpaid, generates the JFEPS Excel, and dispatches it via Notification → HMCTS Email to the Payment Authoriser. The authoriser uploads to Liberata out-of-band; Liberata pays the judge.
 
-This is the companion to [`./absence-to-reconciliation.md`](./absence-to-reconciliation.md), which covers the user-initiated activities. Together they describe the end-to-end operational cycle: the user-initiated flow ends with a booking marked as confirmed and ready for payment; the batch flow below picks up that record on its next scheduled run.
+Companion to [`./absence-to-reconciliation.md`](./absence-to-reconciliation.md). The user-initiated flow ends with a booking marked confirmed and ready for payment; this batch picks up the record on its next scheduled run.
 
-The flow is split into **four phases** — phase 1 is in-process automation (scheduler + batch authentication); phases 2–3 are the batch's actual work; phase 4 is out-of-band external processing (Liberata). Phases are colour-tinted in the diagram for visual separation.
+Four phases: (1) scheduler + batch authentication; (2–3) the batch's work; (4) out-of-band processing in Liberata. Phases are colour-tinted in the diagram.
 
 ## What is and isn't in this diagram
 

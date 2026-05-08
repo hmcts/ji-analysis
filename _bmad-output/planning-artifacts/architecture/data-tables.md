@@ -7,7 +7,7 @@ extracted_in: architecture.md v1.8 — Strategy B refactor
 
 # Authoritative Table Ownership Mapping
 
-> Sibling of [`../architecture.md`](../architecture.md). The parent file's *Data Architecture* (Step 4) section keeps the architectural strategy (single shared schema, per-service DB roles, table-name convention, Flyway migrations); this file keeps the per-table inventory.
+> Sibling of [`../architecture.md`](../architecture.md). The parent's *Data Architecture* section holds the strategy (shared schema, per-service DB roles, table-name convention, Flyway). This file holds the per-table inventory.
 
 ## NJI tables, not APEX
 
@@ -21,7 +21,7 @@ For naming convention rules (entity-plural for primary domain tables, service-pr
 
 ## Reference Data service (`nji-reference-data`) — 15 tables
 
-Cross-cutting controlled lists. **Reads** by other services go directly via SQL JOIN against per-service DB role SELECT grants; **writes** go via the Reference Data API (the seeding mechanism per Step 2 *Cross-Cutting Concerns* in [`../architecture.md`](../architecture.md)).
+Cross-cutting controlled lists. Reads go directly via SQL JOIN with per-service SELECT grants. Writes go via the Reference Data API.
 
 | Table | Type | Purpose | Key consumers |
 |---|---|---|---|

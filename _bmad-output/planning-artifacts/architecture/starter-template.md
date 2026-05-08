@@ -7,13 +7,11 @@ extracted_in: architecture.md v1.8 — Strategy B refactor
 
 # Starter Template — Initialisation Flow, Build Tool, Dependency Inventory, NJI Conventions
 
-> Sibling of [`../architecture.md`](../architecture.md). The parent file's *Starter Template Evaluation* section keeps the high-level rationale ("HMCTS internal Java/Spring Boot starter — selected"); this file keeps the implementation-detail content that backs that decision.
-
-The starter selection rationale and the comparison table of options considered live in [`../architecture.md`](../architecture.md). The content below is the per-service initialisation flow, the dependency inventory the starter brings, and the NJI-specific conventions overlaid by the scaffolding script.
+> Sibling of [`../architecture.md`](../architecture.md). Selection rationale lives in the parent. This file holds the per-service initialisation flow, dependency inventory, and NJI conventions overlaid by the scaffolding script.
 
 ## Initialisation Flow (per service)
 
-Each new NJI service is scaffolded from the HMCTS starter, then customised for its specific domain. The exact CLI form depends on what HMCTS publishes; the conceptual flow is:
+Each new NJI service is scaffolded from the HMCTS starter, then customised. The exact CLI depends on what HMCTS publishes; conceptual flow:
 
 ```bash
 # Conceptual — actual command per HMCTS published documentation
@@ -34,18 +32,18 @@ git add . && git commit -m "Scaffold NJI {service-name} from HMCTS starter"
 git push -u origin main
 ```
 
-The team should produce a small **NJI scaffolding script** (a thin wrapper over the HMCTS starter clone-and-rename steps, plus NJI-specific defaults like Azure UK region selection, default Application Insights workspace, and naming conventions) so that creating service N+1 takes minutes, not hours. The scaffolding script is *not* a runtime dependency; it is a one-shot tool used at service-creation time.
+**NJI scaffolding script:** a thin wrapper over the HMCTS starter clone-and-rename steps, with NJI-specific defaults (Azure UK region, Application Insights workspace, naming conventions). Used at service-creation time only — not a runtime dependency.
 
 ## Build Tool: Gradle
 
-**Selected: Gradle** for all 11 services and the scaffolding script itself.
+Gradle for all 11 services and the scaffolding script.
 
-Rationale:
+Reasons:
 
-- More flexible for the per-service repo + occasional cross-repo conventions pattern.
-- Faster incremental builds; better for the per-service Postman collection generation and OpenAPI artefact publication.
-- Aligns with the HMCTS starter's typical default (HMCTS Java templates have used Gradle).
-- Settled once for all 11 services for consistency.
+- Flexible for per-service repos + occasional cross-repo conventions.
+- Fast incremental builds; works well for per-service Postman collection generation and OpenAPI artefact publication.
+- Matches the HMCTS starter's typical default.
+- Consistent across all services.
 
 ## Architectural Decisions Provided by Starter
 

@@ -227,7 +227,7 @@ The MVP-relevant case is the **payment-processing batch** (`nji-payment-batch`),
 
 **Retry safety and concurrency control:**
 
-NJI uses **native PostgreSQL + JPA constructs** for retry safety and concurrency control. Custom dedup tables (e.g. per-service `*_idempotency_keys`) are *not* introduced — three native mechanisms cover the three distinct problems they would address.
+NJI uses native PostgreSQL + JPA constructs. No custom `*_idempotency_keys` tables. Three native mechanisms cover the three problems:
 
 | Problem | Mechanism | Failure response |
 |---|---|---|
@@ -241,15 +241,11 @@ NJI uses **native PostgreSQL + JPA constructs** for retry safety and concurrency
 - A documented natural-key unique constraint (`uq_{table}_{columns}`) on every table that supports create.
 - For workflows that update a related row, the repository method uses `@Lock(LockModeType.PESSIMISTIC_WRITE)`.
 
-**`Idempotency-Key` HTTP header:** NJI does *not* implement server-side dedup against a custom key store at MVP. The header is reserved as an escape hatch for the rare case where (a) the operation has no natural unique key and (b) no related row exists to lock. If such a case arises post-MVP, dedup is introduced for that specific endpoint, in that specific service, at that point — not pre-built.
+**`Idempotency-Key` HTTP header:** not implemented at MVP. Reserved as an escape hatch for cases where the operation has no natural unique key and no related row to lock. Introduced per-endpoint if such a case arises post-MVP.
 
-**Audit trail (separate concern):** the historical "who changed what when" record is the user-action audit on the **D7 post-MVP roadmap**. Audit answers forensic questions; the three mechanisms above prevent operational duplication. They are independent and serve different purposes.
+**Audit trail:** the "who changed what when" record is the user-action audit on the D7 post-MVP roadmap. Audit answers forensic questions; the three mechanisms above prevent operational duplication. Independent concerns.
 
-**Why this approach:**
-
-- Uses **PostgreSQL primitives** (unique constraints, MVCC versioning, row-level locking) and **JPA primitives** (`@Version`, `@Lock`) that are documented, tested, and well-understood by the team.
-- Avoids per-service custom tables, custom filters, and custom code that would need its own tests, migrations, and operational maintenance.
-- Aligns with Principle 2 (no premature optimization) and the broader rule: *prefer natively-supported constructs over custom entities for problems already solved by the platform*.
+**Why this approach:** uses PostgreSQL primitives (unique constraints, MVCC versioning, row-level locking) and JPA primitives (`@Version`, `@Lock`). Avoids per-service custom tables, filters, and code. Consistent with Principle 2 — prefer native constructs over custom entities for problems already solved by the platform.
 
 ## Process Patterns
 

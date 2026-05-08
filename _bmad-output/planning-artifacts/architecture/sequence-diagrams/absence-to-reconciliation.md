@@ -8,26 +8,24 @@ last_updated: 2026-05-07
 
 Sequence diagram of the user-initiated NJI operational cycle: a Court User logs an absence for a salaried judge; the absence triggers a vacancy; RSU fills the vacancy with a fee-paid booking; the Court User confirms the sitting (marking it ready for payment); RSU reconciles the payment after the batch and external systems complete.
 
-The flow is split into **five phases** — each one driven by a user action. Phases are colour-tinted in the diagram for visual separation.
+Five phases, each driven by a user action. Phases are colour-tinted in the diagram.
 
-## What is deliberately NOT in this diagram
+## Not in this diagram
 
-The MVP assumption (architecture v2.5 — A35) is that the diagrammed runtime flow contains only user-initiated activities. The following sit between Phase 4 and Phase 5 but are **not** drawn here because they are not user-initiated runtime calls:
+User-initiated activities only. The following sit between Phase 4 and Phase 5 but are not drawn because they are not user-initiated:
 
-- **Routine payment-processing batch** — picks up bookings whose `status = ready_for_payment`, SQL-JOINs across confirmed bookings + sittings, generates the JFEPS-shaped Excel schedule, persists `payments` + `payment_schedules`, and dispatches the schedule by email to the Payment Authoriser. Runs on a schedule (e.g. end-of-week), not in response to any user click.
-- **Payment Authoriser → JFEPS / Liberata** — the authoriser reviews the emailed schedule and uploads it to Liberata using the existing JFEPS workflow. Out-of-band; NJI is not in the loop.
-- **Liberata processing** — Liberata pays the fee-paid judge into their payroll account. External system; not part of NJI runtime.
+- **Payment-processing batch** — picks up bookings with `status = ready_for_payment`, SQL-JOINs across confirmed bookings + sittings, generates the JFEPS Excel, persists `payments` + `payment_schedules`, dispatches via email to the Payment Authoriser. Runs on a schedule (e.g. end-of-week). See [`./payment-batch-flow.md`](./payment-batch-flow.md).
+- **Payment Authoriser → JFEPS / Liberata** — authoriser reviews the email and uploads to Liberata via the existing JFEPS workflow. Out-of-band.
+- **Liberata processing** — Liberata pays the fee-paid judge. External system.
 
-The architectural rules and integration points for these batch / external steps are described in `architecture.md` (Step 4 *Data Architecture*, Step 6 *Integration Points — External*).
+## Cross-cutting steps omitted
 
-## Cross-cutting steps omitted for clarity
+Apply to every Court / RSU → service call:
 
-These apply on every Court / RSU → service call but would clutter the diagram:
-
-- All UI→service calls flow through Azure API Management.
-- Each service's `JWTFilter` validates the inbound JWT signature against HMCTS IdP's JWKS endpoint **before** the controller runs.
-- The same `JWTFilter` calls `POST /authz/check` against `nji-authorisation` to resolve role + Region/Area scope + per-region activation flag (FR58).
-- Cross-service calls forward the user's JWT (token propagation; no service principals at MVP).
+- All UI → service calls flow through Azure API Management.
+- Each service's `JWTFilter` validates the JWT signature against HMCTS IdP's JWKS before the controller runs.
+- The same `JWTFilter` calls `POST /authz/check` against `nji-authorisation` for role + Region/Area scope + activation flag (FR58).
+- Cross-service calls forward the user's JWT.
 
 ![Absence → Vacancy → Booking → Sitting → Reconciliation sequence](./absence-to-reconciliation.png)
 
