@@ -64,7 +64,7 @@ The HMCTS Crime SpringBoot template provides (verified by review on 2026-05-06):
 - **`io.spring.dependency-management:1.1.7`** for BOM-based dependency management.
 - **JaCoCo** plugin for code coverage reports.
 - **`org.cyclonedx.bom:3.2.4`** for SBOM (Software Bill of Materials) generation — supply-chain security.
-- **`com.gorylenko.gradle-git-properties:2.5.7`** to embed Git metadata in `/actuator/info` (and inspires `/capabilities`).
+- **`com.gorylenko.gradle-git-properties:2.5.7`** to embed Git metadata in `/actuator/info`.
 - **`com.github.ben-manes.versions:0.54.0`** for dependency-update reports.
 - **`com.avast.gradle.docker-compose:0.17.21`** for local development with docker-compose-managed dependencies.
 - Gradle multi-task layout: `build`, `test`, `bootRun`, `bootJar`, `dockerBuild`, `helmLint`.
@@ -120,8 +120,7 @@ The scaffolding script applies NJI-specific defaults on top of the HMCTS starter
 - Default Azure UK region: UK South (UK West for DR if needed — programme decision).
 - Default Application Insights workspace: NJI shared workspace (HMCTS-provided).
 - Default Reference Data and Authorisation service URL placeholders.
-- Boilerplate `@ControllerAdvice` for RFC 7807 error envelopes.
-- Boilerplate `CapabilitiesController` (`@RestController` at root path `/capabilities`) — consumer-facing API-as-Product contract endpoint, distinct from Spring Actuator (ops). Build metadata from `gradle-git-properties`; per-service version/deprecation/feature fields from `application.yml`. Response shape per Step 4 *API Documentation* in [`../architecture.md`](../architecture.md).
+- Boilerplate `@ControllerAdvice` for [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details error envelopes (formerly RFC 7807; obsoleted July 2023 — content type and field shape unchanged).
 - Boilerplate `JWTFilter` + `AuthDetails` bean (per HMCTS template pattern); modified to call NJI Authorisation service per request (NJI variance from template's claims-only approach — required by FR58).
 - Boilerplate Reference Data direct-SQL access (JPA entities mapped to whitelisted Reference Data tables — 15 tables, see [`./data-tables.md`](./data-tables.md): `regions`, `offices`, `calendar_periods`, plus the 12 vocabulary tables); no client class.
 - *(removed 2026-05-06)* Boilerplate APEX-comparison test base class — retracted. Behavioural parity is verified via **manual UAT performed by APEX-experienced users** (FR61 / NFR41 revised). Per-service UAT scripts live under `docs/uat/` in the service repo, not as test code.

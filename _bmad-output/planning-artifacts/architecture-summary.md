@@ -118,10 +118,9 @@ In detail:
 | Pattern | Detail |
 |---|---|
 | Coordination | REST-first synchronous; no domain event stream, no message bus, no webhook fabric |
-| Versioning | URI prefix major version (`/v1/…`); 6-month internal / 12-month external deprecation windows; `Deprecation` + `Sunset` headers (RFC 8594) |
-| Error envelope | RFC 7807 `application/problem+json` |
-| Capabilities | `/capabilities` per service (`@RestController` at root path); product / contract metadata; **distinct from Spring Actuator** |
-| OpenAPI | Generated via Swagger Core; published per-service as Maven artefacts (`uk.gov.hmcts.nji:api-nji-{service}:{version}`) |
+| Versioning | URI prefix major version (`/v1/…`); 6-month internal / 12-month external deprecation windows; `Deprecation` header per [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745); `Sunset` header per [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) |
+| Error envelope | [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) `application/problem+json` (obsoletes RFC 7807; same content type and field shape) |
+| OpenAPI | Generated via Swagger Core; published per-service as Maven artefacts (`uk.gov.hmcts.nji:api-nji-{service}:{version}`). The OpenAPI document itself is the API's contract surface — there is no separate runtime capabilities/discovery endpoint. |
 | Pagination | Cursor-based for large or chronological lists; offset-based for small filtered lists |
 | Field naming | JSON fields `camelCase`; ISO 8601 dates / instants; UTC stored, UK local for display |
 | Identifiers | UUID primary keys throughout |

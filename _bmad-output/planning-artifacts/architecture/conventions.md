@@ -40,7 +40,7 @@ This document is the consistency contract. Every NJI service follows these patte
 - **Actions on resources:** `POST /v1/absences/{absenceId}/approve`, `POST /v1/sittings/{sittingId}/verify`. Actions are URL-segments, not RPC-style endpoint names.
 - **Path variables:** `{camelCase}` — `{judgeId}`, `{bookingId}`.
 - **Query parameters:** `camelCase` — `?regionId=...&fromDate=...&judgeType=...`.
-- **HTTP headers:** `Title-Kebab-Case`, no `X-` prefix per RFC 6648 — `Idempotency-Key`, `Correlation-Id`, `Sunset`, `Deprecation`.
+- **HTTP headers:** `Title-Kebab-Case`, no `X-` prefix per [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648) — `Idempotency-Key`, `Correlation-Id`, `Sunset` (per [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594)), `Deprecation` (per [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745)).
 - **Versioning prefix:** `/v1/` for major version 1, `/v2/` for v2, etc. (per Step 4 in [`../architecture.md`](../architecture.md)).
 
 **Java code:**
@@ -76,7 +76,7 @@ nji-{service}/
 │   ├── dto/                            (request/response DTOs)
 │   ├── client/                         (clients to other NJI services)
 │   ├── config/                         (Spring config: JWTFilter, AuthDetails, OpenAPI Swagger Core)
-│   ├── error/                          (RFC 7807 ControllerAdvice, problem-detail factories)
+│   ├── error/                          (RFC 9457 ControllerAdvice, problem-detail factories)
 │   └── exception/                      (domain exceptions extending base classes)
 ├── src/main/resources/
 │   ├── application.yml                 (defaults)
@@ -157,7 +157,7 @@ nji-ui/
 **API response envelope:**
 
 - **Success:** direct resource representation, no wrapper. `GET /v1/judges/{id}` returns the Judge JSON directly.
-- **Error:** RFC 7807 `application/problem+json` envelope per Step 4 in [`../architecture.md`](../architecture.md).
+- **Error:** [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) `application/problem+json` envelope (obsoletes RFC 7807; same content type and field shape) per Step 4 in [`../architecture.md`](../architecture.md).
 
 **HTTP status codes (consistent usage):**
 
@@ -215,7 +215,7 @@ The MVP-relevant case is the **payment-processing batch** (`nji-payment-batch`),
 - **Outbound:** every service-to-service client attaches the current MDC correlation ID to outbound `Correlation-Id` header.
 - **Logs:** every log entry includes `correlationId` via Logback MDC integration.
 
-**Error categorisation taxonomy** (used in logs and as RFC 7807 `type` URI suffixes):
+**Error categorisation taxonomy** (used in logs and as RFC 9457 `type` URI suffixes):
 
 | Category | Use case |
 |---|---|
@@ -233,7 +233,7 @@ NJI uses **native PostgreSQL + JPA constructs** for retry safety and concurrency
 
 | Problem | Mechanism | Failure response |
 |---|---|---|
-| **Retry of a successful create** ("duplicate create") | **Natural-key + unique-constraint dedup** at the DB layer. Every domain entity's logical unique key is encoded as a `uq_{table}_{columns}` constraint in Flyway DDL. Examples: `uq_bookings_vacancy_judge_session_date_type`; `uq_absences_judge_start_end_type`; `uq_payments_cycle_run_date`. A retry's `INSERT` violates the constraint; PostgreSQL raises a unique violation; the `@ControllerAdvice` translates `DataIntegrityViolationException` (unique-violation kind) to `409 Conflict` with RFC 7807 `business-rule` + a problem-detail explaining "resource already exists; look up the existing one." | `409 Conflict` |
+| **Retry of a successful create** ("duplicate create") | **Natural-key + unique-constraint dedup** at the DB layer. Every domain entity's logical unique key is encoded as a `uq_{table}_{columns}` constraint in Flyway DDL. Examples: `uq_bookings_vacancy_judge_session_date_type`; `uq_absences_judge_start_end_type`; `uq_payments_cycle_run_date`. A retry's `INSERT` violates the constraint; PostgreSQL raises a unique violation; the `@ControllerAdvice` translates `DataIntegrityViolationException` (unique-violation kind) to `409 Conflict` with RFC 9457 `business-rule` + a problem-detail explaining "resource already exists; look up the existing one." | `409 Conflict` |
 | **Two clients editing the same record concurrently** ("lost update") | **Optimistic concurrency control** via JPA `@Version` (an `integer NOT NULL DEFAULT 0` column on every domain entity that supports update). Update endpoints accept the `If-Match: "v{n}"` header; mismatch → JPA throws `OptimisticLockingFailureException`; `@ControllerAdvice` translates to `412 Precondition Failed`. | `412 Precondition Failed` |
 | **Cross-row workflow that must see consistent state on a related record** (e.g. Booking creation that flips `vacancies.filled`, R5) | **Pessimistic row locking** via Spring Data JPA `@Lock(LockModeType.PESSIMISTIC_WRITE)` on the relevant repository method (translates to `SELECT ... FOR UPDATE`). The transaction holds the lock on the related row from read-time through commit. A retry sees the now-updated row and is rejected by the natural-key + unique-constraint dedup above. | `409 Conflict` (via the unique-constraint path) |
 
@@ -259,12 +259,12 @@ NJI uses **native PostgreSQL + JPA constructs** for retry safety and concurrency
 
 - All controllers return `ResponseEntity<T>` (or void with `@ResponseStatus` for 204 No Content).
 - Per-service `@ControllerAdvice` catches:
-  - `MethodArgumentNotValidException` → 422 + RFC 7807 `validation`
-  - `AuthorisationException` (custom) → 403 + RFC 7807 `authorisation`
-  - `BusinessRuleViolation` (custom base class for domain exceptions) → 409 or 422 + RFC 7807 `business-rule`
-  - `DependencyException` (custom) → 502 + RFC 7807 `dependency`
-  - `OptimisticLockingFailureException` → 409 + RFC 7807 `concurrency`
-  - `Exception` (catch-all) → 500 + RFC 7807 `unexpected` (logged with full stack trace at ERROR level)
+  - `MethodArgumentNotValidException` → 422 + RFC 9457 `validation`
+  - `AuthorisationException` (custom) → 403 + RFC 9457 `authorisation`
+  - `BusinessRuleViolation` (custom base class for domain exceptions) → 409 or 422 + RFC 9457 `business-rule`
+  - `DependencyException` (custom) → 502 + RFC 9457 `dependency`
+  - `OptimisticLockingFailureException` → 409 + RFC 9457 `concurrency`
+  - `Exception` (catch-all) → 500 + RFC 9457 `unexpected` (logged with full stack trace at ERROR level)
 
 **Loading states (UI):**
 
@@ -316,7 +316,7 @@ NJI uses **native PostgreSQL + JPA constructs** for retry safety and concurrency
 - Use the HMCTS Crime SpringBoot template as scaffold (per [`./starter-template.md`](./starter-template.md)) and customise per service.
 - Follow the package layout `uk.gov.hmcts.nji.{service}.{layer}`.
 - Use Gradle Groovy DSL (per HMCTS Crime SpringBoot template) with Gradle Wrapper.
-- Implement RFC 7807 errors via per-service `@ControllerAdvice` (no shared library).
+- Implement RFC 9457 errors via per-service `@ControllerAdvice` (no shared library).
 - Implement Authorisation enforcement via per-service custom `JWTFilter` + `AuthDetails` request-scoped bean (HMCTS template pattern); the filter calls NJI Authorisation per request to resolve role + Region/Area scope (NJI variance from template's claims-only approach — required by FR58).
 - Generate OpenAPI 3.x specs via Swagger Core; publish per-service spec as a Maven artefact (`uk.gov.hmcts.nji:api-nji-{service}:{version}`).
 - Emit structured JSON logs (Logstash encoder) with correlation IDs; export traces via OpenTelemetry.
@@ -336,7 +336,7 @@ NJI uses **native PostgreSQL + JPA constructs** for retry safety and concurrency
 | **CI lint** | Spotless + Checkstyle (Java); ESLint + Prettier (TypeScript); SQL formatting via SQLFluff. Build fails on violation. |
 | **ArchUnit fitness functions** | Per-service ArchUnit tests enforce package layout, dependency rules, naming conventions. Run as part of unit-test suite. |
 | **Consumer-driven contract tests (Pact)** | Verify API conventions are honoured between consumers and providers. |
-| **OpenAPI lint (Spectral)** | OpenAPI specs validated against an NJI-specific ruleset (consistent error envelope, versioning prefix, RFC 7807 references). |
+| **OpenAPI lint (Spectral)** | OpenAPI specs validated against an NJI-specific ruleset (consistent error envelope, versioning prefix, RFC 9457 references). |
 | **JaCoCo + CycloneDX** | Code coverage reports + SBOM generation per HMCTS Crime template. Build emits artefacts for security/audit review. |
 
 **When patterns evolve:**
@@ -360,7 +360,7 @@ NJI uses **native PostgreSQL + JPA constructs** for retry safety and concurrency
 - ❌ Mixed casing in DB: `CREATE TABLE Judge (Id ..., FirstName ...)`.
 - ❌ Snake_case in JSON: `{ "judge_id": ..., "first_name": ... }` (mixes Java-style with JS clients).
 - ❌ Wrap success responses: `{ "data": { "judgeId": ... }, "error": null }`.
-- ❌ Custom error formats: `{ "errorMsg": "..." }` instead of RFC 7807.
+- ❌ Custom error formats: `{ "errorMsg": "..." }` instead of RFC 9457.
 - ❌ Ad-hoc HTTP statuses: `200 OK` with `{"success": false}` body for failures.
 - ❌ "Smart" / RPC-style routes: `POST /v1/processBookingAndCreatePayment` (mixes resources). Use `POST /v1/bookings` then `POST /v1/payments/process`.
 - ❌ Bigint primary keys (use UUID per the standard above).

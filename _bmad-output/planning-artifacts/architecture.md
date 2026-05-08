@@ -65,6 +65,7 @@ date: '2026-05-06'
   - [Assumptions](#assumptions)
   - [Architecture Readiness Assessment](#architecture-readiness-assessment)
   - [Implementation Handoff](#implementation-handoff)
+- [External References](#external-references)
 - [Changelog](#changelog)
 
 ## System context — at a glance
@@ -118,7 +119,7 @@ Architectural implications:
 - **Observability** — log-based MVP only (D7); structured logging + correlation IDs; OpenTelemetry → Application Insights.
 - **Data privacy & sovereignty** — Azure UK regions only; UK GDPR + DPA 2018; no case-level data.
 - **Reliability** — operational availability during HMCTS hours; per-wave rollback; **single Azure region (UK South) with multi-AZ HA**; UK West cold-DR (post-MVP); HMCTS-judicial-region rollout isolation at app tier via FR58 activation flags.
-- **Maintainability** — API-as-Product (versioned, `/capabilities`, RFC 7807, OpenAPI); per-service deployment; **manual UAT scripts per domain service** (FR61 / NFR41 revised 2026-05-06); per-phase Postman collections.
+- **Maintainability** — API-as-Product (versioned, OpenAPI, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details); per-service deployment; **manual UAT scripts per domain service** (FR61 / NFR41 revised 2026-05-06); per-phase Postman collections.
 
 **Scale & Complexity:** API backend (11 services) + first-class UI; **high complexity** driven by financial-integration criticality (JFEPS/Liberata), 11 services with cross-cutting authorisation, multi-region phased rollout, judicial regulatory environment, and behavioural-parity demand on a brownfield rebuild.
 
@@ -153,7 +154,7 @@ These functional concerns recur across most services and are addressed at the pl
 - **Per-region scoping** — domain operations default-scope by Region/Area derived from Authorisation context (FR49). Cross-region operations explicit and rare.
 - **Per-region phased activation** — per D8, NJI access gated by per-region activation flag (FR58). Authorisation supports per-principal "active in NJI" state distinct from "exists in NJI."
 - **Retry safety via native DB primitives** — natural-key unique constraints (`uq_*`), JPA `@Version` optimistic locking, and `SELECT … FOR UPDATE` pessimistic locks. No custom `*_idempotency_keys` tables. See [`./architecture/conventions.md` → "Retry safety and concurrency control"](./architecture/conventions.md).
-- **API-as-Product compliance** — every service exposes a versioned contract, `/capabilities`, RFC 7807 problem-details, OpenAPI (FR59).
+- **API-as-Product compliance** — every service exposes a versioned contract, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details, OpenAPI (FR59).
 - **Behavioural-parity manual UAT** (FR61 / NFR41 revised) — APEX-experienced users compare NJI vs APEX side-by-side per service per region; sign-off is the wave-cutover gate. **No automated APEX-comparison harness in CI.**
 - **Forbidden-data invariants** — no bank details (FR47), no case-level data (FR54). Enforced at schema definition and API boundary.
 
@@ -194,13 +195,13 @@ The shared database is **one global PostgreSQL instance with a single shared sch
 What is shared:
 
 - **The PostgreSQL database** (one global instance, single shared schema, per-service DB roles with explicit grants).
-- **API contracts** (OpenAPI specs per service, RFC 7807 envelope, content-type negotiation patterns) — by specification, not runtime code.
+- **API contracts** (OpenAPI specs per service, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) envelope, content-type negotiation patterns) — by specification, not runtime code.
 - **API spec Maven artefacts** (`uk.gov.hmcts.nji:api-nji-{service}:{version}`) — contract, not runtime code.
 - **Runtime infrastructure services** (Authorisation, Reference Data, Notification) — by API call (workflows) or direct DB read (simple lookups).
 - **Scaffolding templates** (HMCTS Crime SpringBoot template) — at scaffold time, then forked.
 - **CI/CD and operational conventions** (Gradle idioms, OpenTelemetry → Application Insights ingestion contract, Flyway baseline) — by convention and tooling, not library.
 
-What is duplicated, by design: per-service custom `JWTFilter`, per-service `@ControllerAdvice` (RFC 7807 + retry-safety status mapping), per-service `CapabilitiesController`, per-service structured-logging configuration. Estimated duplication: ~300–500 lines of boilerplate per service × 11 services. Mitigation: the HMCTS starter encodes most of this.
+What is duplicated, by design: per-service custom `JWTFilter`, per-service `@ControllerAdvice` ([RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) + retry-safety status mapping), per-service structured-logging configuration. Estimated duplication: ~300–500 lines of boilerplate per service × 11 services. Mitigation: the HMCTS starter encodes most of this.
 
 #### Principle 2: No Premature Optimization
 
@@ -385,28 +386,13 @@ Filter caches authorisation decisions for the request lifecycle only.
 
 **API style: REST-first synchronous.** No event bus, no message queue, no webhook fabric.
 
-**API versioning: URI prefix major versioning. (Resolves PRD TBD #5.)** `/v1/judges`, `/v2/judges`. Backwards-compatible additions stay within the major version. Deprecation: `Deprecation: true` + `Sunset: <RFC 1123 date>` headers per RFC 8594; minimum 6-month internal / 12-month external window before removal.
+**API versioning: URI prefix major versioning. (Resolves PRD TBD #5.)** `/v1/judges`, `/v2/judges`. Backwards-compatible additions stay within the major version. Deprecation signalling: `Deprecation` header per [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) (date-stamp value, e.g. `Deprecation: @1735689600`) + `Sunset` header per [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) (RFC-date value); minimum 6-month internal / 12-month external window before removal.
 
-**Per-service `/capabilities` endpoint** — root-path `@RestController`, distinct from Spring Actuator (which stays ops-restricted at `/actuator/*`). Response shape:
+**Build / version metadata** is exposed only via Spring Boot Actuator's `/actuator/info` endpoint (populated by `gradle-git-properties`), gated to ops at the APIM layer. NJI does **not** publish a runtime API-discovery / capabilities endpoint at MVP — there is no IETF or OpenAPI standard for one (OpenAPI's static spec document is the contract surface), and the API-as-Product standards we mandate (versioning, OpenAPI spec, RFC 9457 errors, deprecation signalling via RFC 9745 + RFC 8594) are sufficient without one.
 
-```json
-{
-  "service": "nji-judge",
-  "currentVersion": "v1",
-  "supportedVersions": ["v1"],
-  "deprecatedVersions": [],
-  "build": { "version": "1.4.2", "commit": "a3f7b21", "builtAt": "2026-05-06T14:30:00Z" },
-  "contentTypes": { "default": "application/json", "negotiated": ["application/json", "application/problem+json"] },
-  "optionalFeatures": [],
-  "deprecationPolicy": { "internalConsumerNoticeMonths": 6, "externalConsumerNoticeMonths": 12 }
-}
-```
+**Rate limiting: Azure API Management at ingress. (Resolves PRD TBD #1.)** 100 req/sec/principal default; 10 req/sec/principal for MI Feed; 200 req/sec burst (sliding 1-second window). The `429 Too Many Requests` status code is per [RFC 6585](https://datatracker.ietf.org/doc/html/rfc6585); the `Retry-After` response header is per [RFC 9110 §10.2.3](https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.3).
 
-Build metadata from `gradle-git-properties` (same source as `/actuator/info`); per-service fields driven by `application.yml`.
-
-**Rate limiting: Azure API Management at ingress. (Resolves PRD TBD #1.)** 100 req/sec/principal default; 10 req/sec/principal for MI Feed; 200 req/sec burst (sliding 1-second window). 429 responses include `Retry-After` per RFC 6585.
-
-**Error handling: RFC 7807 problem-details.** Per-service `@ControllerAdvice` converts domain exceptions; standard `type` URIs `/errors/validation`, `/errors/authorisation`, `/errors/business-rule`, `/errors/dependency`, `/errors/conflict`. Correlation ID echoed for traceability.
+**Error handling: [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details** (formerly [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807); RFC 9457 obsoletes 7807 — `application/problem+json` content type and field shape unchanged). Per-service `@ControllerAdvice` converts domain exceptions; standard `type` URIs `/errors/validation`, `/errors/authorisation`, `/errors/business-rule`, `/errors/dependency`, `/errors/conflict`. Correlation ID echoed for traceability.
 
 **API documentation: Swagger Core + HMCTS API spec artefact pattern.** Each NJI service's OpenAPI 3.x spec is published as a Maven artefact (`uk.gov.hmcts.nji:api-nji-{service}:{version}`); consumers pull at compile time for type-safe contract consumption. Per-phase Postman collections derived from the spec (FR42 / NFR42). API spec artefacts may be shared via Maven (they are *contract*, not runtime code).
 
@@ -452,7 +438,6 @@ Build metadata from `gradle-git-properties` (same source as `/actuator/info`); p
 - **OpenTelemetry** as observability abstraction; exports to Application Insights via OTel Collector.
 - Structured fields: `timestamp`, `level`, `service`, `correlation-id`, `principal-id`, `event-type`, `message`, `error-category`, `error-code`.
 - **Spring Boot Actuator** (`/actuator/health`, `/actuator/info` populated from `gradle-git-properties`, `/actuator/readiness`) — `/actuator/*` namespace ops-restricted at the APIM layer. `/actuator/metrics` and Prometheus endpoint not exposed at MVP per D7.
-- **`/capabilities`** is the consumer-facing contract endpoint (distinct from Actuator).
 - OTel trace sampling 100% in dev/staging; tunable in production.
 
 **Log retention: 30 days hot in App Insights; 90 days cold in Log Analytics archive. (Resolves PRD TBD #4.)** Pre-GA review against HMCTS retention policy may extend.
@@ -533,7 +518,7 @@ If approved in scope: PostgreSQL geo-redundant backup with UK West as restore ta
 | 2 | UI framework family | React + TypeScript + GOV.UK Design System + Vite |
 | 3 | Service-to-service auth | **Two patterns at MVP**: JWT propagation (forward inbound user JWT) for user-initiated calls; OAuth `client_credentials` (via `nji-mock-auth` in non-prod; production issuer per G7.1) for the payment-processing batch service principal |
 | 4 | Log retention | 30 days hot in App Insights; 90 days cold in Log Analytics archive |
-| 5 | API versioning | URI prefix major versioning (`/v1/`); 6-month internal / 12-month external deprecation; `Sunset` header per RFC 8594 |
+| 5 | API versioning | URI prefix major versioning (`/v1/`); 6-month internal / 12-month external deprecation; `Deprecation` header per [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745); `Sunset` header per [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) |
 | 6 | Historical-data access | Read-only APEX bridge for 12 months post-region-cutover; one-shot extract thereafter |
 | 7 | APEX ⇄ IdP identity-key | Email primary, employee number fallback, manual review for unmatched |
 
@@ -596,8 +581,7 @@ See [`./architecture/repo-structure.md`](./architecture/repo-structure.md).
 | Per-region scoping middleware | `src/main/java/.../config/RegionScopeFilter.java` |
 | Per-region phased activation check (FR58) | Resolved in `JWTFilter` via authz path |
 | Retry safety (FR45, FR30) | DB-native — `uq_*` unique constraints in `db/migration/V*__*.sql`; `@Version` on every domain entity; `@Lock(PESSIMISTIC_WRITE)` on repositories that touch related rows. No filter, no custom table, no client class. |
-| RFC 7807 error handling (FR59) | `src/main/java/.../error/GlobalExceptionHandler.java` |
-| `/capabilities` endpoint (FR59) | `src/main/java/.../controller/CapabilitiesController.java` (`@RestController` at root path); build metadata from `gradle-git-properties` |
+| [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details error handling (FR59) | `src/main/java/.../error/GlobalExceptionHandler.java` |
 | OpenAPI 3.x generation (FR59) | `src/main/java/.../config/OpenApiConfig.java` (Swagger Core); spec published as Maven artefact (`uk.gov.hmcts.nji:api-nji-{service}`) |
 | Structured logging (FR60) | `src/main/resources/logback-spring.xml` + `config/CorrelationIdFilter.java` |
 | Manual UAT scripts (FR61 / NFR41 revised) | `docs/uat/` per service (domain services only); not in `src/test/` |
@@ -703,7 +687,7 @@ Rollback path: revert the region's user activation flag (FR58) → users return 
 - **Mock-first authentication + OIDC for human users; two inter-service patterns (JWT propagation + service-principal `client_credentials` for batch)** — coherent. The OIDC contract is issuer-agnostic; switching from mock auth to real HMCTS IdP is a configuration change.
 - **GOV.UK Design System + WCAG 2.2 AA + axe-core** — coherent set; GDS components are built to WCAG 2.2 AA.
 
-**Pattern Consistency:** Step 5 patterns align with Step 4 decisions — DB naming (`snake_case`, plural tables, `uuid` PKs); API naming (`camelCase` JSON, plural resources, `/v1/`, RFC 7807, ISO 8601); Java package layout (`uk.gov.hmcts.nji.{service}.{layer}`); communication patterns (typed clients, correlation-ID propagation, native-DB retry safety).
+**Pattern Consistency:** Step 5 patterns align with Step 4 decisions — DB naming (`snake_case`, plural tables, `uuid` PKs); API naming (`camelCase` JSON, plural resources, `/v1/`, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details, ISO 8601); Java package layout (`uk.gov.hmcts.nji.{service}.{layer}`); communication patterns (typed clients, correlation-ID propagation, native-DB retry safety).
 
 **Structure Alignment:** per-service repos enable per-region phased rollout and per-service deployment independence; per-environment Helm values + zone-redundant AKS in UK South provide HA for NFR34/NFR35/NFR37; NFR38 satisfied at app tier via FR58; per-service Postman collections for NFR42; `nji-architecture` repo holds ADRs and scaffolding without runtime coupling; `nji-mock-auth` isolated so production never references it.
 
@@ -751,7 +735,7 @@ All checklist items pass. No critical gaps block implementation. Mock-first auth
 - **Decisive simplification** — rejected three classes of complexity (event bus, shared library, monorepo) on principled grounds.
 - **Same-Azure-region multi-AZ HA + per-HMCTS-region rollout independence at the application tier** — single-AZ failure tolerated transparently; HMCTS-region rollout independence (NFR38) at app tier via FR58, not per-region infrastructure.
 - **Explicit cross-cutting handling without inheritance** — addressed via per-service patterns, eliminating shared-library redeployment-coupling.
-- **API-as-Product enforcement** — versioning, `/capabilities`, RFC 7807, OpenAPI, deprecation policy as enforceable conventions with CI tooling.
+- **API-as-Product enforcement** — versioning, OpenAPI spec, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details, deprecation policy ([RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) `Deprecation` + [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) `Sunset`) — all enforceable conventions with CI tooling.
 - **Behavioural-parity verification built into the rollout gate** — manual UAT under `docs/uat/` per service walked by APEX-experienced users; sign-off per role per region is the wave-cutover gate.
 - **Mock-first authentication** decouples the build from the HMCTS IdP roadmap.
 
@@ -774,11 +758,30 @@ All checklist items pass. No critical gaps block implementation. Mock-first auth
 2. **Build the NJI scaffolding script** at `nji-architecture/scaffolding/nji-scaffold.sh`, layered on the HMCTS starter, with NJI conventions baked in.
 3. **Scaffold and ship `nji-mock-auth`** as the first Phase 0 service. Spring Authorization Server-based; refuses to start with production profile; supports both `authorization_code` (human) and `client_credentials` (batch).
 4. **Scaffold and ship the three Phase 0 cross-cutting services in order:** Reference Data, Authorisation, Notification. *(A shared `configuration_values` table is created by `nji-architecture`'s Flyway baseline migration.)* **In parallel, build the Phase 0 Data Migration ETL** (`nji-architecture/migration/`) that loads NJI Reference Data + Users/Roles via the corresponding APIs.
-5. **Deploy Phase 0 to dev**, exercise the API-as-Product standards (versioning, `/capabilities`, RFC 7807, OpenAPI), validate Postman collections, run automated tests. Manual UAT begins per domain service from Phase 1 onwards.
+5. **Deploy Phase 0 to dev**, exercise the API-as-Product standards (versioning, OpenAPI spec, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details, deprecation signalling), validate Postman collections, run automated tests. Manual UAT begins per domain service from Phase 1 onwards.
 6. **Resolve programme-management dependencies** before Phase 9 readiness.
 7. **Begin Phase 1 (Judge service)** following the same scaffolding pattern; expand across Phases 2–8 in dependency order.
 8. **Pre-Phase-9: Real HMCTS IdP integration cutover** — verify G1.1, G1.2, G1.3; configure staging issuer-url to HMCTS IdP (and resolve the production service-principal issuer per G7.1); rehearse cutover; re-run full test suite + manual UAT against real IdP before opening pilot region.
 
+## External References
+
+Every IETF / standards reference cited in this architecture, with a verifiable canonical link:
+
+| Reference | Title / Subject | Link |
+|---|---|---|
+| RFC 9457 | Problem Details for HTTP APIs (current; obsoletes RFC 7807 — `application/problem+json` content type and field shape unchanged) | [datatracker.ietf.org/doc/html/rfc9457](https://datatracker.ietf.org/doc/html/rfc9457) |
+| RFC 7807 | Problem Details for HTTP APIs (obsoleted by RFC 9457; retained for historical citations) | [datatracker.ietf.org/doc/html/rfc7807](https://datatracker.ietf.org/doc/html/rfc7807) |
+| RFC 9745 | The Deprecation HTTP Response Header Field (March 2025; `Deprecation` header value is a date timestamp, e.g. `Deprecation: @1735689600`) | [datatracker.ietf.org/doc/html/rfc9745](https://datatracker.ietf.org/doc/html/rfc9745) |
+| RFC 8594 | The Sunset HTTP Header Field (defines `Sunset: <RFC-date>`) | [datatracker.ietf.org/doc/html/rfc8594](https://datatracker.ietf.org/doc/html/rfc8594) |
+| RFC 9110 | HTTP Semantics (defines `Retry-After` in §10.2.3; obsoletes RFC 7231) | [datatracker.ietf.org/doc/html/rfc9110](https://datatracker.ietf.org/doc/html/rfc9110) |
+| RFC 6585 | Additional HTTP Status Codes (defines `429 Too Many Requests` in §4) | [datatracker.ietf.org/doc/html/rfc6585](https://datatracker.ietf.org/doc/html/rfc6585) |
+| RFC 6648 | Deprecating the "X-" Prefix and Similar Constructs in Application Protocols | [datatracker.ietf.org/doc/html/rfc6648](https://datatracker.ietf.org/doc/html/rfc6648) |
+| RFC 1123 | Requirements for Internet Hosts — Application and Support (the "RFC 1123 date" format used by HTTP-date / `Sunset` header) | [datatracker.ietf.org/doc/html/rfc1123](https://datatracker.ietf.org/doc/html/rfc1123) |
+| OpenAPI Specification 3.1 | Standard, programming-language-agnostic interface description for HTTP APIs | [spec.openapis.org/oas/v3.1.0](https://spec.openapis.org/oas/v3.1.0.html) |
+| WCAG 2.2 AA | Web Content Accessibility Guidelines 2.2, Level AA | [www.w3.org/TR/WCAG22/](https://www.w3.org/TR/WCAG22/) |
+
+> **No IETF or OpenAPI standard defines a runtime API capabilities / discovery endpoint.** NJI does not publish a `/capabilities` endpoint. Build / version metadata is exposed only via Spring Boot Actuator `/actuator/info` (ops-restricted at the APIM layer).
+
 ## Changelog
 
-See [`./architecture/changelog.md`](./architecture/changelog.md). **Latest:** v2.6 — payment processing reframed as a scheduled batch; OAuth `client_credentials` restored for the batch service principal only; two new sequence diagrams added (user-initiated absence-to-reconciliation; payment-batch flow); FR41–FR45 reframed; A2/A26/A35 + G1.2/G7.1 reopened.
+See [`./architecture/changelog.md`](./architecture/changelog.md). **Latest:** v2.7 — `/capabilities` endpoint convention removed (no IETF/OpenAPI standard backs it); RFC citations updated to current RFCs (RFC 7807 → RFC 9457 problem-details; `Deprecation` header correctly cited to RFC 9745; `Retry-After` to RFC 9110); External References appendix added with verifiable datatracker links. Earlier: v2.6 — payment processing reframed as a scheduled batch; OAuth `client_credentials` restored for the batch service principal only; two new sequence diagrams added; FR41–FR45 reframed; A2/A26/A35 + G1.2/G7.1 reopened.

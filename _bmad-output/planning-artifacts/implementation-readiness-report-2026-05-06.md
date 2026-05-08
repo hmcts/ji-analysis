@@ -104,7 +104,7 @@ The Architecture document resolves the 7 architecture-phase TBDs from the PRD:
 | UI framework family | TBD | React + TypeScript + GOV.UK Design System + Vite |
 | Service-to-service auth | Resolved v2.6 (2026-05-07) | **Two patterns at MVP**: (1) **JWT propagation** for user-initiated flows — outbound calls forward the inbound user JWT; (2) **Service-principal OAuth `client_credentials`** for the **payment-processing batch** (`nji-payment-batch`) which has no upstream user — non-prod via `nji-mock-auth` (`mock_oauth_clients`), production issuer per `gaps.md` G7.1 (default recommendation: Azure Workload Identity). No mTLS at MVP. *(v2.5 had narrowed this to JWT propagation only; v2.6 widened it again to support the batch.)* |
 | Log retention | TBD | 30 days hot in App Insights; 90 days cold in Log Analytics archive |
-| API versioning specifics | TBD | URI prefix major versioning (`/v1/`); 6-month internal / 12-month external deprecation; `Sunset` header per RFC 8594 |
+| API versioning specifics | TBD | URI prefix major versioning (`/v1/`); 6-month internal / 12-month external deprecation; `Deprecation` header per [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745); `Sunset` header per [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) |
 | Historical-data access | TBD | Read-only APEX bridge for 12 months post-region-cutover; one-shot extract thereafter |
 | APEX ⇄ IdP identity-key | TBD | Email primary, employee number fallback, manual review for unmatched; Phase 0 reconciliation report |
 
@@ -136,7 +136,7 @@ The Architecture's Step 7 validation table maps every PRD FR capability area to 
 | Observability (NFR25–NFR29) | Logstash JSON logs + OpenTelemetry → Application Insights; correlation-ID MDC; Spring Actuator probes |
 | Data Privacy & Sovereignty (NFR30–NFR33) | Azure UK regions only; PostgreSQL Flexible Server in UK South; case-level data forbidden by schema; FOI scope by contract |
 | Reliability & Availability (NFR34–NFR38) | Operational hours availability; per-wave rollback via region activation flag (FR58); region-isolated AKS clusters; PostgreSQL HA configuration |
-| Maintainability (NFR39–NFR42) | API-as-Product standards (versioned, /capabilities, OpenAPI, RFC 7807); per-service deployment unit; **manual UAT scripts per domain service** (FR61 / NFR41 revised 2026-05-06 — APEX-experienced users compare NJI vs APEX side-by-side, sign-off per role per region as wave-cutover gate); Postman collections per phase. *(There is no automated APEX-comparison test suite — automated CI tests are unit, integration with Testcontainers, and contract tests only.)* |
+| Maintainability (NFR39–NFR42) | API-as-Product standards (versioned, OpenAPI spec, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details, [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) `Deprecation` + [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) `Sunset` for deprecation signalling); per-service deployment unit; **manual UAT scripts per domain service** (FR61 / NFR41 revised 2026-05-06 — APEX-experienced users compare NJI vs APEX side-by-side, sign-off per role per region as wave-cutover gate); Postman collections per phase. *(There is no automated APEX-comparison test suite — automated CI tests are unit, integration with Testcontainers, and contract tests only. `/capabilities` runtime endpoint convention retired v2.7, 2026-05-08 — no standard backs it.)* |
 
 **All 61 FRs and 42 NFRs have explicit architectural support.** None unaddressed.
 

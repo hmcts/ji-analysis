@@ -51,7 +51,7 @@ supersedes: 'Lines 139–149 of brainstorming-session-2026-05-01-1400.md (Migrat
 Because MI Feed is read-only over the existing Oracle DB (strangler-style). It validates the API-as-Product / REST-first pattern without touching the write side. APEX/API write coexistence is deferred.
 
 **Why 2 — Why is validating the pattern on read-only worth deferring write-side?**
-Because if the architectural pattern is wrong (versioned content-types, `/capabilities`, Strategy A federation, degraded-mode contracts, SLA templates, deprecation policy), you want to learn it on a low-stakes surface — not while extracting Judge from Oracle and dual-writing.
+Because if the architectural pattern is wrong (versioned content-types, Strategy A federation, degraded-mode contracts, SLA templates, deprecation policy), you want to learn it on a low-stakes surface — not while extracting Judge from Oracle and dual-writing. *(A `/capabilities` runtime endpoint was on the original list but was removed from the architecture in v2.7, 2026-05-08 — no IETF or OpenAPI standard backs one.)*
 
 **Why 3 — Why is dual-writing risky enough to want pattern-validated first?**
 Because Oracle APEX is the system of record today. Any write extraction means coexistence: APEX still writes to its own tables, the new service writes to its own store, and the two must stay in sync. This is named explicitly in the prior session as Risk #2 (APEX/API write coexistence races).
@@ -60,7 +60,7 @@ Because Oracle APEX is the system of record today. Any write extraction means co
 Because there is no event bus (REST-first decision), no audit (deferred), no domain event stream — consistency is enforced by direct synchronous calls. APEX writes can't be observed by the new service without CDC or audit. Mitigation reduces to (a) APEX calls the new service (forces APEX changes), (b) per-record feature-flag locks (operationally complex), or (c) hard cutover (risk concentrated, not avoided).
 
 **Why 5 — Why does "MI Feed validates the pattern" actually hold up as a risk-reduction argument?**
-*Partially.* MI Feed exercises Strategy A federation, `/capabilities`, versioning, JSON shape negotiation. It does **not** exercise the Booking-orchestrates-`Vacancy.markFilled` write coordination, dual-write coexistence with APEX, per-record feature flags, or synchronous-call latency budgets under write contention. **MI Feed reduces some pattern risk but not the dominant risk surface.**
+*Partially.* MI Feed exercises Strategy A federation, versioning, JSON shape negotiation. It does **not** exercise the Booking-orchestrates-`Vacancy.markFilled` write coordination, dual-write coexistence with APEX, per-record feature flags, or synchronous-call latency budgets under write contention. **MI Feed reduces some pattern risk but not the dominant risk surface.**
 
 ### Crystallised reason
 
@@ -105,7 +105,7 @@ The existing sequence has **two distinct rationales** that the prior artefact tr
 | # | Pseudo-constraint | Why it isn't binding |
 |---|---|---|
 | P1 | "DA&I must see something within X months." | DA&I currently receive MI from Oracle reports; no external SLA defines a migration milestone. The expectation is created by the migration plan itself. |
-| P2 | "Pattern must be validated on a read-only surface before any write extraction." | Half-real, half-pseudo. Reference Data extraction in Phase 0 already exercises versioned writes, `/capabilities`, audited reference writes, and deprecation policy. MI Feed adds Strategy A federation experience but does not exercise the dominant risk (APEX/API write coexistence). |
+| P2 | "Pattern must be validated on a read-only surface before any write extraction." | Half-real, half-pseudo. Reference Data extraction in Phase 0 already exercises versioned writes, audited reference writes, and deprecation policy. MI Feed adds Strategy A federation experience but does not exercise the dominant risk (APEX/API write coexistence). |
 | P3 | "Business-chain order is more legible to stakeholders." | Conditional — only material if stakeholders are funding by milestone or if external comms rely on chain milestones. Verify before relying on this benefit. |
 | P4 | "Itinerary must be extracted early so its ≤ 30 s NFR risk is discovered before any UI client lights up." | UI is out of scope of the API decomposition phase. Itinerary's consumers (future tribunals, downstream tooling) can adopt the API in Phase 6 with the contract clearly stating Strategy A's worst-case latency and Strategy C as fallback. |
 | P5 | "Read models must precede domain services." | Inverted dependency. Read models *federate over* domain services (Strategy A); they technically need domain services to exist (or to fall back to Oracle). They can equally come *after* domain extraction with no functional loss — they simply federate over the new APIs instead of Oracle. |
@@ -244,7 +244,7 @@ Inherited risks remain in force; trigger dates shift under Variant B.
 ## Session insights — surprises and inflection points
 
 - **The headline disagreement between "business-chain order" and "risk-graded order" is *not* about domain-service order.** Both lenses agree Judge is first and Payment is last. The real disagreement is **where read models go** — front-loaded (Variant C) or end-loaded (Variants A, B). Recognising this collapses the question from a six-axis tradeoff to a single read-model placement decision.
-- **Reference Data is the actual pattern-validator, not MI Feed.** Phase 0 already exercises versioned writes, `/capabilities`, audited reference writes, and deprecation policy. MI Feed's incremental pattern-validation contribution (Strategy A federation) does not validate the dominant risk surface (write coexistence).
+- **Reference Data is the actual pattern-validator, not MI Feed.** Phase 0 already exercises versioned writes, audited reference writes, and deprecation policy. MI Feed's incremental pattern-validation contribution (Strategy A federation) does not validate the dominant risk surface (write coexistence).
 - **"Read-model-first" is partially-pseudo.** It solves a problem (early-pattern-validation) that is partially-solved by Reference Data, and it carries a hidden cost (transitional double-mode federation over Oracle, then over the new APIs). Once that cost is named, the benefit-to-cost ratio shifts.
 - **DA&I early-evidence is a stakeholder-management benefit dressed as an architectural one.** No external SLA forces Phase 1 MI Feed delivery. The prior plan created the expectation; the new plan can reset it. Whether that's politically viable is the determining question for Variant B vs C.
 - **Sitting parallelism is the underrated cost of Variant A.** The DAG allows Sitting to begin in parallel with Phase 2 (it depends only on Judge). Pure-chain order pays a real serialisation cost to obtain narrative purity that the DAG does not require.

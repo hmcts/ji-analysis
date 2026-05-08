@@ -18,7 +18,9 @@ workflowCompleted: false
 **Date:** 2026-05-05
 **Project:** ji-analysis (NJI — New JI)
 
-> ⚠️ **Superseded — historical snapshot.** Superseded by [`./implementation-readiness-report-2026-05-06.md`](./implementation-readiness-report-2026-05-06.md). Two areas of this report have since been revised by **architecture v2.6 (2026-05-07)** and should be read against the current PRD/architecture rather than this snapshot:
+> ⚠️ **Superseded — historical snapshot.** Superseded by [`./implementation-readiness-report-2026-05-06.md`](./implementation-readiness-report-2026-05-06.md). Areas of this report have since been revised by **architecture v2.6 (2026-05-07)** and **v2.7 (2026-05-08)** and should be read against the current PRD/architecture rather than this snapshot:
+>
+> 0. **FR59 / NFR39 / API-as-Product (v2.7, 2026-05-08)** — the `/capabilities` runtime endpoint convention has been removed (no IETF or OpenAPI standard backs it). RFC citations refreshed: error envelope now [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) (obsoletes RFC 7807 — content unchanged); deprecation signalling cited correctly to [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) `Deprecation` + [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) `Sunset`.
 >
 > 1. **FR41–FR45 (Payment)** — reframed as a **scheduled batch flow** (`nji-payment-batch`), not user-initiated. RSU/Sam confirms bookings/sittings; the batch picks up confirmed-but-unpaid records on its next scheduled run, generates the JFEPS Excel, and dispatches it to the Payment Authoriser. See `architecture/sequence-diagrams/payment-batch-flow.md`.
 > 2. **NFR12 / Service-to-service auth** — v2.5 narrowed this to "JWT propagation only, no service principals." v2.6 widened it back: **two patterns at MVP** — JWT propagation for user-initiated flows AND OAuth `client_credentials` (against `nji-mock-auth` in non-prod) for the payment batch. Production issuer per `gaps.md` G7.1 (default recommendation: Azure Workload Identity).
@@ -149,7 +151,7 @@ workflowCompleted: false
 - **FR56**: NJI's UI replicates the functional surface of the as-is APEX UI on a modern UI stack and meets WCAG 2.2 Level AA accessibility standards.
 - **FR57** *(reframed 2026-05-06)*: A Phase 0 Data Migration ETL takes Reference Data and active user records from APEX (legacy schema), transforms them into NJI's own (independently-designed) shape, and loads them via the NJI Reference Data API and Authorisation API. Migrated user records are keyed to HMCTS IdP principals (email primary, employee number fallback). Phase 0 deliverable with named-owner sign-off; unmatched user records flagged for explicit handling (drop / hold / manual map). The ETL is *not* Flyway data-seeding — it's a separate programme deliverable at `nji-architecture/migration/`.
 - **FR58**: NJI supports per-region phased activation — a region's user accounts can be activated for NJI use only when that region's feature-parity gate is passed; activation is a flag flip, not a data migration.
-- **FR59**: Every NJI service exposes a versioned API contract, a `/capabilities` endpoint, RFC 7807 problem-details for errors, and a published OpenAPI specification.
+- **FR59**: Every NJI service exposes a versioned API contract, a `/capabilities` endpoint, RFC 7807 problem-details for errors, and a published OpenAPI specification. *(Note: revised v2.7, 2026-05-08 — `/capabilities` removed from FR59; RFC 7807 reference updated to [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457). This snapshot preserves the wording at 2026-05-05.)*
 - **FR60**: Every NJI service emits structured logs with correlation IDs and consistent error categorisation, retained for pilot incident triage.
 - **FR61**: Every NJI domain service has a manual user acceptance test (UAT) script for APEX-experienced users to walk through, comparing NJI vs APEX side-by-side; sign-off per role per region is the wave-cutover gate. There is no automated APEX-comparison harness. *(Revised 2026-05-06; supersedes earlier wording about real APEX running as an automated comparison reference in CI. See architecture changelog v1.7.)*
 
@@ -218,7 +220,7 @@ workflowCompleted: false
 
 #### Maintainability (4 NFRs)
 
-- **NFR39**: API-as-Product standards (versioning, /capabilities, RFC 7807, OpenAPI).
+- **NFR39**: API-as-Product standards (versioning, /capabilities, RFC 7807, OpenAPI). *(Note: revised v2.7, 2026-05-08 — `/capabilities` removed; RFC 7807 → [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457). This snapshot preserves the wording at 2026-05-05.)*
 - **NFR40**: Per-service deployment unit on Kubernetes; independently deployable.
 - **NFR41**: Manual UAT script per domain service (revised 2026-05-06) — APEX-experienced users compare NJI vs APEX side-by-side; sign-off per role per region is the wave gate. No automated parity test suite.
 - **NFR42**: Postman collections per phase, versioned alongside services.

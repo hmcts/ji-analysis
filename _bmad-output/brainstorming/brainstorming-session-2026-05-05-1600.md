@@ -194,7 +194,7 @@ The remaining open questions are:
 | # | Pseudo-constraint | Why it isn't binding |
 |---|---|---|
 | P1 | "DA&I must see something within X months." | Greenfield: DA&I are on Oracle until cutover. No mid-build deliverable to DA&I exists or is expected. |
-| P2 | "Pattern must be validated on a read-only surface before any write extraction." | Greenfield: there is no "extraction." Reference Data in Phase 0 is a write surface and is the platform smoke-test (pagination, versioning, `/capabilities`, deprecation policy, audited writes). MI Feed adds nothing not already exercised by Reference Data. |
+| P2 | "Pattern must be validated on a read-only surface before any write extraction." | Greenfield: there is no "extraction." Reference Data in Phase 0 is a write surface and is the platform smoke-test (pagination, versioning, deprecation policy, audited writes). MI Feed adds nothing not already exercised by Reference Data. |
 | P3 | "Business-chain order is more legible to stakeholders." | Under greenfield, business-chain order is the **natural** dependency order. Legibility is a free side-benefit, not a tradeoff to weigh. |
 | P4 | "Itinerary must be extracted early so its ≤ 30 s NFR risk is discovered before cutover." | UI is greenfield and designed-to-NFR; no mid-build Itinerary consumer pressure. NFR validation happens during Itinerary construction, not via sequencing. |
 | P5 | "Read models must precede domain services." | Inverted dependency under any model; under greenfield, doubly so — there is nothing for read models to federate over until the domain services are built. |

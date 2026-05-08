@@ -89,7 +89,7 @@ This is a deliberately simplified greenfield rebuild, not a strangler decomposit
 
 3. **APEX as behavioural reference, verified by manual UAT (D5, revised 2026-05-06).** Behavioural parity is verified by **manual user acceptance testing performed by users who have hands-on experience with the existing Oracle APEX JI application** — RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, and MI users. These users compare NJI's behaviour against APEX behaviour as they reproduce it interactively in APEX, capturing edge cases that the documentation does not. There is no automated APEX-comparison test harness — the project does not co-manage APEX (D6) and the users themselves are the source of truth for behavioural parity.
 
-4. **Phase 0 as platform smoke-test.** Reference Data and Users + Roles are migrated from APEX into NJI's own (newly-designed) tables in Phase 0 (D3 + D9) — via a dedicated ETL that reads APEX dumps, transforms each row, and loads via the NJI Reference Data and Authorisation APIs. API-as-Product standards (versioning, `/capabilities`, deprecation policy) are battle-tested on Reference Data writes and Authorisation lookups before any domain service is built. Cross-cutting concerns are exercised before the team commits to the domain build pattern.
+4. **Phase 0 as platform smoke-test.** Reference Data and Users + Roles are migrated from APEX into NJI's own (newly-designed) tables in Phase 0 (D3 + D9) — via a dedicated ETL that reads APEX dumps, transforms each row, and loads via the NJI Reference Data and Authorisation APIs. API-as-Product standards (versioning, OpenAPI spec, deprecation policy via [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) `Deprecation` + [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) `Sunset`) are battle-tested on Reference Data writes and Authorisation lookups before any domain service is built. Cross-cutting concerns are exercised before the team commits to the domain build pattern.
 
 5. **Per-region, full-role phased cutover (D8).** Each rollout wave is a discrete event — a whole region with all applicable user roles moving together. Risk is amortised across waves rather than concentrated at a single big-bang. Migrated users do not use APEX; non-migrated users do not use NJI. No contention, no synchronisation.
 
@@ -132,7 +132,7 @@ For each role on NJI, the equivalent legacy workflow can be completed without re
 - **All 11 services live** — Reference Data, Authorisation (with SSO), Notification, Judge, Absence, Vacancy, Booking, Sitting, Payment, Itinerary, MI Feed deployed and operating per Phase 0 → 8. *(Per-service configuration uses Spring profiles + Azure Key Vault; cross-service policy values live in a shared `configuration_values` infrastructure table — no dedicated configuration service. Revised v2.2 2026-05-07.)*
 - **Phase 0 migration correctness** — 100% of in-scope APEX Reference Data lists ETL'd into NJI Reference Data tables and signed off by RSU / judicial-team owners (D3, Risk #13). 100% of active APEX user records loaded into NJI Authorisation and successfully mapped to IdP principals (D9, Risk #14); records that don't reconcile have an explicit handling decision (drop / hold / manual map), zero migrated as ambiguous.
 - **Behavioural parity with APEX** (D5, revised 2026-05-06) — every domain service has a **manual UAT script walked through by APEX-experienced users** (RSU, Court, Judge, Judges' Clerks, Finance, MI) who compare NJI's behaviour against APEX behaviour they reproduce interactively in APEX; the UAT sign-off is a wave gate before each rollout wave.
-- **API-as-Product standards** in force from Phase 0 — every domain and read-model service exposes a versioned contract, `/capabilities`, and a documented deprecation policy.
+- **API-as-Product standards** in force from Phase 0 — every domain and read-model service exposes a versioned contract, an OpenAPI spec, and a documented deprecation policy ([RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) `Deprecation` + [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) `Sunset` headers).
 - **Performance NFRs match or exceed APEX**: ≤ 5 s dashboard refresh; ≤ 10 s list / filter; ≤ 15 s batch / annual; ≤ 30 s reports and Forward Look (HOME-NFR, MJ-NFR, ABS-NFR, VAC-NFR, FPB-NFR, PAY-NFR, SIT-NFR, REP-BR-NFR, JFL-NFR from `functional-modules.md`).
 - **Strategy A federated read models** (Itinerary, MI Feed) meet their NFRs without requiring Strategy C cache fallback in the MVP — or the cache fallback is implemented and switched on by the time of the wave that needs it (Risk #9).
 - **Log-based audit / observability minimum** (D7) operational from Phase 1 onwards — structured logging, correlation IDs, error categorisation, retention sufficient for pilot incident triage.
@@ -263,13 +263,13 @@ The MVP is the smallest deliverable that supports phased per-region rollout (D8)
 1. Riya calls `GET /reporting/sittings` with parameters for region, judge type, date range. The API returns aggregated, case-level-stripped JSON (REP-BR-NFR-03 — no case-level exposure).
 2. The same call replaces three previous APEX-export-and-transform steps.
 3. Riya schedules the script to run nightly. The dashboard now updates without her copy-paste.
-4. When MI Feed's contract evolves, the versioned content-type and `/capabilities` (per API-as-Product standards) tell Riya what changed and when.
+4. When MI Feed's contract evolves, the versioned content-type, the published OpenAPI spec, and the `Deprecation` / `Sunset` response headers (per API-as-Product standards) tell Riya what changed and when.
 
 **Critical moment.** The first nightly run that lands without Riya touching it. The export-and-transform manual chain is gone.
 
 **Resolution.** DA&I's monthly reporting cycle accelerates; future programmes (Tribunals, Actuals) onboard onto the same APIs without inventing new export workflows. The strategic-platform vision becomes operational.
 
-**Capabilities revealed:** MI Feed (Read-model service, Strategy A pull-based federation); versioned API contracts with `/capabilities`; aggregated-only data shape (REP-BR-NFR-03); machine-to-machine Authorisation via IdP principals.
+**Capabilities revealed:** MI Feed (Read-model service, Strategy A pull-based federation); versioned API contracts with published OpenAPI specs; aggregated-only data shape (REP-BR-NFR-03); machine-to-machine Authorisation via IdP principals.
 
 ### Journey 5 — Edge case: cross-region fee-paid booking during partial rollout (Risk #1)
 
@@ -305,7 +305,7 @@ The five journeys reveal these capability areas (mapped to the 11-service decomp
 | Modern UI with accessibility, responsiveness, performance | UX-override per D4 |
 | Itinerary view scoped to own profile (Judges) | Itinerary (read model); Strategy A federation |
 | Aggregated, case-level-stripped MI Feed API for DA&I | MI Feed (read model); REP-BR-NFR-03 |
-| API-as-Product standards (versioning, `/capabilities`, deprecation policy) | All services per Phase 0 (D1) |
+| API-as-Product standards (versioning, OpenAPI spec, deprecation policy via `Deprecation` + `Sunset` headers) | All services per Phase 0 (D1) |
 | Per-wave cross-boundary manual coordination | Programme management (not application capability); Risk #1 |
 
 ## Domain-Specific Requirements
@@ -339,7 +339,7 @@ The five journeys reveal these capability areas (mapped to the 11-service decomp
 - **UI stack:** modern UI per D4; specific framework family is an implementation decision in the architecture phase, not locked here.
 - **Implications worth carrying forward:**
   - Spring Boot 4 + Java 25 align well with REST-first synchronous coordination (locked architecture decision); native HTTP client, JSON content-type negotiation, and OpenAPI tooling are first-class.
-  - Spring Actuator endpoints can serve `/capabilities` and health/readiness probes — supports both the API-as-Product standards (versioning, capabilities) and Kubernetes liveness/readiness checks.
+  - Spring Actuator endpoints serve build/version metadata (`/actuator/info`, populated by `gradle-git-properties`) and Kubernetes liveness/readiness probes (`/actuator/health`, `/actuator/readiness`); the `/actuator/*` namespace is ops-restricted at the APIM layer. The OpenAPI spec (Swagger Core, published as a Maven artefact) is the consumer-facing contract — there is no separate runtime `/capabilities` endpoint (no IETF or OpenAPI standard backs one).
   - Kubernetes orchestration on Azure enables the per-region phased rollout (D8) — region-scoped deployments, rolling updates, isolated rollbacks per wave.
   - Azure UK regions support UK GDPR and HMCTS data-sovereignty requirements (data residency in-country); avoids the need for Standard Contractual Clauses or transfer impact assessments that would apply if data left the UK.
   - Azure-native logging (Application Insights / Log Analytics) is a natural fit for the log-based audit / observability minimum (D7); structured logging conventions defined in Phase 0 should target Azure-native ingestion.
@@ -439,7 +439,7 @@ Canonical representation: **JSON** for all REST endpoints. Specific resource sch
 ### Error Codes
 
 - **HTTP status codes** semantically — 200/201 for success, 400 for validation errors, 401/403 for auth, 404 for not-found, 409 for conflict (e.g. double-booking attempts blocked by FPB-NFR-04), 422 for semantically valid but business-rule-rejected, 5xx for server-side faults.
-- **RFC 7807 Problem Details for HTTP APIs** as the standard error envelope — `type`, `title`, `status`, `detail`, `instance`, plus problem-specific extension fields where useful.
+- **[RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) Problem Details for HTTP APIs** as the standard error envelope — `type`, `title`, `status`, `detail`, `instance`, plus problem-specific extension fields where useful. (RFC 9457 obsoleted [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807) in July 2023; the `application/problem+json` content type and field shape are unchanged.)
 - Architecture-phase decision: define the specific problem `type` URIs for the cross-cutting categories (validation failure, authorisation failure, business-rule rejection, dependency failure, etc.).
 
 ### Rate Limits
@@ -451,7 +451,7 @@ Canonical representation: **JSON** for all REST endpoints. Specific resource sch
 - **Versioning policy is a Phase 0 deliverable** as part of API-as-Product standards (per D1).
 - Working assumption (architecture-phase confirmable): versioning via the URI path prefix (e.g. `/v1/judges`, `/v2/judges`) for major versions; backwards-compatible additions within a major version don't require a new path.
 - **Deprecation policy** is part of the same Phase 0 artefact: deprecated endpoints emit a `Deprecation` header, are documented, and are retired no sooner than N months after first deprecation notice (specific N TBD).
-- **`/capabilities` endpoint** (per locked architecture decision) — every service exposes its current contract version, deprecated capabilities, and the deprecation timeline.
+- **No runtime `/capabilities` endpoint** *(architectural change v2.7, 2026-05-08)*. An earlier locked decision called for a per-service `/capabilities` endpoint; this was removed because no IETF or OpenAPI standard backs a runtime API capabilities/discovery endpoint. The OpenAPI spec (published as a Maven artefact and served via Swagger UI) is the consumer-facing contract; deprecation timelines are conveyed via `Deprecation` and `Sunset` response headers per [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) and [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594); build/version metadata is exposed via Spring Actuator `/actuator/info` (ops-restricted).
 
 ### Client Tooling
 
@@ -462,15 +462,15 @@ Canonical representation: **JSON** for all REST endpoints. Specific resource sch
 ### API Documentation
 
 - **OpenAPI 3.x specifications** generated from each service's code (Spring Boot has first-class OpenAPI tooling).
-- **Each service's `/capabilities` endpoint** exposes the current contract version and lifecycle metadata.
+- **Lifecycle metadata** is conveyed via the OpenAPI spec (`info.version`, `paths.{path}.{method}.deprecated`) plus per-response `Deprecation` ([RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745)) and `Sunset` ([RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594)) headers. There is no separate runtime `/capabilities` endpoint.
 - **Documentation hosting:** Swagger UI per service for developer onboarding, plus a published consolidated API catalog (architecture-phase decision on hosting / branding).
 - **Postman collections** per phase serve double duty as test artefacts and as practical, executable API documentation for stakeholders ahead of UI demos.
 
 ### Implementation Considerations
 
-- **Stack alignment** (per Step 5 Technology Stack): Java 25 + Spring Boot 4 + Kubernetes on Azure provides first-class support for every requirement above — Spring Web for REST endpoints, Spring Security for AuthZ integration, Spring Actuator for `/capabilities` and Kubernetes probes, springdoc-openapi for OpenAPI generation, Azure API Management for cross-cutting concerns (rate limits, header injection, deprecation header policy) if needed.
+- **Stack alignment** (per Step 5 Technology Stack): Java 25 + Spring Boot 4 + Kubernetes on Azure provides first-class support for every requirement above — Spring Web for REST endpoints, Spring Security for AuthZ integration, Spring Actuator for build/version metadata + Kubernetes liveness/readiness probes (`/actuator/info`, `/actuator/health`, `/actuator/readiness`; ops-restricted at the APIM layer), springdoc-openapi for OpenAPI generation, Azure API Management for cross-cutting concerns (rate limits, header injection, deprecation/`Sunset` header policy) if needed.
 - **Per-service deployment unit.** Each of the 11 services is a containerised Spring Boot app on Kubernetes; per-region rollout (D8) is enabled by region-scoped namespaces / clusters or by service-instance-level region targeting (architecture-phase choice).
-- **Phase 0 platform smoke-test** (per the executive summary) — Reference Data exercises every API-as-Product standard (versioning, content-type negotiation, `/capabilities`, RFC 7807 errors) before any domain service is built. Phase 0 is not just foundations; it's the standards-validation phase.
+- **Phase 0 platform smoke-test** (per the executive summary) — Reference Data exercises every API-as-Product standard (versioning, content-type negotiation, OpenAPI spec, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details errors, deprecation signalling) before any domain service is built. Phase 0 is not just foundations; it's the standards-validation phase.
 
 ## Project Scoping & Phased Development
 
@@ -618,7 +618,7 @@ This section is the binding capability contract for NJI. UX, architecture, and e
 - **FR56**: NJI's UI replicates the functional surface of the as-is APEX UI on a modern UI stack and meets WCAG 2.2 Level AA accessibility standards.
 - **FR57**: A Phase 0 Data Migration ETL takes Reference Data and active user records (with role and Region/Area mappings) from **APEX** (which has its own legacy schema), transforms them into **NJI's own (independently-designed) shape**, and **loads them via the NJI Reference Data API and Authorisation API**. Migrated user records are keyed to HMCTS IdP principals (email primary, employee number fallback). Phase 0 deliverable with named-owner sign-off; unmatched user records are flagged for explicit handling (drop / hold / manual map). The ETL is *not* a Flyway database-seeding migration — Flyway in NJI manages NJI's own DDL only; the APEX-to-NJI data transform is a separate programme-level activity that lives in `nji-architecture/migration/` and runs against running NJI services. *(Framing clarified 2026-05-06; see architecture changelog v1.9.)*
 - **FR58**: NJI supports per-region phased activation — a region's user accounts can be activated for NJI use only when that region's feature-parity gate is passed; activation is a flag flip, not a data migration.
-- **FR59**: Every NJI service exposes a versioned API contract, a `/capabilities` endpoint, RFC 7807 problem-details for errors, and a published OpenAPI specification.
+- **FR59** *(revised v2.7, 2026-05-08)*: Every NJI service exposes a versioned API contract, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details for errors (formerly RFC 7807; RFC 9457 obsoletes 7807 — `application/problem+json` content type and field shape unchanged), and a published OpenAPI specification. Deprecation signalling uses the `Deprecation` header per [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) and the `Sunset` header per [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594). *(The earlier `/capabilities` runtime endpoint convention was removed in v2.7 — no IETF or OpenAPI standard backs a runtime API capabilities/discovery endpoint; the OpenAPI document is the contract surface.)*
 - **FR60**: Every NJI service emits structured logs with correlation IDs and consistent error categorisation, retained for pilot incident triage.
 - **FR61**: Every NJI domain service has a **manual user acceptance test (UAT) script** that captures the workflows and edge cases an APEX-experienced user is expected to verify against the existing APEX application before that service's region rollout. The UAT is performed by users from the in-region applicable roles (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, MI) and recorded with explicit per-role sign-off. There is no automated APEX-comparison test harness; APEX-comparison parity is a manual UAT activity, not a CI gate. *Revised 2026-05-06; supersedes earlier wording about real APEX running as an automated comparison reference.*
 
@@ -682,12 +682,12 @@ Page-level NFRs are carried from the APEX baseline (`functional-modules.md` cros
 - **NFR34 — Operational availability:** NJI is available during HMCTS operational hours (typically 07:00–19:00 UK weekdays). Out-of-hours availability is best-effort, not contracted.
 - **NFR35 — Payment-cycle continuity:** Zero failed JFEPS payment cycles attributable to NJI deployment, rollout, or runtime issues. Payment generation can fall back to manual handling within a payment cycle if NJI is unavailable, but this is an operational contingency, not a normal-mode expectation.
 - **NFR36 — Per-wave rollback:** Each rollout wave (Phase 9, 10, …) has a documented rollback path returning the affected region to APEX within one operational cycle if the wave's gate is breached post-cutover.
-- **NFR37 — Strategy A degraded-mode contract:** If federated read latency breaches NFR8, NJI degrades to Strategy C cached projection rather than failing; cache freshness window is published per `/capabilities`.
+- **NFR37 — Strategy A degraded-mode contract:** If federated read latency breaches NFR8, NJI degrades to Strategy C cached projection rather than failing; cache freshness window is published in the service's OpenAPI spec metadata and surfaced in response headers (e.g. `Cache-Control`, `Age`).
 - **NFR38 — HMCTS-judicial-region rollout isolation:** A wave activation or feature change targeting one HMCTS judicial region (e.g. Northern, Western) does not affect users in other HMCTS regions. *("Region" here means HMCTS judicial region per D8 — not Azure region. Architectural enforcement is at the application tier via per-user `auth_user_activation_flags` (FR58), not at the infrastructure tier. Production runs in a single Azure region — UK South — with multi-AZ HA; UK West is cold-DR per the architecture's deployment topology. Wording clarified 2026-05-06 — earlier "Region-isolated deployments" framing was ambiguous between the two senses of "region" and is now disambiguated.)*
 
 ### Maintainability
 
-- **NFR39 — API-as-Product standards:** Every service exposes versioned contracts, `/capabilities`, RFC 7807 error envelopes, and a published OpenAPI specification (per FR59). Versioning and deprecation policy is a Phase 0 deliverable.
+- **NFR39 — API-as-Product standards** *(revised v2.7, 2026-05-08)* **:** Every service exposes versioned contracts, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details error envelopes, and a published OpenAPI specification (per FR59). Versioning and deprecation policy is a Phase 0 deliverable; deprecation signalling uses [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) `Deprecation` + [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) `Sunset` headers. *(`/capabilities` runtime endpoint removed v2.7 — no standard backs it.)*
 - **NFR40 — Per-service deployment unit:** Each of the 11 services is independently deployable on Kubernetes; rolling updates per service per region without coupling.
 - **NFR41 — Behavioural-parity UAT suite:** Every domain service has a **manual UAT script** (per FR61) maintained alongside the service. APEX-experienced users walk through the script comparing NJI vs APEX before each rollout wave's cutover; sign-off (per role per region) is the wave gate. There is no automated parity test suite — automated CI tests are unit, integration (Testcontainers), and contract tests only.
 - **NFR42 — Postman collections:** Each phase produces a Postman collection that exercises the phase's endpoints; collections are versioned alongside the services.
@@ -732,7 +732,9 @@ These are the 9 locked decisions taken during the 2026-05-05 brainstorming follo
 | **OIDC** | OpenID Connect (an authentication protocol) |
 | **OPT** | One Performance Truth; the broader Oracle/APEX platform JI sits on |
 | **RFC** | Request for Change (process for amending verified sitting data) |
-| **RFC 7807** | IETF specification for Problem Details for HTTP APIs |
+| **[RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457)** | IETF specification for Problem Details for HTTP APIs (current; obsoletes RFC 7807) |
+| **[RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745)** | IETF specification for the HTTP `Deprecation` response header (March 2025) |
+| **[RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594)** | IETF specification for the HTTP `Sunset` response header |
 | **RSU** | Regional Support Unit (HMCTS regional admin teams) |
 | **S&L** | Scheduling & Listing reforms (HMCTS programme) |
 | **SAML** | Security Assertion Markup Language (an authentication protocol) |

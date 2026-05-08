@@ -31,7 +31,6 @@ nji-{service}/
 │   ├── {Service}Application.java
 │   ├── controller/
 │   │   ├── {Resource}Controller.java
-│   │   ├── CapabilitiesController.java         (@RestController at root /capabilities; consumer-facing API-as-Product contract endpoint, distinct from Actuator)
 │   │   └── HealthController.java
 │   ├── service/
 │   │   └── {Resource}Service.java
@@ -53,7 +52,7 @@ nji-{service}/
 │   │   └── CorrelationIdFilter.java
 │                                                 (no IdempotencyFilter — retry safety is via DB-native unique constraints + @Version + pessimistic locking, not a custom filter)
 │   ├── error/
-│   │   ├── GlobalExceptionHandler.java          (@ControllerAdvice; RFC 7807)
+│   │   ├── GlobalExceptionHandler.java          (@ControllerAdvice; RFC 9457 problem-details)
 │   │   └── ProblemDetailFactory.java
 │   └── exception/
 │       ├── {Resource}NotFoundException.java
@@ -158,7 +157,7 @@ nji-ui/
 │   │   │   └── ProtectedRoute.tsx
 │   │   └── api/
 │   │       ├── httpClient.ts                    (TanStack Query setup; auth header attachment)
-│   │       └── errorHandling.ts                 (RFC 7807 → display)
+│   │       └── errorHandling.ts                 (RFC 9457 problem-details → display)
 │   └── styles/
 │       ├── govuk.scss                           (GOV.UK Design System imports)
 │       └── overrides.scss                       (HMCTS / NJI extensions)
