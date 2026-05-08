@@ -23,7 +23,7 @@ classification:
     - 'visual_design in scope per D4'
     - 'user_journeys in scope per D4'
   domain: 'govtech'
-  domainNotes: 'UK HMCTS — judicial operations; CSV''s US-specific compliance terms (FedRAMP, Section 508) translate to UK equivalents (HMCTS/WCAG accessibility, GDS service standard, UK GDPR, FOI/transparency).'
+  domainNotes: 'UK HMCTS — judicial operations; HMCTS/WCAG accessibility, GDS service standard, UK GDPR, FOI/transparency.'
   complexity: 'high'
   projectContext: 'brownfield-rebuild'
   classificationRationale: 'Scoring during Advanced Elicitation: api_backend (24) vs web_app (22) vs saas_b2b (18); govtech (29) vs legaltech (10). api_backend is composed of 11 APIs; UX/journeys is in scope because D4 requires UI replication.'
@@ -98,9 +98,9 @@ This PRD describes the greenfield rebuild — **NJI (New JI)** — as an API-dri
 | **Project Type** | `api_backend` — composed of 11 APIs |
 | **Project Type override** | `ux_ui`, `visual_design`, `user_journeys` are in scope per D4 (modern UI replicates APEX layouts) |
 | **Domain** | `govtech` (UK HMCTS — judicial operations) |
-| **Domain notes** | UK compliance: HMCTS / WCAG accessibility, GDS service standard, UK GDPR, FOI / transparency. US-specific concerns (FedRAMP, Section 508) do not apply. |
+| **Domain notes** | UK compliance: HMCTS / WCAG accessibility, GDS service standard, UK GDPR, FOI / transparency. |
 | **Complexity** | `high` |
-| **Project Context** | `brownfield-rebuild` |
+| **Project Context** | `greenfield-rebuild` |
 | **Classification rationale** | Scoring during Advanced Elicitation: `api_backend` 24, `web_app` 22, `saas_b2b` 18; `govtech` 29, `legaltech` 10. `api_backend` + UX override fits an API-first product with UI in scope. |
 
 ## Success Criteria
