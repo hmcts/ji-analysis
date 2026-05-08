@@ -118,7 +118,7 @@ Four techniques run in a progressive arc — divergent → analytical → conver
 
 ### Architecture standards (apply to every service)
 
-- **API-as-a-Product** — versioned contract, deprecation policy, SLA per endpoint, changelog *(historical note: an earlier `/capabilities` runtime endpoint was discussed in this session and removed from the architecture in v2.7, 2026-05-08, because no IETF or OpenAPI standard backs a runtime API capabilities/discovery endpoint)*
+- **API-as-a-Product** — versioned contract, deprecation policy, SLA per endpoint, changelog
 - **Anti-fragility / degraded-mode contracts** — codified behaviour when dependencies are unavailable
 
 ### Out-of-scope decisions (deferred or denied)
@@ -215,7 +215,7 @@ Selected high-leverage concepts that emerged during ideation:
 2. **Begin Phase 0 scoping** — Reference Data and Authorisation/SSO are the immediate workstreams. Identify owners, dependencies, and SSO target (HMCTS IdP).
 3. **Open the Audit question explicitly** — decide whether the regulatory obligation can wait until Phase 3, or whether a minimal Audit subscriber needs to be planned in Phase 0.
 4. **Validate the migration sequence with stakeholders** — particularly DA&I (consumers of MI Feed) and OPT support (operators of the existing system).
-5. **Draft the API-as-a-Product standards** as a formal artefact — versioning policy, deprecation policy, SLA template — before any service implements them. *(Originally included a `/capabilities` runtime endpoint shape; removed from the architecture in v2.7, 2026-05-08 — no IETF or OpenAPI standard backs a runtime API capabilities/discovery endpoint.)*
+5. **Draft the API-as-a-Product standards** as a formal artefact — versioning policy, deprecation policy, SLA template — before any service implements them.
 
 ---
 

@@ -51,7 +51,7 @@ supersedes: 'Lines 139–149 of brainstorming-session-2026-05-01-1400.md (Migrat
 Because MI Feed is read-only over the existing Oracle DB (strangler-style). It validates the API-as-Product / REST-first pattern without touching the write side. APEX/API write coexistence is deferred.
 
 **Why 2 — Why is validating the pattern on read-only worth deferring write-side?**
-Because if the architectural pattern is wrong (versioned content-types, Strategy A federation, degraded-mode contracts, SLA templates, deprecation policy), you want to learn it on a low-stakes surface — not while extracting Judge from Oracle and dual-writing. *(A `/capabilities` runtime endpoint was on the original list but was removed from the architecture in v2.7, 2026-05-08 — no IETF or OpenAPI standard backs one.)*
+Because if the architectural pattern is wrong (versioned content-types, Strategy A federation, degraded-mode contracts, SLA templates, deprecation policy), you want to learn it on a low-stakes surface — not while extracting Judge from Oracle and dual-writing.
 
 **Why 3 — Why is dual-writing risky enough to want pattern-validated first?**
 Because Oracle APEX is the system of record today. Any write extraction means coexistence: APEX still writes to its own tables, the new service writes to its own store, and the two must stay in sync. This is named explicitly in the prior session as Risk #2 (APEX/API write coexistence races).
