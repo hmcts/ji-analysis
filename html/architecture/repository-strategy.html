@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Repository Strategy & List — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../architecture.html">Architecture (index)</a></li>
+<li><a href="../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../architecture/conventions.html">Conventions</a></li>
+<li><a href="../architecture/repository-strategy.html" class="current">Repository strategy</a></li>
+<li><a href="../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../architecture/gaps.html">Gaps</a></li>
+<li><a href="../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="repository-strategy--list">Repository Strategy &amp; List</h1>
+<blockquote>
+<p>Sibling of <a
+href="../architecture.html"><code>../architecture.md</code></a>. The
+parent links here from its <em>Project Structure &amp; Boundaries</em>
+section.</p>
+</blockquote>
+<h2 id="repository-strategy-polyrepo">Repository Strategy: Polyrepo</h2>
+<p><strong>Decision:</strong> 11 service repos + 1 mock-auth repo + 1 UI
+repo + 1 architecture/scaffolding repo. No monorepo, no Gradle root
+project.</p>
+<p>A monorepo would either share <code>build.gradle</code> config
+(breaks no-shared-coupling), coordinate releases (breaks per-region
+phased rollout independence), or add Bazel-style hermetic build
+complexity that NJI's requirements don't need.</p>
+<p>Polyrepo gives each service its own repo, pipeline, release cadence,
+CODEOWNERS, branch protection, and review policy. What stays cross-repo:
+API contracts (OpenAPI specs), the architecture documents and ADRs, the
+scaffolding script, the Phase 0 Data Migration ETL.</p>
+<h2 id="repository-list">Repository List</h2>
+<table>
+<thead>
+<tr>
+<th>Repo</th>
+<th>Phase</th>
+<th>Purpose</th>
+<th>Key Functions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>nji-architecture</code></strong></td>
+<td>0</td>
+<td>Architecture index + siblings, ADRs, scaffolding script,
+<strong>Phase 0 Data Migration ETL</strong> under
+<code>migration/</code>.</td>
+<td>Maintain architecture docs and ADRs; generate new service repos via
+<code>nji-scaffold.sh</code>; run the APEX → NJI ETL via NJI APIs;
+produce reconciliation reports.</td>
+</tr>
+<tr>
+<td><strong><code>nji-mock-auth</code></strong></td>
+<td>0</td>
+<td>OIDC issuer for dev / CI / integration (human users
+<strong>and</strong> batch service principals). <strong>Never deployed
+to production.</strong></td>
+<td>Issue JWTs via OIDC <code>authorization_code</code> for human users;
+<strong>issue service tokens via OAuth
+<code>client_credentials</code></strong> for batch components (initially
+<code>nji-payment-batch</code>); refuse to start with
+<code>production</code> profile (G5.3).</td>
+</tr>
+<tr>
+<td><strong><code>nji-reference-data</code></strong></td>
+<td>0</td>
+<td>Owns the 15 Reference Data tables.</td>
+<td>CRUD for <code>regions</code> / <code>offices</code> /
+<code>calendar_periods</code> and the 12 vocabulary tables; accept Phase
+0 ETL writes; reads happen via direct SQL by other services.</td>
+</tr>
+<tr>
+<td><strong><code>nji-authorisation</code></strong></td>
+<td>0</td>
+<td>Owns the 5 Authorisation tables; <strong>the per-request authz
+authority</strong>.</td>
+<td>Manage <code>auth_users</code>, the 12 <code>auth_roles</code>,
+<code>auth_user_roles</code>, <code>auth_user_region_scopes</code>,
+<code>auth_user_activation_flags</code>; expose
+<code>POST /authz/check</code>; enforce per-region phased activation
+(FR58); reconcile principals to HMCTS IdP by email + employee number
+(D9).</td>
+</tr>
+<tr>
+<td><strong><code>nji-notification</code></strong></td>
+<td>0</td>
+<td>Outbound transactional email dispatch.</td>
+<td>Send booking ack (FR32) / absence ack / JFEPS-shaped
+payment-schedule emails (FR43); record dispatch log; retry on transient
+failure.</td>
+</tr>
+<tr>
+<td><strong><code>nji-judge</code></strong></td>
+<td>1</td>
+<td>Judge profile + working patterns + tickets + jurisdictional
+split.</td>
+<td>CRUD judge profiles (FR10, FR11); manage working patterns (FR12);
+generate forward sittings; manage tickets (FR15); jurisdictional splits
+with 100% sum constraint (FR16).</td>
+</tr>
+<tr>
+<td><strong><code>nji-absence</code></strong></td>
+<td>2</td>
+<td>Absence records + approval workflow.</td>
+<td>Create / approve / NTBF-flag / sickness-extend (FR19–FR22); on
+approval, call Vacancy to create cover-required vacancies (R4); send
+acknowledgements via Notification.</td>
+</tr>
+<tr>
+<td><strong><code>nji-vacancy</code></strong></td>
+<td>3</td>
+<td>Cover-requirement records + per-day breakdown.</td>
+<td>Create vacancies (FR23, FR24); manage <code>vacancy_days</code>
+(FR25); accept <code>filled</code> / <code>filled_at</code> UPDATEs from
+Booking.</td>
+</tr>
+<tr>
+<td><strong><code>nji-booking</code></strong></td>
+<td>4</td>
+<td>Fee-paid bookings + verification.</td>
+<td>Create / verify / cancel fee-paid bookings (FR29, FR31); within the
+booking transaction, mark the target vacancy as filled (R5, Principle
+1); retry-safe via native DB primitives (see <a
+href="../architecture.html"><code>../architecture.md</code></a> →
+<em>Data Architecture</em>).</td>
+</tr>
+<tr>
+<td><strong><code>nji-sitting</code></strong></td>
+<td>5</td>
+<td>Salaried-judge sittings + verification.</td>
+<td>Maintain sitting records (generated from working patterns); confirm
+and verify sittings (FR37); AM/PM session split (FR38); RFC unlock
+(FR40); work-type override on confirmation.</td>
+</tr>
+<tr>
+<td><strong><code>nji-payment</code></strong></td>
+<td>6</td>
+<td>Payment processing + reconciliation. JFEPS-shaped Excel output.
+<strong>Two parts: a synchronous API (RSU reconciliation) and a
+scheduled batch component
+(<code>nji-payment-batch</code>).</strong></td>
+<td><strong>Batch component</strong> (scheduled; runs as service
+principal <code>nji-payment-batch</code> per v2.6): SQL JOIN read across
+confirmed bookings + sittings without an existing payment record;
+generate JFEPS Excel (FR41–FR44); persist payments and schedules; call
+Notification with bearer service token to dispatch the schedule (FR43).
+<strong>Synchronous API</strong>: RSU lists unreconciled payments and
+marks them reconciled (FR46). FR45 retry safety via native DB primitives
+(see <a href="../architecture.html"><code>../architecture.md</code></a>
+→ <em>Data Architecture</em>). <strong>Never stores bank
+details</strong> (NFR14).</td>
+</tr>
+<tr>
+<td><strong><code>nji-itinerary</code></strong></td>
+<td>7</td>
+<td>Operational read model. <strong>No own tables</strong> — SQL JOINs
+across judges, absences, vacancies, bookings, sittings.</td>
+<td>Court itinerary view; Judge itinerary view (scoped to own profile
+per R2); Forward Look (≤ 30 s p95 — NFR8).</td>
+</tr>
+<tr>
+<td><strong><code>nji-mi-feed</code></strong></td>
+<td>8</td>
+<td>Aggregate MI read model. <strong>No own tables</strong>.</td>
+<td>Standard reports (utilisation, sittings, payments) with same
+parameter shape as APEX; aggregate-only — <strong>no case-level
+data</strong> (NFR23); Excel/PDF export; DA&amp;I consumer interface
+(post-MVP).</td>
+</tr>
+<tr>
+<td><strong><code>nji-ui</code></strong></td>
+<td>0–8</td>
+<td>Single SPA repo, modules per domain.</td>
+<td>Per-phase UI module replicating APEX functional surface; role-scoped
+Home with Outstanding-Actions tiles (FR55); SSO via HMCTS IdP / mock
+auth; GOV.UK Design System with WCAG 2.2 AA (NFR17).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>14 repos total</strong> (11 production services + UI +
+architecture + mock-auth). <code>nji-mock-auth</code> is
+dev/integration-only and never deploys to production.</p>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/repository-strategy.md</code></p>
+</main>
+</body>
+</html>

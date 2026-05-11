@@ -45,7 +45,7 @@ Four phases: (1) scheduler + batch authentication; (2–3) the batch's work; (4)
 | Phase | Driver | Architectural rule | Outcome |
 |---|---|---|---|
 | 1 — Scheduler triggers batch + token acquisition | Scheduler (cron) | Batch authenticates as service principal via OAuth `client_credentials` | Batch holds a short-lived service JWT for its run |
-| 2 — Eligible records collected + schedule persisted | Batch (no user) | SQL JOIN over confirmed bookings + sittings without payments; FR41–FR45 retry safety via natural-key unique constraints + `@Version` | `payments` + `payment_schedules` rows created; bookings flagged `payment_requested` |
+| 2 — Eligible records collected + schedule persisted | Batch (no user) | SQL JOIN over confirmed bookings + sittings without payments; FR41–FR45 retry safety via native DB primitives (see *Data Architecture*) | Payment + schedule rows created; bookings flagged as payment-requested |
 | 3 — Schedule dispatched | Batch (no user) | Service-token bearer on Notification API call; Notification `JWTFilter` validates same as user JWTs (via JWKS) | JFEPS Excel email delivered to Payment Authoriser |
 | 4 — Liberata processing | Payment Authoriser → JFEPS | Out-of-band; NJI is not in the loop | Judge paid; awaiting reconciliation (which is user-initiated — see other diagram) |
 

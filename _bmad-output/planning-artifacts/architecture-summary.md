@@ -126,7 +126,7 @@ Details:
 | Pagination | Cursor-based for large or chronological lists; offset-based for small filtered lists |
 | Field naming | JSON fields `camelCase`; ISO 8601 dates / instants; UTC stored, UK local for display |
 | Identifiers | UUID primary keys throughout |
-| Idempotency / retry safety | Natural-key unique constraints (`uq_*`) → `409 Conflict`; JPA `@Version` optimistic locking → `412 Precondition Failed`; `SELECT … FOR UPDATE` pessimistic row locking for cross-row workflows. No custom idempotency-key tables. |
+| Idempotency / retry safety | Native DB primitives — natural-key uniqueness (→ `409 Conflict`), optimistic locking (→ `412 Precondition Failed`), pessimistic row locking for cross-row workflows. No custom idempotency-key tables. Detail in [`./architecture/data-tables.md`](./architecture/data-tables.md) and the Data Architecture section of [`./architecture.md`](./architecture.md). |
 
 ## Cross-service interaction patterns
 
@@ -141,7 +141,7 @@ Details:
 | Reference Data reads | Direct SQL (per-service `SELECT` grant); no API call |
 | Reference Data writes | Via `nji-reference-data` API (admin / Phase 0 seeding) |
 | Cross-service workflow | REST call to the owning service |
-| Cross-row workflow safety | `SELECT … FOR UPDATE` on the related row + natural-key unique constraint on the new row |
+| Cross-row workflow safety | Pessimistic row lock on the related row + natural-key uniqueness on the new row (detail in *Data Architecture*) |
 | Read-model federation | SQL JOIN over the shared schema (no API fan-out) |
 | Outbound email | Domain service → `nji-notification` → HMCTS Email → recipient (or, for Payment, → JFEPS via authoriser upload) |
 | Configuration | Per-service: Spring profiles + `application.yml` + Azure Key Vault. Cross-service policy values: shared `configuration_values` infrastructure table (read-only via direct SQL; no API). |
@@ -188,7 +188,7 @@ A programme deliverable, not a runtime service:
 ## Foundational principles
 
 1. **API for workflows; shared database for simple data access.** Multi-step operations with business rules and state transitions are exposed as APIs by the owning service. Single-field cross-service updates (where DB grants permit) and read-model federation (SQL JOINs over the shared schema) bypass the API. No shared runtime library; each service owns its cross-cutting concerns.
-2. **No premature optimisation.** Caching, distributed cache, service mesh, read replicas, async messaging — added only when measurement post-MVP shows the need. Use native platform constructs (PostgreSQL row locking, JPA `@Version`, unique constraints, Spring profiles + Key Vault) before custom entities.
+2. **No premature optimisation.** Caching, distributed cache, service mesh, read replicas, async messaging — added only when measurement post-MVP shows the need. Use native platform constructs (DB locking, optimistic concurrency, uniqueness constraints, Spring profiles + Key Vault) before custom entities.
 
 ## Where to find more detail
 

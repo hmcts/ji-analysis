@@ -104,7 +104,7 @@ Refactor history: the single-file `architecture.md` was split into the index + s
 
 Architectural implications:
 
-- **One synchronous cross-service write**: `POST /bookings` marks the vacancy filled in the same transaction (FR30, R5) — direct UPDATE on `vacancies.filled` per Principle 1. Retry safety: `SELECT … FOR UPDATE` + `uq_bookings_*` unique constraint.
+- **One synchronous cross-service write**: `POST /bookings` marks the linked vacancy as filled in the same transaction (FR30, R5) per Principle 1. Retry safety uses native DB primitives — see *Data Architecture*.
 - **Read-model federation**: SQL JOINs over the shared schema. Indexed joins meet the Forward Look NFR (≤ 30 s p95, NFR8).
 - **Working-pattern sitting generation** (FR13, FR35): owned by Judge; produces records that Sitting manages from Phase 5 onwards.
 - **Versioned content-type for Payment** (FR44 — `application/vnd.hmcts.jfeps+json` vs `+xlsx`). JFEPS shape is externally owned.
@@ -153,7 +153,7 @@ Concerns that recur across most services and are addressed at the platform layer
 - **Reference Data is single-writer** — sole source of truth for Regions, Offices, vocabularies, calendar (FR6, FR7). Reads: direct SQL on the 15 Reference Data tables (no caching per Principle 2). Writes: via the Reference Data API.
 - **Per-region scoping** — domain operations default-scope by Region/Area from the Authorisation context (FR49). Cross-region operations are explicit.
 - **Per-region phased activation** — per D8, NJI access is gated by `auth_user_activation_flags` (FR58). Authorisation distinguishes "active in NJI" from "exists in NJI".
-- **Retry safety via native DB primitives** — `uq_*` unique constraints, JPA `@Version` optimistic locking, `SELECT … FOR UPDATE` pessimistic locks. No `*_idempotency_keys` tables. See [`./architecture/conventions.md`](./architecture/conventions.md) → "Retry safety and concurrency control".
+- **Retry safety via native DB primitives** — natural-key uniqueness, optimistic locking, pessimistic row locking. No custom idempotency-key tables. Detail in *Data Architecture* and [`./architecture/data-tables.md`](./architecture/data-tables.md).
 - **API-as-Product compliance** — versioned contract, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details, OpenAPI per service (FR59).
 - **Manual UAT** (FR61 / NFR41) — APEX-experienced users compare NJI vs APEX per service per region; sign-off is the wave-cutover gate. No automated APEX-comparison in CI.
 - **Forbidden data** — no bank details (FR47); no case-level data (FR54). Enforced at the schema and API boundary.
@@ -181,7 +181,7 @@ The PRD lists 12 TBDs. 5 are programme-management decisions (capacity, ops hours
 **APIs are the boundary for workflows. The shared database is the integration mechanism for simple cross-service reads and writes.**
 
 - **Workflows go via API** — multi-step operations with business rules, state transitions, or orchestration (Booking creation, Payment processing, Absence approval).
-- **Single-field cross-service updates can be direct DB writes** — e.g. Booking marks `vacancies.filled = true`; Payment updates `bookings.payment_status`. Each owning service grants which tables/columns other services may write via explicit DB role grants.
+- **Single-field cross-service updates can be direct DB writes** — e.g. Booking marks its linked vacancy as filled; Payment updates the booking's payment status. Each owning service grants which tables/columns other services may write via explicit DB role grants (see *Data Architecture*).
 - **Cross-service reads are direct SQL JOINs** — Itinerary, MI Feed, and Reference Data reads query the shared schema directly. No API fan-out, no cache.
 
 The database is **one global PostgreSQL instance with a single shared schema**. Cross-service access is gated by **per-service DB roles with explicit grants**. Table ownership is encoded in the table name (entity-plural for primary tables; service-prefix for service-internal) and enforced by ArchUnit fitness functions in CI.
@@ -306,6 +306,24 @@ See [`./architecture/starter-template.md`](./architecture/starter-template.md).
 
 **Validation:** JSR-380 (Bean Validation 3.0) on request DTOs and entity fields, enforced by Spring Web's `@Valid`.
 
+**Retry safety and concurrency control.** Native PostgreSQL + JPA constructs. No custom `*_idempotency_keys` tables. Three native mechanisms cover the three problems:
+
+| Problem | Mechanism | Failure response |
+|---|---|---|
+| **Retry of a successful create** ("duplicate create") | Natural-key + unique-constraint dedup at the DB layer. Every domain entity's logical unique key is encoded as a `uq_{table}_{columns}` constraint in Flyway DDL. A retry's `INSERT` violates the constraint; PostgreSQL raises a unique violation; the `@ControllerAdvice` translates `DataIntegrityViolationException` (unique-violation kind) to `409 Conflict` with [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) `business-rule`. | `409 Conflict` |
+| **Two clients editing the same record concurrently** ("lost update") | Optimistic concurrency control via JPA `@Version` (an `integer NOT NULL DEFAULT 0` column on every domain entity that supports update). Update endpoints accept the `If-Match: "v{n}"` header; mismatch → JPA throws `OptimisticLockingFailureException`; `@ControllerAdvice` translates to `412 Precondition Failed`. | `412 Precondition Failed` |
+| **Cross-row workflow that must see consistent state on a related record** (e.g. Booking creation that flips the linked vacancy's `filled` flag per R5) | Pessimistic row locking via Spring Data JPA `@Lock(LockModeType.PESSIMISTIC_WRITE)` on the relevant repository method (translates to `SELECT ... FOR UPDATE`). The transaction holds the lock on the related row from read-time through commit. A retry sees the now-updated row and is rejected by the unique-constraint dedup above. | `409 Conflict` (via the unique-constraint path) |
+
+**Per-entity convention:**
+
+- `version integer NOT NULL DEFAULT 0` column → `@Version` on the JPA entity.
+- A documented natural-key unique constraint (`uq_{table}_{columns}`) on every table that supports create.
+- For workflows that update a related row, the repository method uses `@Lock(LockModeType.PESSIMISTIC_WRITE)`.
+
+**`Idempotency-Key` HTTP header:** not implemented at MVP. Reserved as an escape hatch where the operation has no natural unique key and no related row to lock. Introduced per-endpoint if such a case arises post-MVP.
+
+**Audit trail (separate concern):** the historical "who changed what when" record is the user-action audit on the D7 post-MVP roadmap. Audit answers forensic questions; the three mechanisms above prevent operational duplication. Independent.
+
 ### Authoritative Table Ownership Mapping
 
 See [`./architecture/data-tables.md`](./architecture/data-tables.md). The fitness function checks that every Flyway-created table appears there with the correct owning service.
@@ -396,7 +414,7 @@ Two patterns at MVP:
 
 **API documentation:** Swagger Core. Each service's OpenAPI 3.x spec is published as a Maven artefact (`uk.gov.hmcts.nji:api-nji-{service}:{version}`); consumers pull it at compile time. Postman collections per phase derived from the spec (FR42 / NFR42). The artefact is contract, not runtime code.
 
-**Service-to-service communication:** REST over HTTPS. Service discovery via Kubernetes DNS (`http://nji-judge.{namespace}.svc.cluster.local:8080`). No service mesh. Synchronous workflows only. Retry safety via native DB primitives (unique constraints + `@Version` + `SELECT … FOR UPDATE`).
+**Service-to-service communication:** REST over HTTPS. Service discovery via Kubernetes DNS (`http://nji-judge.{namespace}.svc.cluster.local:8080`). No service mesh. Synchronous workflows only. Retry safety via native DB primitives — see *Data Architecture*.
 
 ### Frontend Architecture
 
@@ -560,7 +578,7 @@ See [`./architecture/repo-structure.md`](./architecture/repo-structure.md).
 | Foundational Data Management (FR6–FR9) | `nji-reference-data`, `nji-notification` repos + per-service direct JPA reads from the 15 Reference Data tables. **Configuration**: per-service Spring profiles + Key Vault; shared `configuration_values` table (no API) for cross-service policy values, schema-managed by `nji-architecture` Flyway baseline. |
 | Judge Records & Working Patterns (FR10–FR18) | `nji-judge` repo |
 | Absence Workflow (FR19–FR22) | `nji-absence` repo |
-| Vacancy & Cover (FR23–FR28) | `nji-vacancy` repo. Booking marks `vacancies.filled = true` via direct DB UPDATE within Booking's transaction (per Principle 1). |
+| Vacancy & Cover (FR23–FR28) | `nji-vacancy` repo. Booking marks the linked vacancy as filled within Booking's transaction (per Principle 1; see *Data Architecture*). |
 | Booking Management (FR29–FR34) | `nji-booking` repo |
 | Sitting Management (FR35–FR40) | `nji-sitting` repo |
 | Payment & Reconciliation (FR41–FR47) | `nji-payment` repo (batch component + reconciliation API) |
@@ -576,7 +594,7 @@ See [`./architecture/repo-structure.md`](./architecture/repo-structure.md).
 | Reference Data direct SQL access (FR7) | JPA repositories pointing at whitelisted Reference Data tables |
 | Per-region scoping middleware | `src/main/java/.../config/RegionScopeFilter.java` |
 | Per-region phased activation check (FR58) | Resolved in `JWTFilter` via authz path |
-| Retry safety (FR45, FR30) | DB-native — `uq_*` unique constraints in `db/migration/V*__*.sql`; `@Version` on every domain entity; `@Lock(PESSIMISTIC_WRITE)` on repositories that touch related rows. No filter, no custom table, no client class. |
+| Retry safety (FR45, FR30) | Native DB primitives — see *Data Architecture* and [`./architecture/data-tables.md`](./architecture/data-tables.md). No filter, custom table, or client class. |
 | [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details error handling (FR59) | `src/main/java/.../error/GlobalExceptionHandler.java` |
 | OpenAPI 3.x generation (FR59) | `src/main/java/.../config/OpenApiConfig.java` (Swagger Core); spec published as Maven artefact (`uk.gov.hmcts.nji:api-nji-{service}`) |
 | Structured logging (FR60) | `src/main/resources/logback-spring.xml` + `config/CorrelationIdFilter.java` |
@@ -615,9 +633,9 @@ See [`./architecture/repo-structure.md`](./architecture/repo-structure.md).
 
 - Every service → Authorisation API (per-request, request-lifetime cache).
 - Every service → Reference Data tables (direct SQL; no caching at MVP).
-- Booking → `vacancies.filled` direct UPDATE (in-transaction, no API roundtrip per Principle 1).
-- Itinerary read-model → SQL JOIN across `judges`, `absences`, `vacancies`, `bookings`, `sittings` (single indexed query).
-- MI Feed read-model → SQL JOIN across all NJI tables (single aggregate query).
+- Booking → in-transaction direct DB update on the linked vacancy (no API roundtrip per Principle 1).
+- Itinerary read-model → SQL JOIN across domain tables in the shared schema (single indexed query).
+- MI Feed read-model → SQL JOIN across NJI domain tables (single aggregate query).
 
 ### Integration Points — External
 
@@ -643,7 +661,7 @@ The cycle has two halves — user-initiated (Court User and RSU) and batch/exter
 
 1. **Court User** logs an absence with cover requested — `POST /v1/absences` (FR19); ack email to the judge.
 2. **RSU** approves the absence — `POST /v1/absences/{id}/approve` (FR21). Approval triggers vacancy auto-creation per **R4** — `POST /v1/vacancies` (FR23).
-3. **RSU** records a fee-paid booking against the vacancy — `POST /v1/bookings` (FR29). Pessimistic row lock on the vacancy + UPDATE `vacancies.filled = true` in-transaction per **R5** (FR30); ack email (FR32).
+3. **RSU** records a fee-paid booking against the vacancy — `POST /v1/bookings` (FR29). The booking creation and the in-transaction mark-as-filled on the linked vacancy are atomic, per **R5** (FR30); ack email (FR32). Persistence detail: see *Data Architecture*.
 4. **Court User** confirms the sitting after the day — `POST /v1/bookings/{id}/confirm` (FR31, FR37). Booking is now confirmed and **eligible for payment** (no synchronous payment trigger — the batch picks it up).
 5. **RSU** reconciles after Liberata has paid — `POST /v1/payments/{id}/reconcile` (FR46); manual at MVP, automated reconciliation feed is post-MVP.
 

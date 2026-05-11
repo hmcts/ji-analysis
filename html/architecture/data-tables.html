@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Authoritative Table Ownership Mapping — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../architecture.html">Architecture (index)</a></li>
+<li><a href="../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../architecture/data-tables.html" class="current">Authoritative table ownership</a></li>
+<li><a href="../architecture/conventions.html">Conventions</a></li>
+<li><a href="../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../architecture/gaps.html">Gaps</a></li>
+<li><a href="../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="authoritative-table-ownership-mapping">Authoritative Table
+Ownership Mapping</h1>
+<blockquote>
+<p>Sibling of <a
+href="../architecture.html"><code>../architecture.md</code></a>. The
+parent's <em>Data Architecture</em> section holds the strategy (shared
+schema, per-service DB roles, table-name convention, Flyway). This file
+holds the per-table inventory.</p>
+</blockquote>
+<h2 id="nji-tables-not-apex">NJI tables, not APEX</h2>
+<p>This is the inventory of NJI database tables, grouped by owning
+service. The table list, column shapes, FK relationships, and ownership
+boundaries are NJI's design.</p>
+<p>APEX has its own (different) schema. APEX's schema is not in this
+inventory and is not owned by any NJI service. The Phase 0 ETL (see <a
+href="../architecture.html"><code>../architecture.md</code> → <em>Phase
+0 Data Migration from APEX</em></a>) reads APEX dumps, transforms rows
+into NJI shape, and loads via NJI APIs.</p>
+<blockquote>
+<p><strong>Revalidation scope.</strong> When the APEX SQL dump arrives
+in Phase 0, the migration tool's input-side mapping is revalidated
+against it: does the mapping cover every APEX field NJI needs, and does
+NJI have a slot for every APEX value? NJI's schema itself is not under
+revalidation — it is fixed by NJI design. New APEX vocabulary values are
+added as Reference Data rows via the API. Tracked as G4.6 in <a
+href="./gaps.html"><code>./gaps.md</code></a> and A33 in <a
+href="./assumptions.html"><code>./assumptions.md</code></a>.</p>
+</blockquote>
+<p>For naming convention rules (entity-plural for primary domain tables,
+service-prefix for service-internal or potentially-ambiguous tables),
+see <a href="./conventions.html"><code>./conventions.md</code> → "Naming
+Patterns"</a>.</p>
+<h2 id="reference-data-service-nji-reference-data--15-tables">Reference
+Data service (<code>nji-reference-data</code>) — 15 tables</h2>
+<p>Cross-cutting controlled lists. Reads go directly via SQL JOIN with
+per-service SELECT grants. Writes go via the Reference Data API.</p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+<th>Key consumers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>regions</code></td>
+<td>Domain</td>
+<td>Geographic regions</td>
+<td>All services (Region/Area scoping)</td>
+</tr>
+<tr>
+<td><code>offices</code></td>
+<td>Domain</td>
+<td>Offices within regions</td>
+<td>Judge, Booking, Sitting, Itinerary</td>
+</tr>
+<tr>
+<td><code>calendar_periods</code></td>
+<td>Domain</td>
+<td>Financial-year boundaries; term dates</td>
+<td>Judge (working-pattern horizon to 31st March), Reports</td>
+</tr>
+<tr>
+<td><code>judge_types</code></td>
+<td>Vocabulary</td>
+<td>Judge type controlled list (CJ, DJ, DDJ, Recorder, etc.)</td>
+<td>Judge, Vacancy, Booking</td>
+</tr>
+<tr>
+<td><code>work_types</code></td>
+<td>Vocabulary</td>
+<td>Work-type controlled list (Crime, Civil, Family, etc.)</td>
+<td>Sitting, Booking, Vacancy, Itinerary</td>
+</tr>
+<tr>
+<td><code>court_types</code></td>
+<td>Vocabulary</td>
+<td>Court / location-type controlled list</td>
+<td>Office records, Itinerary</td>
+</tr>
+<tr>
+<td><code>ticket_types</code></td>
+<td>Vocabulary</td>
+<td>Ticket-type controlled list</td>
+<td>Judge tickets, Vacancy matching</td>
+</tr>
+<tr>
+<td><code>session_types</code></td>
+<td>Vocabulary</td>
+<td>Session-type controlled list (full / AM / PM / evening /
+reserved-matter)</td>
+<td>Booking, Sitting</td>
+</tr>
+<tr>
+<td><code>absence_types</code></td>
+<td>Vocabulary</td>
+<td>Absence-type controlled list (leave, sickness, training, etc.)</td>
+<td>Absence (FR19)</td>
+</tr>
+<tr>
+<td><code>working_pattern_types</code></td>
+<td>Vocabulary</td>
+<td>Working-pattern-type list (None / Daily / Weekly)</td>
+<td>Judge (FR12)</td>
+</tr>
+<tr>
+<td><code>booking_statuses</code></td>
+<td>Vocabulary</td>
+<td>Booking status list (planned / provisional / confirmed / cancelled /
+rejected)</td>
+<td>Booking (FR31)</td>
+</tr>
+<tr>
+<td><code>sitting_outcomes</code></td>
+<td>Vocabulary</td>
+<td>Sitting outcome list (confirmed / cancelled / rejected)</td>
+<td>Sitting (FR37)</td>
+</tr>
+<tr>
+<td><code>fee_payment_statuses</code></td>
+<td>Vocabulary</td>
+<td>Fee-payment-status list (yes / no / ask-when-booking)</td>
+<td>Judge (FR11), Booking (FR33)</td>
+</tr>
+<tr>
+<td><code>payment_statuses</code></td>
+<td>Vocabulary</td>
+<td>Payment status list (pending / requested / paid / reconciled /
+queried)</td>
+<td>Payment (FR41, FR46)</td>
+</tr>
+<tr>
+<td><code>reconciliation_statuses</code></td>
+<td>Vocabulary</td>
+<td>Reconciliation status list (matched / queried / unreconciled)</td>
+<td>Payment (FR46)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="authorisation-service-nji-authorisation--5-tables">Authorisation
+service (<code>nji-authorisation</code>) — 5 tables</h2>
+<p>NJI-owned tables, designed by NJI. Seeded in Phase 0 by the Phase 0
+Data Migration ETL (per D9), which reads APEX user dumps, transforms
+them, and loads via the Authorisation API. Service prefix used because
+"users" / "roles" are domain-overloaded terms.</p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>auth_users</code></td>
+<td>Domain</td>
+<td>NJI users (one row per active APEX user that the Phase 0 ETL was
+able to reconcile to an IdP principal by email + employee number)</td>
+</tr>
+<tr>
+<td><code>auth_roles</code></td>
+<td>Domain</td>
+<td>NJI authorisation roles (the 12 documented roles from
+<code>functional-modules.md</code>)</td>
+</tr>
+<tr>
+<td><code>auth_user_roles</code></td>
+<td>Domain</td>
+<td>User-role junction (many-to-many)</td>
+</tr>
+<tr>
+<td><code>auth_user_region_scopes</code></td>
+<td>Domain</td>
+<td>Per-user Region/Area scope assignments</td>
+</tr>
+<tr>
+<td><code>auth_user_activation_flags</code></td>
+<td>Domain</td>
+<td>Per-user "active in NJI" flag (FR58 — per-region phased
+activation)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="shared-infrastructure-tables-no-owning-service--1-table">Shared
+infrastructure tables (no owning service) — 1 table</h2>
+<p>Schema-managed by <code>nji-architecture</code>'s Flyway baseline
+migration; SELECT-granted to every NJI service DB role; writes are admin
+/ Flyway-only (no API). <em>(Introduced in v2.2, 2026-05-07 — replaces
+the dedicated <code>nji-configuration</code> service.)</em></p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>configuration_values</code></td>
+<td>Shared infra</td>
+<td>Typed cross-service policy values (D1 — runtime policy keys that
+need to be visible to multiple services). Per-service configuration that
+is scoped to a single service uses Spring profiles +
+<code>application.yml</code> + Azure Key Vault, <strong>not</strong>
+this table.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="notification-service-nji-notification--1-table">Notification
+service (<code>nji-notification</code>) — 1 table</h2>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>notification_dispatches</code></td>
+<td>Domain</td>
+<td>Outbound email dispatch log (recipient, content type, dispatched-at,
+status, retry count, FR9)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="judge-service-nji-judge--5-tables">Judge service
+(<code>nji-judge</code>) — 5 tables</h2>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>judges</code></td>
+<td>Domain</td>
+<td>Judge profile records (FR10, FR11)</td>
+</tr>
+<tr>
+<td><code>working_patterns</code></td>
+<td>Domain</td>
+<td>Per-judge working-pattern definition (target sit %, active period,
+FR12)</td>
+</tr>
+<tr>
+<td><code>working_pattern_days</code></td>
+<td>Domain</td>
+<td>Per-day breakdown within a working pattern (per-day work-type,
+FR12)</td>
+</tr>
+<tr>
+<td><code>judge_tickets</code></td>
+<td>Domain</td>
+<td>Per-judge ticket assignments (start date, ticket type, FR15)</td>
+</tr>
+<tr>
+<td><code>jurisdictional_splits</code></td>
+<td>Domain</td>
+<td>Per-judge jurisdictional split percentages (must total 100%,
+FR16)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="absence-service-nji-absence--1-table">Absence service
+(<code>nji-absence</code>) — 1 table</h2>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>absences</code></td>
+<td>Domain</td>
+<td>Absence records (start/end, type, NTBF flag, status, FR19–FR22)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vacancy-service-nji-vacancy--2-tables">Vacancy service
+(<code>nji-vacancy</code>) — 2 tables</h2>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vacancies</code></td>
+<td>Domain</td>
+<td>Cover-requirement records (FR23, FR24); <code>filled</code> and
+<code>filled_at</code> columns are UPDATE-granted to
+<code>nji_booking</code> per Principle 1</td>
+</tr>
+<tr>
+<td><code>vacancy_days</code></td>
+<td>Domain</td>
+<td>Per-day breakdown for vacancies (FR25 — cancel individual days with
+reason)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="booking-service-nji-booking--1-table">Booking service
+(<code>nji-booking</code>) — 1 table</h2>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bookings</code></td>
+<td>Domain</td>
+<td>Fee-paid booking records (FR29, FR31); <code>payment_status</code>
+column is UPDATE-granted to <code>nji_payment</code> per Principle 1.
+Has <code>version integer NOT NULL DEFAULT 0</code>
+(<code>@Version</code> for optimistic locking) and a
+<code>uq_bookings_vacancy_judge_session_date_type</code> unique
+constraint enforcing natural-key dedup on retries.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sitting-service-nji-sitting--1-table">Sitting service
+(<code>nji-sitting</code>) — 1 table</h2>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sittings</code></td>
+<td>Domain</td>
+<td>Salaried-judge sitting records (FR35, FR37, FR38, FR39, FR40 —
+including verification state)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="payment-service-nji-payment--3-tables">Payment service
+(<code>nji-payment</code>) — 3 tables</h2>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>payments</code></td>
+<td>Domain</td>
+<td>Payment request records (FR41, FR42). Has <code>version</code>
+(<code>@Version</code>) and a <code>uq_payments_cycle_run_date</code>
+unique constraint enforcing natural-key dedup on retries (FR45 — no
+double payment submission).</td>
+</tr>
+<tr>
+<td><code>payment_schedules</code></td>
+<td>Domain</td>
+<td>JFEPS-shaped schedule snapshots (FR43, FR44).</td>
+</tr>
+<tr>
+<td><code>payment_reconciliations</code></td>
+<td>Domain</td>
+<td>Reconciliation records (FR46).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="itinerary-service-nji-itinerary--0-tables">Itinerary service
+(<code>nji-itinerary</code>) — 0 tables</h2>
+<p>Read-model service. No persistent state at MVP per Principle 2 —
+every read is a SQL JOIN over the shared schema across
+<code>judges</code>, <code>absences</code>, <code>vacancies</code>,
+<code>bookings</code>, <code>sittings</code>. Strategy C cache is
+post-MVP if measurement justifies.</p>
+<h2 id="mi-feed-service-nji-mi-feed--0-tables">MI Feed service
+(<code>nji-mi-feed</code>) — 0 tables</h2>
+<p>Read-model service. Same pattern as Itinerary; SQL JOIN over the
+shared schema for aggregate reporting.</p>
+<h2
+id="mock-authentication-service-nji-mock-auth--2-tables-devintegration-only">Mock
+authentication service (<code>nji-mock-auth</code>) — 2 tables
+(dev/integration only)</h2>
+<p>Per <code>nji_mock_auth</code> DB role. <strong>Never deployed to
+production</strong>; production deployments reject mock-auth issuer URLs
+(per G5.3 in <a href="./gaps.html"><code>./gaps.md</code></a>).</p>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mock_oauth_clients</code></td>
+<td>Dev-only</td>
+<td>OAuth client registrations (Spring Authorization Server backend).
+Holds <strong>(a)</strong> the SPA client for human
+<code>authorization_code</code> flow, and <strong>(b)</strong>
+service-principal client registrations for <strong>batch / scheduled
+components</strong> that need a service identity (initially:
+<code>nji-payment-batch</code>). User-initiated runtime calls between
+services use <strong>JWT propagation</strong> (no service principal
+needed); batch / scheduled components — which have no upstream user
+context — use OAuth <code>client_credentials</code> against this mock
+issuer. <em>(v2.5 narrowing reverted in v2.6 to support the payment
+batch.)</em></td>
+</tr>
+<tr>
+<td><code>mock_user_roster</code></td>
+<td>Dev-only</td>
+<td>Test user roster mirroring a representative subset of
+<code>auth_users</code> for realistic Authorisation testing (G5.2)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="inventory-totals">Inventory totals</h2>
+<ul>
+<li><strong>Reference Data:</strong> 15 tables (3 domain + 12
+vocabulary)</li>
+<li><strong>Authorisation:</strong> 5 tables</li>
+<li><strong>Notification:</strong> 1 table</li>
+<li><strong>Judge:</strong> 5 tables</li>
+<li><strong>Absence:</strong> 1 table</li>
+<li><strong>Vacancy:</strong> 2 tables</li>
+<li><strong>Booking:</strong> 1 table</li>
+<li><strong>Sitting:</strong> 1 table</li>
+<li><strong>Payment:</strong> 3 tables</li>
+<li><strong>Itinerary, MI Feed:</strong> 0 tables (read models)</li>
+<li><strong>Shared infrastructure:</strong> 1 table
+(<code>configuration_values</code>; no owning service)</li>
+<li><strong>Mock auth:</strong> 2 tables (dev/integration only)</li>
+</ul>
+<p><strong>Total: 37 tables</strong> across the shared schema (34
+service-owned production + 1 shared infrastructure + 2 dev-only).</p>
+<p><strong>Retry safety convention:</strong> every NJI domain table that
+supports create has a <code>uq_{table}_{columns}</code> unique
+constraint on its natural key, and every entity that supports update has
+a <code>version</code> column for JPA <code>@Version</code> optimistic
+locking. There are <em>no</em> per-service
+<code>*_idempotency_keys</code> tables — those were dropped in v2.1 in
+favour of these PostgreSQL-native primitives. See <a
+href="./conventions.html"><code>./conventions.md</code> → "Retry safety
+and concurrency control"</a> for the pattern.</p>
+<p><strong>On APEX SQL dump validation:</strong> when the dump arrives
+in Phase 0 (per A32 + A33 in <a
+href="./assumptions.html"><code>./assumptions.md</code></a>; G4.6 in <a
+href="./gaps.html"><code>./gaps.md</code></a>), the validation focus is
+on the <strong>Phase 0 Data Migration ETL's input/output
+mapping</strong>, not on this NJI table inventory. NJI's shape is fixed
+by NJI design; the dump can surface (a) APEX fields the migration tool
+didn't anticipate (mapping gap → update the tool), or (b) APEX values
+not yet in NJI vocabularies (vocabulary row insertion via the Reference
+Data API; no schema change). If a fundamental mismatch surfaces — e.g.
+an APEX-side data structure NJI has no place for at all — that is an
+architectural decision (do we add a new NJI table?), and it lands via PR
+against the architecture document set, exactly as any other
+architectural change would.</p>
+<p><strong>Fitness function</strong> (Step 4 <em>ArchUnit-style fitness
+functions</em> in <a
+href="../architecture.html"><code>../architecture.md</code></a>)
+operates against this inventory: every table created by Flyway DDL must
+appear here with the matching owning service (or under "Shared
+infrastructure"); DB role grants must align. The Phase 0 ETL is
+<em>not</em> in scope for the fitness function — it's an external
+programme that calls NJI APIs.</p>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/data-tables.md</code></p>
+</main>
+</body>
+</html>

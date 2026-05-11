@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Implementation Readiness Assessment Report (Re-run) — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="./index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="./index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="./prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="./architecture.html">Architecture (index)</a></li>
+<li><a href="./architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="./architecture/conventions.html">Conventions</a></li>
+<li><a href="./architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="./architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="./architecture/starter-template.html">Starter template</a></li>
+<li><a href="./architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="./architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="./architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="./architecture/gaps.html">Gaps</a></li>
+<li><a href="./architecture/assumptions.html">Assumptions</a></li>
+<li><a href="./architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="./implementation-readiness-report-2026-05-06.html" class="current">Report — 2026-05-06 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul></aside>
+<main class="content">
+<h1
+id="implementation-readiness-assessment-report-re-run">Implementation
+Readiness Assessment Report (Re-run)</h1>
+<p><strong>Date:</strong> 2026-05-06 <strong>Project:</strong>
+ji-analysis (NJI — New JI) <strong>Supersedes:</strong> the 2026-05-05
+readiness report</p>
+<h2 id="what-changed-since-the-previous-run">What changed since the
+previous run</h2>
+<p>The 2026-05-05 readiness report concluded <strong>NEEDS WORK — for
+downstream artefact generation</strong>, with three of four expected
+artefacts missing (Architecture, UX, Epics). Since then:</p>
+<ul>
+<li><strong>Architecture document landed</strong> at
+<code>_bmad-output/planning-artifacts/architecture.md</code> (1,826
+lines, 6 top-level sections, 50 subsections). All 8
+architecture-workflow steps completed; the architecture's own validation
+verdict is <strong>READY WITH DOCUMENTED GAPS</strong> (high
+confidence). The document resolves the 7 architecture-phase TBDs from
+the PRD, locks the technology stack against the verified HMCTS Crime
+SpringBoot template (Java 25, Spring Boot 4.0.6, Gradle Groovy DSL,
+PostgreSQL 17, Flyway, OpenTelemetry → Application Insights, Swagger
+Core, custom JWTFilter, Lombok, MapStruct, OWASP encoder, JaCoCo,
+CycloneDX, Logstash logging), and adopts a shared-DB topology (one
+global PostgreSQL instance, schema-per-service, explicit grants).</li>
+<li><strong>UX Design</strong> still not produced.</li>
+<li><strong>Epics &amp; Stories</strong> still not produced.</li>
+</ul>
+<p>This re-run reflects the Architecture's arrival and updates the
+verdict accordingly.</p>
+<h2 id="document-inventory">Document Inventory</h2>
+<h3 id="prd-documents">PRD Documents</h3>
+<p><strong>Whole Documents:</strong></p>
+<ul>
+<li><code>prd.md</code> (73 KB; 12 PRD-workflow steps complete; 61 FRs,
+42 NFRs, 9 locked decisions D1–D9)</li>
+</ul>
+<h3 id="architecture-documents">Architecture Documents</h3>
+<p><strong>Whole Documents:</strong></p>
+<ul>
+<li><code>architecture.md</code> (136 KB; 8 architecture-workflow steps
+complete; verdict READY WITH DOCUMENTED GAPS / High confidence)</li>
+</ul>
+<h3 id="epics--stories-documents">Epics &amp; Stories Documents</h3>
+<p>⚠️ <strong>Required document not found</strong> — no epics or stories
+document exists. Epic coverage cannot be validated.</p>
+<h3 id="ux-design-documents">UX Design Documents</h3>
+<p>⚠️ <strong>Required document not found</strong> — no UX design
+artefact exists. UX alignment cannot be validated.</p>
+<h3 id="other-files">Other files</h3>
+<ul>
+<li><code>prd_tmp.html</code>, <code>prd.pdf</code> — auto-generated
+renderings of the PRD; not assessment inputs.</li>
+<li><code>implementation-readiness-report-2026-05-05.md</code> —
+superseded by this report.</li>
+</ul>
+<h2 id="critical-issues">Critical Issues</h2>
+<p><strong>Duplicates requiring resolution:</strong> None.</p>
+<p><strong>Missing artefacts:</strong> Two of four expected inputs (UX,
+Epics) are still absent. Down from three at the previous run.</p>
+<h2 id="prd-analysis">PRD Analysis</h2>
+<p>The PRD's 61 FRs (across 9 capability areas) and 42 NFRs (across 8
+categories) are unchanged since the 2026-05-05 extraction. The full
+FR/NFR text is captured in the prior readiness report and in
+<code>prd.md</code> itself; this report references them by ID rather
+than re-extracting verbatim.</p>
+<p><strong>FR capability areas (counts):</strong></p>
+<ul>
+<li>Identity &amp; Authorisation (FR1–FR5): 5</li>
+<li>Foundational Data Management (FR6–FR9): 4</li>
+<li>Judge Records &amp; Working Patterns (FR10–FR18): 9</li>
+<li>Absence Workflow (FR19–FR22): 4</li>
+<li>Vacancy &amp; Cover (FR23–FR28): 6</li>
+<li>Booking Management (FR29–FR34): 6</li>
+<li>Sitting Management (FR35–FR40): 6</li>
+<li>Payment &amp; Reconciliation (FR41–FR47): 7</li>
+<li>Itineraries &amp; Reporting (FR48–FR54): 7</li>
+<li>Platform Operations &amp; Migration (FR55–FR61): 7</li>
+</ul>
+<p><strong>NFR categories (counts):</strong></p>
+<ul>
+<li>Performance (NFR1–NFR9): 9</li>
+<li>Security (NFR10–NFR16): 7</li>
+<li>Accessibility (NFR17–NFR19): 3</li>
+<li>Integration (NFR20–NFR24): 5</li>
+<li>Observability (NFR25–NFR29): 5</li>
+<li>Data Privacy &amp; Sovereignty (NFR30–NFR33): 4</li>
+<li>Reliability &amp; Availability (NFR34–NFR38): 5</li>
+<li>Maintainability (NFR39–NFR42): 4</li>
+</ul>
+<p><strong>Additional Requirements (PRD-level non-FR/NFR
+commitments):</strong></p>
+<p>The PRD's 9 locked decisions (D1–D9) and the technology / domain
+compliance constraints listed in the prior readiness report's
+<em>Additional Requirements</em> section remain authoritative. Twelve
+TBDs were originally surfaced; <strong>seven are now resolved by the
+Architecture</strong> (see Architecture Analysis below); the remaining
+five are programme-management decisions tracked separately.</p>
+<h2 id="architecture-analysis-new-section-since-last-run">Architecture
+Analysis (new section since last run)</h2>
+<h3 id="decisions-formalised">Decisions formalised</h3>
+<p>The Architecture document resolves the 7 architecture-phase TBDs from
+the PRD:</p>
+<table>
+<thead>
+<tr>
+<th>TBD</th>
+<th>PRD status</th>
+<th>Architecture resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rate limit policy</td>
+<td>TBD</td>
+<td>Azure API Management at ingress; 100 req/sec/principal default; 10
+req/sec/principal for MI Feed; 200 req/sec burst</td>
+</tr>
+<tr>
+<td>UI framework family</td>
+<td>TBD</td>
+<td>React + TypeScript + GOV.UK Design System + Vite</td>
+</tr>
+<tr>
+<td>Service-to-service auth</td>
+<td>Resolved v2.6 (2026-05-07)</td>
+<td><strong>Two patterns at MVP</strong>: (1) <strong>JWT
+propagation</strong> for user-initiated flows — outbound calls forward
+the inbound user JWT; (2) <strong>Service-principal OAuth
+<code>client_credentials</code></strong> for the
+<strong>payment-processing batch</strong>
+(<code>nji-payment-batch</code>) which has no upstream user — non-prod
+via <code>nji-mock-auth</code> (<code>mock_oauth_clients</code>),
+production issuer per <code>gaps.md</code> G7.1 (default recommendation:
+Azure Workload Identity). No mTLS at MVP. <em>(v2.5 had narrowed this to
+JWT propagation only; v2.6 widened it again to support the
+batch.)</em></td>
+</tr>
+<tr>
+<td>Log retention</td>
+<td>TBD</td>
+<td>30 days hot in App Insights; 90 days cold in Log Analytics
+archive</td>
+</tr>
+<tr>
+<td>API versioning specifics</td>
+<td>TBD</td>
+<td>URI prefix major versioning (<code>/v1/</code>); 6-month internal /
+12-month external deprecation; <code>Deprecation</code> header per <a
+href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a>;
+<code>Sunset</code> header per <a
+href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a></td>
+</tr>
+<tr>
+<td>Historical-data access</td>
+<td>TBD</td>
+<td>Read-only APEX bridge for 12 months post-region-cutover; one-shot
+extract thereafter</td>
+</tr>
+<tr>
+<td>APEX ⇄ IdP identity-key</td>
+<td>TBD</td>
+<td>Email primary, employee number fallback, manual review for
+unmatched; Phase 0 reconciliation report</td>
+</tr>
+</tbody>
+</table>
+<h3 id="architectures-coverage-of-frs">Architecture's coverage of
+FRs</h3>
+<p>The Architecture's Step 7 validation table maps every PRD FR
+capability area to specific architectural support. Cross-checked
+here:</p>
+<table>
+<thead>
+<tr>
+<th>FR group</th>
+<th>Architectural support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity &amp; Authorisation (FR1–FR5)</td>
+<td>Authorisation service + per-service custom JWTFilter (HMCTS template
+pattern) + OIDC integration for human users (mock auth in Phase 0–8;
+real HMCTS IdP from pre-Phase-9) + JWT propagation interceptor on
+outbound HTTP clients for user-initiated flows + OAuth
+<code>client_credentials</code> (via <code>nji-mock-auth</code>) for the
+payment batch service principal (<code>nji-payment-batch</code>) per
+v2.6. FR5 (full programmatic service-account directory) remains
+post-MVP.</td>
+</tr>
+<tr>
+<td>Foundational Data Management (FR6–FR9)</td>
+<td>Reference Data and Notification services; direct SQL access to
+Reference Data tables (no caching at MVP per Principle 2).
+Configuration: per-service Spring profiles + Key Vault; shared
+<code>configuration_values</code> infrastructure table (no API) for
+cross-service policy values, schema-managed by
+<code>nji-architecture</code> Flyway baseline. <em>(Revised v2.2,
+2026-05-07.)</em></td>
+</tr>
+<tr>
+<td>Judge Records &amp; Working Patterns (FR10–FR18)</td>
+<td>Judge service (Phase 1); working-pattern engine owned by Judge</td>
+</tr>
+<tr>
+<td>Absence Workflow (FR19–FR22)</td>
+<td>Absence service (Phase 2); approval workflow with auto-vacancy
+creation per R4</td>
+</tr>
+<tr>
+<td>Vacancy &amp; Cover (FR23–FR28)</td>
+<td>Vacancy service (Phase 3); <code>markFilled</code> direct DB UPDATE
+(per Principle 1 simple-cross-service-write rule)</td>
+</tr>
+<tr>
+<td>Booking Management (FR29–FR34)</td>
+<td>Booking service (Phase 4); idempotency-key handling for retryable
+creates</td>
+</tr>
+<tr>
+<td>Sitting Management (FR35–FR40)</td>
+<td>Sitting service (Phase 5); generated from Judge working
+patterns</td>
+</tr>
+<tr>
+<td>Payment &amp; Reconciliation (FR41–FR47)</td>
+<td>Payment service (Phase 6) — <strong>scheduled batch</strong>
+(<code>nji-payment-batch</code>) authenticates as a service principal
+via OAuth <code>client_credentials</code>, picks up confirmed-but-unpaid
+bookings/sittings, generates the JFEPS-shaped Excel, dispatches it to
+the Payment Authoriser via Notification → HMCTS Email; reconciliation
+marked manually by RSU at MVP (per v2.6 reframing — FR41–45 are
+batch-driven, not user-initiated). See
+<code>architecture/sequence-diagrams/payment-batch-flow.md</code>.</td>
+</tr>
+<tr>
+<td>Itineraries &amp; Reporting (FR48–FR54)</td>
+<td>Itinerary + MI Feed services (Phases 7–8); SQL JOINs across schemas
+(replaces Strategy A)</td>
+</tr>
+<tr>
+<td>Platform Operations &amp; Migration (FR55–FR61)</td>
+<td>Per-service implementations (HMCTS Crime SpringBoot template
+scaffolding) + Phase 0 migration via Flyway</td>
+</tr>
+</tbody>
+</table>
+<h3 id="architectures-coverage-of-nfrs">Architecture's coverage of
+NFRs</h3>
+<table>
+<thead>
+<tr>
+<th>NFR group</th>
+<th>Architectural support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Performance (NFR1–NFR9)</td>
+<td>APEX-baseline page-level NFRs achievable; Forward Look NFR8
+trivially achievable via indexed SQL JOINs over the shared DB; AKS HPA
+for capacity NFR9</td>
+</tr>
+<tr>
+<td>Security (NFR10–NFR16)</td>
+<td>TLS 1.3 ingress; PostgreSQL encryption-at-rest; custom JWTFilter;
+Azure Key Vault; GFS-7 alignment via HMCTS template defaults; NFR12
+(auth) covers both inter-service patterns — JWT propagation for
+user-initiated, service-principal <code>client_credentials</code> for
+the payment batch (per v2.6)</td>
+</tr>
+<tr>
+<td>Accessibility (NFR17–NFR19)</td>
+<td>GOV.UK Design System; axe-core in CI; React Hook Form</td>
+</tr>
+<tr>
+<td>Integration (NFR20–NFR24)</td>
+<td>OIDC (mock + real); JFEPS unchanged; HMCTS email; MI Feed REST
+contract; no eLinks integration</td>
+</tr>
+<tr>
+<td>Observability (NFR25–NFR29)</td>
+<td>Logstash JSON logs + OpenTelemetry → Application Insights;
+correlation-ID MDC; Spring Actuator probes</td>
+</tr>
+<tr>
+<td>Data Privacy &amp; Sovereignty (NFR30–NFR33)</td>
+<td>Azure UK regions only; PostgreSQL Flexible Server in UK South;
+case-level data forbidden by schema; FOI scope by contract</td>
+</tr>
+<tr>
+<td>Reliability &amp; Availability (NFR34–NFR38)</td>
+<td>Operational hours availability; per-wave rollback via region
+activation flag (FR58); region-isolated AKS clusters; PostgreSQL HA
+configuration</td>
+</tr>
+<tr>
+<td>Maintainability (NFR39–NFR42)</td>
+<td>API-as-Product standards (versioned, OpenAPI spec, <a
+href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a>
+problem-details, <a
+href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a>
+<code>Deprecation</code> + <a
+href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a>
+<code>Sunset</code> for deprecation signalling); per-service deployment
+unit; <strong>manual UAT scripts per domain service</strong> (FR61 /
+NFR41 revised 2026-05-06 — APEX-experienced users compare NJI vs APEX
+side-by-side, sign-off per role per region as wave-cutover gate);
+Postman collections per phase. <em>(There is no automated
+APEX-comparison test suite — automated CI tests are unit, integration
+with Testcontainers, and contract tests only.)</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>All 61 FRs and 42 NFRs have explicit architectural
+support.</strong> None unaddressed.</p>
+<h3
+id="architecture-introduced-foundational-principles">Architecture-introduced
+foundational principles</h3>
+<p>Two principles formalised in the Architecture that shape downstream
+work:</p>
+<ul>
+<li><strong>Principle 1: API for workflows; shared DB for simple data
+access.</strong> Cross-service reads via SQL JOINs over the shared DB;
+cross-service simple writes via DB role grants on whitelisted columns;
+cross-service workflows via API. Single global PostgreSQL instance,
+schema-per-service.</li>
+<li><strong>Principle 2: No premature optimization.</strong> No caching,
+no distributed cache, no service mesh, no read replicas, no async
+messaging at MVP — added only when measurement post-MVP justifies the
+complexity.</li>
+</ul>
+<h3 id="architectures-documented-gaps-carry-forward">Architecture's
+documented gaps (carry forward)</h3>
+<p>The Architecture's Step 7 surfaces 27 gaps across 6 categories
+(G1–G6), each with mitigation, fallback, and named owner. None are
+critical (none block implementation). Most pertinent to this readiness
+assessment:</p>
+<ul>
+<li><strong>G1.4</strong> confirmed via HMCTS Crime template review
+(2026-05-06) — Java 25, Spring Boot 4.0.6, Gradle Groovy DSL, Flyway,
+OpenTelemetry, Logstash, JWTFilter, Lombok, MapStruct, OWASP encoder,
+JaCoCo, CycloneDX, Swagger Core all present.</li>
+<li><strong>G1.4a</strong> Helm chart not in template baseline; NJI
+scaffolding script must add.</li>
+<li><strong>G1.4b</strong> Spring Cloud Azure Key Vault not in template
+baseline; NJI scaffolding script must add.</li>
+<li><strong>G6.1–G6.5</strong> Shared-DB topology risks
+(schema-evolution coordination, single-DB blast radius, cross-region
+rollout, DB role grant maintenance, Flyway migration versioning across
+schema boundaries).</li>
+</ul>
+<h3
+id="architectures-documented-assumptions-carry-forward">Architecture's
+documented assumptions (carry forward)</h3>
+<p>32 assumptions (A1–A32), classified as Load-bearing / Reversible /
+Aspirational, each with verification owner. Mock-first authentication
+reclassifies HMCTS IdP assumptions (A1, A2, A3) from Phase 0 to Phase 9+
+blockers, materially reducing Phase 0 risk.</p>
+<h2 id="epic-coverage-validation">Epic Coverage Validation</h2>
+<h3 id="coverage-matrix">Coverage Matrix</h3>
+<p>⚠️ <strong>Epics &amp; Stories document still not present.</strong>
+Coverage validation cannot be performed.</p>
+<p>By definition, <strong>none of the 61 PRD FRs are currently traced to
+epic coverage</strong>, because no epics have been authored. This was
+already the case at the previous run; the situation is unchanged.</p>
+<h3 id="coverage-statistics">Coverage Statistics</h3>
+<ul>
+<li><strong>Total PRD FRs:</strong> 61</li>
+<li><strong>FRs covered in epics:</strong> 0 (no epics document
+exists)</li>
+<li><strong>Coverage percentage:</strong> 0% — <em>not</em> a defect;
+epics workflow has not run yet</li>
+<li><strong>Status:</strong> ❌ Cannot validate — Epics &amp; Stories
+artefact missing</li>
+</ul>
+<h3 id="whats-improved-vs-prior-run">What's improved vs prior run</h3>
+<p>The Architecture provides a <strong>candidate epic mapping</strong>
+(in its Step 6 <em>Requirements to Structure Mapping</em> table) that
+the Epics workflow can use as a starting point. Each FR capability area
+maps to a specific repo, build phase, and per-service file location.
+This is significantly more concrete guidance than was available at the
+prior run.</p>
+<h3 id="recommendation">Recommendation</h3>
+<p>Run <code>bmad-create-epics-and-stories</code> to author the epics.
+The architecture's Phase 0 → 9+ build sequence + repo-per-service
+structure provides the natural epic boundaries. UX should ideally come
+first (so stories can include UI acceptance criteria).</p>
+<h2 id="ux-alignment-assessment">UX Alignment Assessment</h2>
+<h3 id="ux-document-status">UX Document Status</h3>
+<p>❌ <strong>Not Found.</strong> No <code>*ux*.md</code> artefact
+exists. Unchanged since prior run.</p>
+<h3 id="is-ux-implied">Is UX implied?</h3>
+<p>Yes — strongly. Per D4, modern UI replication of APEX layouts is in
+scope. FR55, FR56 specify UI surface; NFR17–NFR19 specify accessibility
+(WCAG 2.2 AA). The Architecture's Step 4 Frontend Architecture has
+resolved the framework family (React + TypeScript + GOV.UK Design System
++ Vite); the UX workflow now needs to derive component patterns, screen
+flows, and interaction models within those constraints.</p>
+<h3 id="alignment-issues">Alignment Issues</h3>
+<p>Cannot validate alignment between UX, PRD, and Architecture because
+the UX artefact is missing. The PRD and Architecture are internally
+consistent on UX expectations:</p>
+<ul>
+<li><strong>PRD:</strong> UI replicates APEX functional layouts; modern
+UI stack; WCAG 2.2 AA; user-experience uplift.</li>
+<li><strong>Architecture:</strong> React + TypeScript + GOV.UK Design
+System + Vite; per-domain UI modules; TanStack Query for server state;
+React Hook Form + Zod for form state; axe-core integrated in CI.</li>
+</ul>
+<h3 id="recommendation-1">Recommendation</h3>
+<p>Run <code>bmad-create-ux-design</code> to produce the UX artefact.
+The PRD's 5 user journeys, FR55/FR56, and the Architecture's Frontend
+Architecture decisions are sufficient input.</p>
+<h2 id="epic-quality-review">Epic Quality Review</h2>
+<h3 id="status">Status</h3>
+<p>❌ <strong>Cannot perform epic quality review.</strong> Epics &amp;
+Stories artefact does not exist (per Epic Coverage Validation
+above).</p>
+<h3
+id="pre-emptive-guidance-for-the-upcoming-epic--stories-workflow-refreshed">Pre-emptive
+guidance for the upcoming Epic &amp; Stories workflow (refreshed)</h3>
+<p>The candidate-epic mapping is now better-grounded thanks to the
+Architecture. When <code>bmad-create-epics-and-stories</code> runs, the
+natural epic boundaries derived from PRD + Architecture are:</p>
+<table>
+<thead>
+<tr>
+<th>Candidate epic</th>
+<th>Maps to</th>
+<th>Phase</th>
+<th>Architecture support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity &amp; Authorisation (incl. Phase 0 user/role
+migration)</td>
+<td>FR1–FR5, FR57, FR58</td>
+<td>Phase 0</td>
+<td><code>nji-authorisation</code> repo + per-service
+<code>JWTFilter</code> + <code>nji-mock-auth</code> repo</td>
+</tr>
+<tr>
+<td>Reference Data + Notification + shared
+<code>configuration_values</code> table</td>
+<td>FR6–FR9</td>
+<td>Phase 0</td>
+<td><code>nji-reference-data</code>, <code>nji-notification</code> repos
++ shared infrastructure table managed by <code>nji-architecture</code>
+Flyway baseline (no separate configuration service per arch v2.2)</td>
+</tr>
+<tr>
+<td>API Platform + Deployment + Logging</td>
+<td>FR59, FR60, NFR25–NFR28, NFR39, NFR40</td>
+<td>Phase 0</td>
+<td>NJI scaffolding script + per-service Helm + OpenTelemetry
+config</td>
+</tr>
+<tr>
+<td>Judge Records &amp; Working Patterns</td>
+<td>FR10–FR18</td>
+<td>Phase 1</td>
+<td><code>nji-judge</code> repo</td>
+</tr>
+<tr>
+<td>Absence Workflow</td>
+<td>FR19–FR22</td>
+<td>Phase 2</td>
+<td><code>nji-absence</code> repo</td>
+</tr>
+<tr>
+<td>Vacancy &amp; Cover</td>
+<td>FR23–FR28</td>
+<td>Phase 3</td>
+<td><code>nji-vacancy</code> repo</td>
+</tr>
+<tr>
+<td>Booking Management</td>
+<td>FR29–FR34</td>
+<td>Phase 4</td>
+<td><code>nji-booking</code> repo</td>
+</tr>
+<tr>
+<td>Sitting Management</td>
+<td>FR35–FR40</td>
+<td>Phase 5</td>
+<td><code>nji-sitting</code> repo</td>
+</tr>
+<tr>
+<td>Payment &amp; Reconciliation</td>
+<td>FR41–FR47</td>
+<td>Phase 6</td>
+<td><code>nji-payment</code> repo</td>
+</tr>
+<tr>
+<td>Itineraries (Court, Judge, Forward Look)</td>
+<td>FR48–FR52</td>
+<td>Phase 7</td>
+<td><code>nji-itinerary</code> repo with SQL-based read model</td>
+</tr>
+<tr>
+<td>Reports + MI Feed</td>
+<td>FR53, FR54</td>
+<td>Phase 8</td>
+<td><code>nji-mi-feed</code> repo with SQL-based read model</td>
+</tr>
+<tr>
+<td>Real HMCTS IdP Integration</td>
+<td>A1, A2, A3, G1.1, G1.2, G1.3</td>
+<td>Pre-Phase-9</td>
+<td>Mock-to-real-IdP cutover playbook (G1.6)</td>
+</tr>
+<tr>
+<td>Pilot Rollout (per-region cutover playbook)</td>
+<td>FR58 (activation flag), Risk #1 mitigation</td>
+<td>Phase 9+</td>
+<td>Per-region application-tier deployment with shared DB</td>
+</tr>
+</tbody>
+</table>
+<p>Each candidate epic has at least one repo and a defined per-service
+file layout. The Epics workflow should be substantially less ambiguous
+than it would have been at the prior run.</p>
+<h3 id="pre-emptive-failure-mode-flags-refreshed">Pre-emptive
+failure-mode flags (refreshed)</h3>
+<p>When epics are authored, watch for:</p>
+<ul>
+<li><strong>Phase 0 cross-cutting epics</strong> (Identity &amp;
+Authorisation, Reference Data, API Platform) tend to look like technical
+milestones. Frame them as user-value (e.g. "RSU users can log in to NJI
+via SSO and see their authorised regions" rather than "Setup SSO").</li>
+<li><strong>Mock-to-real-IdP cutover</strong> belongs in its own
+pre-Phase-9 epic, not bolted onto Phase 9 rollout.</li>
+<li><strong>Behavioural-parity UAT stories</strong> (FR61 / NFR41
+revised 2026-05-06): per-service manual UAT script authoring (under
+<code>docs/uat/</code>) and per-wave UAT execution belong inside each
+domain epic, not as a separate technical epic. UAT is performed by
+APEX-experienced users (RSU, Court, Judge, Clerks, Finance, MI)
+comparing NJI vs APEX side-by-side; sign-off per role per region is the
+wave-cutover gate. There is no automated APEX-comparison test work to
+schedule.</li>
+<li><strong>UI replication stories</strong> (per D4) should be
+co-located with the API stories of the same phase.</li>
+<li><strong>Data migration stories</strong> (Reference Data +
+Users/Roles) belong in Phase 0; stories should reference the APEX-export
+→ Flyway migration sequence.</li>
+<li><strong>Whitelisted-table grant stories</strong> (per Architecture
+Principle 1) belong in the table-owning service's epic — when Service B
+grants Service A access to one of its tables, Service B owns the grant
+story.</li>
+</ul>
+<h2 id="summary-and-recommendations">Summary and Recommendations</h2>
+<h3 id="overall-readiness-status">Overall Readiness Status</h3>
+<p>🟢 <strong>READY WITH DOCUMENTED GAPS</strong> — for the architecture
+and PRD layers; <strong>NEEDS WORK</strong> for the UX and Epics
+layers.</p>
+<p>This is an upgrade from the prior run's "NEEDS WORK" verdict. The PRD
++ Architecture combination is now ready for downstream work; the UX and
+Epics workflows are the named next steps.</p>
+<p>The Architecture has done substantial readiness lift since the prior
+run:</p>
+<ul>
+<li><strong>All 61 FRs and 42 NFRs have explicit architectural
+support</strong> (validated in Architecture Step 7).</li>
+<li><strong>All 7 architecture-phase TBDs from the PRD are
+resolved.</strong></li>
+<li><strong>Technology stack confirmed against the HMCTS Crime
+SpringBoot template</strong> (Java 25, Spring Boot 4.0.6, Gradle Groovy
+DSL, Flyway, PostgreSQL 17, OpenTelemetry, Logstash, JWTFilter, Lombok,
+MapStruct, OWASP encoder, JaCoCo, CycloneDX, Swagger Core) — reducing
+Phase 0 unknowns considerably.</li>
+<li><strong>Mock-first authentication</strong> decouples Phase 0–8 build
+from HMCTS IdP roadmap.</li>
+<li><strong>Shared-DB topology with explicit grants</strong> simplifies
+read-model federation and retires Strategy A NFR breach risk (formerly
+Risk #9).</li>
+<li><strong>Two foundational principles</strong> (API-for-workflows +
+No-premature-optimization) anchor downstream decisions.</li>
+<li><strong>27 documented gaps + 32 assumptions</strong> carry full
+traceability into the next workflows.</li>
+</ul>
+<h3 id="critical-issues-requiring-immediate-action">Critical Issues
+Requiring Immediate Action</h3>
+<ol type="1">
+<li><strong>UX Design artefact missing.</strong> Run
+<code>bmad-create-ux-design</code>. The PRD's 5 user journeys,
+FR55/FR56, NFR17–NFR19, and the Architecture's Frontend Architecture
+decisions are sufficient input.</li>
+<li><strong>Epics &amp; Stories artefact missing.</strong> Run
+<code>bmad-create-epics-and-stories</code> after UX. The candidate-epic
+mapping in this report's <em>Pre-emptive guidance</em> section is the
+recommended starting point; the architecture's Step 6 <em>Requirements
+to Structure Mapping</em> table is authoritative for repo-per-epic
+boundaries.</li>
+</ol>
+<h3 id="recommended-next-steps">Recommended Next Steps</h3>
+<ol type="1">
+<li><strong>Run <code>bmad-create-ux-design</code></strong> — derive
+component patterns, screen flows, and interaction models from the 5 user
+journeys and FR55/FR56, constrained by D4 (replicate APEX layouts),
+NFR17–NFR19 (WCAG 2.2 AA), and the Architecture's locked stack (React +
+TypeScript + GOV.UK Design System + Vite). UX produces the binding UI
+design contract.</li>
+<li><strong>Run <code>bmad-create-epics-and-stories</code></strong> —
+translate the 61 FRs into deliverable epics aligned with Phase 0 → 9+
+build sequence; use the candidate-epic mapping in this report and the
+Architecture's repo-per-service structure as a starting point. Each
+story includes UI acceptance criteria where relevant (informed by
+UX).</li>
+<li><strong>Re-run
+<code>bmad-check-implementation-readiness</code></strong> once UX and
+Epics artefacts exist. The next verdict should reflect a complete
+artefact set; remaining gaps would then be programme-management
+decisions (G2 series) and external HMCTS dependencies (G1 series).</li>
+<li><strong>Phase 0 prerequisite checks</strong> can begin in parallel
+with UX/Epics work:
+<ul>
+<li>Verify HMCTS Crime SpringBoot template (or judicial-services
+equivalent) is appropriate (G1.4).</li>
+<li>Verify Helm chart provision mechanism within HMCTS (G1.4a).</li>
+<li>Verify Spring Cloud Azure Key Vault availability (G1.4b).</li>
+<li>Verify HMCTS Email transport for AKS-hosted services (G1.5).</li>
+</ul></li>
+</ol>
+<h3
+id="findings-on-the-prd--architecture-combination-positive-signals">Findings
+on the PRD + Architecture combination (positive signals)</h3>
+<p>Strengths surfaced during this re-run:</p>
+<ul>
+<li><strong>End-to-end traceability.</strong> Every PRD FR/NFR has an
+architectural mechanism. The architecture's validation matrix is
+concrete (specific repos, file paths, dependencies).</li>
+<li><strong>Decisive simplification.</strong> The architecture rejected
+three classes of complexity (event bus, shared library, monorepo) on
+principled grounds, plus added Principle 2 (no premature optimization)
+which retired multiple complexity vectors (caching, service mesh, async
+messaging, read replicas).</li>
+<li><strong>Template-grounded technology stack.</strong> All major
+library choices verified against the HMCTS Crime SpringBoot template —
+significantly reduces "discovery" work in Phase 0.</li>
+<li><strong>Mock-first authentication.</strong> Removes HMCTS IdP
+roadmap dependency from Phase 0–8 critical path.</li>
+<li><strong>Shared-DB pragmatism.</strong> Cross-service simple data
+access via DB JOINs and explicit grants; workflows still go via API.
+Strategy A federation retires; Forward Look NFR becomes trivial.</li>
+<li><strong>Documented gaps and assumptions.</strong> 27 + 32 = 59
+explicit traceability items across the architecture document — every
+external dependency or simplifying choice is named, classified, and
+owned.</li>
+</ul>
+<h3 id="final-note">Final Note</h3>
+<p>This assessment identified <strong>2 critical issues</strong> (UX
+missing, Epics missing). Both are next-workflow tasks rather than
+defects in the current artefacts.</p>
+<p>The PRD + Architecture pair is ready to support the next workflows.
+Run <code>bmad-create-ux-design</code> and
+<code>bmad-create-epics-and-stories</code> (in that order), then re-run
+readiness for a final verdict. At that point, only programme-management
+decisions and HMCTS infrastructure verification will remain as
+documented gaps — no architectural blockers.</p>
+<p><strong>Assessment complete.</strong></p>
+<p><strong>Report:</strong>
+<code>_bmad-output/planning-artifacts/implementation-readiness-report-2026-05-06.md</code>
+<strong>Date:</strong> 2026-05-06 <strong>Assessor:</strong> PRD +
+Architecture Validator (bmad-check-implementation-readiness, second run)
+<strong>Supersedes:</strong> the 2026-05-05 readiness report</p>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/implementation-readiness-report-2026-05-06.md</code></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,264 @@
+// NJI — System Context (high-level birds-eye view)
+//
+// Render with:
+//   scripts/render_diagram.sh \
+//     _bmad-output/planning-artifacts/architecture/diagrams/system-context.dot \
+//     _bmad-output/planning-artifacts/architecture/diagrams/system-context.png
+//
+// Scope: this diagram shows ONLY runtime components and high-level
+// dependencies. Deployment-time, Phase-0-only, and historical-bridge
+// artefacts (Phase 0 ETL, APEX legacy system, manual UAT comparison) are
+// intentionally excluded; they are documented in architecture.md.
+//
+// Edge granularity: dependencies are shown at the **cluster level**, not at
+// the individual service level. A single arrow from Domain Services to
+// Cross-cutting Services replaces the many implicit per-service arrows
+// (booking→authz, payment→notify, absence→vacancy, etc.). Service-level
+// detail lives in architecture.md and the Step 6 integration tables.
+//
+// Layout principles:
+//   - Strict top-to-bottom tier stack: Users → UI → APIM → Cross-cutting →
+//     Domain → Read-models → Data tier.
+//   - Each tier cluster lays its services in a multi-row × multi-column grid
+//     (cross-cutting 1×3; domain 2×3; read-models 1×2) to reduce horizontal
+//     stretch.
+//   - External systems float to the side of the spine via natural edge pull.
+//
+// Edge style conventions:
+//   - Solid arrow  = primary runtime dependency / call direction
+//   - Dashed arrow = transport / authN / external boundary
+//   - Dotted arrow = non-prod / post-MVP runtime
+
+digraph nji_system_context {
+  rankdir=TB;
+  compound=true;
+  newrank=true;
+  splines=spline;
+  bgcolor="white";
+  pad="0.3";
+  nodesep=0.30;
+  ranksep=0.55;
+
+  fontname="Helvetica";
+  fontsize=18;
+  labelloc="t";
+  label=<<b>NJI — System Context</b><br/><font point-size="11">High-level service map and key interactions · v2.1 · 2026-05-07</font>>;
+
+  node [fontname="Helvetica", fontsize=10, shape=box, style="filled,rounded", margin="0.18,0.10"];
+  edge [fontname="Helvetica", fontsize=9, color="#404040"];
+
+  // ============== Compact legend (top-left) ==============
+
+  legend [shape=box, style="rounded,filled", fillcolor="#fafafa", color="#a0a0a0",
+          fontsize=8, margin="0.08,0.04",
+          label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="1">
+                   <TR><TD ALIGN="LEFT"><B>Legend</B></TD></TR>
+                   <TR><TD ALIGN="LEFT">—  solid: primary runtime dependency</TD></TR>
+                   <TR><TD ALIGN="LEFT">- - dashed: transport / authN / external</TD></TR>
+                   <TR><TD ALIGN="LEFT">. . dotted: non-prod / post-MVP</TD></TR>
+                 </TABLE>>];
+
+  // ============== Tier 1: Users (top) ==============
+
+  subgraph cluster_users {
+    label=<<b>Users</b><br/><font point-size="9">authenticated via HMCTS IdP SSO</font>>;
+    style="rounded,dashed";
+    color="#808080";
+    bgcolor="#f7f7f7";
+    users [label=<RSU · Court · Judges · Clerks · Finance · MI>, fillcolor="#e8e8e8"];
+  }
+
+  // Pin legend onto the top rank, to the left of the users cluster
+  { rank=same; legend; users; }
+  legend -> users [style=invis, weight=200];
+
+  // ============== Tier 2: UI ==============
+
+  ui [label=<<b>nji-ui</b> — SPA · GOV.UK Design System<br/>role-scoped Home + per-domain modules>, fillcolor="#fff4c8"];
+
+  // ============== Tier 3: Ingress ==============
+
+  apim [label=<<b>Azure API Management</b><br/>zone-redundant in UK South · JWT validation · rate limits>, fillcolor="#cfe6f7"];
+
+  // ============== Tier 4: Cross-cutting (Phase 0) — 2×2 grid ==============
+
+  subgraph cluster_xcutting {
+    label=<<b>Cross-cutting services</b> (Phase 0)<br/><font point-size="9">utility services depended on by Domain and Read-model tiers</font>>;
+    style="rounded";
+    color="#3070a0";
+    fontcolor="#1f4f70";
+    bgcolor="#eaf3fb";
+
+    authz   [label=<<b>nji-authorisation</b><br/>per-request authz authority<br/>users · roles · region scope · activation>, fillcolor="#cfe6f7"];
+    refdata [label=<<b>nji-reference-data</b><br/>regions · offices · calendar periods<br/>+ 12 vocabularies>, fillcolor="#cfe6f7"];
+    notify  [label=<<b>nji-notification</b><br/>outbound transactional email>, fillcolor="#cfe6f7"];
+
+    // Grid: 1 row × 3 columns
+    { rank=same; authz; refdata; notify; }
+  }
+
+  // ============== Tier 5: Domain (Phases 1–6) — 2×3 grid ==============
+
+  subgraph cluster_domain {
+    label=<<b>Domain services</b> (Phases 1–6)>;
+    style="rounded";
+    color="#2f7a3e";
+    fontcolor="#1f5028";
+    bgcolor="#eef9f0";
+
+    judge   [label=<<b>nji-judge</b><br/>profiles · working patterns<br/>tickets · jurisdictional split>, fillcolor="#d8eede"];
+    absence [label=<<b>nji-absence</b><br/>absences + approval<br/>triggers vacancy creation>, fillcolor="#d8eede"];
+    vacancy [label=<<b>nji-vacancy</b><br/>cover-required vacancies<br/>filled flag UPDATE-granted to Booking>, fillcolor="#d8eede"];
+    booking [label=<<b>nji-booking</b><br/>fee-paid bookings + verification<br/>row-locks target vacancy in-tx>, fillcolor="#d8eede"];
+    sitting [label=<<b>nji-sitting</b><br/>salaried-judge sittings<br/>verification · AM/PM split>, fillcolor="#d8eede"];
+    payment [label=<<b>nji-payment</b><br/>payments + reconciliation<br/>JFEPS Excel via Notification>, fillcolor="#d8eede"];
+
+    // Grid: row 1 = judge, absence, vacancy; row 2 = booking, sitting, payment
+    { rank=same; judge; absence; vacancy; }
+    { rank=same; booking; sitting; payment; }
+    judge   -> booking [style=invis, weight=20];
+    absence -> sitting [style=invis, weight=20];
+    vacancy -> payment [style=invis, weight=20];
+  }
+
+  // ============== Tier 6: Read-models (Phases 7–8) — 1×2 ==============
+
+  subgraph cluster_readmodel {
+    label=<<b>Read-model services</b> (Phases 7–8)>;
+    style="rounded";
+    color="#7030a0";
+    fontcolor="#4a1c70";
+    bgcolor="#f3e8f9";
+
+    itinerary [label=<<b>nji-itinerary</b><br/>Court + Judge itinerary · Forward Look<br/>SQL JOINs (no own tables)>, fillcolor="#e6d5ed"];
+    mifeed    [label=<<b>nji-mi-feed</b><br/>aggregate reports · DA&amp;I feed<br/>SQL JOINs (no own tables)>, fillcolor="#e6d5ed"];
+
+    { rank=same; itinerary; mifeed; }
+  }
+
+  // ============== Tier 7: Data ==============
+
+  subgraph cluster_data {
+    label=<<b>Data tier</b><br/><font point-size="9">shared by every NJI service via JPA</font>>;
+    style="rounded";
+    color="#a06030";
+    fontcolor="#6a3a14";
+    bgcolor="#fbf3e8";
+    db [label=<<b>PostgreSQL Flexible Server</b><br/>single instance · single shared schema · zone-redundant HA in UK South<br/>37 NJI tables (35 prod + 2 dev-only)>, fillcolor="#f3dfbf"];
+  }
+
+  // ============== Side artefacts (no rank constraint — let them float) ==============
+
+  subgraph cluster_external {
+    label=<<b>External systems</b><br/><font point-size="9">not co-managed by NJI</font>>;
+    style="rounded,dashed";
+    color="#808080";
+    bgcolor="#f7f7f7";
+
+    idp     [label=<<b>HMCTS IdP</b><br/>OIDC · authN>, fillcolor="#e8e8e8"];
+    email   [label=<<b>HMCTS Email</b>>, fillcolor="#e8e8e8"];
+    jfeps   [label=<<b>JFEPS / Liberata</b><br/>payment processing>, fillcolor="#e8e8e8"];
+    dai     [label=<<b>DA&amp;I</b><br/>MI consumer (post-MVP)>, fillcolor="#e8e8e8", style="filled,rounded,dashed"];
+
+    // Stack vertically inside the cluster — strong weight keeps them together
+    // even when individual nodes have cross-spine edges (which use constraint=false)
+    idp   -> email [style=invis, weight=200];
+    email -> jfeps [style=invis, weight=200];
+    jfeps -> dai   [style=invis, weight=200];
+  }
+
+  mockauth [label=<<b>nji-mock-auth</b><br/>OIDC issuer (dev/CI/integration only)<br/>NEVER deployed to production>, fillcolor="#f5dede", style="filled,rounded,dashed"];
+
+  // Pin mock-auth on the same row as nji-ui (it is an alternative IdP for non-prod)
+  { rank=same; ui; mockauth; }
+  ui -> mockauth [style=invis, weight=200];
+
+  // ============== Spine — invisible high-weight edges enforce TB stack ==============
+
+  users   -> ui      [style=invis, weight=200];
+  ui      -> apim    [style=invis, weight=200];
+  // APIM connects into the cross-cutting row (authz/refdata/notify)
+  apim    -> authz   [style=invis, weight=200];
+  // Cross-cutting row connects into top row of domain (judge/absence/vacancy)
+  authz   -> judge   [style=invis, weight=200];
+  refdata -> absence [style=invis, weight=200];
+  notify  -> vacancy [style=invis, weight=200];
+  // Bottom row of domain (booking/sitting/payment) connects into read-models
+  sitting -> itinerary [style=invis, weight=200];
+  payment -> mifeed  [style=invis, weight=200];
+  // Read-models connect into the data tier
+  itinerary -> db    [style=invis, weight=200];
+  mifeed    -> db    [style=invis, weight=200];
+
+  // ============== Cluster-level dependency edges only ==============
+  //
+  // Service-level arrows are intentionally NOT drawn. Each cluster-level
+  // arrow below replaces many implicit service-to-service edges:
+  //   - "Domain → Cross-cutting" subsumes: booking→authz, payment→authz,
+  //     judge→refdata reads, booking→notify, payment→notify, etc.
+  //   - "Read-models → Data tier" subsumes: itinerary→db SQL JOIN,
+  //     mifeed→db SQL JOIN aggregate.
+  //   - "Cross-cutting → HMCTS Email" subsumes: notify→email SMTP/Graph.
+  //   - "Cross-cutting → HMCTS IdP" subsumes: every NJI service's JWTFilter
+  //     validating inbound user JWTs against IdP's JWKS endpoint.
+  //   - Inter-service auth is via JWT propagation (token forwarding) — the
+  //     upstream service copies the inbound Authorization header to its
+  //     outbound calls. Not drawn (it's a transport pattern, not an edge).
+  // Service-level detail lives in architecture.md (integration points).
+
+  // User entry — explicit SSO authentication first, then JWT-bearing requests
+  // through the UI and APIM. The earlier label "HTTPS via HMCTS IdP SSO (JWT)"
+  // on users→ui has been split: the SSO step is now drawn as a dedicated
+  // users→idp edge so the JWT issuance is no longer implicit.
+  users -> idp  [label="authenticate (SSO)\n→ JWT issued",
+                 style=dashed, color="#3070a0", constraint=false];
+  users -> ui   [label="HTTPS + JWT"];
+  ui    -> apim [label="HTTPS + bearer"];
+
+  // Ingress — APIM is the gateway for user-facing NJI APIs (Domain primarily;
+  // Read-models also have a user-facing surface for Itinerary, but that is
+  // implicit at this granularity)
+  apim -> judge [style=dashed, color="#9090c0", lhead=cluster_domain,
+                 label="user-facing NJI APIs\nrouted via APIM"];
+
+  // Cluster-level dependency: Domain services depend on Cross-cutting
+  // services for authz, reference data, notifications.
+  // (Source/target nodes are representative; ltail/lhead make the arrow
+  // render at cluster boundaries.)
+  judge -> notify [ltail=cluster_domain, lhead=cluster_xcutting,
+                   label="Domain depends on\nCross-cutting\n(authz · ref data · email)",
+                   color="#2f7a3e", penwidth=2.0, constraint=false];
+
+  // Cluster-level dependency: Read-models federate over the shared DB via
+  // SQL JOIN (the architecturally distinctive pattern — no API fan-out)
+  itinerary -> db [ltail=cluster_readmodel,
+                   label="Read-models federate\nvia SQL JOIN over\nshared schema",
+                   color="#7030a0", penwidth=2.0];
+
+  // Cluster-level dependency: every NJI service validates inbound user JWTs
+  // against HMCTS IdP's JWKS endpoint (via its custom JWTFilter, per the
+  // HMCTS Crime template pattern) before the request reaches the controller
+  // layer. At MVP all runtime calls are user-initiated and inter-service auth
+  // is via JWT propagation — no service principals, no client_credentials.
+  authz -> idp [ltail=cluster_xcutting,
+                label="every NJI service validates\nuser JWTs against JWKS\n(human authN only)",
+                style=dashed, color="#3070a0", constraint=false];
+
+  // Cluster-level dependency: Cross-cutting (specifically Notification) sends
+  // outbound email, which is then forwarded to JFEPS by the Payment Authoriser
+  notify -> email [ltail=cluster_xcutting,
+                   label="outbound transactional email\n(SMTP / Graph)",
+                   style=dashed, constraint=false];
+  email  -> jfeps [label="JFEPS Excel\n(via authoriser upload)",
+                   style=dashed, color="#808080"];
+
+  // Read-models post-MVP: DA&I consumes aggregate reports
+  mifeed -> dai [ltail=cluster_readmodel,
+                 label="aggregate REST\n(post-MVP)",
+                 style=dashed, constraint=false];
+
+  // Mock auth — runtime only in dev/CI/integration
+  mockauth -> ui [label="dev/CI only",
+                  style=dotted, color="#b06060", constraint=false];
+
+}

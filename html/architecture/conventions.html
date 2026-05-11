@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Implementation Patterns & Consistency Rules — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../architecture.html">Architecture (index)</a></li>
+<li><a href="../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../architecture/conventions.html" class="current">Conventions</a></li>
+<li><a href="../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../architecture/gaps.html">Gaps</a></li>
+<li><a href="../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="implementation-patterns--consistency-rules">Implementation
+Patterns &amp; Consistency Rules</h1>
+<blockquote>
+<p>Sibling of <a
+href="../architecture.html"><code>../architecture.md</code></a>. The
+parent file links here in place of the original Step 5.</p>
+</blockquote>
+<h2 id="pattern-categories">Pattern Categories</h2>
+<p>This document is the consistency contract for the 11 services and the
+UI. Patterns are enforced by code review, CI lint, contract tests, and
+ArchUnit fitness functions — not by a shared library.</p>
+<h2 id="naming-patterns">Naming Patterns</h2>
+<p><strong>Database (PostgreSQL):</strong></p>
+<ul>
+<li><strong>Schema:</strong> single shared schema (e.g. <code>nji</code>
+or default <code>public</code>). All NJI tables live in this schema.
+Per-service DB roles enforce write boundaries; the team that writes the
+Flyway migration owns the table.</li>
+<li><strong>Tables:</strong> <code>snake_case</code>, plural. Two naming
+variants:
+<ul>
+<li><strong>Primary domain entities</strong> use entity-plural without
+prefix. Full inventory in <a
+href="./data-tables.html"><code>./data-tables.md</code></a>. Owner is
+unambiguous from the inventory.</li>
+<li><strong>Service-internal or potentially-ambiguous tables</strong>
+use service-prefix: <code>payment_reconciliations</code>,
+<code>notification_dispatches</code>, <code>auth_user_roles</code>,
+<code>auth_user_region_scopes</code>. Use the prefix when the table name
+alone wouldn't disclose its owner, or when there's a credible risk of
+collision.</li>
+</ul></li>
+<li><strong>Authoritative ownership mapping</strong> is documented in <a
+href="./data-tables.html"><code>./data-tables.md</code></a>
+(table-ownership table maps every NJI table → owning service-role). The
+team that authors the Flyway migration is the owning team.</li>
+<li><strong>Fitness function in CI</strong> verifies: (a) no two
+services' Flyway migrations create overlapping table names; (b) DB role
+grants align with the documented ownership; (c) tables not in the
+ownership mapping are flagged.</li>
+<li><strong>Columns:</strong> <code>snake_case</code> — <code>id</code>,
+<code>created_at</code>, <code>updated_at</code>,
+<code>payroll_number</code>, <code>is_active</code>.</li>
+<li><strong>Primary keys:</strong> <code>id</code>, type
+<code>uuid</code>. UUIDs avoid integer-range coupling and "guess the
+next ID" patterns. Cost over bigint is negligible at this scale. PK
+generation detail in <a
+href="../architecture.html"><code>../architecture.md</code></a> →
+<em>Data Architecture</em>.</li>
+<li><strong>Foreign keys:</strong>
+<code>{referenced_table_singular}_id</code> — <code>judge_id</code>,
+<code>booking_id</code>, <code>vacancy_id</code>. FKs reference tables
+in the shared schema; no cross-schema FK overhead.</li>
+<li><strong>Indexes:</strong> <code>idx_{table}_{columns}</code> —
+<code>idx_judges_email</code>,
+<code>idx_bookings_judge_id_date</code>.</li>
+<li><strong>Unique constraints:</strong> named
+<code>uq_{table}_{columns}</code>. Per-table examples in <a
+href="./data-tables.html"><code>./data-tables.md</code></a>.</li>
+<li><strong>Audit columns:</strong> every table has
+<code>created_at timestamptz NOT NULL</code>,
+<code>updated_at timestamptz NOT NULL</code>. <code>created_by</code>
+and <code>updated_by</code> (UUID, FK to user identity) added when D7
+user-action audit is implemented post-MVP.</li>
+</ul>
+<p><strong>API endpoints:</strong></p>
+<ul>
+<li><strong>Resources:</strong> plural nouns — <code>/v1/judges</code>,
+<code>/v1/bookings</code>, <code>/v1/payments</code>.</li>
+<li><strong>Resource IDs in path:</strong>
+<code>/v1/judges/{judgeId}</code>.</li>
+<li><strong>Sub-resources:</strong>
+<code>/v1/judges/{judgeId}/working-patterns</code>,
+<code>/v1/judges/{judgeId}/tickets</code>.</li>
+<li><strong>Actions on resources:</strong>
+<code>POST /v1/absences/{absenceId}/approve</code>,
+<code>POST /v1/sittings/{sittingId}/verify</code>. Actions are
+URL-segments, not RPC-style endpoint names.</li>
+<li><strong>Path variables:</strong> <code>{camelCase}</code> —
+<code>{judgeId}</code>, <code>{bookingId}</code>.</li>
+<li><strong>Query parameters:</strong> <code>camelCase</code> —
+<code>?regionId=...&amp;fromDate=...&amp;judgeType=...</code>.</li>
+<li><strong>HTTP headers:</strong> <code>Title-Kebab-Case</code>, no
+<code>X-</code> prefix per <a
+href="https://datatracker.ietf.org/doc/html/rfc6648">RFC 6648</a> —
+<code>Idempotency-Key</code>, <code>Correlation-Id</code>,
+<code>Sunset</code> (per <a
+href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a>),
+<code>Deprecation</code> (per <a
+href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a>).</li>
+<li><strong>Versioning prefix:</strong> <code>/v1/</code> for major
+version 1, <code>/v2/</code> for v2, etc. (per Step 4 in <a
+href="../architecture.html"><code>../architecture.md</code></a>).</li>
+</ul>
+<p><strong>Java code:</strong></p>
+<ul>
+<li><strong>Package:</strong>
+<code>uk.gov.hmcts.nji.{service}.{layer}</code> — e.g.
+<code>uk.gov.hmcts.nji.judge.controller</code>,
+<code>uk.gov.hmcts.nji.booking.service</code>.</li>
+<li><strong>Classes:</strong> <code>PascalCase</code> —
+<code>Judge</code>, <code>JudgeController</code>,
+<code>JudgeService</code>, <code>JudgeRepository</code>,
+<code>JudgeNotFoundException</code>.</li>
+<li><strong>Methods / fields:</strong> <code>camelCase</code> —
+<code>getJudgeById</code>, <code>firstName</code>,
+<code>isActive</code>.</li>
+<li><strong>Constants:</strong> <code>SCREAMING_SNAKE_CASE</code> —
+<code>MAX_BOOKING_DAYS_PER_VACANCY</code>,
+<code>DEFAULT_PESSIMISTIC_LOCK_TIMEOUT_MS</code>.</li>
+<li><strong>Test classes:</strong> unit tests
+<code>{ClassUnderTest}Test.java</code>; integration tests
+<code>{ClassUnderTest}IT.java</code>. <em>(There are no
+<code>*ApexParityTest.java</code> classes — behavioural-parity
+verification is manual UAT, see <code>docs/uat/</code> per
+service.)</em></li>
+</ul>
+<p><strong>TypeScript code (UI):</strong></p>
+<ul>
+<li><strong>Files:</strong> <code>PascalCase.tsx</code> for components —
+<code>JudgeList.tsx</code>, <code>BookingForm.tsx</code>.
+<code>camelCase.ts</code> for non-component modules —
+<code>apiClient.ts</code>, <code>formatters.ts</code>.</li>
+<li><strong>Components:</strong> <code>PascalCase</code> —
+<code>&lt;JudgeList /&gt;</code>,
+<code>&lt;BookingForm /&gt;</code>.</li>
+<li><strong>Hooks:</strong> <code>useCamelCase</code> —
+<code>useJudgeList</code>, <code>useBookings</code>,
+<code>useAuth</code>.</li>
+<li><strong>Types / interfaces:</strong> <code>PascalCase</code> —
+<code>Judge</code>, <code>BookingRequest</code>,
+<code>PaymentSchedule</code>.</li>
+<li><strong>Functions / variables:</strong> <code>camelCase</code>.</li>
+<li><strong>Constants:</strong> <code>SCREAMING_SNAKE_CASE</code>.</li>
+<li><strong>Generated API client types:</strong> <code>camelCase</code>
+per JSON field convention below; one client per backend service,
+regenerated from OpenAPI spec.</li>
+</ul>
+<h2 id="structure-patterns">Structure Patterns</h2>
+<p><strong>Per-service Java structure (Spring Boot conventional, no
+shared parent):</strong></p>
+<pre><code>nji-{service}/
+├── src/main/java/uk/gov/hmcts/nji/{service}/
+│   ├── {Service}Application.java       (Spring Boot @SpringBootApplication)
+│   ├── controller/                     (REST controllers, @RestController)
+│   ├── service/                        (business logic, @Service)
+│   ├── repository/                     (Spring Data JPA, @Repository)
+│   ├── domain/                         (entities + value objects, @Entity)
+│   ├── dto/                            (request/response DTOs)
+│   ├── client/                         (clients to other NJI services)
+│   ├── config/                         (Spring config: JWTFilter, AuthDetails, OpenAPI Swagger Core)
+│   ├── error/                          (RFC 9457 ControllerAdvice, problem-detail factories)
+│   └── exception/                      (domain exceptions extending base classes)
+├── src/main/resources/
+│   ├── application.yml                 (defaults)
+│   ├── application-{profile}.yml       (dev/staging/production overrides)
+│   └── db/migration/                   (Flyway V1__init.sql, V2__add_x.sql, ...)
+├── src/test/java/uk/gov/hmcts/nji/{service}/
+│   └── {layer}/                        (mirrors src/main package layout — unit + integration tests)
+├── docs/
+│   └── uat/                            (manual UAT scripts: APEX-vs-NJI behavioural-parity walkthroughs per FR61 / NFR41 revised)
+├── helm/                                (Kubernetes Helm chart)
+├── postman/                             (Postman collections per phase)
+├── build.gradle                     (Gradle Groovy DSL (per HMCTS template))
+├── settings.gradle
+└── README.md                            (service-specific docs)</code></pre>
+<blockquote>
+<p>Full per-service / UI / <code>nji-architecture</code> directory trees
+with the inventory of every file: see <a
+href="./repo-structure.html"><code>./repo-structure.md</code></a>.</p>
+</blockquote>
+<p><strong>UI repo structure (single repo, modules per
+domain):</strong></p>
+<pre><code>nji-ui/
+├── src/
+│   ├── main.tsx                         (entry point)
+│   ├── App.tsx                          (router root + auth wrapper)
+│   ├── routes.tsx                       (route definitions)
+│   ├── modules/                         (per-domain UI modules)
+│   │   ├── judge/                       (Manage Judges UI)
+│   │   │   ├── pages/                   (JudgeListPage.tsx, JudgeDetailPage.tsx)
+│   │   │   ├── components/              (JudgeCard.tsx, WorkingPatternEditor.tsx)
+│   │   │   ├── hooks/                   (useJudgeList.ts, useJudge.ts)
+│   │   │   ├── api/                     (generated client from Judge OpenAPI spec)
+│   │   │   └── index.ts                 (module exports)
+│   │   ├── absence/
+│   │   ├── vacancy/
+│   │   ├── booking/
+│   │   ├── sitting/
+│   │   ├── payment/
+│   │   ├── itinerary/
+│   │   └── reports/
+│   ├── shared/                          (cross-module UI utilities)
+│   │   ├── components/                  (Layout, Header, ErrorBoundary)
+│   │   ├── hooks/                       (useAuth, useCorrelationId)
+│   │   ├── auth/                        (HMCTS IdP integration)
+│   │   └── api/                         (shared HTTP client config, error handling)
+│   └── styles/                          (GOV.UK Design System overrides)
+├── tests/
+│   ├── unit/                            (Vitest)
+│   └── e2e/                             (Playwright per phase)
+├── public/
+└── package.json</code></pre>
+<p><strong>Why module-per-domain (not by-type):</strong> the 11-service
+backend decomposition implies ~10 UI domain modules (the cross-cutting
+Notification and Authorisation services are not UI-fronted; the
+cross-cutting Reference Data is admin-screen-fronted only); each module
+is self-contained (pages + components + hooks + generated client) so a
+domain phase's UI work is one folder. Easier to onboard, easier to
+delete or rewrite per region's customisation if ever needed.</p>
+<h2 id="format-patterns">Format Patterns</h2>
+<p><strong>JSON field naming: <code>camelCase</code></strong> for all
+field names — <code>firstName</code>, <code>payrollNumber</code>,
+<code>feePaymentStatus</code>, <code>createdAt</code>. Aligns with
+TypeScript convention; Spring Jackson maps Java <code>camelCase</code> →
+JSON <code>camelCase</code> by default. Snake_case at the database layer
+maps to camelCase at the API layer via JPA column-to-field mapping.</p>
+<p><strong>Date/time formats:</strong> <strong>ISO 8601
+always.</strong></p>
+<ul>
+<li>Date-only: <code>2026-05-06</code> (no timezone).</li>
+<li>Instants (timestamps): <code>2026-05-06T14:30:00Z</code> (always
+UTC). Server stores UTC; UI converts to UK local for display only.</li>
+</ul>
+<p><strong>Booleans:</strong> <code>true</code> / <code>false</code> in
+JSON; <code>boolean</code> type in PostgreSQL. No <code>0/1</code>, no
+<code>Y/N</code>.</p>
+<p><strong>Null vs missing:</strong></p>
+<ul>
+<li>Optional fields: omit when null (Jackson
+<code>Include.NON_NULL</code>).</li>
+<li>Required fields: validation rejects missing values at API
+boundary.</li>
+</ul>
+<p><strong>Pagination:</strong></p>
+<ul>
+<li><strong>Cursor-based</strong> for large or chronologically-ordered
+lists (Forward Look, MI Feed reports):
+<code>?cursor={opaque}&amp;limit=50</code>. Response:
+<code>{ "items": [...], "nextCursor": "..." }</code>.</li>
+<li><strong>Offset-based</strong> for small filtered lists (Bookings
+list filtered by region+date): <code>?page=0&amp;size=20</code>.
+Response:
+<code>{ "items": [...], "totalElements": N, "page": 0, "size": 20 }</code>.</li>
+<li>Cursor format is service-internal opaque (typically a base64-encoded
+<code>(timestamp, id)</code> tuple). Consumers do not parse
+cursors.</li>
+</ul>
+<p><strong>API response envelope:</strong></p>
+<ul>
+<li><strong>Success:</strong> direct resource representation, no
+wrapper. <code>GET /v1/judges/{id}</code> returns the Judge JSON
+directly.</li>
+<li><strong>Error:</strong> <a
+href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a>
+<code>application/problem+json</code> envelope (obsoletes RFC 7807; same
+content type and field shape) per Step 4 in <a
+href="../architecture.html"><code>../architecture.md</code></a>.</li>
+</ul>
+<p><strong>HTTP status codes (consistent usage):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200 OK</td>
+<td>Successful read; successful idempotent update</td>
+</tr>
+<tr>
+<td>201 Created</td>
+<td>Successful resource creation; <code>Location</code> header points to
+new resource</td>
+</tr>
+<tr>
+<td>204 No Content</td>
+<td>Successful delete; successful action with no body</td>
+</tr>
+<tr>
+<td>400 Bad Request</td>
+<td>Malformed request (parsing failure)</td>
+</tr>
+<tr>
+<td>401 Unauthorized</td>
+<td>AuthN failure (missing or invalid token)</td>
+</tr>
+<tr>
+<td>403 Forbidden</td>
+<td>AuthZ failure (token valid but principal lacks permission)</td>
+</tr>
+<tr>
+<td>404 Not Found</td>
+<td>Resource does not exist</td>
+</tr>
+<tr>
+<td>409 Conflict</td>
+<td>State conflict (e.g. double-booking attempt)</td>
+</tr>
+<tr>
+<td>422 Unprocessable Entity</td>
+<td>Validation failure (request well-formed, business rule
+rejected)</td>
+</tr>
+<tr>
+<td>429 Too Many Requests</td>
+<td>Rate limit exceeded; <code>Retry-After</code> header included</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td>Server-side faults</td>
+</tr>
+</tbody>
+</table>
+<h2 id="communication-patterns">Communication Patterns</h2>
+<p><strong>Service-to-service call pattern:</strong></p>
+<ul>
+<li>Each service has a <code>client/</code> package with one Spring
+<code>@Component</code> per called service (e.g.
+<code>BookingService</code>'s repo contains <code>VacancyClient</code>
+for calling Vacancy).</li>
+<li>Clients are typed Java interfaces wrapping Spring Boot 4's
+<code>RestClient</code> configured with the JWT-propagation interceptor
+(below) and correlation-ID propagator.</li>
+<li>Method names mirror the operation:
+<code>notificationClient.sendBookingAcknowledgement(bookingId)</code>,
+not <code>notificationClient.post(...)</code>. <strong>Domain language,
+not HTTP language.</strong></li>
+<li>Clients handle: JWT propagation, correlation-ID propagation, retry
+on 5xx (idempotent operations only), circuit-breaker (open if dependency
+is down).</li>
+</ul>
+<p><strong>Inter-service authentication at MVP — two
+patterns:</strong></p>
+<ol type="1">
+<li><strong>JWT propagation (token forwarding)</strong> — for
+<strong>user-initiated</strong> flows (the majority at MVP). The user's
+JWT (issued by HMCTS IdP at SSO) is the relevant security context
+end-to-end. Inter-service calls forward that JWT as-is.</li>
+<li><strong>Service-principal authentication (OAuth
+<code>client_credentials</code>)</strong> — for <strong>batch /
+scheduled</strong> components without an upstream user. The MVP-relevant
+case is <code>nji-payment-batch</code>.</li>
+</ol>
+<p><strong>JWT propagation (token forwarding) — for user-initiated
+flows:</strong></p>
+<ul>
+<li><strong>Mechanism:</strong> every outbound <code>RestClient</code>
+registers a <code>ClientHttpRequestInterceptor</code> that:
+<ol type="1">
+<li>Reads the inbound request's
+<code>Authorization: Bearer &lt;user-jwt&gt;</code> header from the
+request-scoped <code>AuthDetails</code> bean (populated by
+<code>JWTFilter</code>).</li>
+<li>Attaches the same <code>Authorization</code> header to the outbound
+request.</li>
+<li>Allows the call to proceed.</li>
+</ol></li>
+<li><strong>Downstream service</strong> validates the forwarded JWT via
+its own <code>JWTFilter</code> (signature check against IdP's JWKS, then
+<code>POST /authz/check</code>) — same path as for direct user
+requests.</li>
+<li><strong>Implementation footprint per service:</strong> ~10–15 lines
+(one <code>Configuration</code> class wiring the interceptor onto the
+shared <code>RestClient</code> builder).</li>
+<li><strong>Limit:</strong> propagation requires a request-scoped user
+JWT to exist. Background, scheduled, or async flows have no user context
+— those use the service-principal pattern below.</li>
+</ul>
+<p><strong>Service-principal authentication (for batch / scheduled
+components):</strong></p>
+<p>The MVP-relevant case is the <strong>payment-processing
+batch</strong> (<code>nji-payment-batch</code>), which runs on a
+schedule and has no upstream user context. It uses OAuth
+<code>client_credentials</code>:</p>
+<ul>
+<li><strong>Client registration</strong>: a service-principal entry
+exists in the OIDC issuer's client store. In non-prod that's
+<code>mock_oauth_clients</code> on <code>nji-mock-auth</code>; in
+production it's whichever issuer is chosen per <a
+href="./gaps.html"><code>./gaps.md</code> G7.1</a> (default
+recommendation: Azure Workload Identity, which substitutes
+managed-identity tokens for client-secret-based ones).</li>
+<li><strong>Token acquisition</strong>: at run start (or on token
+expiry), the batch component does <code>POST /oauth2/token</code> with
+<code>grant_type=client_credentials</code>. Spring Boot 4's
+<code>OAuth2AuthorizedClientManager</code> handles caching +
+refresh.</li>
+<li><strong>Outbound calls</strong>: the resulting service JWT is
+attached as <code>Authorization: Bearer …</code> to outbound HTTP calls
+(e.g. to the Notification API). The receiving service's
+<code>JWTFilter</code> validates it via the same JWKS path used for
+human user JWTs — same code path; only the principal's "kind" claim
+differs.</li>
+<li><strong>Authorisation</strong>: service principals have records in
+<code>auth_users</code> with a kind flag (e.g.
+<code>principal_kind = service</code>) distinguishing them from humans.
+<code>nji-authorisation</code> resolves their permissions the same way
+as human users.</li>
+<li><strong>Scheduling</strong>: implementation choice between Spring
+<code>@Scheduled</code> (in-process; runs inside the same JVM as the
+synchronous service API) and a Kubernetes CronJob (separate pod; scales
+independently). Either is acceptable at MVP — the batch's external
+observable behaviour is the same.</li>
+</ul>
+<p><strong>Correlation ID propagation:</strong></p>
+<ul>
+<li><strong>Inbound:</strong> read <code>Correlation-Id</code> header
+(or generate UUID if missing); set in MDC via
+<code>MDC.put("correlationId", id)</code>.</li>
+<li><strong>Outbound:</strong> every service-to-service client attaches
+the current MDC correlation ID to outbound <code>Correlation-Id</code>
+header.</li>
+<li><strong>Logs:</strong> every log entry includes
+<code>correlationId</code> via Logback MDC integration.</li>
+</ul>
+<p><strong>Error categorisation taxonomy</strong> (used in logs and as
+RFC 9457 <code>type</code> URI suffixes):</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>validation</code></td>
+<td>Request failed JSR-380 validation</td>
+</tr>
+<tr>
+<td><code>authorisation</code></td>
+<td>AuthZ check rejected the principal</td>
+</tr>
+<tr>
+<td><code>business-rule</code></td>
+<td>Request well-formed but violates a domain rule (e.g.
+double-booking)</td>
+</tr>
+<tr>
+<td><code>dependency</code></td>
+<td>Downstream service call failed</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>Data integrity issue (unexpected null, FK violation, etc.)</td>
+</tr>
+<tr>
+<td><code>concurrency</code></td>
+<td>Optimistic-lock failure on a write</td>
+</tr>
+<tr>
+<td><code>unexpected</code></td>
+<td>Uncaught exception — promotes to a bug ticket; ideally rare</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Retry safety and concurrency control:</strong> native
+PostgreSQL + JPA constructs (natural-key uniqueness for duplicate-create
+dedup → <code>409</code>; optimistic locking for lost-update →
+<code>412</code>; pessimistic row locking for cross-row workflows). No
+custom idempotency-key tables. Detail (mechanisms, naming, per-entity
+convention, <code>Idempotency-Key</code> policy) lives in <a
+href="../architecture.html"><code>../architecture.md</code></a> →
+<em>Data Architecture</em> and per-table in <a
+href="./data-tables.html"><code>./data-tables.md</code></a>.</p>
+<h2 id="process-patterns">Process Patterns</h2>
+<p><strong>Error handling at the controller layer:</strong></p>
+<ul>
+<li>All controllers return <code>ResponseEntity&lt;T&gt;</code> (or void
+with <code>@ResponseStatus</code> for 204 No Content).</li>
+<li>Per-service <code>@ControllerAdvice</code> catches:
+<ul>
+<li><code>MethodArgumentNotValidException</code> → 422 + RFC 9457
+<code>validation</code></li>
+<li><code>AuthorisationException</code> (custom) → 403 + RFC 9457
+<code>authorisation</code></li>
+<li><code>BusinessRuleViolation</code> (custom base class for domain
+exceptions) → 409 or 422 + RFC 9457 <code>business-rule</code></li>
+<li><code>DependencyException</code> (custom) → 502 + RFC 9457
+<code>dependency</code></li>
+<li><code>OptimisticLockingFailureException</code> → 409 + RFC 9457
+<code>concurrency</code></li>
+<li><code>Exception</code> (catch-all) → 500 + RFC 9457
+<code>unexpected</code> (logged with full stack trace at ERROR
+level)</li>
+</ul></li>
+</ul>
+<p><strong>Loading states (UI):</strong></p>
+<ul>
+<li>TanStack Query handles loading state via <code>isLoading</code>,
+<code>isFetching</code>, <code>isError</code>.</li>
+<li>Standard pattern:
+<pre class="tsx"><code>if (isLoading) return &lt;Spinner /&gt;;
+if (isError) return &lt;ErrorMessage error={error} /&gt;;
+return &lt;ActualContent data={data} /&gt;;</code></pre></li>
+<li>Use GOV.UK Design System's loading patterns; no ad-hoc
+spinners.</li>
+</ul>
+<p><strong>Form validation (UI):</strong></p>
+<ul>
+<li>React Hook Form for state management.</li>
+<li>Zod schemas matching the OpenAPI request shape (or
+<code>zod-to-openapi</code> derivation).</li>
+<li>Server is the source of truth — UI validation is for UX feedback
+only and never enforces a constraint the server doesn't.</li>
+</ul>
+<p><strong>Test conventions:</strong></p>
+<ul>
+<li>Unit tests: <code>*Test.java</code>, mock all dependencies, run on
+every commit.</li>
+<li>Integration tests: <code>*IT.java</code>, Testcontainers for
+PostgreSQL, run on every commit.</li>
+<li>Contract tests (Pact or equivalent): per-consumer / per-provider,
+run on every commit.</li>
+<li>E2E tests (UI): Playwright, one suite per phase, run as a phase
+gate.</li>
+<li><strong>Manual UAT — APEX-vs-NJI behavioural parity (FR61 / NFR41
+revised 2026-05-06):</strong> scripted walkthroughs maintained under
+<code>docs/uat/</code> per service. Performed by APEX-experienced users
+(RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, MI)
+opening APEX side-by-side with NJI, comparing behaviour for the
+workflows + edge cases the script enumerates, and signing off per role
+per region. Sign-off is the wave-cutover gate; there is no automated
+APEX-comparison harness in CI.</li>
+<li><strong>Coverage target:</strong> behaviour coverage, not line
+coverage. PRs include behaviour-test rationale, not coverage stats.</li>
+</ul>
+<p><strong>Logging conventions (per HMCTS Crime template):</strong></p>
+<ul>
+<li>Logger per class via SLF4J:
+<code>private static final Logger LOG = LoggerFactory.getLogger(MyService.class);</code>
+(Lombok <code>@Slf4j</code> is also acceptable per HMCTS template's
+Lombok use).</li>
+<li><strong>Logstash JSON encoder</strong> for structured output;
+<strong>OpenTelemetry</strong> for trace context propagation alongside
+logs.</li>
+<li>Levels:
+<ul>
+<li><code>ERROR</code> — request failed in unexpected way;
+investigate.</li>
+<li><code>WARN</code> — recoverable but unusual.</li>
+<li><code>INFO</code> — significant business events ("Booking created",
+"Payment dispatched").</li>
+<li><code>DEBUG</code> — diagnostic detail; off in production by
+default.</li>
+</ul></li>
+<li><strong>Forbidden in logs:</strong> PII (judge personal data,
+payroll numbers), bank details, case-level identifiers, raw request
+bodies that may contain personal data.</li>
+</ul>
+<p><strong>Git conventions:</strong></p>
+<ul>
+<li>Branch naming: <code>feature/{ticket-id}-{short-description}</code>,
+<code>bugfix/{ticket-id}-{short-description}</code>,
+<code>chore/{short-description}</code>.</li>
+<li>Commit messages: imperative present tense, ≤ 72 chars subject.
+Conventional Commits prefix (<code>feat:</code>, <code>fix:</code>,
+<code>docs:</code>, <code>refactor:</code>, <code>test:</code>,
+<code>chore:</code>) per HMCTS conventions.</li>
+<li>PR target: <code>main</code>. Trunk-based development; release
+branches per region/wave only if needed.</li>
+</ul>
+<h2 id="enforcement-guidelines">Enforcement Guidelines</h2>
+<p><strong>All NJI services MUST:</strong></p>
+<ul>
+<li>Use the HMCTS Crime SpringBoot template as scaffold (per <a
+href="./starter-template.html"><code>./starter-template.md</code></a>)
+and customise per service.</li>
+<li>Follow the package layout
+<code>uk.gov.hmcts.nji.{service}.{layer}</code>.</li>
+<li>Use Gradle Groovy DSL (per HMCTS Crime SpringBoot template) with
+Gradle Wrapper.</li>
+<li>Implement RFC 9457 errors via per-service
+<code>@ControllerAdvice</code> (no shared library).</li>
+<li>Implement Authorisation enforcement via per-service custom
+<code>JWTFilter</code> + <code>AuthDetails</code> request-scoped bean
+(HMCTS template pattern); the filter calls NJI Authorisation per request
+to resolve role + Region/Area scope (NJI variance from template's
+claims-only approach — required by FR58).</li>
+<li>Generate OpenAPI 3.x specs via Swagger Core; publish per-service
+spec as a Maven artefact
+(<code>uk.gov.hmcts.nji:api-nji-{service}:{version}</code>).</li>
+<li>Emit structured JSON logs (Logstash encoder) with correlation IDs;
+export traces via OpenTelemetry.</li>
+<li>Use Flyway migrations in
+<code>src/main/resources/db/migration/</code> (per HMCTS Crime
+SpringBoot template).</li>
+<li>Use Lombok and MapStruct (per HMCTS Crime SpringBoot template) for
+boilerplate reduction and DTO/entity mapping.</li>
+<li>Use OWASP Java Encoder for XSS-safe output encoding where rendering
+untrusted input.</li>
+<li>Emit JaCoCo coverage reports and CycloneDX SBOM as part of CI
+artefacts.</li>
+<li>Provide a Helm chart for AKS deployment.</li>
+<li>Provide a Postman collection per phase that exercises the service's
+endpoints.</li>
+<li>Include unit tests, integration tests (Testcontainers PostgreSQL),
+and contract tests. <em>(Domain services additionally maintain a manual
+UAT script under <code>docs/uat/</code> per FR61 / NFR41 revised; this
+is documentation owned by the service, not a CI gate.)</em></li>
+</ul>
+<p><strong>Pattern enforcement mechanisms:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>What it enforces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Code review (PR template)</strong></td>
+<td>"Patterns checklist" — naming, structure, format, error handling.
+Reviewer signs off.</td>
+</tr>
+<tr>
+<td><strong>CI lint</strong></td>
+<td>Spotless + Checkstyle (Java); ESLint + Prettier (TypeScript); SQL
+formatting via SQLFluff. Build fails on violation.</td>
+</tr>
+<tr>
+<td><strong>ArchUnit fitness functions</strong></td>
+<td>Per-service ArchUnit tests enforce package layout, dependency rules,
+naming conventions. Run as part of unit-test suite.</td>
+</tr>
+<tr>
+<td><strong>Consumer-driven contract tests (Pact)</strong></td>
+<td>Verify API conventions are honoured between consumers and
+providers.</td>
+</tr>
+<tr>
+<td><strong>OpenAPI lint (Spectral)</strong></td>
+<td>OpenAPI specs validated against an NJI-specific ruleset (consistent
+error envelope, versioning prefix, RFC 9457 references).</td>
+</tr>
+<tr>
+<td><strong>JaCoCo + CycloneDX</strong></td>
+<td>Code coverage reports + SBOM generation per HMCTS Crime template.
+Build emits artefacts for security/audit review.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When patterns evolve:</strong></p>
+<ul>
+<li>Pattern change starts as a PR against <a
+href="../architecture.html"><code>../architecture.md</code></a> (or this
+file).</li>
+<li>Once merged, the pattern is the new convention.</li>
+<li><strong>Existing services are NOT forced to retrofit</strong> (no
+shared library means no version-bump cascade); new services adopt the
+new pattern; existing services adopt at their own pace via per-service
+refactors when next touched.</li>
+</ul>
+<h2 id="pattern-examples">Pattern Examples</h2>
+<p><strong>Good — naming:</strong></p>
+<ul>
+<li>Database: entity-plural table name; <code>snake_case</code> columns;
+<code>id uuid PRIMARY KEY</code>; <code>created_at</code> /
+<code>updated_at</code> audit columns; natural-key uniqueness via
+<code>uq_{table}_{columns}</code>. Full per-table detail in <a
+href="./data-tables.html"><code>./data-tables.md</code></a>.</li>
+<li>API: <code>GET /v1/judges/{judgeId}</code></li>
+<li>Java:
+<code>@RestController class JudgeController { ResponseEntity&lt;JudgeDto&gt; getJudge(@PathVariable UUID judgeId) { ... } }</code></li>
+<li>TypeScript:
+<code>function JudgeProfile({ judgeId }: { judgeId: string }) { ... }</code></li>
+<li>JSON:
+<code>{ "judgeId": "uuid-here", "firstName": "...", "payrollNumber": "...", "isActive": true, "createdAt": "2026-05-06T10:00:00Z" }</code></li>
+</ul>
+<p><strong>Anti-patterns — do not:</strong></p>
+<ul>
+<li>❌ Mixed casing in DB (<code>Id</code>, <code>FirstName</code>). Use
+<code>snake_case</code>.</li>
+<li>❌ Snake_case in JSON:
+<code>{ "judge_id": ..., "first_name": ... }</code> (mixes Java-style
+with JS clients).</li>
+<li>❌ Wrap success responses:
+<code>{ "data": { "judgeId": ... }, "error": null }</code>.</li>
+<li>❌ Custom error formats: <code>{ "errorMsg": "..." }</code> instead
+of RFC 9457.</li>
+<li>❌ Ad-hoc HTTP statuses: <code>200 OK</code> with
+<code>{"success": false}</code> body for failures.</li>
+<li>❌ "Smart" / RPC-style routes:
+<code>POST /v1/processBookingAndCreatePayment</code> (mixes resources).
+Use <code>POST /v1/bookings</code> then
+<code>POST /v1/payments/process</code>.</li>
+<li>❌ Bigint primary keys (use UUID per the standard above).</li>
+<li>❌ Local time zones in stored timestamps (always UTC).</li>
+<li>❌ Logging PII or bank details at any level.</li>
+</ul>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/conventions.md</code></p>
+</main>
+</body>
+</html>

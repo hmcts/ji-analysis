@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Architecture Changelog — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../architecture.html">Architecture (index)</a></li>
+<li><a href="../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../architecture/conventions.html">Conventions</a></li>
+<li><a href="../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../architecture/gaps.html">Gaps</a></li>
+<li><a href="../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../architecture/changelog.html" class="current">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="architecture-changelog">Architecture Changelog</h1>
+<blockquote>
+<p>Sibling of <a
+href="../architecture.html"><code>../architecture.md</code></a>. The
+parent file links here at its tail.</p>
+<p><strong>Anchor convention:</strong> entries authored at v1.0–v1.7
+reference section anchors that lived in the original single-file
+<code>architecture.md</code>. v1.8 split those sections into siblings
+under <code>architecture/</code>. Pre-v1.8 anchors are preserved
+verbatim (audit trail) and resolve in the sibling files via the table
+below.</p>
+</blockquote>
+<h2 id="pre-v18-anchor--current-location">Pre-v1.8 anchor → current
+location</h2>
+<table>
+<thead>
+<tr>
+<th>Old anchor (<code>architecture.md#…</code>)</th>
+<th>Now lives in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#starter-template-evaluation</code> (Step 3 starter
+content)</td>
+<td><a
+href="./starter-template.html"><code>./starter-template.md</code></a></td>
+</tr>
+<tr>
+<td><code>#per-service-nji-conventions-encoded-in-scaffolding-script-not-in-shared-library</code></td>
+<td><a href="./starter-template.html"><code>./starter-template.md</code>
+→ "Per-service NJI Conventions"</a></td>
+</tr>
+<tr>
+<td><code>#data-architecture</code> (Authoritative Table Ownership
+Mapping subsection)</td>
+<td><a href="./data-tables.html"><code>./data-tables.md</code></a></td>
+</tr>
+<tr>
+<td><code>#implementation-patterns--consistency-rules</code> (Step 5
+entirely)</td>
+<td><a href="./conventions.html"><code>./conventions.md</code></a></td>
+</tr>
+<tr>
+<td><code>#naming-patterns</code></td>
+<td><a href="./conventions.html"><code>./conventions.md</code> → "Naming
+Patterns"</a></td>
+</tr>
+<tr>
+<td><code>#test-conventions</code></td>
+<td><a href="./conventions.html"><code>./conventions.md</code> →
+"Process Patterns"</a></td>
+</tr>
+<tr>
+<td><code>#complete-project-directory-structure--per-backend-service</code></td>
+<td><a
+href="./repo-structure.html"><code>./repo-structure.md</code></a></td>
+</tr>
+<tr>
+<td><code>#documented-gaps</code> (G1–G6)</td>
+<td><a href="./gaps.html"><code>./gaps.md</code></a></td>
+</tr>
+<tr>
+<td><code>#assumptions</code> (A1–A33)</td>
+<td><a href="./assumptions.html"><code>./assumptions.md</code></a></td>
+</tr>
+<tr>
+<td>Other anchors (foundational principles, core architectural
+decisions, validation results, integration points, etc.)</td>
+<td>unchanged — still in <a
+href="../architecture.html"><code>../architecture.md</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="versions">Versions</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Summary</th>
+<th>Sections affected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v2.8 — DR consolidated as a single open gap; all DR detail
+removed from elsewhere</strong></td>
+<td>2026-05-08</td>
+<td><strong>DR (disaster recovery) is now a single open gap</strong> in
+<a href="./gaps.html"><code>./gaps.md</code> G3.6</a>, holding scope,
+target region, posture, geo-redundant backup, AKS DR Helm values, DNS
+failover, RTO/RPO. The architecture documents previously duplicated this
+detail in multiple places — all such duplication has been removed and
+replaced with references to G3.6. <br/><strong>Specific
+removals</strong>: dedicated
+<code>#### DR topology — UK West cold-standby</code> subsection in
+<code>architecture.md</code>; the <code>DR — UK West cold-standby</code>
+row in <code>architecture-summary.md</code>; the
+<code>values-dr-uk-west.yaml</code> line in
+<code>repo-structure.md</code>; the
+<code>(UK West for DR if needed)</code> parenthetical in
+<code>starter-template.md</code>; the "UK West is cold-DR" clause in
+NFR38 in PRD and the duplicated "UK West DR" clauses in NFR Reliability
+rows. Section heading <em>Deployment topology — single Azure region,
+multi-AZ HA, UK West cold-DR</em> renamed to <em>Deployment topology —
+single Azure region, multi-AZ HA</em>. <br/><strong>Gap-content
+review</strong>: G6.2 mitigation tightened to point at G3.6 for DR
+rather than repeat the residual-risk handling; the architecture.md
+<em>Cross-Component Dependencies</em> PostgreSQL bullet trimmed to point
+at the <em>HA topology</em> table and the gaps register for residual
+risks. <br/><strong>Principle codified</strong>: where a topic is
+documented as an open gap, the architecture documentation references the
+gap rather than restating mitigation, scope, or residual-risk detail.
+Implementing this principle now applies most strongly to DR; future gaps
+follow the same rule.</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+2 <em>Reliability</em> bullet + Step 4 <em>Decision Priority Analysis
+(Important)</em> + Step 4 <em>Hosting</em> + Step 4 <em>Database
+hosting</em> + Step 4 <em>Deployment topology</em> (heading renamed; DR
+sub-section deleted; HA-topology PostgreSQL row updated;
+full-region-loss footnote rewritten; Helm values list trimmed) + Step 6
+<em>Cross-Component Dependencies</em> PostgreSQL bullet + Changelog
+stub</a>; <a
+href="../architecture-summary.html"><code>../architecture-summary.md</code>
+Deployment / hosting list (DR row + per-service unit Helm-values
+list)</a>; <a href="./gaps.html"><code>./gaps.md</code> G3.6
+(consolidated as authoritative DR source) + G6.2 (DR cross-reference
+tightened) + title bumped to G1–G7</a>; <a
+href="./repo-structure.html"><code>./repo-structure.md</code>
+per-service Helm tree</a>; <a
+href="./starter-template.html"><code>./starter-template.md</code>
+Default Azure UK region note</a>; <a
+href="./non-functional-requirements-coverage.html"><code>./non-functional-requirements-coverage.md</code>
+NFR31 + NFR Reliability architectural support</a>; PRD
+<code>NFR31</code> data-residency + <code>NFR38</code> rollout-isolation
++ Cloud platform Tech Stack note</td>
+</tr>
+<tr>
+<td><strong>v2.7 — Correct + verify all RFC citations; add External
+References appendix</strong></td>
+<td>2026-05-08</td>
+<td><strong>RFC citations corrected</strong>: error envelope now cites
+<strong><a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC
+9457</a></strong> (current; obsoletes <a
+href="https://datatracker.ietf.org/doc/html/rfc7807">RFC 7807</a> since
+July 2023 — content type and field shape unchanged).
+<code>Deprecation</code> header now cited correctly to <strong><a
+href="https://datatracker.ietf.org/doc/html/rfc9745">RFC
+9745</a></strong> (March 2025; was previously incorrectly attributed to
+RFC 8594). <code>Sunset</code> remains <a
+href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a>.
+<code>Retry-After</code> header now cited to <a
+href="https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.3">RFC
+9110 §10.2.3</a>; <code>429 Too Many Requests</code> status to <a
+href="https://datatracker.ietf.org/doc/html/rfc6585">RFC 6585</a>.
+<code>Deprecation</code> value corrected — RFC 9745 specifies a date
+timestamp value (<code>Deprecation: @&lt;unix-timestamp&gt;</code>).
+<br/><strong>External References appendix</strong> (new):
+<code>architecture.md</code> ends with a table of every RFC / OpenAPI /
+WCAG cited, each with a verifiable canonical link. <br/><strong>FR59 /
+NFR39</strong>: RFC references refreshed; PRD glossary updated.</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+2 <em>Cross-Cutting Concerns</em> + Step 4 <em>API &amp; Communication
+Patterns</em> (RFC citations refreshed) + Step 6 <em>Cross-Cutting
+Concerns to File Locations</em> (problem-details row updated) +
+Validation Strengths + Implementation Handoff + new <em>External
+References</em> appendix</a>; <a
+href="../architecture-summary.html"><code>../architecture-summary.md</code>
+API patterns table (Versioning/Error rows updated)</a>; <a
+href="./conventions.html"><code>./conventions.md</code> HTTP headers +
+Error envelope rows + Process Patterns + Spectral lint reference +
+anti-patterns</a>; <a
+href="./repo-structure.html"><code>./repo-structure.md</code>
+per-service tree (error path updated)</a>; <a
+href="./starter-template.html"><code>./starter-template.md</code>
+scaffolding boilerplate</a>; <a
+href="./gaps.html"><code>./gaps.md</code> G4.5 Spectral ruleset
+references</a>; <a
+href="./functional-requirements-coverage.html"><code>./functional-requirements-coverage.md</code>
+FR59 reworded</a>; <a
+href="./non-functional-requirements-coverage.html"><code>./non-functional-requirements-coverage.md</code>
+NFR39 reworded + architectural support</a>; PRD <code>FR59</code>,
+<code>NFR39</code>, glossary, executive-summary smoke-test bullet</td>
+</tr>
+<tr>
+<td><strong>v2.6 — Payment processing reframed as a scheduled batch;
+service-principal auth restored for the batch only</strong></td>
+<td>2026-05-07</td>
+<td><strong>Payment flow</strong>: FR41–FR45 reframed — RSU/Sam confirms
+bookings/sittings only; the <strong>scheduled batch</strong>
+(<code>nji-payment-batch</code>) picks up confirmed-but-unpaid records,
+generates the JFEPS Excel, and dispatches it via Notification → HMCTS
+Email to the Payment Authoriser. Sam's Journey 1 updated to remove "Sam
+runs Process Payments." <br/><strong>Auth (MVP)</strong>: <strong>two
+patterns</strong> — JWT propagation for user-initiated flows + OAuth
+<code>client_credentials</code> for the batch service principal. v2.5's
+"no service principals" stance widened back, scoped to the batch case
+only. <br/><strong>mock-auth</strong>: re-widened to support
+<code>client_credentials</code>; <code>mock_oauth_clients</code> now
+holds both the SPA client and the <code>nji-payment-batch</code>
+service-principal registration. <br/><strong>Sequence diagrams</strong>
+(new):
+<code>architecture/sequence-diagrams/absence-to-reconciliation.md</code>
+(user-initiated, 5 phases) +
+<code>architecture/sequence-diagrams/payment-batch-flow.md</code>
+(batch, 4 phases). <br/><strong>ASCII flow → links</strong>: Step 6
+<em>Data Flow</em> in <code>architecture.md</code> no longer duplicates
+the flow as ASCII art — replaced with bullet lists pointing at the two
+sequence diagrams. <br/><strong>Gaps</strong>: G1.2 reopened (production
+service-principal issuer is again MVP-relevant); G7.1 revised — was
+"post-MVP only", now "pre-Phase-9 decision; default recommendation Azure
+Workload Identity". <br/><strong>Assumptions</strong>: A2 reopened, A26
+widened back (mock auth must cover both flows), A35 softened (payment
+batch is the documented exception to "all calls user-initiated").
+<br/><strong>PRD</strong>: NFR12 expanded to cover both auth patterns;
+FR41–FR45 reframed as batch-driven.</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+4 <em>Authentication &amp; Security</em> (split into JWT propagation +
+service principals) + Repository List (<code>nji-mock-auth</code> +
+<code>nji-payment</code> rows updated) + Step 6 <em>Data Flow</em>
+(ASCII replaced with bullet-list + sequence-diagram links)</a>; <a
+href="../architecture-summary.html"><code>../architecture-summary.md</code>
+auth section + cross-service interaction patterns table + technology
+stack + "MVP non-user-initiated flow" section</a>; <a
+href="./conventions.html"><code>./conventions.md</code> Communication
+Patterns: dual auth section</a>; <a
+href="./sequence-diagrams/absence-to-reconciliation.html"><code>./sequence-diagrams/absence-to-reconciliation.md</code>
+(new)</a>; <a
+href="./sequence-diagrams/payment-batch-flow.html"><code>./sequence-diagrams/payment-batch-flow.md</code>
+(new)</a>; <a href="./gaps.html"><code>./gaps.md</code> G1.2 reopened,
+G7.1 revised</a>; <a
+href="./assumptions.html"><code>./assumptions.md</code> A2 reopened, A26
+widened, A35 softened</a>; <a
+href="./data-tables.html"><code>./data-tables.md</code>
+mock_oauth_clients widened to cover service principals</a>; PRD
+<code>FR41</code>–<code>FR45</code>, <code>NFR12</code>, Sam's Journey
+1; both implementation-readiness reports</td>
+</tr>
+<tr>
+<td><strong>v2.5 — Lock MVP auth model: HMCTS IdP for human users only;
+JWT propagation for all inter-service auth; no service principals at
+MVP</strong></td>
+<td>2026-05-07</td>
+<td><strong>Auth (MVP)</strong>: HMCTS IdP for human OIDC
+<code>authorization_code</code> only — no service principals, no
+<code>client_credentials</code>, no mTLS.
+<br/><strong>Inter-service</strong>: JWT propagation — forward user's
+JWT via per-service <code>RestClient</code> interceptor.
+<br/><strong>mock-auth</strong>: narrowed to
+<code>authorization_code</code> flow only;
+<code>mock_oauth_clients</code> holds only the SPA client registration.
+<br/><strong>Data seeding</strong>: dev/CI via one-off scripts;
+production via operator-initiated ETL (post-MVP refinement).
+<br/><strong>Gaps</strong>: G1.2 closes; G4.7 (operator-ETL post-MVP
+refinement) + G7 (service-identity question for any future
+non-user-initiated flow) added. <br/><strong>Assumptions</strong>: A2
+retires; A26 narrows; A35 added ("all MVP runtime calls
+user-initiated").</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+4 Authentication &amp; Security, Phasing of Authentication, Repository
+List, Implementation Sequence, External Integration Points, Decision
+Priority Analysis, TBDs Resolved, Coherence Validation, Architecture
+Strengths</a>; <a
+href="../architecture-summary.html"><code>../architecture-summary.md</code></a>;
+<a href="./conventions.html"><code>./conventions.md</code> Communication
+Patterns / JWT propagation</a>; <a
+href="./diagrams/system-context.dot"><code>./diagrams/system-context.dot</code></a>;
+<a href="./gaps.html"><code>./gaps.md</code> G1.2 closure, G4.7, G7</a>;
+<a href="./assumptions.html"><code>./assumptions.md</code> A2 retire,
+A26 narrow, A35 new</a>; <a
+href="./data-tables.html"><code>./data-tables.md</code>
+mock_oauth_clients narrowing</a>; PRD <code>FR5</code> /
+<code>NFR12</code>; both implementation-readiness reports</td>
+</tr>
+<tr>
+<td><strong>v2.4 — Show user → HMCTS IdP authentication on the system
+context diagram</strong></td>
+<td>2026-05-07</td>
+<td><strong>Diagram</strong>: explicit <code>users → idp</code> SSO edge
+added; <code>users → ui</code> label simplified to "HTTPS + JWT".
+<br/><strong>Auth flow</strong>: now reads top-to-bottom — user
+authenticates at IdP → JWT → UI/APIM → service <code>JWTFilter</code>
+validates against JWKS. <br/><strong>Summary doc</strong>: opens auth
+section with a 3-step numbered flow; <em>Cross-service interaction
+patterns</em> table gains a <em>User authentication</em> row.</td>
+<td><a
+href="./diagrams/system-context.dot"><code>./diagrams/system-context.dot</code></a>;
+<a
+href="../architecture-summary.html"><code>../architecture-summary.md</code></a></td>
+</tr>
+<tr>
+<td><strong>v2.3 — Make HMCTS IdP integration with NJI services explicit
+(JWKS validation + service tokens)</strong></td>
+<td>2026-05-07</td>
+<td><strong>Diagram</strong>: new cluster-level
+<code>Cross-cutting → HMCTS IdP</code> edge for JWKS-based JWT
+validation. <br/><strong>architecture.md</strong>:
+<code>JWTFilter</code> step 1 specifies JWKS fetch; <em>Integration
+Points — External</em> HMCTS IdP row reworded to name JWKS + per-service
+validation pattern. <br/><strong>Summary doc</strong>: auth section
+expanded to make JWKS validation explicit; <em>Cross-service interaction
+patterns</em> table fixed (User request row no longer attributes JWT
+validation to APIM).</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+4 <em>Authentication &amp; Security</em>, Step 6 <em>Integration Points
+— External</em></a>; <a
+href="../architecture-summary.html"><code>../architecture-summary.md</code></a>;
+<a
+href="./diagrams/system-context.dot"><code>./diagrams/system-context.dot</code></a></td>
+</tr>
+<tr>
+<td><strong>v2.2 — Drop dedicated <code>nji-configuration</code>
+service; demote <code>configuration_values</code> to a shared
+infrastructure table</strong></td>
+<td>2026-05-07</td>
+<td><strong>Decomposition</strong>: 12 → 11 services
+(<code>nji-configuration</code> dropped). <br/><strong>Repos</strong>:
+15 → 14. <br/><strong>Configuration</strong>: per-service via Spring
+profiles + Key Vault; cross-service via shared
+<code>configuration_values</code> infrastructure table (no API).
+<br/><strong>Tables</strong>: <code>configuration_values</code> moves to
+<em>Shared infrastructure tables</em>; total stays 37 (34 service-owned
+production + 1 shared infrastructure + 2 dev-only).</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+1, Step 2, Step 3, Step 4 Implementation Sequence, Step 6 Repository
+List, Step 7 coverage tables, Step 8 Implementation Handoff</a>; <a
+href="./data-tables.html"><code>./data-tables.md</code></a>; <a
+href="./diagrams/system-context.dot"><code>./diagrams/system-context.dot</code></a>;
+PRD <code>D1</code> / <code>FR8</code> / "All 11 services live" /
+"Cross-cutting services" / "Phase 0 Foundations"; brainstorming-1600.md
+<code>D1</code> / Phase 0 scope / migration table; both
+implementation-readiness reports</td>
+</tr>
+<tr>
+<td><strong>v2.1 — Drop custom idempotency-key tables; use DB-native
+retry-safety primitives</strong></td>
+<td>2026-05-06</td>
+<td><strong>Tables</strong>: <code>booking_idempotency_keys</code> +
+<code>payment_idempotency_keys</code> dropped (39 → 37).
+<br/><strong>Retry safety</strong>: PostgreSQL natural-key unique
+constraints (<code>uq_*</code>) → 409; JPA <code>@Version</code>
+optimistic locking → 412; <code>SELECT … FOR UPDATE</code> pessimistic
+row locks for cross-row workflows. <br/><strong>Boilerplate</strong>:
+per-service <code>IdempotencyFilter</code> retired. <br/><strong>Design
+rule</strong>: prefer native platform constructs over custom entities
+(captured to user-feedback memory).</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+2 Cross-Cutting Concerns + Step 3 "what is duplicated" + Step 4
+Authentication &amp; Security idempotency line + Step 4 cross-service
+access table + Step 6 Cross-Cutting Concerns to File Locations +
+Repository List <code>nji-booking</code> / <code>nji-payment</code> rows
++ Step 5 stub intro + Step 7 Coherence Validation / Requirements
+Coverage / Completeness Checklist</a>; <a
+href="./conventions.html"><code>./conventions.md</code> Naming Patterns
+service-prefix examples + Constants examples + Communication Patterns
+retry-safety section</a>; <a
+href="./data-tables.html"><code>./data-tables.md</code> Booking +
+Payment + Inventory totals + retry-safety convention note</a>; <a
+href="./repo-structure.html"><code>./repo-structure.md</code>
+per-service <code>config/</code> directory</a></td>
+</tr>
+<tr>
+<td><strong>v2.0 — Same-Azure-region multi-AZ HA topology (retracts
+implied per-Azure-region active/active)</strong></td>
+<td>2026-05-06</td>
+<td><strong>Deployment</strong>: single Azure region (UK South) with
+multi-AZ HA — AKS multi-zone node pools, PostgreSQL zone-redundant HA
+(sync replication, automatic failover), APIM/Key Vault/ACR
+zone-redundant. <br/><strong>DR</strong>: UK West cold-standby (post-MVP
+scope decision per G3.6). <br/><strong>Region disambiguation</strong>:
+<em>Azure region</em> (geographic) vs <em>HMCTS judicial region</em>
+(business — FR58 activation flag) are different things.
+<br/><strong>Helm values</strong>: per-environment
+(<code>values-production.yaml</code>) instead of per-Azure-region.
+<br/><strong>Retracted</strong>: v1.x "per-region AKS clusters" wording.
+<br/><strong>Gaps/Assumptions</strong>: A34 (UK South 3 AZs) + G3.6 (UK
+West DR scope) added; G6.2 mitigation refined.</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+1 Reliability bullet, Step 4 Hosting + Database hosting + Decision
+Priority Analysis (HA topology row) + Region Isolation rewrite +
+Cross-Component Dependencies, Step 7 Coherence Validation Structure
+Alignment + NFR Reliability coverage + Architecture Strengths</a>; <a
+href="./repo-structure.html"><code>./repo-structure.md</code>
+per-service <code>helm/</code> directory</a>; <a
+href="./assumptions.html"><code>./assumptions.md</code> A34</a>; <a
+href="./gaps.html"><code>./gaps.md</code> G3.6 + G6.2</a>; PRD
+<code>NFR38</code></td>
+</tr>
+<tr>
+<td><strong>v1.9 — Phase 0 Data Migration ETL framing (separated from
+Flyway DDL; NJI tables decoupled from APEX shape)</strong></td>
+<td>2026-05-06</td>
+<td><strong>Migration framing</strong>: NJI tables are NJI's own design;
+APEX schema is the <em>data source</em>, not the target shape.
+<br/><strong>Flyway</strong>: NJI DDL only (no APEX-data ingestion via
+Flyway). <br/><strong>Phase 0 ETL</strong>:
+<code>nji-architecture/migration/</code> reads APEX dumps → transforms →
+loads via NJI Reference Data + Authorisation APIs. <br/><strong>Repo
+structure</strong>: <code>nji-architecture/migration/</code>
+subdirectory documented with rationale "why migration lives here, not in
+services or Flyway". <br/><strong>Gaps/Assumptions</strong>: G4.6, A29,
+A32, A33 reframed for the ETL/Flyway separation.</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+4 Data Architecture, Step 4 Implementation Sequence step 4 + step 7,
+Repository List, Implementation Handoff step 4</a>; <a
+href="./data-tables.html"><code>./data-tables.md</code></a>; <a
+href="./gaps.html"><code>./gaps.md</code> G4.6</a>; <a
+href="./assumptions.html"><code>./assumptions.md</code> A29, A32,
+A33</a>; <a
+href="./repo-structure.html"><code>./repo-structure.md</code>
+<code>nji-architecture</code> repo + new "Why migration lives here"
+rationale</a>; PRD <code>FR57</code>, <code>D3</code>, <code>D9</code>,
+"What Makes This Special" #4, Phase 0 migration correctness bullet;
+brainstorming-session-2026-05-05-1600.md <code>D3</code>,
+<code>D9</code>; implementation-readiness-report-2026-05-05.md
+<code>FR57</code></td>
+</tr>
+<tr>
+<td><strong>v1.8 — Strategy B refactor (architecture vs implementation
+split)</strong></td>
+<td>2026-05-06</td>
+<td><strong>Refactor</strong>: <code>architecture.md</code> (~2,050
+lines) split into an index + 7 siblings under
+<code>architecture/</code>. <br/><strong>Sibling files created</strong>:
+<code>gaps.md</code>, <code>assumptions.md</code>,
+<code>changelog.md</code>, <code>conventions.md</code>,
+<code>repo-structure.md</code>, <code>starter-template.md</code>,
+<code>data-tables.md</code>. <br/><strong>Anchors</strong>: pre-v1.8
+anchors redirected via the header table in
+<code>changelog.md</code>.</td>
+<td>All — sibling files created in <a
+href="."><code>architecture/</code></a>; main
+<code>architecture.md</code> stubs replaced moved sections with one-line
+links into the siblings</td>
+</tr>
+<tr>
+<td><strong>v1.7 — Manual UAT replaces automated APEX-comparison parity
+tests</strong></td>
+<td>2026-05-06</td>
+<td><strong>Behavioural parity</strong>: D5 / FR61 / NFR41 reframed —
+manual UAT by APEX-experienced users replaces automated APEX-as-oracle
+harness. <br/><strong>Removed</strong>: <code>@ApexOracle</code> test
+base class; <code>*ApexParityTest.java</code>; per-service
+<code>parity/</code> directory; APEX-during-build HTTP scraping.
+<br/><strong>Added</strong>: per-service <code>docs/uat/</code>
+directory for manual UAT walkthrough scripts.
+<br/><strong>Cross-doc</strong>: brainstorming-1600 D5 + Risks; PRD
+<code>FR61</code>/<code>NFR41</code>/Decisions Log D5; both
+implementation-readiness reports.</td>
+<td>Step 2 — Cross-Cutting Concerns; <a
+href="./starter-template.html"><code>./starter-template.md</code>
+Per-service NJI Conventions, Foundational Principles "What is
+duplicated"</a>; Step 4 — Phasing of Authentication, Implementation
+Sequence; <a href="./conventions.html"><code>./conventions.md</code>
+Test conventions, Naming Patterns</a>; <a
+href="./repo-structure.html"><code>./repo-structure.md</code>
+Per-service tree, Project Directory Structure</a>; Step 6 — External
+System Boundaries, Cross-Cutting Concerns to File Locations, External
+Integration Points, Region rollout flow; Step 7 — Coherence Validation
+Pattern Consistency, NFR Maintainability coverage, <a
+href="./assumptions.html"><code>./assumptions.md</code> A12, A13</a>, <a
+href="./gaps.html"><code>./gaps.md</code> G5.1</a>, Architecture
+Strengths, Implementation Handoff; PRD <code>FR61</code> /
+<code>NFR41</code> / Decisions Log D5; brainstorming <code>D5</code> /
+Risk #11 / Risk #12 / captured idea #4; both implementation-readiness
+reports</td>
+</tr>
+<tr>
+<td><strong>v1.6 — Consistency review + vocabulary
+inventory</strong></td>
+<td>2026-05-06</td>
+<td><strong>Consistency</strong>: 31+ contradictions resolved across the
+document. <br/><strong>Booking ↔︎ Vacancy</strong>:
+<code>markFilled</code> API endpoint removed; Booking writes
+<code>vacancies.filled</code> via direct DB UPDATE in-transaction (PRD
+<code>FR30</code> updated). <br/><strong>Reference Data</strong>: reads
+via direct SQL; writes via API. <br/><strong>Region isolation</strong>:
+app tier per-region; DB tier shared globally (HMCTS best-practice
+alignment noted as post-MVP review). <br/><strong>Vocabularies</strong>:
+12 vocabulary tables (table-per-vocabulary, Option B). <br/><strong>Data
+inventory</strong>: new Authoritative Table Ownership Mapping (39
+entities; provisional pending APEX SQL dump validation).</td>
+<td>Step 2 — Cross-Cutting Concerns; <a
+href="./starter-template.html"><code>./starter-template.md</code></a>;
+Step 4 — Data Architecture, Authentication, Infrastructure &amp;
+Deployment + <a
+href="./data-tables.html"><code>./data-tables.md</code></a>; <a
+href="./conventions.html"><code>./conventions.md</code> Naming Patterns,
+Communication Patterns</a>; Step 6 — Boundaries, Data Flow, Integration
+Points; Step 7 — Coherence Validation, FR/NFR Coverage tables; PRD
+<code>FR30</code> updated for cross-document consistency</td>
+</tr>
+<tr>
+<td><strong>v1.5 — Hybrid DB topology</strong></td>
+<td>2026-05-06</td>
+<td><strong>Schema</strong>: single shared schema (no
+schema-per-service); table-name convention (entity-plural for primary,
+service-prefix for ambiguous). <br/><strong>DB roles</strong>:
+per-service roles retained as forward-compatibility hooks; broad Day-1
+grants tightening over time. <br/><strong>Enforcement</strong>: ArchUnit
+fitness functions verify table ownership. <br/><strong>Gaps</strong>:
+G6.6 (table-name collision risk) added.</td>
+<td>Step 3 — Principle 1; Step 4 — Data Architecture; <a
+href="./conventions.html"><code>./conventions.md</code> Database
+naming</a>; Step 6 — Service &amp; Data Boundaries; <a
+href="./gaps.html"><code>./gaps.md</code> G6.6</a>; <a
+href="./assumptions.html"><code>./assumptions.md</code> A31</a></td>
+</tr>
+<tr>
+<td><strong>v1.4 — HMCTS Crime template alignment</strong></td>
+<td>2026-05-06</td>
+<td><strong>Schema migrations</strong>: Liquibase → Flyway.
+<br/><strong>Build</strong>: Gradle Kotlin DSL → Groovy DSL.
+<br/><strong>OpenAPI</strong>: springdoc-openapi → Swagger Core +
+Maven-published API spec artefacts. <br/><strong>Observability</strong>:
+Application Insights direct ingestion → OpenTelemetry → App Insights.
+<br/><strong>Authentication</strong>: Spring Security filter chain →
+custom <code>JWTFilter</code> (HMCTS template pattern; calls
+Authorisation per request, required by FR58). <br/><strong>Added
+libraries</strong>: Lombok, MapStruct, OWASP encoder, JaCoCo, CycloneDX,
+gradle-git-properties. <br/><strong>Gaps</strong>: G1.4 confirmed via
+template review; G1.4a (Helm not in template), G1.4b (Key Vault not in
+template) added.</td>
+<td><a
+href="./starter-template.html"><code>./starter-template.md</code></a>;
+Step 4 — Authentication, API &amp; Communication, Infrastructure &amp;
+Deployment; <a
+href="./conventions.html"><code>./conventions.md</code></a>; <a
+href="./repo-structure.html"><code>./repo-structure.md</code>
+per-service tree</a>; <a href="./gaps.html"><code>./gaps.md</code>
+G1.4–G1.4b</a>; <a
+href="./assumptions.html"><code>./assumptions.md</code> A4, A29,
+A32</a></td>
+</tr>
+<tr>
+<td><strong>v1.3 — Shared DB + Principle 2</strong></td>
+<td>2026-05-06</td>
+<td><strong>DB</strong>: single global PostgreSQL (replaces per-service
+DBs). <em>(Schema-per-service introduced here was superseded in
+v1.5.)</em> <br/><strong>Foundational principles</strong>: split into
+two — (1) API for workflows + shared DB for simple data access; (2) No
+premature optimization. <br/><strong>Read federation</strong>: Strategy
+A federation retired → SQL JOINs over shared schema.
+<br/><strong>Caching</strong>: Caffeine cache dropped (direct DB reads).
+<br/><strong>Risks</strong>: Risk #9 (Strategy A NFR breach) retires.
+<br/><strong>Gaps/Assumptions</strong>: G6 series + A28–A32 added.</td>
+<td>Step 3 — Foundational Principles; Step 4 — Data Architecture; <a
+href="./gaps.html"><code>./gaps.md</code> G6</a>; <a
+href="./assumptions.html"><code>./assumptions.md</code> A28–A32</a></td>
+</tr>
+<tr>
+<td><strong>v1.2 — Documented gaps + assumptions</strong></td>
+<td>2026-05-06</td>
+<td><strong>Verdict</strong>: refined to <strong>READY WITH DOCUMENTED
+GAPS</strong>. <br/><strong>Registers</strong>: G1–G5 (Documented Gaps)
+and A1–A27 (Assumptions) elevated to authoritative sections so
+implementation can begin while gaps are tracked in parallel.</td>
+<td><a href="./gaps.html"><code>./gaps.md</code></a>; <a
+href="./assumptions.html"><code>./assumptions.md</code></a>; Step 7
+Architecture Readiness Assessment</td>
+</tr>
+<tr>
+<td><strong>v1.1 — Mock-first authentication</strong></td>
+<td>2026-05-06</td>
+<td><strong>Mock auth</strong>: <code>nji-mock-auth</code> covers Phase
+0–8 dev/CI/integration. <br/><strong>Real IdP</strong>: HMCTS IdP
+integration deferred to a discrete pre-Phase-9 cutover.
+<br/><strong>Gaps</strong>: G1.x (HMCTS IdP) reclassified from Phase 0
+blockers to pre-Phase-9 prerequisites.</td>
+<td>Step 4 — Phasing of Authentication; Step 4 Implementation Sequence;
+Step 6 Repository List; Step 7 G1, G5, A26, A27 (now in <a
+href="./gaps.html"><code>./gaps.md</code></a>, <a
+href="./assumptions.html"><code>./assumptions.md</code></a>)</td>
+</tr>
+<tr>
+<td><strong>v1.0 — Initial</strong></td>
+<td>2026-05-06</td>
+<td><strong>Initial 8-step architecture</strong> aligned with PRD locked
+decisions D1–D9. <br/><strong>Stack</strong>: Java 25 + Spring Boot 4 +
+Gradle Kotlin DSL + Liquibase + per-service PostgreSQL + Strategy A
+federation + Caffeine cache + Spring Security filter chain +
+springdoc-openapi + schema-per-service. <br/><strong>Foundational
+principle</strong>: API as only boundary; no shared library.
+<br/><strong>Verdict</strong>: READY FOR IMPLEMENTATION.</td>
+<td>All</td>
+</tr>
+</tbody>
+</table>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/changelog.md</code></p>
+</main>
+</body>
+</html>

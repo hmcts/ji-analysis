@@ -63,7 +63,7 @@ The 61 Functional Requirements are organised into 9 capability areas. Each subse
 - **FR27** — NJI surfaces fee-paid judges matching a vacancy's filter as a hint for advertising; advertising itself is performed out-of-system by judicial teams.
 - **FR28** — Authorised users can cancel or close vacancies (e.g. when a parent absence becomes NTBF).
 
-**Architectural support:** `nji-vacancy` repo (Phase 3); Booking marks `vacancies.filled = true` (and `filled_at`) via direct in-transaction DB UPDATE per Principle 1 (no `markFilled` API endpoint at MVP — Booking has UPDATE grant on those columns).
+**Architectural support:** `nji-vacancy` repo (Phase 3); Booking marks the linked vacancy as filled in the same transaction per Principle 1 (no `markFilled` API endpoint at MVP — Booking has the necessary DB-role grant; per-column detail in [`../architecture.md`](../architecture.md) → *Data Architecture*).
 
 ## Booking Management (FR29–FR34)
 
@@ -74,7 +74,7 @@ The 61 Functional Requirements are organised into 9 capability areas. Each subse
 - **FR33** — NJI requires a Y/N fee-payment answer at booking time when a judge's fee-payment status is *Ask when booking*.
 - **FR34** — NJI prevents double-booking of fee-paid judges for overlapping sessions.
 
-**Architectural support:** `nji-booking` repo (Phase 4); natural-key unique constraint (`uq_bookings_*`) + JPA `@Version` + pessimistic row lock (`SELECT … FOR UPDATE`) on the target vacancy provide retry safety natively (no custom idempotency table).
+**Architectural support:** `nji-booking` repo (Phase 4); retry safety via native DB primitives — natural-key uniqueness, optimistic locking, and pessimistic row locking on the target vacancy. No custom idempotency table. Detail in [`../architecture.md`](../architecture.md) → *Data Architecture* and [`./data-tables.md`](./data-tables.md).
 
 ## Sitting Management (FR35–FR40)
 
@@ -93,7 +93,7 @@ The 61 Functional Requirements are organised into 9 capability areas. Each subse
 - **FR42** *(revised v2.6)* — NJI's **payment-processing batch** (`nji-payment-batch`, scheduled on a configurable cron) automatically marks eligible bookings as *payment requested* and creates the corresponding `payments` + `payment_schedules` records. **No user click is required.** Authorised users can also list and review the generated schedule before/after dispatch.
 - **FR43** *(revised v2.6)* — The **payment batch** generates JFEPS-compatible payment schedules and dispatches them as Excel attachments to a configured Payment Authoriser via email (using its service-principal identity to call the Notification API); the Payment Authoriser forwards to Liberata out-of-system. Schedule generation and dispatch are batch-driven, not user-initiated.
 - **FR44** — NJI exposes the payment schedule via API with content-type negotiation (`application/vnd.hmcts.jfeps+json` or `+xlsx`); the JFEPS shape evolves independently of Payment internals.
-- **FR45** — NJI prevents double submission of the same booking for payment. The batch's natural-key unique constraint on `(payment_cycle_id, booking_id)` rejects duplicate creates; re-runs of the same cycle are idempotent.
+- **FR45** — NJI prevents double submission of the same booking for payment. The batch's natural-key uniqueness rejects duplicate creates; re-runs of the same cycle are idempotent. (Column-level detail in *Data Architecture* and [`./data-tables.md`](./data-tables.md).)
 - **FR46** — Authorised users (Finance, RSU) can flag payments as reconciled, capturing notes for mismatches; once fully reconciled, a payment cannot be re-requested for the same booking.
 - **FR47** — NJI does not store or expose bank details for any judge — those remain in the finance system.
 

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NJI Architecture Summary — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="./index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="./index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="./prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="./architecture.html">Architecture (index)</a></li>
+<li><a href="./architecture-summary.html" class="current">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="./architecture/conventions.html">Conventions</a></li>
+<li><a href="./architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="./architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="./architecture/starter-template.html">Starter template</a></li>
+<li><a href="./architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="./architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="./architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="./architecture/gaps.html">Gaps</a></li>
+<li><a href="./architecture/assumptions.html">Assumptions</a></li>
+<li><a href="./architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="nji-architecture-summary">NJI Architecture Summary</h1>
+<p>NJI (New Judicial Itineraries) — HMCTS's API-driven greenfield
+rebuild of the Oracle APEX Judicial Itineraries platform.</p>
+<p>This file describes what is built and how it runs. For rationale,
+alternatives, gap and assumption registers, data-table inventory,
+conventions, repo structure, changelog, and build sequence, see <a
+href="./architecture.html"><code>./architecture.md</code></a> and the
+siblings under <a
+href="./architecture/"><code>./architecture/</code></a>.</p>
+<h2 id="system-context">System context</h2>
+<p><img src="./architecture/diagrams/system-context.png"
+alt="NJI System Context — high-level service map and key interactions" /></p>
+<h2 id="service-decomposition-11-services--ui">Service decomposition (11
+services + UI)</h2>
+<h3 id="domain-services">Domain services</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-judge</code></td>
+<td>Judges, working patterns, tickets, jurisdictional split</td>
+</tr>
+<tr>
+<td><code>nji-absence</code></td>
+<td>Absence records + approval workflow; triggers vacancy creation</td>
+</tr>
+<tr>
+<td><code>nji-vacancy</code></td>
+<td>Cover-required vacancies; <code>filled</code> flag UPDATE-granted to
+Booking</td>
+</tr>
+<tr>
+<td><code>nji-booking</code></td>
+<td>Fee-paid bookings + verification; row-locks target vacancy
+in-transaction</td>
+</tr>
+<tr>
+<td><code>nji-sitting</code></td>
+<td>Salaried-judge sittings; verification; AM/PM split</td>
+</tr>
+<tr>
+<td><code>nji-payment</code></td>
+<td>Payments + reconciliation; JFEPS-shaped Excel schedule via
+Notification</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cross-cutting-services">Cross-cutting services</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-authorisation</code></td>
+<td>Per-request authz authority; users, roles, Region/Area scope,
+activation flags</td>
+</tr>
+<tr>
+<td><code>nji-reference-data</code></td>
+<td>Regions, offices, calendar periods, 12 vocabularies (read directly
+via SQL by other services; written via API)</td>
+</tr>
+<tr>
+<td><code>nji-notification</code></td>
+<td>Outbound transactional email (booking / absence acks; JFEPS schedule
+emails)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="read-model-services">Read-model services</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-itinerary</code></td>
+<td>Court + Judge itinerary; Forward Look; SQL JOINs over the shared
+schema (no own tables)</td>
+</tr>
+<tr>
+<td><code>nji-mi-feed</code></td>
+<td>Aggregate reports; DA&amp;I consumer feed (post-MVP); SQL JOINs over
+the shared schema (no own tables); aggregate-only — no case-level
+data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="frontend">Frontend</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-ui</code></td>
+<td>Single SPA; per-domain modules; GOV.UK Design System; WCAG 2.2 AA;
+HMCTS IdP SSO</td>
+</tr>
+</tbody>
+</table>
+<h3 id="non-production-support">Non-production support</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-mock-auth</code></td>
+<td>OIDC issuer for dev / CI / integration environments only —
+<strong>never deployed to production</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="technology-stack">Technology stack</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Choice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Language &amp; runtime</td>
+<td>Java 25 (LTS) + Spring Boot 4.0.6</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Gradle (Groovy DSL); HMCTS Crime SpringBoot template as
+scaffold</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>PostgreSQL 17 on Azure Database for PostgreSQL Flexible Server
+(single global instance; single shared schema; zone-redundant HA in UK
+South)</td>
+</tr>
+<tr>
+<td>Schema evolution</td>
+<td>Flyway (NJI DDL only)</td>
+</tr>
+<tr>
+<td>Container orchestration</td>
+<td>Azure Kubernetes Service — single production cluster in UK South
+with multi-AZ node pools</td>
+</tr>
+<tr>
+<td>Ingress</td>
+<td>Azure API Management — Premium SKU, zone-redundant</td>
+</tr>
+<tr>
+<td>Identity provider</td>
+<td>HMCTS IdP via OIDC <code>authorization_code</code> (production,
+human users only); <code>nji-mock-auth</code> in dev / CI / integration;
+JWKS endpoint provides JWT-signature public keys to every NJI
+service</td>
+</tr>
+<tr>
+<td>Service-to-service auth</td>
+<td><strong>User-initiated</strong>: JWT propagation via
+<code>RestClient</code> interceptor (forward inbound user JWT).
+<strong>Batch / scheduled</strong> (payment batch only at MVP): OAuth
+<code>client_credentials</code> against <code>nji-mock-auth</code>;
+production issuer per G7.1 (default recommendation: Azure Workload
+Identity).</td>
+</tr>
+<tr>
+<td>Per-request auth</td>
+<td>Custom <code>JWTFilter</code> (HMCTS Crime template pattern,
+<code>io.jsonwebtoken:jjwt</code>) — validates JWT signature against IdP
+JWKS, then calls <code>nji-authorisation</code> for authz</td>
+</tr>
+<tr>
+<td>Secrets</td>
+<td>Azure Key Vault (zone-redundant)</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>Logback + Logstash JSON encoder → OpenTelemetry → Azure Application
+Insights / Log Analytics</td>
+</tr>
+<tr>
+<td>Frontend stack</td>
+<td>React + TypeScript + Vite + GOV.UK Design System</td>
+</tr>
+<tr>
+<td>Static hosting</td>
+<td>Azure Static Web Apps</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-tier">Data tier</h2>
+<ul>
+<li>One PostgreSQL Flexible Server instance in UK South. One shared
+schema. Zone-redundant HA (primary + standby in different AZs;
+synchronous replication; automatic failover &lt;60 s).</li>
+<li>37 tables: 34 service-owned production + 1 shared infrastructure
+(<code>configuration_values</code>) + 2 dev-only (mock-auth).</li>
+<li>Per-service DB roles (<code>nji_judge</code>,
+<code>nji_booking</code>, <code>nji_payment</code>, …) with explicit
+grants. A service has <code>ALL</code> on its own tables; only the
+specific grants it needs on others.</li>
+<li><strong>Cross-service reads</strong> — direct SQL JOIN using SELECT
+grants. No caching at MVP.</li>
+<li><strong>Cross-service simple writes</strong> — direct UPDATE on
+UPDATE-granted columns within the writer's transaction (e.g. Booking
+writes <code>vacancies.filled</code>).</li>
+<li><strong>Cross-service workflows</strong> — REST API call to the
+owning service.</li>
+<li><strong>Read models</strong> — SQL JOIN over the shared schema. No
+API fan-out.</li>
+</ul>
+<p>Full per-table inventory: <a
+href="./architecture/data-tables.html"><code>./architecture/data-tables.md</code></a>.</p>
+<h2 id="authentication--authorisation">Authentication &amp;
+Authorisation</h2>
+<p>Most runtime requests are user-initiated. The one exception is the
+payment-processing batch (<code>nji-payment-batch</code>), which runs on
+a schedule and authenticates as a service principal.</p>
+<p>The auth flow:</p>
+<ol type="1">
+<li>User authenticates at HMCTS IdP (SSO). IdP issues a JWT.</li>
+<li>User calls <code>nji-ui</code> with the JWT; UI forwards the bearer
+token through APIM to the target service.</li>
+<li>The service's <code>JWTFilter</code> validates the JWT against HMCTS
+IdP's JWKS, then calls <code>nji-authorisation</code> for authz
+scope.</li>
+<li>Cross-service calls forward the user's JWT — the upstream service
+copies the inbound <code>Authorization</code> header onto outbound
+calls. The downstream <code>JWTFilter</code> validates the same
+JWT.</li>
+</ol>
+<p>Details:</p>
+<ul>
+<li><strong>End-user authentication</strong> — HMCTS IdP, OIDC
+<code>authorization_code</code>. SSO. JWT issued.
+<code>nji-mock-auth</code> (Spring Authorization Server) is the OIDC
+issuer in non-production. Mock-to-real cutover is a Spring profile
+change (issuer-url + JWKS URL flip; no code change).</li>
+<li><strong>JWT signature validation</strong> — each service's
+<code>JWTFilter</code> (HMCTS Crime template,
+<code>io.jsonwebtoken:jjwt</code>) validates signature and issuer using
+the IdP's JWKS endpoint (<code>/oauth2/jwks</code> on mock; HMCTS IdP's
+JWKS URL in production). Validation runs before any controller. Public
+keys cached per the issuer's cache headers.</li>
+<li><strong>End-user authorisation</strong> — after JWT validation,
+<code>JWTFilter</code> calls <code>POST /authz/check</code> against
+<code>nji-authorisation</code> for role + Region/Area scope + activation
+flag (FR58). Result stored in a request-scoped <code>AuthDetails</code>
+bean.</li>
+<li><strong>JWT propagation (user-initiated cross-service
+calls)</strong> — the <code>RestClient</code> interceptor copies the
+inbound <code>Authorization: Bearer &lt;user-jwt&gt;</code> header onto
+outbound calls. The downstream <code>JWTFilter</code> validates the same
+JWT.</li>
+<li><strong>Service-principal auth (batch)</strong> — the payment batch
+authenticates against <code>nji-mock-auth</code> (non-prod) via OAuth
+<code>client_credentials</code>, then attaches the service JWT to
+outbound calls (e.g. Notification). Production issuer is deferred
+(default: Azure Workload Identity — <code>architecture/gaps.md</code>
+G7.1).</li>
+<li><strong>APEX ⇄ IdP reconciliation</strong> — email primary, employee
+number fallback. Performed by Phase 0 dev/CI scripts and the production
+ETL.</li>
+</ul>
+<p><strong>MVP non-user-initiated flows:</strong></p>
+<ul>
+<li>Payment batch (<code>nji-payment-batch</code>) — scheduled (e.g.
+weekly), authenticates as a service principal, picks up confirmed
+bookings/sittings without payment records, generates the JFEPS Excel,
+dispatches via Notification → HMCTS Email → Payment Authoriser.
+Sequence: <a
+href="./architecture/sequence-diagrams/payment-batch-flow.html"><code>./architecture/sequence-diagrams/payment-batch-flow.md</code></a>.</li>
+</ul>
+<p><strong>Out of scope at MVP:</strong></p>
+<ul>
+<li>Other non-user-initiated flows (more scheduled jobs, async
+messaging, event bus) — would use the same service-principal
+pattern.</li>
+<li>DA&amp;I post-MVP MI Feed integration — auth model TBD. See <a
+href="./architecture/gaps.html"><code>./architecture/gaps.md</code>
+G7.2</a>.</li>
+<li>Production data migration via operator-initiated ETL — works at MVP;
+flagged for post-MVP refinement. See <a
+href="./architecture/gaps.html"><code>./architecture/gaps.md</code>
+G4.7</a>.</li>
+<li>Production service-auth issuer — <code>nji-mock-auth</code> covers
+Phase 0–8; deferred per G7.1.</li>
+</ul>
+<h2 id="api-patterns">API patterns</h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coordination</td>
+<td>REST-first synchronous; no domain event stream, no message bus, no
+webhook fabric</td>
+</tr>
+<tr>
+<td>Versioning</td>
+<td>URI prefix major version (<code>/v1/…</code>); 6-month internal /
+12-month external deprecation windows; <code>Deprecation</code> header
+per <a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC
+9745</a>; <code>Sunset</code> header per <a
+href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a></td>
+</tr>
+<tr>
+<td>Error envelope</td>
+<td><a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a>
+<code>application/problem+json</code> (obsoletes RFC 7807; same content
+type and field shape)</td>
+</tr>
+<tr>
+<td>OpenAPI</td>
+<td>Generated via Swagger Core; published per-service as Maven artefacts
+(<code>uk.gov.hmcts.nji:api-nji-{service}:{version}</code>). The OpenAPI
+document is the API's contract surface.</td>
+</tr>
+<tr>
+<td>Pagination</td>
+<td>Cursor-based for large or chronological lists; offset-based for
+small filtered lists</td>
+</tr>
+<tr>
+<td>Field naming</td>
+<td>JSON fields <code>camelCase</code>; ISO 8601 dates / instants; UTC
+stored, UK local for display</td>
+</tr>
+<tr>
+<td>Identifiers</td>
+<td>UUID primary keys throughout</td>
+</tr>
+<tr>
+<td>Idempotency / retry safety</td>
+<td>Native DB primitives — natural-key uniqueness (→
+<code>409 Conflict</code>), optimistic locking (→
+<code>412 Precondition Failed</code>), pessimistic row locking for
+cross-row workflows. No custom idempotency-key tables. Detail in <a
+href="./architecture/data-tables.html"><code>./architecture/data-tables.md</code></a>
+and the Data Architecture section of <a
+href="./architecture.html"><code>./architecture.md</code></a>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cross-service-interaction-patterns">Cross-service interaction
+patterns</h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User authentication</td>
+<td>User → HMCTS IdP (SSO) → JWT issued</td>
+</tr>
+<tr>
+<td>User request</td>
+<td>User (with JWT) → <code>nji-ui</code> → APIM (rate limits, routing)
+→ service</td>
+</tr>
+<tr>
+<td>Per-request JWT validation</td>
+<td>Each NJI service's <code>JWTFilter</code> validates the inbound JWT
+signature against <strong>HMCTS IdP's JWKS endpoint</strong> before any
+controller is invoked</td>
+</tr>
+<tr>
+<td>Cross-service call (within a user request)</td>
+<td>Upstream service's outbound <code>RestClient</code> interceptor
+copies the inbound <code>Authorization: Bearer &lt;user-jwt&gt;</code>
+header to the downstream call; downstream service's
+<code>JWTFilter</code> validates the same user JWT (token propagation /
+forwarding pattern). No separate service identity.</td>
+</tr>
+<tr>
+<td>Batch / scheduled flow (no user context)</td>
+<td>Batch component (e.g. <code>nji-payment-batch</code>) authenticates
+as a service principal via OAuth <code>client_credentials</code> against
+the OIDC issuer (<code>nji-mock-auth</code> non-prod); attaches the
+resulting service JWT to outbound calls (Notification, etc.); receiving
+services validate via the same JWKS path. <strong>MVP scope: payment
+batch only.</strong></td>
+</tr>
+<tr>
+<td>Per-request authz</td>
+<td>After JWT validation, the same <code>JWTFilter</code> calls
+<code>POST /authz/check</code> against
+<code>nji-authorisation</code></td>
+</tr>
+<tr>
+<td>Reference Data reads</td>
+<td>Direct SQL (per-service <code>SELECT</code> grant); no API call</td>
+</tr>
+<tr>
+<td>Reference Data writes</td>
+<td>Via <code>nji-reference-data</code> API (admin / Phase 0
+seeding)</td>
+</tr>
+<tr>
+<td>Cross-service workflow</td>
+<td>REST call to the owning service</td>
+</tr>
+<tr>
+<td>Cross-row workflow safety</td>
+<td>Pessimistic row lock on the related row + natural-key uniqueness on
+the new row (detail in <em>Data Architecture</em>)</td>
+</tr>
+<tr>
+<td>Read-model federation</td>
+<td>SQL JOIN over the shared schema (no API fan-out)</td>
+</tr>
+<tr>
+<td>Outbound email</td>
+<td>Domain service → <code>nji-notification</code> → HMCTS Email →
+recipient (or, for Payment, → JFEPS via authoriser upload)</td>
+</tr>
+<tr>
+<td>Configuration</td>
+<td>Per-service: Spring profiles + <code>application.yml</code> + Azure
+Key Vault. Cross-service policy values: shared
+<code>configuration_values</code> infrastructure table (read-only via
+direct SQL; no API).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deployment-topology">Deployment topology</h2>
+<ul>
+<li><strong>Production region</strong> — Azure UK South.</li>
+<li><strong>HA</strong> — multi-AZ within UK South for every component:
+<ul>
+<li>AKS node pools span all three UK South AZs with pod anti-affinity
+(zone topology spread).</li>
+<li>PostgreSQL Flexible Server zone-redundant HA (synchronous
+replication; automatic failover).</li>
+<li>APIM Premium, Key Vault, Azure Container Registry — all
+zone-redundant.</li>
+</ul></li>
+<li><strong>DR</strong> — open gap; scope and design held in <a
+href="./architecture/gaps.html"><code>./architecture/gaps.md</code>
+G3.6</a>.</li>
+<li><strong>Per-service unit</strong> — independently-deployable Spring
+Boot service; per-service Helm chart with per-environment values files
+(<code>values-dev.yaml</code>, <code>values-staging.yaml</code>,
+<code>values-production.yaml</code>).</li>
+<li><strong>CI/CD</strong> — per-service pipeline (Azure DevOps
+Pipelines or GitHub Actions). Build → Docker image → Azure Container
+Registry → Helm upgrade to AKS.</li>
+<li><strong>Logging</strong> — structured JSON logs (Logstash encoder)
+with correlation IDs; OpenTelemetry export to Application Insights; 30
+days hot in App Insights + 90 days cold in Log Analytics archive.</li>
+</ul>
+<h2 id="phased-rollout">Phased rollout</h2>
+<ul>
+<li><strong>Boundary</strong> — per HMCTS judicial region (Northern,
+Western, etc.), with all applicable user roles in that region migrating
+together.</li>
+<li><strong>Mechanism</strong> — per-user activation flag in
+<code>auth_user_activation_flags</code> (FR58). Migrated regions' users
+authenticate; non-migrated regions' users are rejected at the
+<code>JWTFilter</code> boundary. Flag flip activates a region; flag
+flip-off rolls back.</li>
+<li><strong>Wave gates</strong> — automated tests passing (unit,
+integration with Testcontainers PostgreSQL, contract); manual UAT signed
+off by APEX-experienced users; per-region migration verified; programme
+sign-off.</li>
+<li><strong>Build sequence</strong> — Phase 0 cross-cutting services +
+UI shell + Phase 0 Data Migration ETL; Phases 1–6 domain services in
+dependency order (Judge → Absence → Vacancy → Booking → Sitting →
+Payment); Phases 7–8 read-models (Itinerary, MI Feed); Pre-Phase-9
+real-IdP cutover; Phase 9+ per-region rollout waves.</li>
+</ul>
+<h2 id="phase-0-data-migration-etl">Phase 0 Data Migration ETL</h2>
+<p>A programme deliverable, not a runtime service:</p>
+<ul>
+<li>Lives at <code>nji-architecture/migration/</code>.</li>
+<li>Reads APEX SQL dumps; transforms rows to NJI shape; loads via the
+Reference Data API and Authorisation API.</li>
+<li>Migrates Reference Data and active user records + role/Region-Area
+scope mappings. No transactional data.</li>
+<li>Re-runs per rollout wave for incremental user activation.</li>
+<li>APEX is the source. NJI's schema is set by NJI design.</li>
+</ul>
+<h2 id="external-integrations">External integrations</h2>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Direction</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HMCTS IdP</td>
+<td>inbound (human authN only) + JWKS used by NJI services for JWT
+signature validation</td>
+<td>OIDC <code>authorization_code</code> flow for human users; every NJI
+service's <code>JWTFilter</code> validates inbound user JWTs against IdP
+JWKS before allowing access to NJI APIs. <strong>Service-principal token
+issuance</strong> for the payment batch is handled by
+<code>nji-mock-auth</code> in non-prod; production decision per
+G7.1.</td>
+</tr>
+<tr>
+<td>HMCTS Email</td>
+<td>outbound</td>
+<td>Booking / absence acknowledgements; JFEPS payment schedules</td>
+</tr>
+<tr>
+<td>JFEPS / Liberata</td>
+<td>outbound (via authoriser email upload)</td>
+<td>Payment processing</td>
+</tr>
+<tr>
+<td>DA&amp;I</td>
+<td>inbound (post-MVP REST)</td>
+<td>MI consumer for aggregate reports</td>
+</tr>
+<tr>
+<td>APEX (legacy)</td>
+<td>inbound (read-only)</td>
+<td>12-month historical-data bridge for migrated users in each region
+post-cutover</td>
+</tr>
+</tbody>
+</table>
+<h2 id="foundational-principles">Foundational principles</h2>
+<ol type="1">
+<li><strong>API for workflows; shared database for simple data
+access.</strong> Multi-step operations with business rules and state
+transitions are exposed as APIs by the owning service. Single-field
+cross-service updates (where DB grants permit) and read-model federation
+(SQL JOINs over the shared schema) bypass the API. No shared runtime
+library; each service owns its cross-cutting concerns.</li>
+<li><strong>No premature optimisation.</strong> Caching, distributed
+cache, service mesh, read replicas, async messaging — added only when
+measurement post-MVP shows the need. Use native platform constructs (DB
+locking, optimistic concurrency, uniqueness constraints, Spring profiles
++ Key Vault) before custom entities.</li>
+</ol>
+<h2 id="where-to-find-more-detail">Where to find more detail</h2>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Decision history, alternatives, validation</td>
+<td><a
+href="./architecture.html"><code>./architecture.md</code></a></td>
+</tr>
+<tr>
+<td>Conventions — naming, structure, format, communication, process,
+enforcement</td>
+<td><a
+href="./architecture/conventions.html"><code>./architecture/conventions.md</code></a></td>
+</tr>
+<tr>
+<td>Repo directory trees, local dev workflow, deployment pipeline</td>
+<td><a
+href="./architecture/repo-structure.html"><code>./architecture/repo-structure.md</code></a></td>
+</tr>
+<tr>
+<td>Table ownership mapping</td>
+<td><a
+href="./architecture/data-tables.html"><code>./architecture/data-tables.md</code></a></td>
+</tr>
+<tr>
+<td>HMCTS Crime SpringBoot starter, dependencies, NJI overlay</td>
+<td><a
+href="./architecture/starter-template.html"><code>./architecture/starter-template.md</code></a></td>
+</tr>
+<tr>
+<td>Gaps (G1–G7)</td>
+<td><a
+href="./architecture/gaps.html"><code>./architecture/gaps.md</code></a></td>
+</tr>
+<tr>
+<td>Assumptions (A1–A35)</td>
+<td><a
+href="./architecture/assumptions.html"><code>./architecture/assumptions.md</code></a></td>
+</tr>
+<tr>
+<td>Changelog</td>
+<td><a
+href="./architecture/changelog.html"><code>./architecture/changelog.md</code></a></td>
+</tr>
+<tr>
+<td>PRD</td>
+<td><a href="./prd.html"><code>./prd.md</code></a></td>
+</tr>
+</tbody>
+</table>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture-summary.md</code></p>
+</main>
+</body>
+</html>

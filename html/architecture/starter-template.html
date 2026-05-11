@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Starter Template — Initialisation Flow, Build Tool, Dependency Inventory, NJI Conventions — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../architecture.html">Architecture (index)</a></li>
+<li><a href="../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../architecture/conventions.html">Conventions</a></li>
+<li><a href="../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../architecture/starter-template.html" class="current">Starter template</a></li>
+<li><a href="../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../architecture/gaps.html">Gaps</a></li>
+<li><a href="../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul></aside>
+<main class="content">
+<h1
+id="starter-template--initialisation-flow-build-tool-dependency-inventory-nji-conventions">Starter
+Template — Initialisation Flow, Build Tool, Dependency Inventory, NJI
+Conventions</h1>
+<blockquote>
+<p>Sibling of <a
+href="../architecture.html"><code>../architecture.md</code></a>.
+Selection rationale lives in the parent. This file holds the per-service
+initialisation flow, dependency inventory, and NJI conventions overlaid
+by the scaffolding script.</p>
+</blockquote>
+<h2 id="initialisation-flow-per-service">Initialisation Flow (per
+service)</h2>
+<p>Each new NJI service is scaffolded from the HMCTS starter, then
+customised. The exact CLI depends on what HMCTS publishes; conceptual
+flow:</p>
+<pre class="bash"><code># Conceptual — actual command per HMCTS published documentation
+git clone https://github.com/hmcts/spring-boot-template.git nji-{service-name}
+cd nji-{service-name}
+git remote remove origin
+git remote add origin &lt;new-repo-url&gt;
+
+# Rename package, artifact, application name to match the service
+# (specific tooling / scripts per HMCTS starter conventions)
+./scripts/rename uk.gov.hmcts.nji.{service-name}
+
+# Verify build
+./gradlew build
+
+# Initial commit on new repo
+git add . &amp;&amp; git commit -m &quot;Scaffold NJI {service-name} from HMCTS starter&quot;
+git push -u origin main</code></pre>
+<p><strong>NJI scaffolding script:</strong> a thin wrapper over the
+HMCTS starter clone-and-rename steps, with NJI-specific defaults (Azure
+UK region, Application Insights workspace, naming conventions). Used at
+service-creation time only — not a runtime dependency.</p>
+<h2 id="build-tool-gradle">Build Tool: Gradle</h2>
+<p>Gradle for all 11 services and the scaffolding script.</p>
+<p>Reasons:</p>
+<ul>
+<li>Flexible for per-service repos + occasional cross-repo
+conventions.</li>
+<li>Fast incremental builds; works well for per-service Postman
+collection generation and OpenAPI artefact publication.</li>
+<li>Matches the HMCTS starter's typical default.</li>
+<li>Consistent across all services.</li>
+</ul>
+<h2 id="architectural-decisions-provided-by-starter">Architectural
+Decisions Provided by Starter</h2>
+<p>The HMCTS Crime SpringBoot template provides (verified by review on
+2026-05-06):</p>
+<p><strong>Language &amp; Runtime:</strong></p>
+<ul>
+<li>Java 25 (current LTS).</li>
+<li>Spring Boot 4.0.x (released Q4 2025).</li>
+<li>Gradle build with Gradle Wrapper (<code>gradlew</code>)
+committed.</li>
+</ul>
+<p><strong>Build Tooling (per HMCTS Crime SpringBoot
+template):</strong></p>
+<ul>
+<li><strong>Gradle Groovy DSL</strong> with Gradle Wrapper.</li>
+<li><strong>Spring Boot Gradle plugin 4.0.6</strong> for fat-jar
+packaging.</li>
+<li><strong><code>io.spring.dependency-management:1.1.7</code></strong>
+for BOM-based dependency management.</li>
+<li><strong>JaCoCo</strong> plugin for code coverage reports.</li>
+<li><strong><code>org.cyclonedx.bom:3.2.4</code></strong> for SBOM
+(Software Bill of Materials) generation — supply-chain security.</li>
+<li><strong><code>com.gorylenko.gradle-git-properties:2.5.7</code></strong>
+to embed Git metadata in <code>/actuator/info</code>.</li>
+<li><strong><code>com.github.ben-manes.versions:0.54.0</code></strong>
+for dependency-update reports.</li>
+<li><strong><code>com.avast.gradle.docker-compose:0.17.21</code></strong>
+for local development with docker-compose-managed dependencies.</li>
+<li>Gradle multi-task layout: <code>build</code>, <code>test</code>,
+<code>bootRun</code>, <code>bootJar</code>, <code>dockerBuild</code>,
+<code>helmLint</code>.</li>
+</ul>
+<p><strong>Testing Framework (per HMCTS Crime SpringBoot
+template):</strong></p>
+<ul>
+<li><strong>Spring Boot Test</strong> (JUnit 5 via
+<code>junit-bom:6.0.3</code>).</li>
+<li><strong><code>spring-boot-testcontainers:4.0.6</code></strong> +
+<strong><code>testcontainers-postgresql:1.21.4</code></strong> +
+<strong><code>testcontainers-junit-jupiter:1.21.4</code></strong> for
+integration tests with real PostgreSQL.</li>
+<li><strong>AssertJ</strong> for assertions (transitively via Spring
+Boot Test).</li>
+<li><strong><code>spring-boot-starter-webmvc-test</code></strong> for
+controller-layer testing.</li>
+<li>Pact or similar for consumer-driven contract tests — added per
+service (not in HMCTS Crime template).</li>
+</ul>
+<p><strong>Observability (per HMCTS Crime SpringBoot
+template):</strong></p>
+<ul>
+<li><strong>Logstash Logback Encoder</strong>
+(<code>net.logstash.logback:logstash-logback-encoder:9.0</code>) for
+structured JSON logs; async appender.</li>
+<li><strong>OpenTelemetry</strong>
+(<code>spring-boot-starter-opentelemetry</code>) for traces; OTel
+Collector → Azure Application Insights as the export target.</li>
+<li>Correlation ID filter at request entry; correlation ID propagation
+in service-to-service calls.</li>
+<li>Spring Boot Actuator endpoints (<code>/actuator/health</code>,
+<code>/actuator/info</code>, <code>/actuator/readiness</code>);
+<code>/actuator/metrics</code> and Prometheus endpoint not exposed at
+MVP per D7.</li>
+<li>Application Insights instrumentation key configured via env vars
+(<code>APPINSIGHTS_INSTRUMENTATIONKEY</code>).</li>
+</ul>
+<p><strong>Security defaults (per HMCTS Crime SpringBoot
+template):</strong></p>
+<ul>
+<li>TLS-only configuration (no HTTP).</li>
+<li>Secure header defaults.</li>
+<li><strong>Custom <code>JWTFilter</code></strong> (using
+<code>io.jsonwebtoken:jjwt:0.13.0</code>) for JWT validation; integrates
+with NJI Authorisation service per Step 4 of <a
+href="../architecture.html"><code>../architecture.md</code></a>.</li>
+<li><strong><code>org.owasp.encoder:encoder:1.4.0</code></strong> for
+XSS-safe output encoding.</li>
+<li>Azure Key Vault integration for secret retrieval (added per service
+via Spring Cloud Azure — not in template baseline).</li>
+</ul>
+<p><strong>Deployment:</strong></p>
+<ul>
+<li>Dockerfile (multi-stage build, JDK image) — provided by HMCTS
+template.</li>
+<li>Standard health probe configuration via Spring Actuator — provided
+by HMCTS template.</li>
+<li><strong>Helm chart for AKS deployment is NOT in the template
+baseline</strong> (G1.4a in <a
+href="./gaps.html"><code>./gaps.md</code></a>) — NJI scaffolding script
+adds it.</li>
+</ul>
+<p><strong>Code Organisation:</strong></p>
+<ul>
+<li>Standard Gradle directory layout: <code>src/main/java</code>,
+<code>src/main/resources</code>, <code>src/test/java</code>.</li>
+<li>Per-service top-level package:
+<code>uk.gov.hmcts.nji.{service-name}</code> (e.g.
+<code>uk.gov.hmcts.nji.judge</code>,
+<code>uk.gov.hmcts.nji.booking</code>).</li>
+<li>Standard Spring Boot application class with
+<code>@SpringBootApplication</code>.</li>
+<li>Service internals follow a layered approach (controller / service /
+repository) — the precise pattern is settled in <a
+href="./conventions.html"><code>./conventions.md</code></a>.</li>
+</ul>
+<p><strong>Productivity libraries (per HMCTS Crime SpringBoot
+template):</strong></p>
+<ul>
+<li><strong>Lombok 1.18.46</strong> for boilerplate reduction
+(<code>@Data</code>, <code>@Builder</code>,
+<code>@RequiredArgsConstructor</code>, <code>@Slf4j</code>, etc.).</li>
+<li><strong>MapStruct 1.6.3</strong> for compile-time bean mapping (DTO
+↔︎ entity); pairs naturally with the per-service <code>dto/</code> and
+<code>domain/</code> package layout.</li>
+</ul>
+<h2
+id="per-service-nji-conventions-encoded-in-scaffolding-script-not-in-shared-library">Per-service
+NJI Conventions (encoded in scaffolding script, not in shared
+library)</h2>
+<p>The scaffolding script applies NJI-specific defaults on top of the
+HMCTS starter:</p>
+<ul>
+<li>Group ID: <code>uk.gov.hmcts.nji</code>.</li>
+<li>Naming: artefact <code>nji-{service-name}</code>, package
+<code>uk.gov.hmcts.nji.{service-name}</code>.</li>
+<li>Default Azure UK region: UK South. (DR scope and target region are
+an open gap — see <a href="./gaps.html"><code>./gaps.md</code>
+G3.6</a>.)</li>
+<li>Default Application Insights workspace: NJI shared workspace
+(HMCTS-provided).</li>
+<li>Default Reference Data and Authorisation service URL
+placeholders.</li>
+<li>Boilerplate <code>@ControllerAdvice</code> for <a
+href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a>
+problem-details error envelopes (formerly RFC 7807; obsoleted July 2023
+— content type and field shape unchanged).</li>
+<li>Boilerplate <code>JWTFilter</code> + <code>AuthDetails</code> bean
+(per HMCTS template pattern); modified to call NJI Authorisation service
+per request (NJI variance from template's claims-only approach —
+required by FR58).</li>
+<li>Boilerplate Reference Data direct-SQL access (JPA entities mapped to
+whitelisted Reference Data tables — 15 tables, see <a
+href="./data-tables.html"><code>./data-tables.md</code></a>:
+<code>regions</code>, <code>offices</code>,
+<code>calendar_periods</code>, plus the 12 vocabulary tables); no client
+class.</li>
+<li><em>(removed 2026-05-06)</em> Boilerplate APEX-comparison test base
+class — retracted. Behavioural parity is verified via <strong>manual UAT
+performed by APEX-experienced users</strong> (FR61 / NFR41 revised).
+Per-service UAT scripts live under <code>docs/uat/</code> in the service
+repo, not as test code.</li>
+<li>Default port <code>8082</code> (per HMCTS template).</li>
+</ul>
+<p>These are <strong>scaffolded once per service</strong>; subsequent
+edits live in the service's own repo. There is no upstream library that
+can force a redeployment.</p>
+<p><strong>Note:</strong> Project initialisation using these commands
+and the scaffolding script should be the first implementation story per
+service.</p>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/starter-template.md</code></p>
+</main>
+</body>
+</html>
