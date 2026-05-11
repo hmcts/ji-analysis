@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin maintenance flows in `nji-admin-ui` — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../../architecture.html">Architecture (index)</a></li>
+<li><a href="../../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../../architecture/conventions.html">Conventions</a></li>
+<li><a href="../../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html" class="current">Admin maintenance flows</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../../architecture/gaps.html">Gaps</a></li>
+<li><a href="../../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../../epics.html">Epics & Stories</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="admin-maintenance-flows-in-nji-admin-ui">Admin maintenance flows
+in <code>nji-admin-ui</code></h1>
+<p>Sequence diagram of the two admin write paths exposed by
+<code>nji-admin-ui</code> at MVP. Both paths share the same actor
+(System Administrator), the same auth pattern, and the same UI shell —
+only the destination service and the downstream effect differ. Both run
+in <code>nji-admin-ui</code>, never in <code>nji-ui</code>, per the
+v2.10 architecture decision separating admin from business workflows at
+the repo boundary.</p>
+<ul>
+<li><strong>Path A — Reference Data maintenance (FR6)</strong> — Sys
+Admin (or RSU-with-admin-rights — same admin module, same role-gate)
+creates / updates an entry in any of the 15 Reference Data tables
+(Regions, Offices, calendar / financial-year boundaries, the 12 judicial
+vocabularies). Writes go via the <code>nji-reference-data</code>
+versioned API. Other services pick up the change on their next
+direct-SQL read of the affected table (per revised FR7) — no cache
+invalidation needed because there is no cache (architecture Principle
+2).</li>
+<li><strong>Path B — User &amp; Role admin (FR4)</strong> — Sys Admin
+updates a user's role and Region/Area scope assignment, or creates a new
+user record. Writes go via the <code>nji-authorisation</code> versioned
+API. The change is reflected on the affected user's <em>next</em>
+request via the standard per-request <code>authz/check</code> (see <a
+href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
+Phase 3) — no propagation step is needed because authz is resolved per
+request.</li>
+</ul>
+<p>Four phases: (1) admin login + role-gate; (2) Reference Data write
+path; (3) User &amp; Role write path; (4) downstream visibility (no
+propagation step).</p>
+<h2 id="not-in-this-diagram">Not in this diagram</h2>
+<ul>
+<li><strong>Phase 0 Data Migration ETL</strong> — bulk-loads Reference
+Data and Users/Roles from APEX in one shot, calling the same APIs shown
+here in Phases 2 and 3 but operator-initiated and not via
+<code>nji-admin-ui</code>. ETL lives at
+<code>nji-architecture/migration/</code>. Not drawn separately at this
+scope — it's a programme deliverable, not a runtime business flow.</li>
+<li><strong>Per-region phased activation cutover</strong> (FR58) —
+wave-cutover operation that flips
+<code>auth_user_activation_flags</code>. Same shape as Path B but
+operator-initiated per wave. Could be diagrammed if useful — flag if you
+want it.</li>
+<li><strong>Named-owner sign-off workflow detail</strong> — Reference
+Data writes are subject to named-owner sign-off per FR6; the diagram
+captures the validation point but not the full multi-step approval.
+Sign-off mechanics are programme-level.</li>
+<li><strong>Post-MVP admin modules</strong> — per-region activation
+dashboard, migration reconciliation viewer, user-action audit viewer.
+Module placeholders are reserved in <code>nji-admin-ui</code> but not
+built at MVP.</li>
+</ul>
+<h2 id="cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
+omitted for clarity</h2>
+<ul>
+<li><strong>Authentication + per-request authorisation</strong> — Sys
+Admin's JWT is validated by both <code>nji-reference-data</code>'s and
+<code>nji-authorisation</code>'s <code>JWTFilter</code>. Admin role
+gating is enforced by <code>nji-authorisation</code> itself (role =
+<code>sys-admin</code>); for User &amp; Role admin, this means
+<code>nji-authorisation</code> is both the gatekeeper <em>and</em> the
+writer of the change. See <a
+href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
+Phase 3.</li>
+<li>All UI → service calls flow through Azure API Management.
+<code>nji-admin-ui</code> deploys to its own hostname (e.g.
+<code>admin.nji.hmcts.gov.uk</code>) but the same APIM tier handles its
+requests.</li>
+</ul>
+<p><img src="./admin-maintenance-flows.png"
+alt="Admin maintenance flows sequence" /></p>
+<p><em>Source: <a
+href="./admin-maintenance-flows.mmd"><code>./admin-maintenance-flows.mmd</code></a>
+(Mermaid). Regenerate with
+<code>mmdc -i admin-maintenance-flows.mmd -o admin-maintenance-flows.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<h2 id="phase-summary">Phase summary</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Driver</th>
+<th>Architectural rule</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 — Admin login + role-gate</td>
+<td>Sys Admin</td>
+<td>OIDC SSO same as business users; <code>nji-authorisation</code>
+role-gate restricts <code>nji-admin-ui</code> access to
+<code>sys-admin</code> role</td>
+<td>Admin lands on <code>nji-admin-ui</code> Home with admin-scoped
+navigation; non-admin users see a 403 if they try to reach this
+hostname</td>
+</tr>
+<tr>
+<td>2 — Reference Data write path (FR6)</td>
+<td>Sys Admin</td>
+<td><code>nji-reference-data</code> is the single writer for the 15
+Reference Data tables (revised FR7); writes are validated, audited, and
+persisted to the shared schema</td>
+<td>Reference Data row created / updated; visible to every other NJI
+service on its next direct-SQL read (no cache, no propagation step)</td>
+</tr>
+<tr>
+<td>3 — User &amp; Role write path (FR4)</td>
+<td>Sys Admin</td>
+<td><code>nji-authorisation</code> owns the 5 auth tables
+(<code>auth_users</code>, <code>auth_roles</code>,
+<code>auth_user_roles</code>, <code>auth_user_region_scopes</code>,
+<code>auth_user_activation_flags</code>); writes are validated and
+persisted</td>
+<td>User / role / scope row created / updated; affected user sees the
+new effective permissions on their <em>next</em> request via per-request
+<code>authz/check</code></td>
+</tr>
+<tr>
+<td>4 — Downstream visibility</td>
+<td>(none — passive)</td>
+<td>No cache, no event bus, no propagation step (architecture Principle
+2 + REST-first synchronous coordination)</td>
+<td>Next consumer call picks up the change naturally</td>
+</tr>
+</tbody>
+</table>
+<h2 id="where-to-find-more-detail">Where to find more detail</h2>
+<table>
+<thead>
+<tr>
+<th>Detail</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-admin-ui</code> repo purpose, MVP modules, and
+future-surface placeholders</td>
+<td><a
+href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
+— new row added in v2.10</td>
+</tr>
+<tr>
+<td><code>nji-admin-ui</code> directory structure</td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
+Complete Project Directory Structure — UI repos →
+<code>nji-admin-ui</code></a></td>
+</tr>
+<tr>
+<td><code>nji-reference-data</code> repo purpose and key functions</td>
+<td><a
+href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
+Phase 0 row</td>
+</tr>
+<tr>
+<td><code>nji-authorisation</code> repo purpose and key functions</td>
+<td><a
+href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
+Phase 0 row</td>
+</tr>
+<tr>
+<td>15 Reference Data tables + 5 Authorisation tables (column-level
+detail)</td>
+<td><a
+href="../data-tables.html"><code>../data-tables.md</code></a></td>
+</tr>
+<tr>
+<td>FR4 (User &amp; Role admin) + FR6 (Reference Data maintenance)</td>
+<td>PRD <code>FR4</code>, <code>FR6</code>; both annotated in <a
+href="../functional-requirements-coverage.html"><code>./functional-requirements-coverage.md</code></a>
+with the admin UI location</td>
+</tr>
+<tr>
+<td>Why admin and business UI are separate repos (v2.10)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code>
+→ Step 4 <em>Frontend Architecture</em></a>; <a
+href="../changelog.html"><code>./changelog.md</code> v2.10</a></td>
+</tr>
+<tr>
+<td>Per-request authz resolution that picks up Path B changes on the
+next call</td>
+<td><a
+href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
+Phase 3</td>
+</tr>
+<tr>
+<td>Phase 0 Data Migration ETL — the bulk-load equivalent of Phases 2 +
+3</td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
+<code>nji-architecture/migration/</code></a>; epics.md AR46–AR49</td>
+</tr>
+<tr>
+<td>As-is equivalent — Module 11 <em>Admin</em> had only narrow
+self-service (password change, new-user request); higher-impact admin
+was off-screen in OPT Support. NJI brings it into a first-class admin
+module.</td>
+<td><a
+href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code>
+→ Module 11</a></td>
+</tr>
+</tbody>
+</table>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/admin-maintenance-flows.md</code></p>
+</main>
+</body>
+</html>

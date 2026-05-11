@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MI Feed / Reports consumption — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../../architecture.html">Architecture (index)</a></li>
+<li><a href="../../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../../architecture/conventions.html">Conventions</a></li>
+<li><a href="../../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html" class="current">MI Feed & Reports</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../../architecture/gaps.html">Gaps</a></li>
+<li><a href="../../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../../epics.html">Epics & Stories</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="mi-feed--reports-consumption">MI Feed / Reports consumption</h1>
+<p>Sequence diagram of how aggregate management-information is consumed
+from <code>nji-mi-feed</code>, by two distinct actors:</p>
+<ol type="1">
+<li><strong>Internal MI / Reporting users</strong> — at MVP, open the
+Reports module in <code>nji-ui</code>, pick a standard report
+(utilisation, sitting analysis, jurisdictional split, etc.), apply
+parameter filters, render results, and export to Excel or PDF.</li>
+<li><strong>External DA&amp;I consumer</strong> — post-MVP, calls the MI
+Feed REST API directly as a service principal to ingest aggregate data
+into their own pipelines, replacing today's manual export-and-transform
+chain.</li>
+</ol>
+<p>Both paths hit the same backend (<code>nji-mi-feed</code>) and are
+bound by the <strong>same aggregate-only contract</strong>: no
+case-level data anywhere in the response, ever (REP-BR-NFR-03 / FR54 /
+NFR23). This contract is the most important architectural invariant in
+the read-model layer — it bounds FOI scope (NFR33), protects against the
+data-scope concerns flagged in the PRD, and is enforced both at the
+schema level (no case-level columns exist in any NJI table that MI Feed
+reads from) and at the API-contract level (no case-level field in any
+response shape).</p>
+<p><code>nji-mi-feed</code> holds <strong>no own tables</strong> — it
+SQL-JOINs aggregates from the shared schema, the same Strategy A pattern
+as <code>nji-itinerary</code> (<a
+href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>),
+but with aggregation projections rather than per-record cells.</p>
+<p>The as-is equivalents are Module 12 <em>Reports</em> in <a
+href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a>
+and Integration Flow 7 <em>Management Information &amp; Reporting (JI →
+DA&amp;I)</em> in <a
+href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>.
+The as-is flow is export-and-transform (Excel/PDF copied out of JI,
+transformed in DA&amp;I); the NJI MI Feed API is the post-MVP
+replacement.</p>
+<p>Three phases: (1) internal MI user runs a report; (2) post-MVP
+external DA&amp;I consumer calls the same API; (3) shared aggregation +
+contract enforcement.</p>
+<h2 id="not-in-this-diagram">Not in this diagram</h2>
+<ul>
+<li><strong>External consumer onboarding</strong> (service-principal
+credential issuance, OAuth scopes, rate-limit policy assignment) —
+programme-management activity, not a runtime flow.</li>
+<li><strong>MI Feed cache</strong> — none at MVP per architecture
+Principle 2. Considered if NFR8-like measurement shows reports breaching
+≤ 30 s.</li>
+<li><strong>Tribunals data extension</strong> — flagged as a strategic
+gap in <a
+href="../../../../docs/architecture/asis/data-dependencies.html"><code>../../../docs/architecture/asis/data-dependencies.md</code></a>
+and the as-is Reports module; out of scope for NJI MVP.</li>
+<li><strong>Per-report parameter validation detail</strong> — varies per
+report; handled by the controller as standard request validation. Not
+drawn.</li>
+</ul>
+<h2 id="cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
+omitted for clarity</h2>
+<ul>
+<li><strong>Authentication + per-request authorisation</strong> — both
+flows. Internal MI users go through HMCTS IdP OIDC; external DA&amp;I
+consumers use a service principal (currently a post-MVP open question
+per <a href="../gaps.html"><code>../gaps.md</code> G7.1</a> — default
+recommendation Azure Workload Identity, or
+<code>client_credentials</code> against the IdP if it supports non-human
+principals). The diagram shows the auth boundary only. Full mechanics:
+<a
+href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
+<li>All UI → service and external → APIM calls flow through Azure API
+Management; APIM is where rate-limit and
+<code>Deprecation</code>/<code>Sunset</code> policies apply.</li>
+</ul>
+<p><img src="./mi-feed-and-reports-consumption.png"
+alt="MI Feed / Reports consumption sequence" /></p>
+<p><em>Source: <a
+href="./mi-feed-and-reports-consumption.mmd"><code>./mi-feed-and-reports-consumption.mmd</code></a>
+(Mermaid). Regenerate with
+<code>mmdc -i mi-feed-and-reports-consumption.mmd -o mi-feed-and-reports-consumption.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<h2 id="phase-summary">Phase summary</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Driver</th>
+<th>Architectural rule</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 — Internal MI user runs a report</td>
+<td>MI / Reporting User</td>
+<td>FR53 — fixed catalogue of standard reports with parameter filters
+per report. Region/Office/judge-type/date-range scoped per FR49 /
+R2.</td>
+<td>Tabular report rendered in <code>nji-ui</code>; copy/export to Excel
+or PDF via FR52</td>
+</tr>
+<tr>
+<td>2 — External DA&amp;I consumer calls MI Feed API (post-MVP)</td>
+<td>DA&amp;I analyst script / system</td>
+<td>FR54 — aggregate-only REST contract; service-principal auth;
+standard parameter filters; same data shape as internal reports</td>
+<td>Aggregate JSON returned to consumer; replaces today's
+export-and-transform chain</td>
+</tr>
+<tr>
+<td>3 — Shared aggregation + contract enforcement</td>
+<td><code>nji-mi-feed</code> (no own tables)</td>
+<td>Principle 1 + 2 — SQL JOIN over the shared schema with aggregation
+projections; <strong>no case-level data in any response shape</strong>
+(REP-BR-NFR-03 / FR54 / NFR23); contract enforced at schema (no
+case-level columns) and at API shape (no case-level fields)</td>
+<td>Aggregated result with no case-level identifiers; serialised per
+content-type negotiation (JSON for API; Excel/PDF for internal
+export)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="where-to-find-more-detail">Where to find more detail</h2>
+<table>
+<thead>
+<tr>
+<th>Detail</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-mi-feed</code> repo purpose and key functions (no own
+tables — SQL JOINs)</td>
+<td><a
+href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
+Phase 8 row</td>
+</tr>
+<tr>
+<td>Aggregate-only contract enforcement (REP-BR-NFR-03 + FR54 +
+NFR23)</td>
+<td>PRD <code>FR54</code>, <code>NFR23</code>; <a
+href="../../architecture.html"><code>../../architecture.md</code> → Step
+2 <em>Cross-Cutting Concerns</em> (Forbidden data)</a></td>
+</tr>
+<tr>
+<td>Reports catalogue (utilisation, sitting analysis, jurisdictional
+split, summary by court / work type, …)</td>
+<td>PRD <code>FR53</code>; Module 12 in <a
+href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a></td>
+</tr>
+<tr>
+<td>Reports UI module structure</td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
+<code>nji-ui/src/modules/reports/</code></a></td>
+</tr>
+<tr>
+<td>Service-principal auth for external consumers (open question;
+pre-Phase-9 decision)</td>
+<td><a href="../gaps.html"><code>../gaps.md</code> G7.1</a>; <a
+href="../assumptions.html"><code>../assumptions.md</code> A35</a></td>
+</tr>
+<tr>
+<td>Related read flow — Itinerary federated read (same
+SQL-JOIN-on-shared-schema pattern, per-record cells rather than
+aggregates)</td>
+<td><a
+href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a></td>
+</tr>
+<tr>
+<td>As-is equivalents (Module 12 Reports; Integration Flow 7 MI &amp;
+Reporting → DA&amp;I)</td>
+<td><a
+href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code>
+→ Module 12</a>; <a
+href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code>
+→ Flow 7</a></td>
+</tr>
+</tbody>
+</table>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/mi-feed-and-reports-consumption.md</code></p>
+</main>
+</body>
+</html>

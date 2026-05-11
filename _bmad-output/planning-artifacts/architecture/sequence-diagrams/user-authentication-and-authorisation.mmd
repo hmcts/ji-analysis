@@ -1,0 +1,44 @@
+%%{init: {'theme': 'default', 'sequence': {'actorFontSize': 22, 'actorFontWeight': 'bold', 'messageFontSize': 20, 'noteFontSize': 18, 'mirrorActors': false, 'actorMargin': 60, 'boxMargin': 12, 'messageMargin': 40, 'wrap': true}}}%%
+sequenceDiagram
+    autonumber
+
+    actor User
+    participant UI
+    participant IdP as HMCTS IdP / mock-auth
+    participant Svc as Any nji service
+    participant Authz as nji-authorisation
+
+    rect rgb(232, 240, 250)
+        Note over User,Authz: Phase 1 — Login + JWT issuance
+        User->>UI: open NJI app
+        UI->>IdP: OIDC authorization_code request
+        User->>IdP: authenticate via SSO
+        IdP-->>UI: redirect with authorization code
+        UI->>IdP: exchange code for JWT
+        IdP-->>UI: short-lived JWT signed by IdP
+    end
+
+    rect rgb(232, 250, 232)
+        Note over User,Authz: Phase 2 — Per-service JWT validation against JWKS
+        Note right of UI: Every subsequent API call carries the JWT as Bearer. APIM is on the path but omitted for clarity.
+        UI->>Svc: API call with Bearer JWT
+        Svc->>IdP: GET /.well-known/jwks.json (cached)
+        IdP-->>Svc: JWKS public keys
+        Svc->>Svc: validate signature and expiry
+    end
+
+    rect rgb(250, 240, 230)
+        Note over User,Authz: Phase 3 — Per-request authz check + activation gating
+        Svc->>Authz: POST /authz/check with principal and endpoint
+        Authz->>Authz: resolve roles, Region/Area scope, activation flag per FR58
+        alt principal activated for region and authorised
+            Authz-->>Svc: allowed, returns roles and scope
+            Svc->>Svc: populate AuthDetails request-scoped bean
+            Svc-->>UI: controller runs, 2xx response
+        else not activated or not authorised
+            Authz-->>Svc: denied
+            Svc-->>UI: 403 Forbidden with RFC 9457 problem-details
+        end
+    end
+
+    Note over User,Authz: Every other sequence diagram assumes this flow has already run on the inbound call. Service-to-service calls forward the user JWT, and Phase 2 + 3 happen at each hop.

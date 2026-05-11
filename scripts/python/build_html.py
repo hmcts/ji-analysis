@@ -47,8 +47,14 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
         ("Non-functional requirements coverage", "architecture/non-functional-requirements-coverage", False),
     ]),
     ("Sequence Diagrams", [
+        ("Authentication & authorisation", "architecture/sequence-diagrams/user-authentication-and-authorisation", False),
+        ("Judge onboarding & sitting gen.", "architecture/sequence-diagrams/judge-onboarding-and-sitting-generation", False),
         ("Absence → Reconciliation", "architecture/sequence-diagrams/absence-to-reconciliation", False),
+        ("Salaried sitting confirmation", "architecture/sequence-diagrams/salaried-sitting-confirmation", False),
         ("Payment batch flow", "architecture/sequence-diagrams/payment-batch-flow", False),
+        ("Itinerary federated read", "architecture/sequence-diagrams/itinerary-federated-read", False),
+        ("MI Feed & Reports", "architecture/sequence-diagrams/mi-feed-and-reports-consumption", False),
+        ("Admin maintenance flows", "architecture/sequence-diagrams/admin-maintenance-flows", False),
     ]),
     ("Open Items", [
         ("Gaps", "architecture/gaps", False),
@@ -58,6 +64,9 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
     ("Implementation Readiness", [
         ("Report — 2026-05-06 (current)", "implementation-readiness-report-2026-05-06", False),
         ("Report — 2026-05-05 (historical)", "implementation-readiness-report-2026-05-05", False),
+    ]),
+    ("Implementation", [
+        ("Epics & Stories", "epics", False),
     ]),
 ]
 

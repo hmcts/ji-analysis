@@ -69,8 +69,14 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 </ul>
 <h3>Sequence Diagrams</h3>
 <ul>
+<li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
 <li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
 <li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 <h3>Open Items</h3>
 <ul>
@@ -82,6 +88,10 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <ul>
 <li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../epics.html">Epics & Stories</a></li>
 </ul></aside>
 <main class="content">
 <h1 id="functional-requirements-coverage-fr1fr61">Functional
@@ -121,8 +131,10 @@ per-service custom <code>JWTFilter</code> (HMCTS template pattern) +
 OIDC for human users (mock auth Phase 0–8; HMCTS IdP from pre-Phase-9) +
 JWT propagation interceptor (Pattern 1) + OAuth
 <code>client_credentials</code> for the payment-batch service principal
-(Pattern 2). FR5 (full programmatic service-account directory) remains
-post-MVP.</p>
+(Pattern 2). <strong>FR4</strong> (User &amp; Role admin) UI surface
+lives in <code>nji-admin-ui</code> — kept separate from business
+workflows in <code>nji-ui</code>. FR5 (full programmatic service-account
+directory) remains post-MVP.</p>
 <h2 id="foundational-data-management-fr6fr9">Foundational Data
 Management (FR6–FR9)</h2>
 <ul>
@@ -130,9 +142,14 @@ Management (FR6–FR9)</h2>
 Data lists — Regions, Offices, judicial vocabularies,
 calendar/financial-year boundaries — with named-owner sign-off on
 changes.</li>
-<li><strong>FR7</strong> — Every NJI service can read Reference Data via
-a versioned API; Reference Data is the single writer (no duplicates
-anywhere).</li>
+<li><strong>FR7</strong> <em>(revised 2026-05-11)</em> — Every NJI
+service reads Reference Data via <strong>direct SQL</strong> on the
+shared schema's 15 Reference Data tables (SELECT-granted to each
+service's DB role) — no client class, no API fan-out, no cache (per
+Principle 2). Reference Data is the <strong>single writer</strong> — all
+writes (Phase 0 ETL load + ongoing RSU maintenance per FR6) go through
+the versioned Reference Data API. No service holds duplicate or cached
+copies in its own tables.</li>
 <li><strong>FR8</strong> <em>(revised v2.2)</em> — Cross-service runtime
 policy values are stored in a shared <code>configuration_values</code>
 infrastructure table, schema-managed by <code>nji-architecture</code>'s
@@ -147,7 +164,9 @@ with a delivery log retained.</li>
 <p><strong>Architectural support:</strong> Reference Data + Notification
 services; direct SQL access to the 15 Reference Data tables (no caching
 at MVP per Principle 2); shared <code>configuration_values</code> table
-for cross-service policy values.</p>
+for cross-service policy values. <strong>FR6</strong> (RSU Reference
+Data maintenance) UI surface lives in <code>nji-admin-ui</code> — kept
+separate from business workflows in <code>nji-ui</code>.</p>
 <h2 id="judge-records--working-patterns-fr10fr18">Judge Records &amp;
 Working Patterns (FR10–FR18)</h2>
 <ul>
@@ -261,8 +280,13 @@ AM/PM with different work types within a single day.</li>
 <li><strong>FR39</strong> — Authorised users can create ad-hoc sittings
 for salaried judges, including DJ(MC)s and Legal Advisers in County
 Courts.</li>
-<li><strong>FR40</strong> — Verifiers can verify confirmed sittings;
-once verified, the data is read-only and amendments require an RFC.</li>
+<li><strong>FR40</strong> <em>(revised 2026-05-11)</em> — Verifiers can
+verify confirmed sittings; once verified, the data is read-only.
+Post-verification amendments require <strong>re-opening</strong> via a
+UI re-open action gated by a distinct authorised role (RSU Admin only at
+MVP — different from the original confirmer and from a standard
+Verifier). Mandatory justification captured; fully audited. No external
+Request-for-Change ticketing.</li>
 </ul>
 <p><strong>Architectural support:</strong> <code>nji-sitting</code> repo
 (Phase 5); generated from Judge working patterns; verification gates

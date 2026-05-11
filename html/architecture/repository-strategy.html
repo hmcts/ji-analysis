@@ -69,8 +69,14 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 </ul>
 <h3>Sequence Diagrams</h3>
 <ul>
+<li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
 <li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
 <li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 <h3>Open Items</h3>
 <ul>
@@ -82,6 +88,10 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <ul>
 <li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../epics.html">Epics & Stories</a></li>
 </ul></aside>
 <main class="content">
 <h1 id="repository-strategy--list">Repository Strategy &amp; List</h1>
@@ -92,9 +102,9 @@ parent links here from its <em>Project Structure &amp; Boundaries</em>
 section.</p>
 </blockquote>
 <h2 id="repository-strategy-polyrepo">Repository Strategy: Polyrepo</h2>
-<p><strong>Decision:</strong> 11 service repos + 1 mock-auth repo + 1 UI
-repo + 1 architecture/scaffolding repo. No monorepo, no Gradle root
-project.</p>
+<p><strong>Decision:</strong> 11 service repos + 1 mock-auth repo + 2 UI
+repos (business + admin) + 1 architecture/scaffolding repo. No monorepo,
+no Gradle root project.</p>
 <p>A monorepo would either share <code>build.gradle</code> config
 (breaks no-shared-coupling), coordinate releases (breaks per-region
 phased rollout independence), or add Bazel-style hermetic build
@@ -204,8 +214,10 @@ href="../architecture.html"><code>../architecture.md</code></a> →
 <td>5</td>
 <td>Salaried-judge sittings + verification.</td>
 <td>Maintain sitting records (generated from working patterns); confirm
-and verify sittings (FR37); AM/PM session split (FR38); RFC unlock
-(FR40); work-type override on confirmation.</td>
+and verify sittings (FR37); AM/PM session split (FR38);
+post-verification re-open via RBAC (FR40 — RSU Admin only at MVP, with
+mandatory justification + audit; no external RFC process); work-type
+override on confirmation.</td>
 </tr>
 <tr>
 <td><strong><code>nji-payment</code></strong></td>
@@ -245,16 +257,47 @@ data</strong> (NFR23); Excel/PDF export; DA&amp;I consumer interface
 <tr>
 <td><strong><code>nji-ui</code></strong></td>
 <td>0–8</td>
-<td>Single SPA repo, modules per domain.</td>
-<td>Per-phase UI module replicating APEX functional surface; role-scoped
-Home with Outstanding-Actions tiles (FR55); SSO via HMCTS IdP / mock
-auth; GOV.UK Design System with WCAG 2.2 AA (NFR17).</td>
+<td><strong>Business-user-facing SPA</strong>, modules per domain.
+Excludes admin workflows.</td>
+<td>Per-phase UI module replicating APEX functional surface for business
+roles (RSU operational work, Court users, Judges, Judges' Clerks,
+Finance/Payment Authoriser, MI); role-scoped Home with
+Outstanding-Actions tiles (FR55); SSO via HMCTS IdP / mock auth; GOV.UK
+Design System with WCAG 2.2 AA (NFR17).</td>
+</tr>
+<tr>
+<td><strong><code>nji-admin-ui</code></strong></td>
+<td>0</td>
+<td><strong>Admin-facing SPA</strong>, separated from business
+workflows. Same stack as <code>nji-ui</code> but distinct repo,
+pipeline, and deployment.</td>
+<td>Reference Data maintenance (FR6 — Regions, Offices, judicial
+vocabularies, calendar / financial-year boundaries with named-owner
+sign-off); User &amp; Role admin (FR4 — system administrators update
+role and Region/Area assignments for migrated and new users). Future
+admin surfaces reserved: per-region activation flag dashboard (FR58),
+Phase 0 migration reconciliation report viewer (FR57), post-MVP
+user-action audit viewer (D7 roadmap). Same SSO + Authorisation pattern
+as <code>nji-ui</code>.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>14 repos total</strong> (11 production services + UI +
+<p><strong>15 repos total</strong> (11 production services + 2 UI +
 architecture + mock-auth). <code>nji-mock-auth</code> is
 dev/integration-only and never deploys to production.</p>
+<p><strong>Why split admin and business UI:</strong> business
+operational workflows (judges, absences, vacancies, bookings, sittings,
+payments, itineraries, reports) are continuously evolving with HMCTS
+judicial process. Admin work (managing the controlled vocabularies and
+user role assignments those workflows depend on) is lower-cadence,
+higher-stakes (a wrong Region rename or role flip cascades into
+operational chaos), and has a different audience (system administrators,
+not RSU/Court/Judges). Keeping them in separate repos gives independent
+CI/CD, independent rollout, distinct CODEOWNERS, and prevents accidental
+coupling — for example, admin-only screens cannot leak into a business
+user's nav by misconfiguration. Same as the backend's per-service
+polyrepo discipline: minimise shared code, accept duplication, gain
+independence.</p>
 
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/repository-strategy.md</code></p>
 </main>

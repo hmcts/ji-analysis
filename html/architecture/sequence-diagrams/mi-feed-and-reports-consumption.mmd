@@ -1,0 +1,40 @@
+%%{init: {'theme': 'default', 'sequence': {'actorFontSize': 22, 'actorFontWeight': 'bold', 'messageFontSize': 20, 'noteFontSize': 18, 'mirrorActors': false, 'actorMargin': 60, 'boxMargin': 12, 'messageMargin': 40, 'wrap': true}}}%%
+sequenceDiagram
+    autonumber
+
+    actor MI as MI / Reporting User
+    actor DAI as DA&I Consumer post-MVP
+
+    participant UI as nji-ui reports module
+    participant Feed as nji-mi-feed
+    participant DB as Shared schema
+
+    rect rgb(232, 240, 250)
+        Note over MI,DB: Phase 1 — Internal MI user runs a report, MVP
+        MI->>UI: open Reports, choose report and filters
+        UI->>Feed: GET /v1/reporting/{report} with region, judge-type, date range
+        Feed->>Feed: validate parameters
+        Feed->>DB: SQL JOIN with aggregation projections
+        DB-->>Feed: aggregated result set
+        Feed-->>UI: 200 aggregate report as JSON for tabular render
+        UI-->>MI: tabular view, Excel or PDF export available per FR52
+    end
+
+    rect rgb(232, 250, 232)
+        Note over MI,DB: Phase 2 — External DA&I consumer calls MI Feed API, post-MVP
+        Note right of DAI: Service-principal auth is an open question per gaps.md G7.1. Default recommendation is Azure Workload Identity or client_credentials.
+        DAI->>Feed: GET /v1/reporting/sittings with service-principal bearer
+        Feed->>Feed: validate service-principal scope
+        Feed->>DB: SQL JOIN with aggregation projections, same shape
+        DB-->>Feed: aggregated result set
+        Feed-->>DAI: 200 aggregate JSON
+    end
+
+    rect rgb(250, 240, 230)
+        Note over MI,DB: Phase 3 — Shared aggregation and aggregate-only contract enforcement
+        Note right of Feed: Same response shape for both internal and external. No case-level identifiers in any field per REP-BR-NFR-03, FR54, NFR23. Enforced at schema and at API shape.
+        Feed->>Feed: serialise per content-type, JSON for API or Excel and PDF for internal export
+        Feed->>Feed: emit Deprecation and Sunset headers if endpoint is sunsetting per FR59
+    end
+
+    Note over MI,DB: At MVP only the internal path is built. The external path is post-MVP DA&I onboarding. Same API surface, only the consumer identity differs.

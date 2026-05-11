@@ -69,8 +69,14 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 </ul>
 <h3>Sequence Diagrams</h3>
 <ul>
+<li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
 <li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
 <li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 <h3>Open Items</h3>
 <ul>
@@ -82,6 +88,10 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <ul>
 <li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../epics.html">Epics & Stories</a></li>
 </ul></aside>
 <main class="content">
 <h1
@@ -184,8 +194,17 @@ Project Directory Structure — per backend service</h2>
 │   └── uat/                                     (manual UAT scripts: APEX-vs-NJI behavioural-parity walkthroughs per FR61 / NFR41 revised; domain services only)
 ├── .gitignore
 └── .editorconfig</code></pre>
-<h2 id="complete-project-directory-structure--ui-repo">Complete Project
-Directory Structure — UI repo</h2>
+<h2 id="complete-project-directory-structure--ui-repos">Complete Project
+Directory Structure — UI repos</h2>
+<p>There are <strong>two UI repos</strong> with the same stack and
+conventions: <code>nji-ui</code> (business-user-facing) and
+<code>nji-admin-ui</code> (admin-facing). The split exists so admin
+workflows (Reference Data maintenance, User &amp; Role admin) cannot
+leak into business users' nav, and so each has its own CI/CD,
+CODEOWNERS, and rollout cadence. <code>nji-admin-ui</code> mirrors the
+structure below, with admin modules replacing the per-domain operational
+modules.</p>
+<h3 id="nji-ui-business"><code>nji-ui</code> (business)</h3>
 <pre><code>nji-ui/
 ├── README.md
 ├── package.json
@@ -262,6 +281,77 @@ Directory Structure — UI repo</h2>
 └── docs/
     ├── README.md
     └── decisions/                               (UI-specific ADRs)</code></pre>
+<h3 id="nji-admin-ui-admin"><code>nji-admin-ui</code> (admin)</h3>
+<p>Same scaffolding as <code>nji-ui</code> above — React + TypeScript +
+Vite + Vitest + Playwright, GOV.UK Design System, OIDC client, RFC 9457
+error handling, axe-core in CI — but with admin modules instead of
+per-domain operational modules.</p>
+<pre><code>nji-admin-ui/
+├── (same top-level scaffolding as nji-ui: package.json, vite.config.ts, etc.)
+├── src/
+│   ├── main.tsx
+│   ├── App.tsx
+│   ├── routes.tsx
+│   ├── modules/                                 (admin modules only)
+│   │   ├── home/
+│   │   │   ├── pages/AdminHomePage.tsx          (admin-scoped Home; system administrator role)
+│   │   │   └── index.ts
+│   │   ├── reference-data/                      (FR6 — RSU-with-admin-rights and system administrators)
+│   │   │   ├── pages/RegionsAdminPage.tsx
+│   │   │   ├── pages/OfficesAdminPage.tsx
+│   │   │   ├── pages/VocabulariesAdminPage.tsx  (12 judicial vocabularies)
+│   │   │   ├── pages/CalendarAdminPage.tsx      (financial-year boundaries, calendar periods)
+│   │   │   ├── components/NamedOwnerSignOff.tsx (cross-cutting sign-off pattern per FR6)
+│   │   │   ├── hooks/useReferenceDataAdmin.ts
+│   │   │   ├── api/                             (generated TypeScript client from nji-reference-data OpenAPI)
+│   │   │   └── index.ts
+│   │   └── users-roles/                         (FR4 — system administrators)
+│   │       ├── pages/UserListPage.tsx
+│   │       ├── pages/UserDetailPage.tsx          (role assignment, Region/Area scope)
+│   │       ├── components/RoleAssignmentEditor.tsx
+│   │       ├── hooks/useUserAdmin.ts
+│   │       ├── api/                             (generated TypeScript client from nji-authorisation OpenAPI)
+│   │       └── index.ts
+│   ├── shared/                                  (mirrors nji-ui — auth, http client, error handling, layout)
+│   │   ├── components/Layout.tsx                 (Admin-specific Header marking this as the admin surface)
+│   │   ├── hooks/useAuth.ts
+│   │   ├── auth/HmctsIdpProvider.tsx
+│   │   ├── auth/ProtectedRoute.tsx               (gates routes by admin role from nji-authorisation)
+│   │   └── api/httpClient.ts
+│   └── styles/
+│       ├── govuk.scss
+│       └── admin-overrides.scss                  (visual marker: admin surface — distinct accent for the header / nav)
+├── tests/
+│   ├── unit/                                    (Vitest)
+│   └── e2e/                                     (Playwright)
+│       ├── reference-data.spec.ts
+│       └── users-roles.spec.ts
+├── api-clients/                                 (generated; regenerated in CI from nji-reference-data + nji-authorisation OpenAPI specs)
+│   ├── reference-data-client/
+│   └── authorisation-client/
+├── helm/                                        (Helm chart for Static Web App / CDN deployment — separate from nji-ui)
+├── .github/
+│   ├── CODEOWNERS                                (admin-team scoped; distinct from nji-ui)
+│   └── workflows/
+│       ├── ci.yml                                (build + test + lint + axe-core)
+│       └── deploy-{env}.yml
+└── docs/
+    ├── README.md
+    └── decisions/                                (admin-UI-specific ADRs)</code></pre>
+<p><strong>Future admin surfaces reserved</strong> (not built at MVP —
+placeholders only):</p>
+<ul>
+<li><code>modules/activation/</code> — per-region activation flag
+dashboard (FR58 admin side)</li>
+<li><code>modules/migration-reports/</code> — Phase 0 reconciliation
+report viewer (FR57)</li>
+<li><code>modules/audit/</code> — post-MVP user-action audit viewer (D7
+roadmap)</li>
+</ul>
+<p><strong>Deployment:</strong> independent of <code>nji-ui</code>. Same
+Azure Static Web Apps pattern, separate hostname (e.g.
+<code>admin.nji.hmcts.gov.uk</code> vs <code>nji.hmcts.gov.uk</code>),
+separate Helm release, separate per-environment rollout.</p>
 <h2
 id="complete-project-directory-structure--nji-architecture-repo">Complete
 Project Directory Structure — <code>nji-architecture</code> repo</h2>

@@ -20,16 +20,16 @@ The 61 Functional Requirements are organised into 9 capability areas. Each subse
 - **FR4** — System administrators can update role and Region/Area assignments for migrated and new users.
 - **FR5** *(reframed v2.5 as post-MVP)* — External machine-to-machine consumers require an authentication mechanism. At MVP, no machine-to-machine consumers are in scope. The mechanism for genuine service-principal authentication is a post-MVP open question (see [`./gaps.md` G7](./gaps.md)).
 
-**Architectural support:** Authorisation service + per-service custom `JWTFilter` (HMCTS template pattern) + OIDC for human users (mock auth Phase 0–8; HMCTS IdP from pre-Phase-9) + JWT propagation interceptor (Pattern 1) + OAuth `client_credentials` for the payment-batch service principal (Pattern 2). FR5 (full programmatic service-account directory) remains post-MVP.
+**Architectural support:** Authorisation service + per-service custom `JWTFilter` (HMCTS template pattern) + OIDC for human users (mock auth Phase 0–8; HMCTS IdP from pre-Phase-9) + JWT propagation interceptor (Pattern 1) + OAuth `client_credentials` for the payment-batch service principal (Pattern 2). **FR4** (User & Role admin) UI surface lives in `nji-admin-ui` — kept separate from business workflows in `nji-ui`. FR5 (full programmatic service-account directory) remains post-MVP.
 
 ## Foundational Data Management (FR6–FR9)
 
 - **FR6** — RSU users can view and maintain Reference Data lists — Regions, Offices, judicial vocabularies, calendar/financial-year boundaries — with named-owner sign-off on changes.
-- **FR7** — Every NJI service can read Reference Data via a versioned API; Reference Data is the single writer (no duplicates anywhere).
+- **FR7** *(revised 2026-05-11)* — Every NJI service reads Reference Data via **direct SQL** on the shared schema's 15 Reference Data tables (SELECT-granted to each service's DB role) — no client class, no API fan-out, no cache (per Principle 2). Reference Data is the **single writer** — all writes (Phase 0 ETL load + ongoing RSU maintenance per FR6) go through the versioned Reference Data API. No service holds duplicate or cached copies in its own tables.
 - **FR8** *(revised v2.2)* — Cross-service runtime policy values are stored in a shared `configuration_values` infrastructure table, schema-managed by `nji-architecture`'s Flyway baseline migration and SELECT-granted to every NJI service DB role. Updates via Flyway migrations or admin SQL — no API service. Per-service config that's scoped to one service uses Spring profiles + `application.yml` + Azure Key Vault.
 - **FR9** — NJI dispatches transactional emails (booking acks, absence acks, payment schedules) via HMCTS email infrastructure, with a delivery log retained.
 
-**Architectural support:** Reference Data + Notification services; direct SQL access to the 15 Reference Data tables (no caching at MVP per Principle 2); shared `configuration_values` table for cross-service policy values.
+**Architectural support:** Reference Data + Notification services; direct SQL access to the 15 Reference Data tables (no caching at MVP per Principle 2); shared `configuration_values` table for cross-service policy values. **FR6** (RSU Reference Data maintenance) UI surface lives in `nji-admin-ui` — kept separate from business workflows in `nji-ui`.
 
 ## Judge Records & Working Patterns (FR10–FR18)
 
@@ -83,7 +83,7 @@ The 61 Functional Requirements are organised into 9 capability areas. Each subse
 - **FR37** — Authorised users can confirm that a sitting actually took place, updating outcome (confirmed, cancelled, rejected) and actual work type.
 - **FR38** — Authorised users can split a sitting into AM/PM with different work types within a single day.
 - **FR39** — Authorised users can create ad-hoc sittings for salaried judges, including DJ(MC)s and Legal Advisers in County Courts.
-- **FR40** — Verifiers can verify confirmed sittings; once verified, the data is read-only and amendments require an RFC.
+- **FR40** *(revised 2026-05-11)* — Verifiers can verify confirmed sittings; once verified, the data is read-only. Post-verification amendments require **re-opening** via a UI re-open action gated by a distinct authorised role (RSU Admin only at MVP — different from the original confirmer and from a standard Verifier). Mandatory justification captured; fully audited. No external Request-for-Change ticketing.
 
 **Architectural support:** `nji-sitting` repo (Phase 5); generated from Judge working patterns; verification gates downstream edits.
 

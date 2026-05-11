@@ -69,8 +69,14 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 </ul>
 <h3>Sequence Diagrams</h3>
 <ul>
+<li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
 <li><a href="./architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="./architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
 <li><a href="./architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="./architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="./architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 <h3>Open Items</h3>
 <ul>
@@ -82,6 +88,10 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <ul>
 <li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
 <li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="./epics.html">Epics & Stories</a></li>
 </ul></aside>
 <main class="content">
 <h1 id="architecture-decision-document">Architecture Decision
@@ -235,7 +245,7 @@ structures, file organisation, deployment pipeline</td>
 <tr>
 <td><a
 href="./architecture/repository-strategy.html"><code>./architecture/repository-strategy.md</code></a></td>
-<td>Polyrepo strategy + the 14-repo list (per-service purpose and key
+<td>Polyrepo strategy + the 15-repo list (per-service purpose and key
 functions)</td>
 </tr>
 <tr>
@@ -1015,29 +1025,58 @@ Service discovery via Kubernetes DNS
 service mesh. Synchronous workflows only. Retry safety via native DB
 primitives — see <em>Data Architecture</em>.</p>
 <h3 id="frontend-architecture">Frontend Architecture</h3>
-<p><strong>Framework:</strong> React 18.x + TypeScript 5.x. (Resolves
-PRD TBD #2.) Common in HMCTS applications; aligns with
+<p><strong>Two UI repos with the same stack and conventions, separated
+by audience</strong> (v2.10):</p>
+<ul>
+<li><strong><code>nji-ui</code></strong> — business-user-facing SPA.
+Per-domain operational modules (Judge, Absence, Vacancy, Booking,
+Sitting, Payment, Itinerary, Reports). Audience: RSU operational users,
+Court users, Judges, Judges' Clerks, Finance/Payment Authoriser, MI
+consumers.</li>
+<li><strong><code>nji-admin-ui</code></strong> — admin-facing SPA.
+Reference Data maintenance (FR6) and User &amp; Role admin (FR4).
+Audience: system administrators. Future admin surfaces reserved for
+per-region activation, migration reconciliation, audit log viewer.</li>
+</ul>
+<p>The split prevents admin workflows from leaking into business users'
+nav, gives each repo its own CI/CD and CODEOWNERS, and matches the
+backend's per-service polyrepo discipline (minimise shared code, accept
+duplication, gain independence). Both repos use the same SSO +
+Authorisation pattern; admin gating happens at the
+<code>nji-authorisation</code> layer via role assignment.</p>
+<p><strong>Framework (both):</strong> React 18.x + TypeScript 5.x.
+(Resolves PRD TBD #2.) Common in HMCTS applications; aligns with
 <code>govuk-react</code>.</p>
-<p><strong>Component library:</strong> GOV.UK Design System — required
-for WCAG 2.2 AA (NFR17).</p>
-<p><strong>State management:</strong> TanStack Query for server state;
-Zustand or React Context for UI state; React Hook Form for form state
-(pairs with JSR-380 backend validation via OpenAPI-generated
+<p><strong>Component library (both):</strong> GOV.UK Design System —
+required for WCAG 2.2 AA (NFR17). <code>nji-admin-ui</code> uses a
+distinct accent in its header/nav so the admin surface is visually
+unambiguous.</p>
+<p><strong>State management (both):</strong> TanStack Query for server
+state; Zustand or React Context for UI state; React Hook Form for form
+state (pairs with JSR-380 backend validation via OpenAPI-generated
 clients).</p>
-<p><strong>Routing:</strong> React Router 6.x.</p>
-<p><strong>API client:</strong> generated per backend service from the
-OpenAPI spec (<code>openapi-typescript-codegen</code> or
-<code>orval</code>). Generated clients live in the UI repo and are
-regenerated in UI CI. No shared client library across services.</p>
-<p><strong>Build tool:</strong> Vite 5.x.</p>
-<p><strong>Styling:</strong> GOV.UK Design System CSS (Sass-compiled).
-Per-component CSS modules for extensions. No Tailwind.</p>
-<p><strong>Testing:</strong> Vitest (unit) + React Testing Library
-(components) + Playwright (E2E, one suite per phase) + axe-core
-(accessibility).</p>
-<p><strong>Performance:</strong> route-based code splitting via
+<p><strong>Routing (both):</strong> React Router 6.x.</p>
+<p><strong>API client (both):</strong> generated per backend service
+from the OpenAPI spec (<code>openapi-typescript-codegen</code> or
+<code>orval</code>). Generated clients live in each UI repo and are
+regenerated in its own CI. No shared client library across services or
+between the two UI repos.</p>
+<p><strong>Build tool (both):</strong> Vite 5.x.</p>
+<p><strong>Styling (both):</strong> GOV.UK Design System CSS
+(Sass-compiled). Per-component CSS modules for extensions. No
+Tailwind.</p>
+<p><strong>Testing (both):</strong> Vitest (unit) + React Testing
+Library (components) + Playwright (E2E) + axe-core (accessibility).
+<code>nji-ui</code> has one Playwright suite per backend phase;
+<code>nji-admin-ui</code> has one suite per admin module (Reference
+Data, User &amp; Role).</p>
+<p><strong>Performance (both):</strong> route-based code splitting via
 <code>React.lazy</code> + Suspense. Vite tree-shaking and minification.
 No PWA at MVP.</p>
+<p><strong>Deployment:</strong> each UI repo is independently deployed
+to Azure Static Web Apps (or Blob Storage + CDN) on its own hostname.
+Independent rollout — admin surface can deploy without touching business
+surface, and vice versa.</p>
 <h3 id="infrastructure--deployment">Infrastructure &amp; Deployment</h3>
 <p><strong>Hosting:</strong> Azure Kubernetes Service (AKS), single
 cluster in UK South, multi-AZ node pools. Pod anti-affinity
@@ -1250,14 +1289,20 @@ production seeding, the <strong>Phase 0 Data Migration ETL</strong> at
 flagged for post-MVP refinement at G4.7.)</em></li>
 <li><strong>Phase 0 API gateway</strong> — Azure API Management with
 default rate-limit policies (TBD #1 resolution).</li>
-<li><strong>Phase 0 UI shell</strong> — Vite + React + GOV.UK Design
-System scaffolding deployed to Azure Static Web Apps.</li>
+<li><strong>Phase 0 UI shells</strong> — two Vite + React + GOV.UK
+Design System scaffolds deployed independently to Azure Static Web Apps:
+<code>nji-ui</code> (business) and <code>nji-admin-ui</code> (admin).
+<code>nji-admin-ui</code> carries the Reference Data maintenance module
+(FR6) and User &amp; Role admin module (FR4); <code>nji-ui</code>
+carries the role-scoped Home shell for business users.</li>
 <li><strong>Phases 1–8</strong> — domain services per the brainstorming
 sequence (Judge → Absence → Vacancy → Booking → Sitting → Payment →
 Itinerary → MI Feed); each adds its own tables, OpenAPI spec, Postman
-collection, UI module. <strong>No further APEX-data migration in Phases
-1–8</strong> — D3 caps data migration at Reference Data + Users/Roles
-only.</li>
+collection, and a <code>nji-ui</code> module. <strong>No further
+APEX-data migration in Phases 1–8</strong> — D3 caps data migration at
+Reference Data + Users/Roles only. <code>nji-admin-ui</code> evolves
+only when admin surfaces grow (e.g. activation flag dashboard in Phase
+9+).</li>
 <li><strong>Pre-Phase-9 — Real HMCTS IdP integration cutover</strong> —
 confirm G1.1, G1.2 (client_credentials for batch — re-opened v2.6),
 G1.3. Switch staging <code>issuer-url</code> from mock auth to HMCTS IdP
@@ -1388,9 +1433,15 @@ SQL.</li>
 <li>Migrated transactional history stays in APEX; NJI tables are empty
 at region cutover.</li>
 </ul>
-<p><strong>UI Boundaries:</strong> single SPA, multiple per-domain
-modules; each module imports its generated API client; cross-module
-communication via TanStack Query cache + React Context.</p>
+<p><strong>UI Boundaries:</strong> <strong>two SPAs</strong> (v2.10) —
+<code>nji-ui</code> (business) and <code>nji-admin-ui</code> (admin).
+Each SPA contains multiple modules; each module imports its generated
+API client; cross-module communication via TanStack Query cache + React
+Context. No code-sharing between the two SPAs — same stack and
+conventions, but independent repos, pipelines, and deployments. Admin
+workflows (Reference Data maintenance per FR6, User &amp; Role admin per
+FR4) live exclusively in <code>nji-admin-ui</code> and never appear in
+<code>nji-ui</code>'s nav.</p>
 <p><strong>External Systems:</strong> HMCTS IdP (every authentication);
 JFEPS/Liberata (outbound only via Notification → email); HMCTS Email
 (outbound only); APEX during build (manual UAT only); APEX during
@@ -1411,12 +1462,16 @@ Mapping</h3>
 <td><code>nji-authorisation</code> repo + per-service
 <code>config/JWTFilter.java</code>,
 <code>config/AuthDetails.java</code>,
-<code>client/AuthorisationClient.java</code></td>
+<code>client/AuthorisationClient.java</code>. <strong>FR4 (User &amp;
+Role admin)</strong> surface lives in <code>nji-admin-ui</code> — not in
+<code>nji-ui</code>.</td>
 </tr>
 <tr>
 <td>Foundational Data Management (FR6–FR9)</td>
 <td><code>nji-reference-data</code>, <code>nji-notification</code> repos
 + per-service direct JPA reads from the 15 Reference Data tables.
+<strong>FR6 (Reference Data maintenance)</strong> surface lives in
+<code>nji-admin-ui</code> — not in <code>nji-ui</code>.
 <strong>Configuration</strong>: per-service Spring profiles + Key Vault;
 shared <code>configuration_values</code> table (no API) for
 cross-service policy values, schema-managed by
@@ -1529,9 +1584,11 @@ Core); spec published as Maven artefact
 </table>
 <h3 id="integration-points--internal-communication">Integration Points —
 Internal Communication</h3>
-<pre><code>              ┌───────────────────┐
-              │   nji-ui (SPA)    │
-              └─────────┬─────────┘
+<pre><code>      ┌──────────────────────┐    ┌────────────────────────┐
+      │   nji-ui (business)  │    │ nji-admin-ui (admin)   │
+      └──────────┬───────────┘    └────────────┬───────────┘
+                 │                              │
+                 └──────────┬───────────────────┘
                         │ HTTPS
               ┌─────────▼─────────┐
               │ Azure API         │
@@ -1771,8 +1828,9 @@ id="implementation-readiness-validation-white_check_mark">Implementation
 Readiness Validation ✅</h3>
 <p>All 7 architecture-phase TBDs from the PRD are resolved (see <em>TBDs
 Resolved by This Step</em>).</p>
-<p><strong>Structure:</strong> 14 repos with per-repo trees; per-service
-standard layout to file level; UI repo with per-domain modules;
+<p><strong>Structure:</strong> 15 repos with per-repo trees; per-service
+standard layout to file level; two UI repos (<code>nji-ui</code>
+business + <code>nji-admin-ui</code> admin) with per-module structure;
 architecture repo with ADRs/scaffolding/aggregated specs; isolated
 mock-auth repo; integration points mapped; requirements-to-structure
 mapping covers all 9 FR capability areas.</p>

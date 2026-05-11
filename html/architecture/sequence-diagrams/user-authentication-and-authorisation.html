@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>User authentication + per-request authorisation — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../../architecture.html">Architecture (index)</a></li>
+<li><a href="../../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../../architecture/conventions.html">Conventions</a></li>
+<li><a href="../../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html" class="current">Authentication & authorisation</a></li>
+<li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../../architecture/gaps.html">Gaps</a></li>
+<li><a href="../../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../../epics.html">Epics & Stories</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="user-authentication--per-request-authorisation">User
+authentication + per-request authorisation</h1>
+<p>Sequence diagram of the cross-cutting authentication and per-request
+authorisation flow that underpins every user-initiated interaction in
+NJI. A user authenticates once at the HMCTS IdP (or
+<code>nji-mock-auth</code> in non-prod); the issued JWT is then
+forwarded by the UI on every subsequent API call. Each backend service's
+custom <code>JWTFilter</code> validates the token against the issuer's
+JWKS endpoint and asks <code>nji-authorisation</code> to resolve the
+principal's roles, Region/Area scope, and per-region activation flag
+before the controller is allowed to run.</p>
+<p>This is the cross-cutting flow that the other sequence diagrams (<a
+href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>,
+<a
+href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>,
+<a
+href="./judge-onboarding-and-sitting-generation.html"><code>./judge-onboarding-and-sitting-generation.md</code></a>,
+<a
+href="./salaried-sitting-confirmation.html"><code>./salaried-sitting-confirmation.md</code></a>,
+<a
+href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>,
+<a
+href="./mi-feed-and-reports-consumption.html"><code>./mi-feed-and-reports-consumption.md</code></a>,
+<a
+href="./admin-maintenance-flows.html"><code>./admin-maintenance-flows.md</code></a>)
+explicitly omit for clarity. Read this diagram once; treat it as
+implicit on every API call shown in the others.</p>
+<p>Three phases: (1) login + JWT issuance; (2) per-service JWT
+validation against JWKS; (3) per-request <code>authz/check</code>
+resolving roles + scope + activation flag.</p>
+<h2 id="not-in-this-diagram">Not in this diagram</h2>
+<ul>
+<li><strong>Service-principal authentication</strong> for batch
+components — <code>nji-payment-batch</code> uses OAuth
+<code>client_credentials</code> rather than the human SSO flow. See <a
+href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>
+Phase 1.</li>
+<li><strong>Mock-auth internal mechanics</strong> (signing keys, token
+issuance, JWKS publication) — implementation detail. The mock-auth
+surface is OIDC-conformant; how it produces tokens is out of scope
+here.</li>
+<li><strong>Token refresh / expiry handling</strong> in the UI —
+standard OIDC behaviour; not NJI-specific.</li>
+<li><strong>Sign-out</strong> — clears the local session; not a
+server-side flow worth diagramming.</li>
+</ul>
+<h2 id="cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
+omitted for clarity</h2>
+<ul>
+<li>All UI → service calls flow through Azure API Management. APIM is
+omitted from the arrows below; assume every UI → service arrow passes
+through it (rate-limit policies, header injection,
+<code>/actuator/*</code> restriction).</li>
+<li>The two UIs (<code>nji-ui</code> and <code>nji-admin-ui</code>)
+follow the same auth pattern. The diagram uses "UI" generically.</li>
+</ul>
+<p><img src="./user-authentication-and-authorisation.png"
+alt="User authentication + per-request authorisation sequence" /></p>
+<p><em>Source: <a
+href="./user-authentication-and-authorisation.mmd"><code>./user-authentication-and-authorisation.mmd</code></a>
+(Mermaid). Regenerate with
+<code>mmdc -i user-authentication-and-authorisation.mmd -o user-authentication-and-authorisation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<h2 id="phase-summary">Phase summary</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Driver</th>
+<th>Architectural rule</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 — Login + JWT issuance</td>
+<td>User</td>
+<td>OIDC <code>authorization_code</code> against HMCTS IdP (mock-auth in
+non-prod)</td>
+<td>UI holds a short-lived JWT for the session</td>
+</tr>
+<tr>
+<td>2 — Per-service JWT validation</td>
+<td>Any backend service</td>
+<td>Custom <code>JWTFilter</code> validates JWT signature against
+issuer's JWKS endpoint (cached per service)</td>
+<td>Token integrity + expiry verified before any controller logic
+runs</td>
+</tr>
+<tr>
+<td>3 — Per-request authz check</td>
+<td>Any backend service</td>
+<td><code>JWTFilter</code> calls <code>nji-authorisation</code>
+<code>POST /authz/check</code>; resolves principal → roles + Region/Area
+scope + <code>auth_user_activation_flags</code> (FR58); populates
+request-scoped <code>AuthDetails</code> bean</td>
+<td>Controller method invoked with authorised principal in scope; or 403
+if not active for the region</td>
+</tr>
+</tbody>
+</table>
+<h2 id="where-to-find-more-detail">Where to find more detail</h2>
+<table>
+<thead>
+<tr>
+<th>Detail</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Authentication &amp; Security model (JWT propagation pattern, JWKS
+validation, mock-auth in non-prod, HMCTS IdP in production)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code>
+→ Step 4 <em>Authentication &amp; Security</em></a></td>
+</tr>
+<tr>
+<td><code>JWTFilter</code> per-service implementation pattern and
+<code>AuthDetails</code> request-scoped bean</td>
+<td><a
+href="../starter-template.html"><code>../starter-template.md</code> →
+Per-service NJI Conventions</a>; <a
+href="../repo-structure.html"><code>../repo-structure.md</code>
+per-service <code>config/JWTFilter.java</code>,
+<code>config/AuthDetails.java</code></a></td>
+</tr>
+<tr>
+<td>Authorisation tables (<code>auth_users</code>,
+<code>auth_roles</code>, <code>auth_user_roles</code>,
+<code>auth_user_region_scopes</code>,
+<code>auth_user_activation_flags</code>)</td>
+<td><a
+href="../data-tables.html"><code>../data-tables.md</code></a></td>
+</tr>
+<tr>
+<td>FR1, FR2, FR3 (Identity &amp; Authorisation) and NFR12 <em>(revised
+v2.6)</em>, NFR13</td>
+<td>PRD <code>FR1</code>–<code>FR3</code>, <code>NFR12</code>,
+<code>NFR13</code></td>
+</tr>
+<tr>
+<td>Per-region phased activation (FR58) and the wave-cutover semantics
+it enforces</td>
+<td>PRD <code>FR58</code>; <a
+href="../../architecture.html"><code>../../architecture.md</code> → Step
+4 <em>Deployment topology</em></a></td>
+</tr>
+<tr>
+<td>Mock-auth scope and production-issuer open question</td>
+<td><a href="../gaps.html"><code>../gaps.md</code> G1.1, G1.2,
+G7.1</a></td>
+</tr>
+<tr>
+<td>Two-UI repo split (both <code>nji-ui</code> and
+<code>nji-admin-ui</code> follow the same pattern)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code>
+→ Step 4 <em>Frontend Architecture</em></a> — v2.10</td>
+</tr>
+</tbody>
+</table>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/user-authentication-and-authorisation.md</code></p>
+</main>
+</body>
+</html>

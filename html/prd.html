@@ -69,8 +69,14 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 </ul>
 <h3>Sequence Diagrams</h3>
 <ul>
+<li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
 <li><a href="./architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="./architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
 <li><a href="./architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="./architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="./architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 <h3>Open Items</h3>
 <ul>
@@ -82,6 +88,10 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <ul>
 <li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
 <li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="./epics.html">Epics & Stories</a></li>
 </ul></aside>
 <main class="content">
 <h1 id="product-requirements-document---ji-analysis">Product
@@ -1309,9 +1319,14 @@ issuer, Azure Workload Identity, mTLS, and (if HMCTS IdP supports it)
 <li><strong>FR6</strong>: RSU users can view and maintain Reference Data
 lists — Regions, Offices, judicial vocabularies, calendar /
 financial-year boundaries — with named-owner sign-off on changes.</li>
-<li><strong>FR7</strong>: Every NJI service can read Reference Data via
-a versioned API; Reference Data is the single writer (no duplicates
-anywhere in the system).</li>
+<li><strong>FR7</strong> <em>(revised 2026-05-11)</em>: Every NJI
+service reads Reference Data via <strong>direct SQL</strong> on the
+shared schema's Reference Data tables (15 tables, SELECT-granted to each
+service's DB role) — no client class, no API fan-out, no cache (per
+architecture Principle 2). Reference Data is the <strong>single
+writer</strong> — all writes (Phase 0 ETL load + ongoing RSU maintenance
+per FR6) go through the versioned Reference Data API. No service holds
+duplicate or cached copies of Reference Data in its own tables.</li>
 <li><strong>FR8</strong> <em>(revised v2.2, 2026-05-07)</em>:
 Cross-service runtime policy values (e.g. session timeout warnings,
 batch schedules, feature flags) are stored in a shared
@@ -1423,8 +1438,16 @@ AM/PM with different work types within a single day.</li>
 <li><strong>FR39</strong>: Authorised users can create ad-hoc sittings
 for salaried judges, including DJ(MC)s and Legal Advisers in County
 Courts.</li>
-<li><strong>FR40</strong>: Verifiers can verify confirmed sittings; once
-verified, the data is read-only and amendments require an RFC.</li>
+<li><strong>FR40</strong> <em>(revised 2026-05-11)</em>: Verifiers can
+verify confirmed sittings; once verified, the data is read-only.
+Amendments after verification require <strong>re-opening</strong> the
+sitting via a UI re-open action gated by a distinct authorised role —
+the re-opener must be different from the original confirmer (SIT-NFR-02)
+and from a standard Verifier (at MVP, the permission is granted to RSU
+Admin only). The action captures a mandatory justification field and is
+fully audited (who, when, why, which sittings). No external
+Request-for-Change ticketing process — re-open is a first-class UI
+action with RBAC controls.</li>
 </ul>
 <h3 id="payment--reconciliation">Payment &amp; Reconciliation</h3>
 <ul>
@@ -1913,10 +1936,6 @@ data</td>
 <td><strong>OPT</strong></td>
 <td>One Performance Truth; the broader Oracle/APEX platform JI sits
 on</td>
-</tr>
-<tr>
-<td><strong>RFC</strong></td>
-<td>Request for Change (process for amending verified sitting data)</td>
 </tr>
 <tr>
 <td><strong><a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC

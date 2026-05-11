@@ -101,7 +101,11 @@ nji-{service}/
 └── .editorconfig
 ```
 
-## Complete Project Directory Structure — UI repo
+## Complete Project Directory Structure — UI repos
+
+There are **two UI repos** with the same stack and conventions: `nji-ui` (business-user-facing) and `nji-admin-ui` (admin-facing). The split exists so admin workflows (Reference Data maintenance, User & Role admin) cannot leak into business users' nav, and so each has its own CI/CD, CODEOWNERS, and rollout cadence. `nji-admin-ui` mirrors the structure below, with admin modules replacing the per-domain operational modules.
+
+### `nji-ui` (business)
 
 ```
 nji-ui/
@@ -181,6 +185,73 @@ nji-ui/
     ├── README.md
     └── decisions/                               (UI-specific ADRs)
 ```
+
+### `nji-admin-ui` (admin)
+
+Same scaffolding as `nji-ui` above — React + TypeScript + Vite + Vitest + Playwright, GOV.UK Design System, OIDC client, RFC 9457 error handling, axe-core in CI — but with admin modules instead of per-domain operational modules.
+
+```
+nji-admin-ui/
+├── (same top-level scaffolding as nji-ui: package.json, vite.config.ts, etc.)
+├── src/
+│   ├── main.tsx
+│   ├── App.tsx
+│   ├── routes.tsx
+│   ├── modules/                                 (admin modules only)
+│   │   ├── home/
+│   │   │   ├── pages/AdminHomePage.tsx          (admin-scoped Home; system administrator role)
+│   │   │   └── index.ts
+│   │   ├── reference-data/                      (FR6 — RSU-with-admin-rights and system administrators)
+│   │   │   ├── pages/RegionsAdminPage.tsx
+│   │   │   ├── pages/OfficesAdminPage.tsx
+│   │   │   ├── pages/VocabulariesAdminPage.tsx  (12 judicial vocabularies)
+│   │   │   ├── pages/CalendarAdminPage.tsx      (financial-year boundaries, calendar periods)
+│   │   │   ├── components/NamedOwnerSignOff.tsx (cross-cutting sign-off pattern per FR6)
+│   │   │   ├── hooks/useReferenceDataAdmin.ts
+│   │   │   ├── api/                             (generated TypeScript client from nji-reference-data OpenAPI)
+│   │   │   └── index.ts
+│   │   └── users-roles/                         (FR4 — system administrators)
+│   │       ├── pages/UserListPage.tsx
+│   │       ├── pages/UserDetailPage.tsx          (role assignment, Region/Area scope)
+│   │       ├── components/RoleAssignmentEditor.tsx
+│   │       ├── hooks/useUserAdmin.ts
+│   │       ├── api/                             (generated TypeScript client from nji-authorisation OpenAPI)
+│   │       └── index.ts
+│   ├── shared/                                  (mirrors nji-ui — auth, http client, error handling, layout)
+│   │   ├── components/Layout.tsx                 (Admin-specific Header marking this as the admin surface)
+│   │   ├── hooks/useAuth.ts
+│   │   ├── auth/HmctsIdpProvider.tsx
+│   │   ├── auth/ProtectedRoute.tsx               (gates routes by admin role from nji-authorisation)
+│   │   └── api/httpClient.ts
+│   └── styles/
+│       ├── govuk.scss
+│       └── admin-overrides.scss                  (visual marker: admin surface — distinct accent for the header / nav)
+├── tests/
+│   ├── unit/                                    (Vitest)
+│   └── e2e/                                     (Playwright)
+│       ├── reference-data.spec.ts
+│       └── users-roles.spec.ts
+├── api-clients/                                 (generated; regenerated in CI from nji-reference-data + nji-authorisation OpenAPI specs)
+│   ├── reference-data-client/
+│   └── authorisation-client/
+├── helm/                                        (Helm chart for Static Web App / CDN deployment — separate from nji-ui)
+├── .github/
+│   ├── CODEOWNERS                                (admin-team scoped; distinct from nji-ui)
+│   └── workflows/
+│       ├── ci.yml                                (build + test + lint + axe-core)
+│       └── deploy-{env}.yml
+└── docs/
+    ├── README.md
+    └── decisions/                                (admin-UI-specific ADRs)
+```
+
+**Future admin surfaces reserved** (not built at MVP — placeholders only):
+
+- `modules/activation/` — per-region activation flag dashboard (FR58 admin side)
+- `modules/migration-reports/` — Phase 0 reconciliation report viewer (FR57)
+- `modules/audit/` — post-MVP user-action audit viewer (D7 roadmap)
+
+**Deployment:** independent of `nji-ui`. Same Azure Static Web Apps pattern, separate hostname (e.g. `admin.nji.hmcts.gov.uk` vs `nji.hmcts.gov.uk`), separate Helm release, separate per-environment rollout.
 
 ## Complete Project Directory Structure — `nji-architecture` repo
 

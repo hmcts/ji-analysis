@@ -1,0 +1,39 @@
+%%{init: {'theme': 'default', 'sequence': {'actorFontSize': 22, 'actorFontWeight': 'bold', 'messageFontSize': 20, 'noteFontSize': 18, 'mirrorActors': false, 'actorMargin': 60, 'boxMargin': 12, 'messageMargin': 40, 'wrap': true}}}%%
+sequenceDiagram
+    autonumber
+
+    actor User as Judge / Court / RSU
+
+    participant UI as nji-ui itinerary module
+    participant Itin as nji-itinerary
+    participant Authz as nji-authorisation
+    participant DB as Shared schema
+    participant OwnSvc as Owning service
+
+    rect rgb(232, 240, 250)
+        Note over User,OwnSvc: Phase 1 — Request and authorisation scoping
+        User->>UI: open Court Itinerary, Judge Itinerary, or Forward Look
+        UI->>Itin: GET /v1/itineraries/... with office + FY + month, or judge + range, or region for Forward Look
+        Itin->>Authz: POST /authz/check to resolve principal scope per FR2 and R2
+        Authz-->>Itin: roles plus Region/Area scope. Judge sees own, Court sees office, RSU sees region.
+    end
+
+    rect rgb(232, 250, 232)
+        Note over User,OwnSvc: Phase 2 — SQL JOIN federated read on shared schema, Strategy A
+        Note right of Itin: No fan-out API calls. JOIN respects per-service SELECT grants. Bounded by NFR8 at 30 s p95 for Forward Look.
+        Itin->>DB: SQL JOIN over judges, working_patterns, absences, vacancies, bookings, sittings
+        DB-->>Itin: result set scoped to auth by region, office, or judge subset
+        Itin->>Itin: compose itinerary cells, tag each cell with underlying record type and ID
+        Itin-->>UI: 200 itinerary view with clickable cells
+    end
+
+    rect rgb(250, 240, 230)
+        Note over User,OwnSvc: Phase 3 — Drill-down deep-link per FR51
+        User->>UI: click a sitting, absence, vacancy, or booking cell
+        UI->>OwnSvc: GET /v1/{resource}/{id} on owning service
+        OwnSvc->>OwnSvc: validate JWT and authz, same cross-cutting pattern
+        OwnSvc-->>UI: 200 record detail
+        UI-->>User: render detail view
+    end
+
+    Note over User,OwnSvc: NFR37 fallback, designed but not built unless NFR8 breached. Strategy C — nji-itinerary holds a cached projection refreshed on a configured cadence with Cache-Control and Age headers.

@@ -516,7 +516,7 @@ This section is the binding capability contract for NJI. UX, architecture, and e
 ### Foundational Data Management
 
 - **FR6**: RSU users can view and maintain Reference Data lists — Regions, Offices, judicial vocabularies, calendar / financial-year boundaries — with named-owner sign-off on changes.
-- **FR7**: Every NJI service can read Reference Data via a versioned API; Reference Data is the single writer (no duplicates anywhere in the system).
+- **FR7** *(revised 2026-05-11)*: Every NJI service reads Reference Data via **direct SQL** on the shared schema's Reference Data tables (15 tables, SELECT-granted to each service's DB role) — no client class, no API fan-out, no cache (per architecture Principle 2). Reference Data is the **single writer** — all writes (Phase 0 ETL load + ongoing RSU maintenance per FR6) go through the versioned Reference Data API. No service holds duplicate or cached copies of Reference Data in its own tables.
 - **FR8** *(revised v2.2, 2026-05-07)*: Cross-service runtime policy values (e.g. session timeout warnings, batch schedules, feature flags) are stored in a shared `configuration_values` infrastructure table, schema-managed by `nji-architecture`'s Flyway baseline migration and SELECT-granted to every NJI service DB role. Updates are made via Flyway migrations or direct admin SQL — no API service. Per-service configuration scoped to a single service uses Spring profiles + `application.yml` + Azure Key Vault.
 - **FR9**: NJI dispatches transactional emails (booking acknowledgements, absence acknowledgements, payment schedules) via HMCTS email infrastructure, with a delivery log retained.
 
@@ -564,7 +564,7 @@ This section is the binding capability contract for NJI. UX, architecture, and e
 - **FR37**: Authorised users can confirm that a sitting actually took place, updating outcome (confirmed, cancelled, rejected) and actual work type.
 - **FR38**: Authorised users can split a sitting into AM/PM with different work types within a single day.
 - **FR39**: Authorised users can create ad-hoc sittings for salaried judges, including DJ(MC)s and Legal Advisers in County Courts.
-- **FR40**: Verifiers can verify confirmed sittings; once verified, the data is read-only and amendments require an RFC.
+- **FR40** *(revised 2026-05-11)*: Verifiers can verify confirmed sittings; once verified, the data is read-only. Amendments after verification require **re-opening** the sitting via a UI re-open action gated by a distinct authorised role — the re-opener must be different from the original confirmer (SIT-NFR-02) and from a standard Verifier (at MVP, the permission is granted to RSU Admin only). The action captures a mandatory justification field and is fully audited (who, when, why, which sittings). No external Request-for-Change ticketing process — re-open is a first-class UI action with RBAC controls.
 
 ### Payment & Reconciliation
 
@@ -705,7 +705,6 @@ These are the 9 locked decisions taken during the 2026-05-05 brainstorming follo
 | **NTBF** | Not To Be Filled (an absence flag — cover not required) |
 | **OIDC** | OpenID Connect (an authentication protocol) |
 | **OPT** | One Performance Truth; the broader Oracle/APEX platform JI sits on |
-| **RFC** | Request for Change (process for amending verified sitting data) |
 | **[RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457)** | IETF specification for Problem Details for HTTP APIs (current; obsoletes RFC 7807) |
 | **[RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745)** | IETF specification for the HTTP `Deprecation` response header (March 2025) |
 | **[RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594)** | IETF specification for the HTTP `Sunset` response header |

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Itinerary federated read — Court Itinerary, Judge Itinerary, Forward Look — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../../architecture.html">Architecture (index)</a></li>
+<li><a href="../../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../../architecture/conventions.html">Conventions</a></li>
+<li><a href="../../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html" class="current">Itinerary federated read</a></li>
+<li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../../architecture/gaps.html">Gaps</a></li>
+<li><a href="../../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../../epics.html">Epics & Stories</a></li>
+</ul></aside>
+<main class="content">
+<h1
+id="itinerary-federated-read--court-itinerary-judge-itinerary-forward-look">Itinerary
+federated read — Court Itinerary, Judge Itinerary, Forward Look</h1>
+<p>Sequence diagram of how itinerary views are served by
+<code>nji-itinerary</code>. The service holds <strong>no own
+tables</strong> — it composes Court Itinerary, Judge Itinerary, and
+Forward Look views by SQL-JOINing across <code>judges</code>,
+<code>working_patterns</code>, <code>absences</code>,
+<code>vacancies</code>, <code>bookings</code>, and <code>sittings</code>
+on the shared schema (architecture Principle 1). This is the canonical
+<em>Strategy A federated read</em> pattern; NFR8 bounds it at ≤ 30 s p95
+for Forward Look across a Region, with NFR37 specifying Strategy C
+cached projection as the documented fallback if measurement breaches
+NFR8.</p>
+<p>The as-is equivalents are Module 3 <em>Court Itinerary</em>, Module 4
+<em>Judge Itinerary</em>, and the JFL <em>Judges Forward Look</em>
+sub-module in <a
+href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a>.</p>
+<p>Three phases: (1) request + authorisation scoping; (2) SQL JOIN
+federated read; (3) drill-down deep-link into the underlying record.</p>
+<h2 id="not-in-this-diagram">Not in this diagram</h2>
+<ul>
+<li><strong>Strategy C cache fallback</strong> — designed and documented
+(NFR37) but not built unless measurement shows NFR8 breached. Adding it
+would introduce a cache invalidation flow and a freshness header pattern
+(<code>Cache-Control</code> + <code>Age</code>) — out of scope for the
+MVP architectural diagram.</li>
+<li><strong>Excel / PDF export</strong> (FR52) — a separate render step
+on top of the same data; same shape as Phase 2's read, then
+format-shifted. Not drawn separately.</li>
+<li><strong>Home dashboard tile aggregation</strong> (FR55) — same
+pattern as this diagram with different aggregations; functionally a
+sub-case of Court Itinerary monthly view.</li>
+<li><strong>Cross-Region judge linking display</strong> (FR18) — the
+federated read shows linked-judge sittings transparently; the linking
+record itself is created in <a
+href="./judge-onboarding-and-sitting-generation.html"><code>./judge-onboarding-and-sitting-generation.md</code></a>.</li>
+</ul>
+<h2 id="cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
+omitted for clarity</h2>
+<ul>
+<li><strong>Authentication + per-request authorisation</strong> — User's
+JWT is validated by <code>nji-itinerary</code>'s <code>JWTFilter</code>
+and resolved to a principal with roles + Region/Area scope.
+<strong>Authorisation scoping is critical</strong> for this flow: judges
+see only their own itinerary (R2), courts see their office, RSU sees
+their region. The diagram's "auth scoping" note captures the
+architectural rule; full mechanics are in <a
+href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
+<li>All UI → service calls flow through Azure API Management.</li>
+<li>Drill-down requests to the underlying service (e.g.
+<code>nji-sitting</code> for a sitting cell click) follow the same auth
+pattern.</li>
+</ul>
+<p><img src="./itinerary-federated-read.png"
+alt="Itinerary federated read sequence" /></p>
+<p><em>Source: <a
+href="./itinerary-federated-read.mmd"><code>./itinerary-federated-read.mmd</code></a>
+(Mermaid). Regenerate with
+<code>mmdc -i itinerary-federated-read.mmd -o itinerary-federated-read.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<h2 id="phase-summary">Phase summary</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Driver</th>
+<th>Architectural rule</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 — Request + authorisation scoping</td>
+<td>User (Judge / Court / RSU)</td>
+<td>FR48–FR50 — select Office + Financial Year + Month (Court
+Itinerary), Judge + date range (Judge Itinerary), or Region (Forward
+Look). <code>nji-authorisation</code> returns roles + Region/Area scope
+per FR2/R2.</td>
+<td><code>nji-itinerary</code> receives the request with the authorised
+scope (e.g. RSU sees own region; Judge sees only own profile)</td>
+</tr>
+<tr>
+<td>2 — SQL JOIN federated read</td>
+<td><code>nji-itinerary</code> (no own tables)</td>
+<td>Principle 1 + 2 — direct SQL JOINs across <code>judges</code>,
+<code>working_patterns</code>, <code>absences</code>,
+<code>vacancies</code>, <code>bookings</code>, <code>sittings</code>;
+respects per-service SELECT grants; bounded by NFR8 (≤ 30 s p95)</td>
+<td>Composed itinerary cells returned to UI, each cell tagged with the
+underlying record type + ID for drill-down</td>
+</tr>
+<tr>
+<td>3 — Drill-down deep-link</td>
+<td>User</td>
+<td>FR51 — itinerary cells are clickable; UI navigates to the underlying
+record's detail view in the owning module (Sitting / Absence / Vacancy /
+Booking)</td>
+<td>User sees the underlying record (e.g. opens the
+<code>nji-sitting</code> confirmation screen for a sitting cell, or the
+<code>nji-absence</code> detail for an absence cell)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="where-to-find-more-detail">Where to find more detail</h2>
+<table>
+<thead>
+<tr>
+<th>Detail</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-itinerary</code> repo purpose and key functions (no own
+tables — SQL JOINs)</td>
+<td><a
+href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
+Phase 7 row</td>
+</tr>
+<tr>
+<td>Strategy A federated read and Strategy C cache fallback (NFR8 +
+NFR37)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code>
+→ Step 4 <em>Data Architecture</em></a>; PRD <code>NFR8</code>,
+<code>NFR37</code></td>
+</tr>
+<tr>
+<td>Per-service DB SELECT grants underpinning the SQL JOINs</td>
+<td><a href="../data-tables.html"><code>../data-tables.md</code> →
+Authoritative Table Ownership Mapping</a></td>
+</tr>
+<tr>
+<td>Authorisation scoping per role (R2 — judges see own; courts see
+office; RSU sees region)</td>
+<td>PRD <code>FR2</code>, <code>FR49</code>; <a
+href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
+Phase 3</td>
+</tr>
+<tr>
+<td>Itinerary UI module structure</td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
+<code>nji-ui/src/modules/itinerary/</code></a></td>
+</tr>
+<tr>
+<td>Upstream producers — judge profiles + working-pattern-driven
+sittings</td>
+<td><a
+href="./judge-onboarding-and-sitting-generation.html"><code>./judge-onboarding-and-sitting-generation.md</code></a></td>
+</tr>
+<tr>
+<td>Upstream producers — operational workflow records</td>
+<td><a
+href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>;
+<a
+href="./salaried-sitting-confirmation.html"><code>./salaried-sitting-confirmation.md</code></a></td>
+</tr>
+<tr>
+<td>Related read flow — MI Feed / Reports (same
+SQL-JOIN-on-shared-schema pattern but aggregate-only)</td>
+<td><a
+href="./mi-feed-and-reports-consumption.html"><code>./mi-feed-and-reports-consumption.md</code></a></td>
+</tr>
+<tr>
+<td>As-is equivalents (Module 3 Court Itinerary, Module 4 Judge
+Itinerary + JFL)</td>
+<td><a
+href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code>
+→ Modules 3, 4</a></td>
+</tr>
+</tbody>
+</table>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/itinerary-federated-read.md</code></p>
+</main>
+</body>
+</html>

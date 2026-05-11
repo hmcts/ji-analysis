@@ -69,8 +69,14 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 </ul>
 <h3>Sequence Diagrams</h3>
 <ul>
+<li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
 <li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
 <li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 <h3>Open Items</h3>
 <ul>
@@ -82,6 +88,10 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <ul>
 <li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../epics.html">Epics & Stories</a></li>
 </ul></aside>
 <main class="content">
 <h1 id="architecture-changelog">Architecture Changelog</h1>
@@ -169,6 +179,96 @@ href="../architecture.html"><code>../architecture.md</code></a></td>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><strong>v2.11 — Retire the RFC process; post-verification sitting
+amendments handled via UI re-open + RBAC</strong></td>
+<td>2026-05-11</td>
+<td><strong>Process change</strong>: the as-is APEX "Request for Change
+(RFC)" external workflow for amending verified sittings is
+<strong>retired in NJI</strong>. Post-verification amendments are
+handled inside the UI by a <strong>re-open action gated by
+RBAC</strong>, with mandatory in-form justification and full audit. The
+<code>sitting:re-open</code> permission is granted to <strong>RSU Admin
+only at MVP</strong> — distinct from the original confirmer (SIT-NFR-02
+extended) and from a standard Verifier. <strong>API rename</strong>:
+<code>POST /v1/sittings/rfc-unlock</code> →
+<code>POST /v1/sittings/{id}/re-open</code> (body carries the
+justification). <strong>Glossary</strong>: PRD <code>RFC</code> entry
+removed. <strong>Why</strong>: in the as-is system, RFC was an
+out-of-system ticketing workflow that gated who could request and who
+could approve. NJI's first-class RBAC model (FR2) and per-request
+<code>authz/check</code> make that ticketing unnecessary — the same gate
+is achievable inside the UI with a permission, a justification field,
+and an audit row. Reduces friction and brings amendment handling into
+the same trace as every other write.</td>
+<td><a href="../../prd.html">PRD <code>FR40</code> reworded; PRD
+glossary <code>RFC</code> entry removed</a>; <a
+href="./functional-requirements-coverage.html"><code>./functional-requirements-coverage.md</code>
+FR40</a>; <a
+href="./repository-strategy.html"><code>./repository-strategy.md</code>
+<code>nji-sitting</code> row</a>; <a
+href="./sequence-diagrams/salaried-sitting-confirmation.html"><code>./sequence-diagrams/salaried-sitting-confirmation.md</code>
+narrative + Phase 4 summary row + "Not in this diagram" entry</a>; <a
+href="./sequence-diagrams/salaried-sitting-confirmation.mmd"><code>./sequence-diagrams/salaried-sitting-confirmation.mmd</code>
+Phase 4 redrawn — actor changed from Programme Admin to RSU Admin;
+endpoint renamed; justification + audit captured (PNG regenerated)</a>;
+epics.md FR40 <em>(revised)</em> + Phase 5 area scope updated</td>
+</tr>
+<tr>
+<td><strong>v2.10 — Split UI into two repos: <code>nji-ui</code>
+(business) and <code>nji-admin-ui</code> (admin)</strong></td>
+<td>2026-05-11</td>
+<td><strong>Frontend boundary change</strong> — the single
+<code>nji-ui</code> SPA is split into two independently-deployed SPAs
+separated by audience: <code>nji-ui</code> (business-user-facing: Judge,
+Absence, Vacancy, Booking, Sitting, Payment, Itinerary, Reports +
+business Home shell per FR55) and <code>nji-admin-ui</code>
+(admin-facing: Reference Data maintenance per FR6, User &amp; Role admin
+per FR4). Same stack and conventions for both (React + TypeScript + Vite
++ Vitest + Playwright + GOV.UK Design System + OIDC + RFC 9457 error
+handling), but distinct repos, CI/CD, CODEOWNERS, deployments, and
+hostnames. <strong>Polyrepo count: 14 → 15.</strong> Future admin
+surfaces reserved as module placeholders in <code>nji-admin-ui</code>:
+activation flag dashboard (FR58 admin), migration reconciliation viewer
+(FR57), post-MVP audit viewer (D7 roadmap). <strong>Why</strong>: admin
+work has a different audience (system administrators, not
+RSU/Court/Judges), different change cadence (lower, higher stakes), and
+different review posture; separating at the repo boundary prevents
+accidental nav leakage of admin-only screens into business users' UI and
+gives independent rollout. Consistent with the backend's per-service
+polyrepo discipline: minimise shared code, accept duplication, gain
+independence. No backend changes; admin gating is enforced server-side
+at <code>nji-authorisation</code> via role assignment, with the
+repo-level boundary as defence-in-depth.</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+4 <em>Frontend Architecture</em> (split into two-repos preamble +
+per-repo callouts + independent-deployment paragraph); Step 6 <em>UI
+Boundaries</em> (single SPA → two SPAs); Step 6 <em>Integration Points —
+Internal</em> (ASCII diagram updated to show both UIs); Step 6
+<em>Requirements to Structure Mapping</em> (FR4 + FR6 rows annotated
+with admin UI location); Step 4 <em>Decision Impact Analysis —
+Implementation Sequence</em> (Phase 0 UI shell → two shells); Step 7
+<em>Validation Strengths</em> (14 → 15 repos)</a>; <a
+href="./repository-strategy.html"><code>./repository-strategy.md</code>
+Polyrepo intro (14 → 15 repos); Repository List (new
+<code>nji-admin-ui</code> row + <code>nji-ui</code> description
+tightened to business-only); 14-repo total → 15-repo total; new "Why
+split admin and business UI" paragraph</a>; <a
+href="./repo-structure.html"><code>./repo-structure.md</code> "Complete
+Project Directory Structure — UI repo" → "UI repos" with
+<code>nji-ui</code> (business) sub-section + new
+<code>nji-admin-ui</code> (admin) sub-section showing admin module
+structure + future-surface placeholders</a>; <a
+href="./functional-requirements-coverage.html"><code>./functional-requirements-coverage.md</code>
+FR1–FR5 architectural support (FR4 admin UI annotated) + FR6–FR9
+architectural support (FR6 admin UI annotated)</a>; epics.md AR1
+<em>(repo count revised)</em>, AR42–AR45 <em>(revised to describe both
+repos)</em>, AR45b <em>(new — independent deployment)</em>; Phase × Area
+summary (UI Foundation row split into Business UI Foundation + Admin UI
+Foundation); Phase 0 areas (Reference Data scope clarifies admin UI
+lives in <code>nji-admin-ui</code>; UI Foundation renamed to "Business
+UI Foundation"; new "Admin UI Foundation" area added)</td>
+</tr>
 <tr>
 <td><strong>v2.9 — DB-level detail consolidated to Data Architecture;
 vocabulary renames for clarity; HTML build + mock-data tooling

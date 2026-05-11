@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Salaried sitting confirmation + verifier sign-off — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../../prd.html">PRD</a></li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li><a href="../../architecture.html">Architecture (index)</a></li>
+<li><a href="../../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>Architecture — Reference</h3>
+<ul>
+<li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../../architecture/conventions.html">Conventions</a></li>
+<li><a href="../../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>Sequence Diagrams</h3>
+<ul>
+<li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../../architecture/sequence-diagrams/salaried-sitting-confirmation.html" class="current">Salaried sitting confirmation</a></li>
+<li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+</ul>
+<h3>Open Items</h3>
+<ul>
+<li><a href="../../architecture/gaps.html">Gaps</a></li>
+<li><a href="../../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../../epics.html">Epics & Stories</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="salaried-sitting-confirmation--verifier-sign-off">Salaried
+sitting confirmation + verifier sign-off</h1>
+<p>Sequence diagram of the daily salaried-sitting confirmation flow: a
+Court User confirms that yesterday's planned sittings actually took
+place, recording actual work type and splitting AM/PM where relevant; a
+Verifier later signs off the period, which makes the data read-only.
+Post-verification amendments are handled inside the UI by a
+<strong>re-open action gated by RBAC</strong> — not by an out-of-system
+RFC ticketing process (revised 2026-05-11). This is distinct from the
+booking-confirmation step shown in <a
+href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>
+Phase 4 — that diagram covers <em>fee-paid bookings</em>; this one
+covers <em>salaried sittings</em>.</p>
+<p>Confirmed-and-verified salaried sittings feed <a
+href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>
+Phase 2 (alongside confirmed fee-paid bookings) for fee-paid recorder
+cases, and feed <a
+href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>
+and <a
+href="./mi-feed-and-reports-consumption.html"><code>./mi-feed-and-reports-consumption.md</code></a>
+as utilisation data.</p>
+<p>The as-is equivalent is Module 10 <em>Sittings</em> in <a
+href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a>
+and Integration Flow 3 <em>Sitting &amp; Booking Confirmation</em> in <a
+href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>.</p>
+<p>Four phases: (1) list daily sittings awaiting confirmation; (2)
+confirm with actual work type + AM/PM split; (3) Verifier sign-off; (4)
+post-verification re-open via RBAC-gated UI action.</p>
+<h2 id="not-in-this-diagram">Not in this diagram</h2>
+<ul>
+<li><strong>Fee-paid booking confirmation</strong> — distinct flow in <a
+href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>
+Phase 4 (<code>POST /v1/bookings/{id}/confirm</code>).</li>
+<li><strong>Ad-hoc sitting creation</strong> (FR39) — a small follow-up
+CRUD; same shape as Phase 2 with a different starting point.</li>
+<li><strong>Sittings → Payments handoff</strong> — Phase 2 of <a
+href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>
+shows the batch reading confirmed bookings + sittings; not duplicated
+here.</li>
+<li><strong>Working-pattern generation of the planned sittings being
+confirmed</strong> — see <a
+href="./judge-onboarding-and-sitting-generation.html"><code>./judge-onboarding-and-sitting-generation.md</code></a>
+Phase 3.</li>
+<li><strong>External Request-for-Change ticketing</strong> — does not
+exist in NJI (revised 2026-05-11). Post-verification amendment is a UI
+action gated by RBAC, with mandatory justification captured in-form and
+full audit. The legacy APEX "RFC" external workflow is retired.</li>
+</ul>
+<h2 id="cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
+omitted for clarity</h2>
+<ul>
+<li><strong>Authentication + per-request authorisation</strong> — Court
+User's and Verifier's JWTs are validated by <code>nji-sitting</code>'s
+<code>JWTFilter</code> on every call; role gating (only authorised roles
+can confirm; only Verifiers can verify; a Verifier cannot also be the
+original confirmer per SIT-NFR-02). See <a
+href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
+<li>All UI → service calls flow through Azure API Management.</li>
+</ul>
+<p><img src="./salaried-sitting-confirmation.png"
+alt="Salaried sitting confirmation + verifier sign-off sequence" /></p>
+<p><em>Source: <a
+href="./salaried-sitting-confirmation.mmd"><code>./salaried-sitting-confirmation.mmd</code></a>
+(Mermaid). Regenerate with
+<code>mmdc -i salaried-sitting-confirmation.mmd -o salaried-sitting-confirmation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<h2 id="phase-summary">Phase summary</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Driver</th>
+<th>Architectural rule</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 — List daily sittings awaiting confirmation</td>
+<td>Court User</td>
+<td>FR36 — filter by Region/Office/judge/date range; auth scope-gated by
+<code>nji-authorisation</code></td>
+<td>UI shows the list of <code>planned</code> sittings for the user's
+scope</td>
+</tr>
+<tr>
+<td>2 — Confirm with actual work type + AM/PM split</td>
+<td>Court User</td>
+<td>FR37 + FR38 — set outcome (confirmed / cancelled / rejected), update
+actual work type, split into AM/PM rows where applicable;
+once-per-sitting natural-key idempotency</td>
+<td>Sitting status = <code>confirmed</code> (or cancelled/rejected);
+actual work type recorded; split rows persisted if applicable</td>
+</tr>
+<tr>
+<td>3 — Verifier sign-off</td>
+<td>Verifier (Read-only / Verifier role)</td>
+<td>FR40 — verifier different from confirmer (SIT-NFR-02); marks the
+period as verified</td>
+<td>Sitting becomes read-only; visible to payment-batch eligibility
+(Recorder fee-payment cases) and to MI Feed as verified utilisation
+data</td>
+</tr>
+<tr>
+<td>4 — Post-verification re-open (RBAC-gated)</td>
+<td>RSU Admin (the <code>sitting:re-open</code> permission is granted to
+RSU Admin only at MVP; distinct from the original confirmer per
+SIT-NFR-02 and from a standard Verifier)</td>
+<td>FR40 <em>(revised 2026-05-11)</em> — verified data is read-only;
+re-opening is a UI action requiring the <code>sitting:re-open</code>
+permission, captures a mandatory justification, and is fully audited. No
+external RFC ticketing.</td>
+<td>Specified sittings revert from verified to confirmed for amendment;
+justification recorded; audit entry written</td>
+</tr>
+</tbody>
+</table>
+<h2 id="where-to-find-more-detail">Where to find more detail</h2>
+<table>
+<thead>
+<tr>
+<th>Detail</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-sitting</code> repo purpose and key functions</td>
+<td><a
+href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
+Phase 5 row</td>
+</tr>
+<tr>
+<td>Sitting confirmation semantics (planned / confirmed / cancelled /
+rejected / verified; AM/PM split; work-type override)</td>
+<td>PRD <code>FR35</code>–<code>FR40</code>; Module 10 in <a
+href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a></td>
+</tr>
+<tr>
+<td>Sittings table schema</td>
+<td><a
+href="../data-tables.html"><code>../data-tables.md</code></a></td>
+</tr>
+<tr>
+<td>Sitting UI module structure</td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
+<code>nji-ui/src/modules/sitting/</code></a></td>
+</tr>
+<tr>
+<td>Payment-batch eligibility (the downstream consumer of confirmed
+sittings)</td>
+<td><a
+href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>
+Phase 2</td>
+</tr>
+<tr>
+<td>Itinerary read federation that displays confirmed/verified
+sittings</td>
+<td><a
+href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a></td>
+</tr>
+<tr>
+<td>As-is equivalent (Module 10 Sittings; Integration Flow 3)</td>
+<td><a
+href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code>
+→ Module 10</a>; <a
+href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code>
+→ Flow 3</a></td>
+</tr>
+</tbody>
+</table>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/salaried-sitting-confirmation.md</code></p>
+</main>
+</body>
+</html>
