@@ -523,7 +523,7 @@ This section is the binding capability contract for NJI. UX, architecture, and e
 ### Judge Records & Working Patterns
 
 - **FR10**: RSU users can search and filter judges by name, base location, location type, and judge type.
-- **FR11**: RSU users can maintain judge profiles, including personal details, judge type, base office, active/inactive status, and role-specific data (payroll number, retirement date, fee-payment status, London weighting, name-for-itinerary, heading).
+- **FR11**: RSU users can maintain judge profiles, including personal details, judge type, base office, active/inactive status, and role-specific data (payroll number, retirement date, fee entitlement, London weighting, name-for-itinerary, heading).
 - **FR12**: Authorised users can define and update Working Patterns (None / Daily / Weekly) with target sit %, jurisdictional split, and per-day work-type pattern.
 - **FR13**: NJI auto-populates judge itineraries up to the next 31st March from the working pattern, preserving any prior absences.
 - **FR14**: RSU users can convert salaried judges between full-time and part-time, adjusting mandatory sitting days.
@@ -554,7 +554,7 @@ This section is the binding capability contract for NJI. UX, architecture, and e
 - **FR30**: Booking creation marks the linked vacancy as filled within the same transaction when a `vacancyId` is supplied. *(Implementation per architecture: in-process direct DB update on the `vacancies` row using a per-service DB role grant; see architecture Principle 1 for the rationale and the cross-service-write rules.)*
 - **FR31**: NJI tracks booking status (planned, provisional, confirmed, cancelled, rejected) with reason capture for cancellation.
 - **FR32**: NJI sends booking acknowledgement emails to fee-paid judges, batched overnight or sent immediately via *Create and Email Now*.
-- **FR33**: NJI requires a Y/N fee-payment answer at booking time when a judge's fee-payment status is *Ask when booking*.
+- **FR33**: NJI requires a Y/N answer at booking time when a judge's fee entitlement is *Ask when booking*.
 - **FR34**: NJI prevents double-booking of fee-paid judges for overlapping sessions.
 
 ### Sitting Management
@@ -568,7 +568,7 @@ This section is the binding capability contract for NJI. UX, architecture, and e
 
 ### Payment & Reconciliation
 
-- **FR41** *(revised v2.6, 2026-05-07)*: Authorised users can list confirmed bookings and salaried sittings, filterable by Region/Office, judge, date range, and payment status (pending, requested, paid, reconciled). The **payment-eligible** subset is the read-only union of confirmed bookings + sittings whose payment record does not yet exist; this is the input the scheduled batch consumes.
+- **FR41** *(revised v2.6, 2026-05-07)*: Authorised users can list confirmed bookings and salaried sittings, filterable by Region/Office, judge, date range, and payment lifecycle status (pending, requested, paid, reconciled). The **payment-eligible** subset is the read-only union of confirmed bookings + sittings whose payment record does not yet exist; this is the input the scheduled batch consumes.
 - **FR42** *(revised v2.6)*: NJI's **payment-processing batch** (`nji-payment-batch`, scheduled on a configurable cron — typically end-of-week) automatically marks eligible bookings as *payment requested* and creates the corresponding `payments` + `payment_schedules` records. **No user click is required** — the batch identifies the eligible set via SQL JOIN over confirmed bookings + sittings without an existing payment record. Authorised users can also list and review the generated schedule before / after dispatch.
 - **FR43** *(revised v2.6)*: The **payment batch** generates JFEPS-compatible payment schedules and dispatches them as Excel attachments to a configured Payment Authoriser via email (using its service-principal identity to call the Notification API); the Payment Authoriser forwards to Liberata out-of-system. Schedule generation and dispatch are batch-driven, not user-initiated.
 - **FR44**: NJI exposes the payment schedule via API with content-type negotiation (`application/vnd.hmcts.jfeps+json` or `+xlsx`); the JFEPS shape evolves independently of Payment internals.

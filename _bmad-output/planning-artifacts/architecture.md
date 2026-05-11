@@ -22,51 +22,51 @@ date: '2026-05-06'
 
 ## Contents
 
-- [System context — at a glance](#system-context--at-a-glance)
-- [How this document is structured](#how-this-document-is-structured)
-- [Project Context Analysis](#project-context-analysis)
-  - [Requirements Overview](#requirements-overview)
-  - [Technical Constraints & Dependencies](#technical-constraints--dependencies)
-  - [Cross-Cutting Concerns Identified](#cross-cutting-concerns-identified)
-  - [Architecture-phase decisions still open](#architecture-phase-decisions-still-open)
-- [Starter Template Evaluation](#starter-template-evaluation)
-  - [Foundational Principles](#foundational-principles)
-  - [Primary Technology Domain](#primary-technology-domain)
-  - [Starter Options & Selection](#starter-options--selection)
-  - [Initialisation Flow, Build Tool, Dependency Inventory, Per-service Conventions](#initialisation-flow-build-tool-dependency-inventory-per-service-conventions)
-- [Core Architectural Decisions](#core-architectural-decisions)
-  - [Decision Priority Analysis](#decision-priority-analysis)
-  - [Data Architecture](#data-architecture)
-  - [Authoritative Table Ownership Mapping](#authoritative-table-ownership-mapping)
-  - [Authentication & Security](#authentication--security)
-  - [API & Communication Patterns](#api--communication-patterns)
-  - [Frontend Architecture](#frontend-architecture)
-  - [Infrastructure & Deployment](#infrastructure--deployment)
-  - [Deployment topology — single Azure region, multi-AZ HA](#deployment-topology--single-azure-region-multi-az-ha)
-  - [Decision Impact Analysis](#decision-impact-analysis)
-  - [TBDs Resolved by This Step](#tbds-resolved-by-this-step)
-- [Implementation Patterns & Consistency Rules](#implementation-patterns--consistency-rules)
-- [Project Structure & Boundaries](#project-structure--boundaries)
-  - [Repository Strategy & List](#repository-strategy--list)
-  - [Complete Project Directory Structures](#complete-project-directory-structures-per-service--ui--nji-architecture)
-  - [Architectural Boundaries](#architectural-boundaries)
-  - [Requirements to Structure Mapping](#requirements-to-structure-mapping)
-  - [Cross-Cutting Concerns to File Locations](#cross-cutting-concerns-to-file-locations)
-  - [Integration Points — Internal](#integration-points--internal-communication)
-  - [Integration Points — External](#integration-points--external)
-  - [Data Flow — Canonical Operational Cycle](#data-flow--canonical-operational-cycle-journey-1-from-prd)
-  - [File Organisation, Development Workflow, Deployment Pipeline](#file-organisation-development-workflow-deployment-pipeline)
-  - [Region rollout flow (Phase 9+)](#region-rollout-flow-phase-9)
-- [Architecture Validation Results](#architecture-validation-results)
-  - [Coherence Validation](#coherence-validation-)
-  - [Requirements Coverage Validation](#requirements-coverage-validation-)
-  - [Implementation Readiness Validation](#implementation-readiness-validation-)
-  - [Documented Gaps](#documented-gaps)
-  - [Assumptions](#assumptions)
-  - [Architecture Readiness Assessment](#architecture-readiness-assessment)
-  - [Implementation Handoff](#implementation-handoff)
-- [External References](#external-references)
-- [Changelog](#changelog)
+1. [System context — at a glance](#system-context--at-a-glance)
+2. [How this document is structured](#how-this-document-is-structured)
+3. [Project Context Analysis](#project-context-analysis)
+   1. [Requirements Overview](#requirements-overview)
+   2. [Technical Constraints & Dependencies](#technical-constraints--dependencies)
+   3. [Cross-Cutting Concerns Identified](#cross-cutting-concerns-identified)
+   4. [Architecture-phase decisions still open](#architecture-phase-decisions-still-open)
+4. [Starter Template Evaluation](#starter-template-evaluation)
+   1. [Foundational Principles](#foundational-principles)
+   2. [Primary Technology Domain](#primary-technology-domain)
+   3. [Starter Options & Selection](#starter-options--selection)
+   4. [Initialisation Flow, Build Tool, Dependency Inventory, Per-service Conventions](#initialisation-flow-build-tool-dependency-inventory-per-service-conventions)
+5. [Core Architectural Decisions](#core-architectural-decisions)
+   1. [Decision Priority Analysis](#decision-priority-analysis)
+   2. [Data Architecture](#data-architecture)
+   3. [Authoritative Table Ownership Mapping](#authoritative-table-ownership-mapping)
+   4. [Authentication & Security](#authentication--security)
+   5. [API & Communication Patterns](#api--communication-patterns)
+   6. [Frontend Architecture](#frontend-architecture)
+   7. [Infrastructure & Deployment](#infrastructure--deployment)
+   8. [Deployment topology — single Azure region, multi-AZ HA](#deployment-topology--single-azure-region-multi-az-ha)
+   9. [Decision Impact Analysis](#decision-impact-analysis)
+   10. [TBDs Resolved by This Step](#tbds-resolved-by-this-step)
+6. [Implementation Patterns & Consistency Rules](#implementation-patterns--consistency-rules)
+7. [Project Structure & Boundaries](#project-structure--boundaries)
+   1. [Repository Strategy & List](#repository-strategy--list)
+   2. [Complete Project Directory Structures](#complete-project-directory-structures-per-service--ui--nji-architecture)
+   3. [Architectural Boundaries](#architectural-boundaries)
+   4. [Requirements to Structure Mapping](#requirements-to-structure-mapping)
+   5. [Cross-Cutting Concerns to File Locations](#cross-cutting-concerns-to-file-locations)
+   6. [Integration Points — Internal](#integration-points--internal-communication)
+   7. [Integration Points — External](#integration-points--external)
+   8. [Data Flow — Canonical Operational Cycle](#data-flow--canonical-operational-cycle-journey-1-from-prd)
+   9. [File Organisation, Development Workflow, Deployment Pipeline](#file-organisation-development-workflow-deployment-pipeline)
+   10. [Region rollout flow (Phase 9+)](#region-rollout-flow-phase-9)
+8. [Architecture Validation Results](#architecture-validation-results)
+   1. [Coherence Validation](#coherence-validation-)
+   2. [Requirements Coverage Validation](#requirements-coverage-validation-)
+   3. [Implementation Readiness Validation](#implementation-readiness-validation-)
+   4. [Documented Gaps](#documented-gaps)
+   5. [Assumptions](#assumptions)
+   6. [Architecture Readiness Assessment](#architecture-readiness-assessment)
+   7. [Implementation Handoff](#implementation-handoff)
+9. [External References](#external-references)
+10. [Changelog](#changelog)
 
 ## System context — at a glance
 
@@ -181,7 +181,7 @@ The PRD lists 12 TBDs. 5 are programme-management decisions (capacity, ops hours
 **APIs are the boundary for workflows. The shared database is the integration mechanism for simple cross-service reads and writes.**
 
 - **Workflows go via API** — multi-step operations with business rules, state transitions, or orchestration (Booking creation, Payment processing, Absence approval).
-- **Single-field cross-service updates can be direct DB writes** — e.g. Booking marks its linked vacancy as filled; Payment updates the booking's payment status. Each owning service grants which tables/columns other services may write via explicit DB role grants (see *Data Architecture*).
+- **Single-field cross-service updates can be direct DB writes** — e.g. Booking marks its linked vacancy as filled; Payment updates the booking's payment lifecycle status. Each owning service grants which tables/columns other services may write via explicit DB role grants (see *Data Architecture*).
 - **Cross-service reads are direct SQL JOINs** — Itinerary, MI Feed, and Reference Data reads query the shared schema directly. No API fan-out, no cache.
 
 The database is **one global PostgreSQL instance with a single shared schema**. Cross-service access is gated by **per-service DB roles with explicit grants**. Table ownership is encoded in the table name (entity-plural for primary tables; service-prefix for service-internal) and enforced by ArchUnit fitness functions in CI.
@@ -796,4 +796,4 @@ Every IETF / standards reference cited in this architecture, with canonical link
 
 ## Changelog
 
-See [`./architecture/changelog.md`](./architecture/changelog.md). **Latest:** v2.8 — DR (disaster recovery) consolidated as an open gap. All DR scope, design, region choice, posture, geo-redundant backup configuration, AKS DR Helm values, DNS failover and RTO/RPO detail moved into [`./architecture/gaps.md` G3.6](./architecture/gaps.md); architecture documents reference the gap rather than repeating mitigation/scope detail. Earlier: v2.7 — RFC citations updated to current RFCs (RFC 9457 problem-details, RFC 9745 `Deprecation`, RFC 9110 `Retry-After`); External References appendix added with verifiable datatracker links.
+See [`./architecture/changelog.md`](./architecture/changelog.md). **Latest:** v2.9 — DB-level detail (column references, SQL operations, DDL) consolidated into *Data Architecture* (new *Retry safety and concurrency control* subsection); abstracted everywhere else. Vocabulary tables renamed for clarity: `fee_payment_statuses` → `judge_fee_entitlements`; `payment_statuses` → `payment_lifecycle_statuses`. Reference-data vocabulary corrected against the docs (`judge_types`, `session_types`, `absence_types`, `booking_statuses`, `payment_lifecycle_statuses`, `reconciliation_statuses`, `judge_fee_entitlements`, `regions`, `calendar_periods`). New tooling: `scripts/build-html.sh` (pandoc-based HTML site under `html/`); `sql/mock_ref_data.sql` + `sql/mock_judge_data.sql` (mock data, every value cross-referenced to the docs). Earlier: v2.8 — DR consolidated as a single open gap (G3.6); v2.7 — RFC citations updated to current RFCs + External References appendix.

@@ -82,7 +82,7 @@ workflowCompleted: false
 #### Judge Records & Working Patterns (9 FRs)
 
 - **FR10**: RSU users can search and filter judges by name, base location, location type, and judge type.
-- **FR11**: RSU users can maintain judge profiles, including personal details, judge type, base office, active/inactive status, and role-specific data (payroll number, retirement date, fee-payment status, London weighting, name-for-itinerary, heading).
+- **FR11**: RSU users can maintain judge profiles, including personal details, judge type, base office, active/inactive status, and role-specific data (payroll number, retirement date, fee entitlement, London weighting, name-for-itinerary, heading).
 - **FR12**: Authorised users can define and update Working Patterns (None / Daily / Weekly) with target sit %, jurisdictional split, and per-day work-type pattern.
 - **FR13**: NJI auto-populates judge itineraries up to the next 31st March from the working pattern, preserving any prior absences.
 - **FR14**: RSU users can convert salaried judges between full-time and part-time, adjusting mandatory sitting days.
@@ -113,7 +113,7 @@ workflowCompleted: false
 - **FR30**: Booking creation orchestrates `Vacancy.markFilled` synchronously when a `vacancyId` is supplied.
 - **FR31**: NJI tracks booking status (planned, provisional, confirmed, cancelled, rejected) with reason capture for cancellation.
 - **FR32**: NJI sends booking acknowledgement emails to fee-paid judges, batched overnight or sent immediately via *Create and Email Now*.
-- **FR33**: NJI requires a Y/N fee-payment answer at booking time when a judge's fee-payment status is *Ask when booking*.
+- **FR33**: NJI requires a Y/N answer at booking time when a judge's fee entitlement is *Ask when booking*.
 - **FR34**: NJI prevents double-booking of fee-paid judges for overlapping sessions.
 
 #### Sitting Management (6 FRs)
@@ -127,7 +127,7 @@ workflowCompleted: false
 
 #### Payment & Reconciliation (7 FRs)
 
-- **FR41**: Authorised users can list confirmed bookings and salaried sittings eligible for payment, filterable by Region/Office, judge, date range, and payment status (pending, requested, paid).
+- **FR41**: Authorised users can list confirmed bookings and salaried sittings eligible for payment, filterable by Region/Office, judge, date range, and payment lifecycle status (pending, requested, paid).
 - **FR42**: Authorised users can mark eligible bookings as *payment requested* individually or in bulk.
 - **FR43**: NJI generates JFEPS-compatible payment schedules and dispatches them as Excel attachments to a chosen Payment Authoriser via email; the Payment Authoriser forwards to Liberata out-of-system.
 - **FR44**: NJI exposes the payment schedule via API with content-type negotiation (`application/vnd.hmcts.jfeps+json` or `+xlsx`); the JFEPS shape evolves independently of Payment internals.

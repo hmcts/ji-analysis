@@ -37,8 +37,8 @@ Cross-cutting controlled lists. Reads go directly via SQL JOIN with per-service 
 | `working_pattern_types` | Vocabulary | Working-pattern-type list (None / Daily / Weekly) | Judge (FR12) |
 | `booking_statuses` | Vocabulary | Booking status list (planned / provisional / confirmed / cancelled / rejected) | Booking (FR31) |
 | `sitting_outcomes` | Vocabulary | Sitting outcome list (confirmed / cancelled / rejected) | Sitting (FR37) |
-| `fee_payment_statuses` | Vocabulary | Fee-payment-status list (yes / no / ask-when-booking) | Judge (FR11), Booking (FR33) |
-| `payment_statuses` | Vocabulary | Payment status list (pending / requested / paid / reconciled / queried) | Payment (FR41, FR46) |
+| `judge_fee_entitlements` | Vocabulary | Per-judge fee-entitlement list (yes / no / ask-when-booking). Answers "is this judge entitled to a fee for their sittings?" Set on the judge profile (FR11); consumed at booking time (FR33). | Judge (FR11), Booking (FR33) |
+| `payment_lifecycle_statuses` | Vocabulary | Payment-record lifecycle (pending / requested / paid / reconciled / queried). State of an individual payment as it moves through the JFEPS / Liberata flow. | Payment (FR41, FR46), Booking (`payment_lifecycle_status_id` column UPDATE-granted to `nji_payment`) |
 | `reconciliation_statuses` | Vocabulary | Reconciliation status list (matched / queried / unreconciled) | Payment (FR46) |
 
 ## Authorisation service (`nji-authorisation`) — 5 tables
@@ -94,7 +94,7 @@ Schema-managed by `nji-architecture`'s Flyway baseline migration; SELECT-granted
 
 | Table | Type | Purpose |
 |---|---|---|
-| `bookings` | Domain | Fee-paid booking records (FR29, FR31); `payment_status` column is UPDATE-granted to `nji_payment` per Principle 1. Has `version integer NOT NULL DEFAULT 0` (`@Version` for optimistic locking) and a `uq_bookings_vacancy_judge_session_date_type` unique constraint enforcing natural-key dedup on retries. |
+| `bookings` | Domain | Fee-paid booking records (FR29, FR31); `payment_lifecycle_status_id` column is UPDATE-granted to `nji_payment` per Principle 1. Has `version integer NOT NULL DEFAULT 0` (`@Version` for optimistic locking) and a `uq_bookings_vacancy_judge_session_date_type` unique constraint enforcing natural-key dedup on retries. |
 
 ## Sitting service (`nji-sitting`) — 1 table
 

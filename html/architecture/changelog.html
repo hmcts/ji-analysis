@@ -170,6 +170,125 @@ href="../architecture.html"><code>../architecture.md</code></a></td>
 </thead>
 <tbody>
 <tr>
+<td><strong>v2.9 — DB-level detail consolidated to Data Architecture;
+vocabulary renames for clarity; HTML build + mock-data tooling
+added</strong></td>
+<td>2026-05-11</td>
+<td><strong>Database detail out of architecture docs</strong> —
+column-level references, SQL operations
+(<code>SELECT ... FOR UPDATE</code>, <code>INSERT</code>,
+<code>UPDATE filled=true</code>, <code>gen_random_uuid()</code>), DDL
+fragments, and process-on-DB implications were stripped from every
+non-data section. The full retry-safety mechanism (natural-key
+uniqueness, <code>@Version</code> optimistic locking,
+<code>@Lock(PESSIMISTIC_WRITE)</code> pessimistic row locking,
+per-entity convention, <code>Idempotency-Key</code> policy, audit-trail
+boundary) now lives in a new <strong>Retry safety and concurrency
+control</strong> subsection inside <code>architecture.md</code> →
+<em>Data Architecture</em>. Everywhere else, the topic is referenced as
+"native DB primitives — see Data Architecture". Sequence-diagram steps
+abstracted (<code>SELECT FOR UPDATE</code> / <code>INSERT booking</code>
+/ <code>UPDATE filled = true</code> → "lock vacancy row" / "persist
+booking" / "mark vacancy filled"); both PNGs regenerated.
+<br/><strong>Vocabulary table renames for clarity</strong> —
+<code>fee_payment_statuses</code> →
+<strong><code>judge_fee_entitlements</code></strong> (a per-judge
+attribute answering "is this judge entitled to a fee for their
+sittings?"); <code>payment_statuses</code> →
+<strong><code>payment_lifecycle_statuses</code></strong> (state of an
+individual payment record moving through JFEPS / Liberata). Column
+renames: <code>judges.fee_payment_status_id</code> →
+<code>judges.judge_fee_entitlement_id</code>;
+<code>bookings.payment_status</code> →
+<code>bookings.payment_lifecycle_status_id</code>. PRD FR11/FR33/FR41
+wording refreshed to use the clearer concept names.
+<br/><strong>Reference-data vocabulary corrected against the
+docs</strong> — <code>judge_types</code> expanded to documented set (CJ,
+DJ, DJ(MC), DDJ, Recorder, Legal Adviser); <code>session_types</code>
+completed (Full / AM / PM / Evening / Reserved Matter);
+<code>absence_types</code> adds Official Business;
+<code>booking_statuses</code> adds Provisional;
+<code>payment_lifecycle_statuses</code> corrected to (pending /
+requested / paid / reconciled / queried) per FR41 + data-tables.md;
+<code>reconciliation_statuses</code> corrected to (matched / queried /
+unreconciled) per data-tables.md; <code>judge_fee_entitlements</code>
+corrected to (yes / no / ask-when-booking) per FR33;
+<code>regions</code> reduced to (Northern, Western) per PRD NFR38;
+<code>calendar_periods</code> expanded to FY 2026/27 + 12 monthly
+periods. <br/><strong>HTML build pipeline added</strong> —
+<code>scripts/python/build_html.py</code> (pandoc-based markdown→HTML) +
+<code>scripts/build-html.sh</code> (wrapper). Mirrors the
+planning-artifacts structure under <code>html/</code> at the repo root;
+rewrites <code>.md</code> link targets to <code>.html</code>; copies
+PNG/PDF/DOT/MMD assets; applies a single CSS theme + persistent sidebar
+navigation; generates an <code>index.html</code>. Reads
+<code>_bmad-output/planning-artifacts/</code>; output lives outside
+<code>_bmad-output/</code>. Re-runnable cleanly. <br/><strong>Mock SQL
+data files added</strong> — <code>sql/mock_ref_data.sql</code> (64 rows
+across all 15 reference-data tables, every value cross-referenced to the
+planning docs; <code>offices</code> and <code>ticket_types</code> are
+illustrative placeholders, flagged as such in the file header) +
+<code>sql/mock_judge_data.sql</code> (15 rows across the 5 Judge-service
+tables — Sarah Hawthorne / Emma Patel / Michael Chen threaded across
+every table). Self-contained DDL + INSERTs; deterministic UUID scheme so
+FK targets are stable across the two files; <code>BEGIN / COMMIT</code>
+wrapper.</td>
+<td><a href="../architecture.html"><code>../architecture.md</code> Step
+2 <em>Cross-Cutting Concerns</em> (retry-safety bullet abstracted); Step
+3 <em>Principle 1</em> (<code>vacancies.filled</code> example
+abstracted); Step 4 <em>Data Architecture</em> (new <em>Retry safety and
+concurrency control</em> subsection — full mechanism table + per-entity
+convention + Idempotency-Key policy + audit-trail boundary); Step 4
+<em>API &amp; Communication Patterns</em> (service-to-service
+retry-safety reference); Step 6 <em>Cross-Cutting Concerns to File
+Locations</em> (retry-safety row abstracted); Step 6 <em>Requirements to
+Structure Mapping</em> (Vacancy &amp; Cover row abstracted); Step 6
+<em>Synchronous call patterns by frequency</em> (column references
+abstracted); Step 6 <em>Data Flow</em> (R5 step abstracted); Step 3
+<em>Principle 1</em> (booking's payment-status example now says "payment
+lifecycle status")</a>; <a
+href="../architecture-summary.html"><code>../architecture-summary.md</code>
+API patterns table (Idempotency / retry safety row abstracted);
+Cross-service interaction patterns table (Cross-row workflow safety row
+abstracted); Foundational principles (Principle 2 native-constructs
+example abstracted)</a>; <a
+href="./data-tables.html"><code>./data-tables.md</code>
+<code>judge_fee_entitlements</code> and
+<code>payment_lifecycle_statuses</code> rows renamed and rewritten with
+clearer purpose statements; <code>bookings</code> table description uses
+the new <code>payment_lifecycle_status_id</code> column name</a>; <a
+href="./conventions.html"><code>./conventions.md</code> Retry-safety
+section collapsed to a one-line pointer; DDL example in <em>Pattern
+Examples</em> abstracted; anti-pattern DDL line abstracted; PK naming
+bullet abstracted; unique-constraint naming bullet abstracted;
+vocabulary-table list removed (duplicates
+<code>./data-tables.md</code>)</a>; <a
+href="./repository-strategy.html"><code>./repository-strategy.md</code>
+<code>nji-booking</code> and <code>nji-payment</code> repo descriptions
+abstracted</a>; <a
+href="./functional-requirements-coverage.html"><code>./functional-requirements-coverage.md</code>
+FR23–FR28 + FR29–FR34 + FR45 architectural-support paragraphs
+abstracted; FR11 / FR33 / FR41 reworded for new vocabulary</a>; <a
+href="./repo-structure.html"><code>./repo-structure.md</code>
+per-service tree comment abstracted</a>; <a
+href="./sequence-diagrams/absence-to-reconciliation.html"><code>./sequence-diagrams/absence-to-reconciliation.md</code>
+Phase 3 narrative + where-to-find link abstracted</a>; <a
+href="./sequence-diagrams/absence-to-reconciliation.mmd"><code>./sequence-diagrams/absence-to-reconciliation.mmd</code>
+Mermaid steps abstracted (PNG regenerated)</a>; <a
+href="./sequence-diagrams/payment-batch-flow.html"><code>./sequence-diagrams/payment-batch-flow.md</code>
+Phase 2 row abstracted</a>; <a
+href="./sequence-diagrams/payment-batch-flow.mmd"><code>./sequence-diagrams/payment-batch-flow.mmd</code>
+Mermaid steps abstracted (PNG regenerated)</a>; PRD <code>FR11</code> /
+<code>FR33</code> / <code>FR41</code> wording updated for new
+vocabulary; <code>implementation-readiness-report-2026-05-05.md</code>
+historical FR quotes refreshed to match; new files:
+<code>sql/mock_ref_data.sql</code>,
+<code>sql/mock_judge_data.sql</code>,
+<code>scripts/python/build_html.py</code>,
+<code>scripts/build-html.sh</code>, <code>html/</code> directory at repo
+root</td>
+</tr>
+<tr>
 <td><strong>v2.8 — DR consolidated as a single open gap; all DR detail
 removed from elsewhere</strong></td>
 <td>2026-05-08</td>

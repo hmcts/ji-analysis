@@ -205,17 +205,22 @@ rejected)</td>
 <td>Sitting (FR37)</td>
 </tr>
 <tr>
-<td><code>fee_payment_statuses</code></td>
+<td><code>judge_fee_entitlements</code></td>
 <td>Vocabulary</td>
-<td>Fee-payment-status list (yes / no / ask-when-booking)</td>
+<td>Per-judge fee-entitlement list (yes / no / ask-when-booking).
+Answers "is this judge entitled to a fee for their sittings?" Set on the
+judge profile (FR11); consumed at booking time (FR33).</td>
 <td>Judge (FR11), Booking (FR33)</td>
 </tr>
 <tr>
-<td><code>payment_statuses</code></td>
+<td><code>payment_lifecycle_statuses</code></td>
 <td>Vocabulary</td>
-<td>Payment status list (pending / requested / paid / reconciled /
-queried)</td>
-<td>Payment (FR41, FR46)</td>
+<td>Payment-record lifecycle (pending / requested / paid / reconciled /
+queried). State of an individual payment as it moves through the JFEPS /
+Liberata flow.</td>
+<td>Payment (FR41, FR46), Booking
+(<code>payment_lifecycle_status_id</code> column UPDATE-granted to
+<code>nji_payment</code>)</td>
 </tr>
 <tr>
 <td><code>reconciliation_statuses</code></td>
@@ -414,10 +419,11 @@ reason)</td>
 <tr>
 <td><code>bookings</code></td>
 <td>Domain</td>
-<td>Fee-paid booking records (FR29, FR31); <code>payment_status</code>
-column is UPDATE-granted to <code>nji_payment</code> per Principle 1.
-Has <code>version integer NOT NULL DEFAULT 0</code>
-(<code>@Version</code> for optimistic locking) and a
+<td>Fee-paid booking records (FR29, FR31);
+<code>payment_lifecycle_status_id</code> column is UPDATE-granted to
+<code>nji_payment</code> per Principle 1. Has
+<code>version integer NOT NULL DEFAULT 0</code> (<code>@Version</code>
+for optimistic locking) and a
 <code>uq_bookings_vacancy_judge_session_date_type</code> unique
 constraint enforcing natural-key dedup on retries.</td>
 </tr>

@@ -95,13 +95,13 @@ href="./architecture/"><code>./architecture/</code></a> and is
 referenced from this file in place. Read this file for the <em>what and
 why</em>; follow links into the siblings for the <em>how</em>.</p>
 <h2 id="contents">Contents</h2>
-<ul>
+<ol type="1">
 <li><a href="#system-context--at-a-glance">System context — at a
 glance</a></li>
 <li><a href="#how-this-document-is-structured">How this document is
 structured</a></li>
 <li><a href="#project-context-analysis">Project Context Analysis</a>
-<ul>
+<ol type="1">
 <li><a href="#requirements-overview">Requirements Overview</a></li>
 <li><a href="#technical-constraints--dependencies">Technical Constraints
 &amp; Dependencies</a></li>
@@ -110,10 +110,10 @@ Identified</a></li>
 <li><a
 href="#architecture-phase-decisions-still-open">Architecture-phase
 decisions still open</a></li>
-</ul></li>
+</ol></li>
 <li><a href="#starter-template-evaluation">Starter Template
 Evaluation</a>
-<ul>
+<ol type="1">
 <li><a href="#foundational-principles">Foundational Principles</a></li>
 <li><a href="#primary-technology-domain">Primary Technology
 Domain</a></li>
@@ -122,10 +122,10 @@ Selection</a></li>
 <li><a
 href="#initialisation-flow-build-tool-dependency-inventory-per-service-conventions">Initialisation
 Flow, Build Tool, Dependency Inventory, Per-service Conventions</a></li>
-</ul></li>
+</ol></li>
 <li><a href="#core-architectural-decisions">Core Architectural
 Decisions</a>
-<ul>
+<ol type="1">
 <li><a href="#decision-priority-analysis">Decision Priority
 Analysis</a></li>
 <li><a href="#data-architecture">Data Architecture</a></li>
@@ -145,12 +145,12 @@ topology — single Azure region, multi-AZ HA</a></li>
 Analysis</a></li>
 <li><a href="#tbds-resolved-by-this-step">TBDs Resolved by This
 Step</a></li>
-</ul></li>
+</ol></li>
 <li><a href="#implementation-patterns--consistency-rules">Implementation
 Patterns &amp; Consistency Rules</a></li>
 <li><a href="#project-structure--boundaries">Project Structure &amp;
 Boundaries</a>
-<ul>
+<ol type="1">
 <li><a href="#repository-strategy--list">Repository Strategy &amp;
 List</a></li>
 <li><a
@@ -174,10 +174,10 @@ href="#file-organisation-development-workflow-deployment-pipeline">File
 Organisation, Development Workflow, Deployment Pipeline</a></li>
 <li><a href="#region-rollout-flow-phase-9">Region rollout flow (Phase
 9+)</a></li>
-</ul></li>
+</ol></li>
 <li><a href="#architecture-validation-results">Architecture Validation
 Results</a>
-<ul>
+<ol type="1">
 <li><a href="#coherence-validation-">Coherence Validation</a></li>
 <li><a href="#requirements-coverage-validation-">Requirements Coverage
 Validation</a></li>
@@ -188,10 +188,10 @@ Readiness Validation</a></li>
 <li><a href="#architecture-readiness-assessment">Architecture Readiness
 Assessment</a></li>
 <li><a href="#implementation-handoff">Implementation Handoff</a></li>
-</ul></li>
+</ol></li>
 <li><a href="#external-references">External References</a></li>
 <li><a href="#changelog">Changelog</a></li>
-</ul>
+</ol>
 <h2 id="system-context--at-a-glance">System context — at a glance</h2>
 <p><img src="./architecture/diagrams/system-context.png"
 alt="NJI System Context — high-level service map and key interactions" /></p>
@@ -479,9 +479,9 @@ business rules, state transitions, or orchestration (Booking creation,
 Payment processing, Absence approval).</li>
 <li><strong>Single-field cross-service updates can be direct DB
 writes</strong> — e.g. Booking marks its linked vacancy as filled;
-Payment updates the booking's payment status. Each owning service grants
-which tables/columns other services may write via explicit DB role
-grants (see <em>Data Architecture</em>).</li>
+Payment updates the booking's payment lifecycle status. Each owning
+service grants which tables/columns other services may write via
+explicit DB role grants (see <em>Data Architecture</em>).</li>
 <li><strong>Cross-service reads are direct SQL JOINs</strong> —
 Itinerary, MI Feed, and Reference Data reads query the shared schema
 directly. No API fan-out, no cache.</li>
@@ -1967,16 +1967,25 @@ href="https://www.w3.org/TR/WCAG22/"><span>www.w3.org/TR/WCAG22/</span></a></td>
 <h2 id="changelog">Changelog</h2>
 <p>See <a
 href="./architecture/changelog.html"><code>./architecture/changelog.md</code></a>.
-<strong>Latest:</strong> v2.8 — DR (disaster recovery) consolidated as
-an open gap. All DR scope, design, region choice, posture, geo-redundant
-backup configuration, AKS DR Helm values, DNS failover and RTO/RPO
-detail moved into <a
-href="./architecture/gaps.html"><code>./architecture/gaps.md</code>
-G3.6</a>; architecture documents reference the gap rather than repeating
-mitigation/scope detail. Earlier: v2.7 — RFC citations updated to
-current RFCs (RFC 9457 problem-details, RFC 9745
-<code>Deprecation</code>, RFC 9110 <code>Retry-After</code>); External
-References appendix added with verifiable datatracker links.</p>
+<strong>Latest:</strong> v2.9 — DB-level detail (column references, SQL
+operations, DDL) consolidated into <em>Data Architecture</em> (new
+<em>Retry safety and concurrency control</em> subsection); abstracted
+everywhere else. Vocabulary tables renamed for clarity:
+<code>fee_payment_statuses</code> → <code>judge_fee_entitlements</code>;
+<code>payment_statuses</code> → <code>payment_lifecycle_statuses</code>.
+Reference-data vocabulary corrected against the docs
+(<code>judge_types</code>, <code>session_types</code>,
+<code>absence_types</code>, <code>booking_statuses</code>,
+<code>payment_lifecycle_statuses</code>,
+<code>reconciliation_statuses</code>,
+<code>judge_fee_entitlements</code>, <code>regions</code>,
+<code>calendar_periods</code>). New tooling:
+<code>scripts/build-html.sh</code> (pandoc-based HTML site under
+<code>html/</code>); <code>sql/mock_ref_data.sql</code> +
+<code>sql/mock_judge_data.sql</code> (mock data, every value
+cross-referenced to the docs). Earlier: v2.8 — DR consolidated as a
+single open gap (G3.6); v2.7 — RFC citations updated to current RFCs +
+External References appendix.</p>
 
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture.md</code></p>
 </main>
