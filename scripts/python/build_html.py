@@ -22,22 +22,50 @@ from typing import List, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SRC = REPO_ROOT / "_bmad-output" / "planning-artifacts"
+ASIS_SRC = REPO_ROOT / "docs" / "architecture" / "asis"
 OUT = REPO_ROOT / "html"
+
+# As-is architecture views generated from PNGs in docs/architecture/asis/.
+# Each entry: (display title, intro paragraph, source PNG filename, output relpath without .html)
+ASIS_VIEWS: List[Tuple[str, str, str, str]] = [
+    (
+        "System Context — as-is JI",
+        "High-level system context view of the legacy JI (Oracle APEX / OPT) application — actors, "
+        "external systems, and integrations as they exist before the NJI rebuild. Authoritative "
+        "source for system-context parity validation during NJI design.",
+        "JI-SystemContext.png",
+        "asis/system-context",
+    ),
+    (
+        "Components — as-is JI",
+        "Component view of the legacy JI application — internal modules and their relationships in "
+        "the existing APEX implementation. Used as the parity reference for the NJI functional "
+        "decomposition into 11 services.",
+        "JI-Components.png",
+        "asis/components",
+    ),
+]
 
 # Sidebar navigation. Each entry: (display label, source path without .md, is_special)
 # is_special marks entries that have no source file (e.g. the index page).
+# Group naming convention: "As-is — …" for legacy JI; "To-be — …" for NJI.
 NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
     ("Overview", [
         ("Index", "index", True),
     ]),
     ("Product", [
-        ("PRD", "prd", False),
+        ("PRD (NJI)", "prd", False),
     ]),
-    ("Architecture", [
+    ("As-is — JI Architecture Views", [
+        ("System Context (as-is)", "asis/system-context", False),
+        ("Components (as-is)", "asis/components", False),
+    ]),
+    ("To-be — NJI Architecture", [
         ("Architecture (index)", "architecture", False),
         ("Architecture summary", "architecture-summary", False),
     ]),
-    ("Architecture — Reference", [
+    ("To-be — NJI Reference", [
+        ("User types", "architecture/user-types", False),
         ("Authoritative table ownership", "architecture/data-tables", False),
         ("Conventions", "architecture/conventions", False),
         ("Repository strategy", "architecture/repository-strategy", False),
@@ -46,7 +74,7 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
         ("Functional requirements coverage", "architecture/functional-requirements-coverage", False),
         ("Non-functional requirements coverage", "architecture/non-functional-requirements-coverage", False),
     ]),
-    ("Sequence Diagrams", [
+    ("To-be — NJI Sequence Diagrams", [
         ("Authentication & authorisation", "architecture/sequence-diagrams/user-authentication-and-authorisation", False),
         ("Judge onboarding & sitting gen.", "architecture/sequence-diagrams/judge-onboarding-and-sitting-generation", False),
         ("Absence → Reconciliation", "architecture/sequence-diagrams/absence-to-reconciliation", False),
@@ -56,7 +84,7 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
         ("MI Feed & Reports", "architecture/sequence-diagrams/mi-feed-and-reports-consumption", False),
         ("Admin maintenance flows", "architecture/sequence-diagrams/admin-maintenance-flows", False),
     ]),
-    ("Open Items", [
+    ("To-be — NJI Open Items", [
         ("Gaps", "architecture/gaps", False),
         ("Assumptions", "architecture/assumptions", False),
         ("Changelog", "architecture/changelog", False),
@@ -195,10 +223,11 @@ def write_page(out_path: Path, title: str, content: str, current_relpath: str, s
 
 
 def build_index_body() -> str:
-    parts = ["<h1>NJI Documentation</h1>"]
+    parts = ["<h1>JI / NJI Documentation</h1>"]
     parts.append(
-        "<p>HTML rendering of the NJI planning artefacts. "
-        "The sidebar is available on every page for quick navigation.</p>"
+        "<p>HTML rendering of the JI / NJI planning artefacts. The sidebar — available on every page — "
+        "is organised so it is clear what belongs to the legacy <strong>as-is</strong> JI and what "
+        "belongs to the <strong>to-be</strong> NJI rebuild.</p>"
     )
     for group_name, items in NAV:
         parts.append(f"<h2>{group_name}</h2>")
@@ -209,6 +238,38 @@ def build_index_body() -> str:
             parts.append(f'<li><a href="{relpath}.html">{label}</a></li>')
         parts.append("</ul>")
     return "\n".join(parts)
+
+
+def build_asis_views() -> None:
+    """Generate HTML wrapper pages for as-is architecture PNG views.
+
+    Copies each source PNG from docs/architecture/asis/ into html/asis/ and wraps it in an
+    HTML page using the standard sidebar template, so the views are first-class documents
+    in the site rather than raw images.
+    """
+    if not ASIS_SRC.exists():
+        print(f"warn: as-is source not found: {ASIS_SRC} — skipping as-is views", file=sys.stderr)
+        return
+    for title, intro, source_png, out_relpath in ASIS_VIEWS:
+        src_png = ASIS_SRC / source_png
+        if not src_png.exists():
+            print(f"warn: as-is view source not found: {src_png} — skipping", file=sys.stderr)
+            continue
+        # copy PNG next to the generated HTML
+        dst_png = OUT / (out_relpath + ".png")
+        dst_png.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src_png, dst_png)
+        print(f"copy:  {out_relpath}.png  (from {src_png.relative_to(REPO_ROOT)})")
+        # generate wrapper page
+        png_name = Path(out_relpath).name + ".png"
+        body = (
+            f"<h1>{title}</h1>\n"
+            f"<p>{intro}</p>\n"
+            f'<img src="./{png_name}" alt="{title}">\n'
+        )
+        out_html = OUT / (out_relpath + ".html")
+        write_page(out_html, title, body, out_relpath, src_png)
+        print(f"build: {out_relpath}.html")
 
 
 def main() -> int:
@@ -247,8 +308,11 @@ def main() -> int:
         shutil.copy2(src_file, dst)
         print(f"copy:  {rel}")
 
+    # generate as-is architecture view pages from docs/architecture/asis/
+    build_asis_views()
+
     # write index page
-    write_page(OUT / "index.html", "NJI Documentation", build_index_body(), "index", None)
+    write_page(OUT / "index.html", "JI / NJI Documentation", build_index_body(), "index", None)
     print("build: index.html")
 
     print(f"\nDone. Output: {OUT}")

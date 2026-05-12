@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>User Types — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2 a{color:inherit;text-decoration:none}
+aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.nav ul{list-style:none;margin:0;padding:0}
+aside.nav li{margin:2px 0}
+aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
+aside.nav a:hover{background:#eaeef2}
+aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+</style>
+</head>
+<body>
+<aside class="nav"><h2><a href="../index.html">NJI Documentation</a></h2>
+<h3>Overview</h3>
+<ul>
+<li><a href="../index.html">Index</a></li>
+</ul>
+<h3>Product</h3>
+<ul>
+<li><a href="../prd.html">PRD (NJI)</a></li>
+</ul>
+<h3>As-is — JI Architecture Views</h3>
+<ul>
+<li><a href="../asis/system-context.html">System Context (as-is)</a></li>
+<li><a href="../asis/components.html">Components (as-is)</a></li>
+</ul>
+<h3>To-be — NJI Architecture</h3>
+<ul>
+<li><a href="../architecture.html">Architecture (index)</a></li>
+<li><a href="../architecture-summary.html">Architecture summary</a></li>
+</ul>
+<h3>To-be — NJI Reference</h3>
+<ul>
+<li><a href="../architecture/user-types.html" class="current">User types</a></li>
+<li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../architecture/conventions.html">Conventions</a></li>
+<li><a href="../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+<h3>To-be — NJI Sequence Diagrams</h3>
+<ul>
+<li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+</ul>
+<h3>To-be — NJI Open Items</h3>
+<ul>
+<li><a href="../architecture/gaps.html">Gaps</a></li>
+<li><a href="../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../architecture/changelog.html">Changelog</a></li>
+</ul>
+<h3>Implementation Readiness</h3>
+<ul>
+<li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+<h3>Implementation</h3>
+<ul>
+<li><a href="../epics.html">Epics & Stories</a></li>
+</ul></aside>
+<main class="content">
+<h1 id="user-types">User Types</h1>
+<blockquote>
+<p>Sibling of <a
+href="../architecture.html"><code>../architecture.md</code></a>. The
+as-is JI catalogue
+(<code>docs/architecture/asis/JI user types - 2.xlsx</code>, Feb 2026
+snapshot) is authoritative for the role taxonomy. NJI carries these
+access types over 1:1; this document is the binding taxonomy reference
+for <code>nji-authorisation</code>, the Phase 0 user migration (D9), and
+the per-phase manual UAT scripts (FR61). Authentication is owned by
+HMCTS IdP (FR1); role + Region/Area mapping and effective-permission
+lookup live in <code>nji-authorisation</code> (FR2, FR3). See <a
+href="./sequence-diagrams/user-authentication-and-authorisation.html"><code>./sequence-diagrams/user-authentication-and-authorisation.md</code></a>
+for the call path.</p>
+<p><strong>Baseline capability for every access type:</strong> access to
+standard reports. The capability lists below add to this baseline rather
+than repeat it.</p>
+</blockquote>
+<h2 id="at-a-glance">At a glance</h2>
+<p>NJI inherits <strong>17 application access types</strong> across four
+groups, plus <strong>1 configuration entry</strong> (Payment Authoriser)
+that is not an application access type. The as-is catalogue records
+<strong>2,818 active users</strong> as of Feb 2026.</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Access types</th>
+<th>Active users (Feb 2026)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#court-access-types">Court</a></td>
+<td>5</td>
+<td>2,196</td>
+</tr>
+<tr>
+<td><a href="#regional-access-types">Regional</a></td>
+<td>5</td>
+<td>195</td>
+</tr>
+<tr>
+<td><a href="#judicial-access-types">Judicial</a></td>
+<td>6</td>
+<td>386</td>
+</tr>
+<tr>
+<td><a href="#finance-access-types">Finance</a></td>
+<td>1</td>
+<td>39</td>
+</tr>
+<tr>
+<td><strong>Application access types — total</strong></td>
+<td><strong>17</strong></td>
+<td><strong>2,816</strong></td>
+</tr>
+<tr>
+<td>Configuration: <a
+href="#payment-authoriser-configuration-not-an-access-type">Payment
+Authoriser distribution list</a></td>
+<td>—</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>Catalogue total</strong></td>
+<td>—</td>
+<td><strong>2,818</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="sitting--booking-lifecycle-confirm--verify--re-open">Sitting
+&amp; booking lifecycle (Confirm → Verify → Re-open)</h2>
+<p>Several access types are defined by their position in the
+sittings/bookings release lifecycle. Recording this once here so the
+per-role capability lists can refer to it.</p>
+<ol type="1">
+<li><strong>Confirm</strong> — A Court user (Full Access, Enhanced CJ,
+Limited) records that yesterday's sitting / booking took place, with
+actual work type and any AM/PM split. Performed daily.</li>
+<li><strong>Verify</strong> — A Verifier (Court or Regional) signs off
+batches of confirmed sittings / bookings, typically monthly.
+Verification locks the records and releases them to be reported on.</li>
+<li><strong>Re-open</strong> — Privileged correction action against a
+verified record. Granted to <strong>Regional (Admin)</strong> only at
+MVP (FR40). The re-opener must be different from the original confirmer
+(SIT-NFR-02); a mandatory justification is captured and the action is
+fully audited.</li>
+</ol>
+<p>A Verifier <strong>cannot</strong> confirm sittings or bookings —
+confirmation and verification are separated by design (segregation of
+duties).</p>
+<h2 id="court-access-types">Court access types</h2>
+<p>5 access types, 2,196 active users. Scope is the
+<strong>office(s)</strong> the user is assigned to.</p>
+<h3 id="court-full-access--1442-active-users">Court (Full Access) —
+1,442 active users</h3>
+<p>Standard access level for users in the courts.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>Full access (view, create, maintain) to <strong>District
+Judge</strong> judge profiles only.</li>
+<li>Confirm sittings for <strong>all judge types</strong> at assigned
+location(s).</li>
+<li>Confirm bookings for <strong>all judge types</strong> at assigned
+location(s).</li>
+<li>Request absences for judges at assigned location(s) — Regional team
+approval required.</li>
+<li>Request vacancies for judges at assigned location(s) — Regional team
+approval required.</li>
+</ol>
+<blockquote>
+<p>Q2 resolution (2026-05-12): the xlsx description is not
+contradictory. Profile-maintenance access (full edit) is limited to DJ;
+sittings/bookings <em>confirmation</em> is location-scoped and works
+against all judge types. These are two distinct capabilities.</p>
+</blockquote>
+<h3 id="court-enhanced-cj--224-active-users">Court (Enhanced CJ) — 224
+active users</h3>
+<p>Enhanced access for court users in certain regions where Circuit
+Judge cover is required.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>All capabilities of Court (Full Access).</li>
+<li>Additionally: full access (view, create, maintain) to
+<strong>Circuit Judge</strong> profiles.</li>
+</ol>
+<h3 id="court-limited--132-active-users">Court (Limited) — 132 active
+users</h3>
+<p>Limited access for court users. Same daily operational footprint as
+Full Access but without the judge-profile maintenance privilege.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>Confirm sittings for all judge types at assigned location(s).</li>
+<li>Confirm bookings for all judge types at assigned location(s).</li>
+<li>Request absences for judges at assigned location(s) — Regional team
+approval required.</li>
+<li>Request vacancies for judges at assigned location(s) — Regional team
+approval required.</li>
+</ol>
+<blockquote>
+<p>Q3 resolution (2026-05-12) — <em>inferred from the xlsx description
+"as per Full Access but doesn't include full access to any judge
+types"</em>: the <strong>only material difference</strong> between Court
+(Limited) and Court (Full Access) is that Limited cannot maintain
+District Judge profiles. Confirmation of sittings/bookings, absence and
+vacancy requests are unchanged. Flagged in <a
+href="./gaps.html"><code>./gaps.md</code></a> for confirmation against
+APEX-experienced UAT.</p>
+</blockquote>
+<h3 id="court-read-only--27-active-users">Court (Read-only) — 27 active
+users</h3>
+<p>Read-only access for court users.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>View the same data set Court (Full Access) can view, with no write
+actions (no profile maintenance, no confirm, no requests).</li>
+</ol>
+<h3 id="court-verifier--371-active-users">Court (Verifier) — 371 active
+users</h3>
+<p>Verifier access for court users. Performs step 2 of the
+sittings/bookings release lifecycle.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li><strong>Cannot</strong> confirm sittings or bookings.</li>
+<li>Verify sittings that have been confirmed by another user (typically
+monthly).</li>
+<li>Verify bookings that have been confirmed by another user.</li>
+<li>View the same data set Court (Full Access) can view.</li>
+</ol>
+<blockquote>
+<p>Verification releases verified records for reporting. See <a
+href="#sitting--booking-lifecycle-confirm--verify--re-open">Sitting
+&amp; booking lifecycle</a>.</p>
+</blockquote>
+<h2 id="regional-access-types">Regional access types</h2>
+<p>5 access types, 195 active users. Scope is the
+<strong>Region</strong> the user is assigned to, optionally narrowed by
+Area.</p>
+<h3 id="regional-admin--75-active-users">Regional (Admin) — 75 active
+users</h3>
+<p>Regional user with elevated administrative powers.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>All capabilities of Regional (Full Access).</li>
+<li>Send user-creation requests to the Advice Point (operational process
+to create new NJI users for the region).</li>
+<li>Re-open verified sittings / bookings (FR40, MVP-only privileged
+action). Mandatory justification, must differ from original confirmer
+(SIT-NFR-02), fully audited.</li>
+</ol>
+<blockquote>
+<p>Q11 from the xlsx (whether Regional Admin should create users
+directly without an external operational process) is parked as an NJI
+design question. See <a
+href="./gaps.html"><code>./gaps.md</code></a>.</p>
+</blockquote>
+<h3 id="regional-full-access--68-active-users">Regional (Full Access) —
+68 active users</h3>
+<p>Standard access level for regional users.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>Full access (view, create, maintain) to records for <strong>all
+judge types</strong> in the region.</li>
+<li>Create bookings for fee-paid judges.</li>
+<li>Amend bookings for fee-paid judges.</li>
+<li>Create absences for judges in the region.</li>
+<li>Approve absences requested by Court users.</li>
+<li>Create vacancies in the region.</li>
+<li>Approve vacancies (e.g. auto-created from approved absences per
+FR23).</li>
+<li><strong>Cannot</strong> confirm sittings or bookings — confirmation
+is a Court-level function only.</li>
+</ol>
+<h3 id="regional-no-fees--14-active-users">Regional (No Fees) — 14
+active users</h3>
+<p>Restricted access for Regional users who must not transact on
+fee-paid bookings.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>All capabilities of Regional (Full Access)
+<strong>except</strong>:</li>
+<li>Cannot create bookings for fee-paid judges.</li>
+<li>Cannot amend bookings for fee-paid judges.</li>
+</ol>
+<h3 id="regional-read-only--23-active-users">Regional (Read-only) — 23
+active users</h3>
+<p>Read-only access for Regional users.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>View the same data set Regional (Full Access) can view, with no
+write actions.</li>
+</ol>
+<h3 id="regional-verifier--15-active-users">Regional (Verifier) — 15
+active users</h3>
+<p>Verifier access at Regional scope.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>All capabilities of Regional (Full Access).</li>
+<li>Verify confirmed sittings for all courts in the region.</li>
+<li>Verify confirmed bookings for all courts in the region.</li>
+</ol>
+<blockquote>
+<p>Q12 from the xlsx (national-level access): no national-level access
+type exists in the as-is catalogue except Finance. All other roles are
+scoped by Region/Area or by judge linkage. Recorded for NJI parity.</p>
+</blockquote>
+<h2 id="judicial-access-types">Judicial access types</h2>
+<p>6 access types, 386 active users. Scope varies — see each entry.</p>
+<h3 id="judge--273-active-users">Judge — 273 active users</h3>
+<p>Standard access level for a judge.</p>
+<p><strong>Scope:</strong> the judge's own record only (R2 — no
+case-level data, no access to other judges' data).</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>View own record (profile, working pattern, tickets).</li>
+<li>View own itinerary and forward look.</li>
+<li>Request absences against own record where permitted (FR19) —
+Regional team confirmation may be required (FR20).</li>
+</ol>
+<h3 id="judges-clerk--2-active-users">Judge's Clerk — 2 active
+users</h3>
+<p>Clerk to a salaried judge, acting on the judge's behalf.</p>
+<p><strong>Scope:</strong> the linked judge(s) the clerk supports.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>Same capability surface as Judge, but exercised on behalf of the
+linked judge(s).</li>
+</ol>
+<blockquote>
+<p>Q7 from the xlsx (whether Judge's Clerk differs from Judge): the
+as-is catalogue records them as functionally identical from an
+access-control standpoint — the only distinction is <em>which</em>
+judge's record(s) the principal is linked to. NJI maintains the
+separation for audit clarity (the Clerk acts on someone else's
+behalf).</p>
+</blockquote>
+<h3 id="presiding-judge--2-active-users">Presiding Judge — 2 active
+users</h3>
+<p>Leadership judge with oversight of a group of judges (typically a
+Circuit's salaried judges).</p>
+<p><strong>Scope:</strong> all judges who fall under the Presiding
+Judge's leadership.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>Same capability surface as Judge, exercised across all judges under
+their leadership.</li>
+</ol>
+<blockquote>
+<p>Q9 from the xlsx (why so few users): low headcount is structurally
+expected — there are very few presiding judges nationally. No NJI design
+implication.</p>
+</blockquote>
+<h3 id="presiding-judges-clerk--0-active-users">Presiding Judge's Clerk
+— 0 active users</h3>
+<p>Clerk to a Presiding Judge.</p>
+<p><strong>Scope:</strong> the linked Presiding Judge's leadership
+group.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>Same capability surface as Presiding Judge, exercised on behalf of
+the linked Presiding Judge.</li>
+</ol>
+<blockquote>
+<p><strong>No active users in the as-is catalogue (Feb 2026).</strong>
+Retained in the NJI taxonomy for as-is parity (Q6 confirmed). The access
+type is provisioned but currently unused. Whether to retire it is an
+operational decision deferred to post-MVP review.</p>
+</blockquote>
+<h3 id="judge-itin-view-only--107-active-users">Judge Itin View Only —
+107 active users</h3>
+<p>CTSC (Courts and Tribunals Service Centre) operational users who need
+to know whether and where a judge is working.</p>
+<p><strong>Scope:</strong> national, but with significant data
+restrictions (see below).</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>View judges' itineraries only — no profile, working pattern,
+absence, vacancy, booking, or sitting detail.</li>
+<li>Massively cut-down information surface. Used operationally to
+identify (a) whether a judge is working on a given date and (b) where
+they are sitting.</li>
+</ol>
+<blockquote>
+<p>Q8 from the xlsx (exact contents of "very limited information"): the
+precise field set is not specified in the as-is catalogue. Captured as
+an open gap for the Itinerary service's API design — see <a
+href="./gaps.html"><code>./gaps.md</code></a> and the <a
+href="./sequence-diagrams/itinerary-federated-read.html">Itinerary
+federated read sequence</a>.</p>
+</blockquote>
+<h3 id="judicial-college--2-active-users">Judicial College — 2 active
+users</h3>
+<p>Users within the Judicial College (training body for judges).</p>
+<p><strong>Scope:</strong> national, read-only.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>View a cut-down version of Court itineraries.</li>
+<li>View Absences associated with those itineraries.</li>
+<li>View Vacancies associated with those itineraries.</li>
+<li>View Bookings associated with those itineraries.</li>
+<li><strong>All views are read-only</strong> — no write actions of any
+kind.</li>
+</ol>
+<blockquote>
+<p>Q5 from the xlsx (exact contents of the cut-down Court itinerary
+view): not specified in the as-is catalogue. Captured as an open gap for
+the Itinerary service — see <a
+href="./gaps.html"><code>./gaps.md</code></a>.</p>
+</blockquote>
+<h2 id="finance-access-types">Finance access types</h2>
+<p>1 access type, 39 active users.</p>
+<h3 id="finance--39-active-users">Finance — 39 active users</h3>
+<p>Users within HMCTS finance who generate JFEPS payment schedules.</p>
+<p><strong>Scope:</strong> <strong>National</strong> — no Region/Area
+scoping. A Finance user can produce payment schedules covering all
+Regions/Areas.</p>
+<p><strong>Capabilities:</strong></p>
+<ol type="1">
+<li>Produce payment schedules — JFEPS-compatible Excel — across all
+courts and circuits nationally.</li>
+<li>Each generated schedule is automatically emailed to a configured
+Payment Authoriser (see <a
+href="#payment-authoriser-configuration-not-an-access-type">Payment
+Authoriser configuration</a>).</li>
+</ol>
+<blockquote>
+<p>Q4 from the xlsx (scope of payment schedules): confirmed national — a
+Finance user can produce schedules across all areas (2026-05-12).</p>
+</blockquote>
+<h2 id="payment-authoriser-configuration-not-an-access-type">Payment
+Authoriser (configuration, not an access type)</h2>
+<p>The Payment Authoriser is <strong>not an NJI application access
+type</strong>. It is a <strong>configuration entry</strong> — the
+addressable identity (name + email) to whom Finance-generated JFEPS
+payment schedules are emailed for forwarding to Liberata.</p>
+<p><strong>Modelling in NJI:</strong></p>
+<ol type="1">
+<li>Stored as configuration, not as an authenticated principal.</li>
+<li>The list of valid Payment Authoriser recipients is administrable
+(Phase 0 design decision: most likely the shared
+<code>configuration_values</code> infrastructure table or an
+admin-maintained reference list — to be finalised in the Payment
+service's design).</li>
+<li>Finance users select a Payment Authoriser from this list when
+generating a payment schedule (FR43).</li>
+<li>The recipient does <strong>not</strong> log into NJI. They receive
+the JFEPS Excel by email and forward it to Liberata out-of-system (D6,
+unchanged from APEX).</li>
+<li>The 2 individuals recorded against this entry in the as-is catalogue
+(Feb 2026) are tracked operationally but are not migrated as NJI users
+in Phase 0 (D9).</li>
+</ol>
+<h2 id="administrative--cross-cutting-roles">Administrative /
+cross-cutting roles</h2>
+<p>These are not user-facing access types in the as-is catalogue; they
+are NJI-specific permissions overlaid on the taxonomy above.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Capabilities</th>
+<th>Mapped to as-is access type</th>
+<th>Key FRs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>System Administrator</strong></td>
+<td>(1) Create users. (2) Update role and Region/Area assignments for
+migrated and new users. (3) Manage per-user activation flags for
+per-region rollout (FR58).</td>
+<td>New in NJI — partially overlaps with Regional (Admin)'s Advice-Point
+request capability.</td>
+<td>FR4, FR58</td>
+</tr>
+<tr>
+<td><strong>Re-opener</strong> <em>(permission, not a separate role at
+MVP)</em></td>
+<td>(1) Re-open a verified sitting via the UI re-open action. (2) Must
+be different from the original confirmer (SIT-NFR-02). (3) Captures
+mandatory justification. (4) Fully audited.</td>
+<td>Granted to <strong>Regional (Admin)</strong> only at MVP.</td>
+<td>FR40</td>
+</tr>
+<tr>
+<td><strong>Reference Data Owner</strong> <em>(business role overlaid on
+Regional)</em></td>
+<td>(1) Named-owner sign-off on Reference Data list changes (FR6). (2)
+Sign-off on Phase 0 ETL migration of in-scope lists.</td>
+<td>Overlaid on Regional (Admin) / Regional (Full Access).</td>
+<td>FR6, Phase 0 D3</td>
+</tr>
+</tbody>
+</table>
+<h2 id="authorisation-model-summary">Authorisation model (summary)</h2>
+<ul>
+<li><strong>Authentication:</strong> HMCTS IdP via OIDC
+<code>authorization_code</code> (FR1). NJI does not own password,
+session, or account lifecycle.</li>
+<li><strong>Authorisation state:</strong> <code>nji-authorisation</code>
+owns <code>auth_users</code>, <code>auth_roles</code>,
+<code>auth_user_roles</code>, <code>auth_user_region_scopes</code>,
+<code>auth_user_activation_flags</code>. Authoritative table ownership
+is recorded in <a
+href="./data-tables.html"><code>./data-tables.md</code></a>.</li>
+<li><strong>Enforcement:</strong> every API call resolves principal →
+role(s) + Region/Area scope through Authorisation; implemented as
+per-service middleware (FR2). Effective-permission lookup is
+<code>POST /authz/check</code> (FR3).</li>
+<li><strong>Phase 0 migration:</strong> active APEX users +
+role/Region-Area scope assignments are loaded into NJI via the
+Authorisation API and mapped to IdP principals (D9, Risk #14). Unmatched
+records get an explicit decision — drop / hold / manual map. Zero
+ambiguous migrations.</li>
+<li><strong>Per-user activation flag:</strong> rollout gating uses
+<code>auth_user_activation_flags</code> (FR58) — migrated users do not
+use APEX; non-migrated users do not use NJI (D8).</li>
+<li><strong>Verifier separation of duties:</strong> confirmation and
+verification of sittings/bookings must be performed by different
+principals — enforced at the application tier on the sitting/booking
+row's <code>confirmed_by</code> field. Re-open enforces a similar
+constraint (FR40).</li>
+</ul>
+<h2 id="manual-uat-mapping-fr61">Manual UAT mapping (FR61)</h2>
+<p>Each domain service has a manual UAT script walked by
+APEX-experienced users from the in-region applicable access types before
+that service's regional rollout.</p>
+<table>
+<thead>
+<tr>
+<th>Service / phase</th>
+<th>UAT access types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reference Data, Authorisation, Notification (Phase 0)</td>
+<td>Regional (Admin), System Administrator</td>
+</tr>
+<tr>
+<td>Judge, Absence (Phases 1–2)</td>
+<td>Regional (Full Access, Admin), Judge, Judge's Clerk</td>
+</tr>
+<tr>
+<td>Vacancy (Phase 3)</td>
+<td>Regional (Full Access, Admin, No Fees), Court (Full Access)</td>
+</tr>
+<tr>
+<td>Booking (Phase 4)</td>
+<td>Regional (Full Access, Admin, No Fees), Court (Full Access, Enhanced
+CJ)</td>
+</tr>
+<tr>
+<td>Sitting (Phase 5)</td>
+<td>Court (Full Access, Enhanced CJ, Limited, Verifier), Regional
+(Verifier)</td>
+</tr>
+<tr>
+<td>Payment (Phase 6)</td>
+<td>Finance, (Payment Authoriser as email recipient — out-of-band
+UAT)</td>
+</tr>
+<tr>
+<td>Itinerary (Phase 7)</td>
+<td>Judge, Judge's Clerk, Presiding Judge, Presiding Judge's Clerk
+<em>(if any user exists at time of UAT)</em>, Judge Itin View Only,
+Judicial College</td>
+</tr>
+<tr>
+<td>MI Feed (Phase 8)</td>
+<td>All access types verifying reports; primary owners: Regional and
+Finance</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related-documents">Related documents</h2>
+<ul>
+<li><code>docs/architecture/asis/JI user types - 2.xlsx</code> —
+authoritative as-is catalogue (Feb 2026)</li>
+<li><a href="../prd.html"><code>../prd.md</code></a> — <em>Target
+users</em>, <em>User Journeys</em>, FR1–FR5, FR40, FR58, FR61</li>
+<li><a
+href="./sequence-diagrams/user-authentication-and-authorisation.html"><code>./sequence-diagrams/user-authentication-and-authorisation.md</code></a>
+— authn / authz call path</li>
+<li><a href="./data-tables.html"><code>./data-tables.md</code></a> —
+<code>nji-authorisation</code> table inventory</li>
+<li><a href="./gaps.html"><code>./gaps.md</code></a> — open questions
+inherited from the as-is catalogue</li>
+<li><a
+href="./functional-requirements-coverage.html"><code>./functional-requirements-coverage.md</code></a>
+— per-FR architectural coverage</li>
+</ul>
+
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/user-types.md</code></p>
+</main>
+</body>
+</html>
