@@ -243,8 +243,8 @@ surface (per FR58) is available before Phase 9+ rollout orchestration
 uses it.</p>
 <p><strong>Acceptance Criteria:</strong></p>
 <p><strong>Given</strong> <code>nji-authorisation</code> is deployed per
-Epic 0.1 (Story 0.1.3) with the 5 auth tables in place,
-<strong>When</strong> the engineer adds admin endpoints,
+Epic 0.1 (Story 0.1.3) with the 5 auth tables in place<br/>
+<strong>When</strong> the engineer adds admin endpoints<br/>
 <strong>Then</strong> <code>GET /v1/admin/users</code> supports list +
 search + filter by email, employee number, role, region, area,
 activation state (per FR4), <strong>And</strong>
@@ -253,37 +253,37 @@ role assignments and Region/Area scope, <strong>And</strong>
 <code>PUT /v1/admin/users/{id}/roles</code> updates the user's role
 assignments (writes <code>auth_user_roles</code>), <strong>And</strong>
 <code>PUT /v1/admin/users/{id}/region-scopes</code> updates Region/Area
-scope (writes <code>auth_user_region_scopes</code>),
+scope (writes <code>auth_user_region_scopes</code>)<br/>
 <strong>And</strong> <code>PUT /v1/admin/users/{id}/activation</code>
 toggles per-region activation flags (writes
 <code>auth_user_activation_flags</code>) — per FR58.</p>
-<p><strong>Given</strong> any admin endpoint is called,
+<p><strong>Given</strong> any admin endpoint is called<br/>
 <strong>When</strong> the authenticated principal does NOT have a
 <code>system-admin</code> role, <strong>Then</strong> the response is
 <code>403 Forbidden</code> with an RFC 9457 problem-details body (per
 NFR13).</p>
-<p><strong>Given</strong> an admin user updates another user's roles,
-<strong>When</strong> the API processes the request,
+<p><strong>Given</strong> an admin user updates another user's roles<br/>
+<strong>When</strong> the API processes the request<br/>
 <strong>Then</strong> an audit row is written to a
 <code>auth_audit</code> table (added via Flyway migration in this story)
 recording principal / target user / before-state / after-state /
 timestamp, <strong>And</strong> the response is <code>200 OK</code> with
 the updated user resource (or <code>409 Conflict</code> if optimistic
-locking via <code>@Version</code> detects a concurrent edit — per AR21),
+locking via <code>@Version</code> detects a concurrent edit — per AR21)<br/>
 <strong>And</strong> the change is reflected in the next
 <code>POST /v1/authz/check</code> call for the target user.</p>
 <p><strong>Given</strong> the admin endpoints are tested via Postman
-collection, <strong>When</strong> the collection runs in CI,
+collection, <strong>When</strong> the collection runs in CI<br/>
 <strong>Then</strong> it covers happy path + <code>403</code> (non-admin
 caller) + <code>404</code> (missing user) + <code>409</code>
 (optimistic-lock conflict) + <code>400</code> (validation failure with
 RFC 9457), <strong>And</strong> the collection is appended to
 <code>postman/nji-authorisation-phase0.postman_collection.json</code>.</p>
-<p><strong>Given</strong> the OpenAPI spec is regenerated,
+<p><strong>Given</strong> the OpenAPI spec is regenerated<br/>
 <strong>When</strong>
-<code>uk.gov.hmcts.nji:api-nji-authorisation:1.1.0</code> is published,
+<code>uk.gov.hmcts.nji:api-nji-authorisation:1.1.0</code> is published<br/>
 <strong>Then</strong> all admin endpoints are documented with full
-request/response schemas, <strong>And</strong> Spectral lint passes,
+request/response schemas, <strong>And</strong> Spectral lint passes<br/>
 <strong>And</strong> the spec version bumps from 1.0.0 (Story 0.1.3) to
 1.1.0 reflecting backwards-compatible additions (per AR38 versioning
 policy).</p>
@@ -302,8 +302,8 @@ can be onboarded to NJI</strong> (per FR4) and rollout orchestration
 flag-flip.</p>
 <p><strong>Acceptance Criteria:</strong></p>
 <p><strong>Given</strong> an admin signs into <code>nji-admin-ui</code>
-(Story 0.2.3) with a <code>system-admin</code> role,
-<strong>When</strong> they open <code>/users-roles</code>,
+(Story 0.2.3) with a <code>system-admin</code> role<br/>
+<strong>When</strong> they open <code>/users-roles</code><br/>
 <strong>Then</strong> they see a paginated user list with search by
 email, employee number, name, role, region, <strong>And</strong> the
 list is fetched via the auto-generated TypeScript client from
@@ -312,29 +312,29 @@ list is fetched via the auto-generated TypeScript client from
 the detail view renders, <strong>Then</strong> they see user identity
 (email, employee number, name), current roles, current Region/Area
 scope, current activation state per region, and effective permissions
-(computed by <code>GET /v1/users/{id}/effective-permissions</code>),
+(computed by <code>GET /v1/users/{id}/effective-permissions</code>)<br/>
 <strong>And</strong> an "Edit roles" form lists available roles with
 checkboxes, <strong>And</strong> an "Edit Region/Area scope" form lists
 regions and areas, <strong>And</strong> a "Toggle activation" control
 shows the current state per region with a confirmation modal before
 flip.</p>
-<p><strong>Given</strong> the admin edits and submits,
-<strong>When</strong> the form posts via the auto-generated client,
-<strong>Then</strong> a success toast confirms the change,
+<p><strong>Given</strong> the admin edits and submits<br/>
+<strong>When</strong> the form posts via the auto-generated client<br/>
+<strong>Then</strong> a success toast confirms the change<br/>
 <strong>And</strong> the effective permissions panel refreshes to show
 the new state, <strong>And</strong> on optimistic-lock conflict
 (<code>409</code>), the UI shows <em>"This user was edited by someone
 else — please reload"</em> with a refresh button.</p>
 <p><strong>Given</strong> the admin clicks the activation toggle for a
 region, <strong>When</strong> the confirmation modal asks <em>"Activate
-user <code>judge.test@…</code> for region Northern?"</em>,
+user <code>judge.test@…</code> for region Northern?"</em><br/>
 <strong>Then</strong> the admin confirms, <strong>And</strong> the API
 call updates <code>auth_user_activation_flags</code> for that user +
 region, <strong>And</strong> the user immediately sees (per Story 0.1.5)
 the new state on next sign-in (banner appears/disappears).</p>
 <p><strong>Given</strong> accessibility CI runs, <strong>When</strong>
-axe-core scans the list, detail, edit forms, and confirmation modal,
-<strong>Then</strong> no new WCAG 2.2 AA violations,
+axe-core scans the list, detail, edit forms, and confirmation modal<br/>
+<strong>Then</strong> no new WCAG 2.2 AA violations<br/>
 <strong>And</strong> keyboard navigation works through all forms and the
 modal, <strong>And</strong> ARIA labels are correct on the toggle
 controls.</p>
@@ -360,9 +360,9 @@ correctness is auditably owned</strong> (per FR57, D9, Risk #14) and
 unmatched records are not silently dropped.</p>
 <p><strong>Acceptance Criteria:</strong></p>
 <p><strong>Given</strong> the engineer creates the ETL at
-<code>nji-architecture/migration/users-roles/</code>,
+<code>nji-architecture/migration/users-roles/</code><br/>
 <strong>When</strong> the ETL is implemented, <strong>Then</strong> it
-reads APEX user dumps (format per the migration spec),
+reads APEX user dumps (format per the migration spec)<br/>
 <strong>And</strong> for each row, it reconciles to an HMCTS IdP
 principal: • try exact email match against the HMCTS IdP directory
 (primary key per D9) • on no email match, try employee-number match
@@ -373,7 +373,7 @@ bucket, <strong>And</strong> matched rows load via
 (per AR36, AR46).</p>
 <p><strong>Given</strong> the ETL completes a run, <strong>When</strong>
 the reconciliation report is generated at
-<code>nji-architecture/migration/reports/users-roles/{run-date}.md</code>,
+<code>nji-architecture/migration/reports/users-roles/{run-date}.md</code><br/>
 <strong>Then</strong> the report shows: • source-row count per APEX dump
 • matched count (email primary, employee-number fallback breakdown) •
 unmatched count with per-row reason • per-role assignment counts •
@@ -385,7 +385,7 @@ as one file per row, <strong>And</strong> each unmatched-row file
 includes the raw APEX row + a "handling decision" placeholder (drop /
 hold / manual map).</p>
 <p><strong>Given</strong> the ETL is re-run incrementally for a
-subsequent wave, <strong>When</strong> the second run completes,
+subsequent wave, <strong>When</strong> the second run completes<br/>
 <strong>Then</strong> previously-matched users are not re-created
 (idempotency per AR49), <strong>And</strong> new APEX rows are matched
 fresh against IdP, <strong>And</strong> previously-unmatched rows whose
@@ -432,22 +432,22 @@ file-system API, OR expose a per-service endpoint — recommend a single
 read-only endpoint on <code>nji-authorisation</code> to centralise the
 auth/audit surface).</p>
 <p><strong>Given</strong> the owner opens a Users/Roles reconciliation
-report, <strong>When</strong> the detail view renders,
+report, <strong>When</strong> the detail view renders<br/>
 <strong>Then</strong> they see the report's summary (matched / unmatched
 / anomalies counts), <strong>And</strong> a list of unmatched rows with
 reason, raw APEX data, and a "handling decision" dropdown (drop / hold /
 manual map), <strong>And</strong> for "manual map", a text input accepts
 the IdP principal email to bind to.</p>
 <p><strong>Given</strong> the owner applies decisions to all unmatched
-rows, <strong>When</strong> they click "Submit decisions",
+rows, <strong>When</strong> they click "Submit decisions"<br/>
 <strong>Then</strong> each decision is persisted to the ETL's
 reconciliation state (per Story 0.3.3), <strong>And</strong> a
 confirmation banner shows the per-decision counts.</p>
-<p><strong>Given</strong> all unmatched rows have decisions,
+<p><strong>Given</strong> all unmatched rows have decisions<br/>
 <strong>When</strong> the owner clicks "Sign off", <strong>Then</strong>
 a confirmation modal appears with the summary, <strong>And</strong> on
 confirm, the sign-off is recorded with owner identity, timestamp, report
-version, <strong>And</strong> the report status moves to "Signed off",
+version, <strong>And</strong> the report status moves to "Signed off"<br/>
 <strong>And</strong> downstream Phase 1+ consumption is no longer
 operationally blocked (enforcement gate at this stage is operational;
 can be wired to an activation flag in a follow-up).</p>
@@ -457,7 +457,7 @@ no new WCAG 2.2 AA violations, <strong>And</strong> keyboard navigation
 works through the report list, unmatched-rows table, decision dropdowns,
 manual-map input, and confirmation modal.</p>
 <p><strong>Given</strong> Playwright E2E coverage, <strong>When</strong>
-<code>tests/e2e/migration-reports.spec.ts</code> runs,
+<code>tests/e2e/migration-reports.spec.ts</code> runs<br/>
 <strong>Then</strong> it covers: list → open report → apply
 drop/hold/manual-map decisions → submit → sign off → report status
 updates to signed off, <strong>And</strong> also covers the rejection

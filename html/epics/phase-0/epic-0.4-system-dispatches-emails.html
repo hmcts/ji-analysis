@@ -246,7 +246,7 @@ Actions, Actuator, structured logs, OpenAPI tooling, Spectral, ArchUnit,
 Spotless, Checkstyle, Pact, Postman), <strong>And</strong> Group ID is
 <code>uk.gov.hmcts.nji</code>, artefact is
 <code>nji-notification</code>, package is
-<code>uk.gov.hmcts.nji.notification</code>, default port is 8082,
+<code>uk.gov.hmcts.nji.notification</code>, default port is 8082<br/>
 <strong>And</strong> initial commit is <em>"Scaffold NJI notification
 from HMCTS starter"</em> (per AR4).</p>
 <p><strong>Given</strong> the engineer adds Flyway migration
@@ -262,15 +262,15 @@ migration runs, <strong>Then</strong> a
 AR21), <strong>And</strong> <code>nji_notification</code> DB role owns
 the table, <strong>And</strong> the schema is documented in
 <code>architecture/data-tables.md</code>.</p>
-<p><strong>Given</strong> the engineer configures SMTP,
-<strong>When</strong> the service starts in dev profile,
+<p><strong>Given</strong> the engineer configures SMTP<br/>
+<strong>When</strong> the service starts in dev profile<br/>
 <strong>Then</strong> SMTP settings are loaded from Spring profiles +
 Azure Key Vault (per AR25, NFR16), <strong>And</strong> in non-prod
 environments a SMTP mock (e.g. Mailpit container in docker-compose)
 intercepts outbound mail, <strong>And</strong> in production the
 configuration points to HMCTS email infrastructure (per NFR22).</p>
-<p><strong>Given</strong> the service is deployed to dev AKS,
-<strong>When</strong> <code>/actuator/health</code> is queried,
+<p><strong>Given</strong> the service is deployed to dev AKS<br/>
+<strong>When</strong> <code>/actuator/health</code> is queried<br/>
 <strong>Then</strong> the response is <code>200 OK</code> with SMTP
 health-check status, <strong>And</strong> the response includes a
 degraded status if SMTP is unreachable.</p>
@@ -306,7 +306,7 @@ row in <code>notification_delivery_log</code> with status
 queue consumer — engineer to choose; recommendation at this scale:
 in-process Spring <code>@Scheduled</code> task picking
 <code>queued</code> rows with <code>FOR UPDATE SKIP LOCKED</code> per
-AR21 to avoid worker contention) processes queued rows,
+AR21 to avoid worker contention) processes queued rows<br/>
 <strong>When</strong> the worker picks a row, <strong>Then</strong> it
 transitions to <code>sending</code>, <strong>And</strong> invokes SMTP
 send, <strong>And</strong> on success transitions to <code>sent</code>
@@ -323,23 +323,23 @@ response is <code>400 Bad Request</code> with RFC 9457 problem-details
 including field-level errors (per AR37), <strong>And</strong> no
 delivery log row is created.</p>
 <p><strong>Given</strong> an unauthenticated request reaches the send
-endpoint, <strong>When</strong> the JWT is missing or invalid,
+endpoint, <strong>When</strong> the JWT is missing or invalid<br/>
 <strong>Then</strong> the response is <code>401 Unauthorized</code> with
 RFC 9457 problem-details, <strong>And</strong> no delivery log row is
 created.</p>
 <p><strong>Given</strong> a
-<code>GET /v1/notifications/delivery-log</code> endpoint is added,
+<code>GET /v1/notifications/delivery-log</code> endpoint is added<br/>
 <strong>When</strong> the caller is authenticated with a
 <code>system-admin</code> role, <strong>Then</strong> the response
 returns paginated delivery log entries with filters (recipient, status,
 date range), <strong>And</strong> non-admin callers get
 <code>403 Forbidden</code> with RFC 9457.</p>
-<p><strong>Given</strong> the OpenAPI spec is regenerated,
+<p><strong>Given</strong> the OpenAPI spec is regenerated<br/>
 <strong>When</strong>
-<code>uk.gov.hmcts.nji:api-nji-notification:1.0.0</code> is published,
+<code>uk.gov.hmcts.nji:api-nji-notification:1.0.0</code> is published<br/>
 <strong>Then</strong> Spectral lint passes, <strong>And</strong> the
 spec documents the send + delivery-log endpoints.</p>
-<p><strong>Given</strong> a Postman collection is published,
+<p><strong>Given</strong> a Postman collection is published<br/>
 <strong>When</strong>
 <code>postman/nji-notification-phase0.postman_collection.json</code>
 runs, <strong>Then</strong> it covers happy path + 400 + 401 + 403 +
@@ -362,7 +362,7 @@ in place from Phase 0 — locking in the pattern before downstream
 consumers depend on it.</p>
 <p><strong>Acceptance Criteria:</strong></p>
 <p><strong>Given</strong> <code>nji-mock-auth</code> was scaffolded per
-Story 0.1.2 with <code>client_credentials</code> flow supported,
+Story 0.1.2 with <code>client_credentials</code> flow supported<br/>
 <strong>When</strong> the engineer adds a
 <code>service-client-config</code> seed under
 <code>nji-mock-auth</code>, <strong>Then</strong> a service-token client
@@ -375,9 +375,9 @@ config is repeatable for future batch components by adding new entries
 <p><strong>Given</strong> a batch caller (or test harness) requests a
 token, <strong>When</strong> it calls <code>nji-mock-auth</code>'s token
 endpoint with
-<code>grant_type=client_credentials&amp;client_id=...&amp;client_secret=...&amp;scope=notification:send</code>,
+<code>grant_type=client_credentials&amp;client_id=...&amp;client_secret=...&amp;scope=notification:send</code><br/>
 <strong>Then</strong> the response is <code>200 OK</code> with
-<code>{access_token, token_type: "Bearer", expires_in, scope}</code>,
+<code>{access_token, token_type: "Bearer", expires_in, scope}</code><br/>
 <strong>And</strong> the JWT validates against
 <code>nji-mock-auth</code>'s JWKS endpoint, <strong>And</strong> the JWT
 subject identifies the client.</p>
@@ -413,8 +413,8 @@ Epic 0.4) — and so admins have a sanity-check tool when downstream
 phases start consuming Notification.</p>
 <p><strong>Acceptance Criteria:</strong></p>
 <p><strong>Given</strong> an admin signs into <code>nji-admin-ui</code>
-(Story 0.2.3) with a <code>system-admin</code> role,
-<strong>When</strong> they open <code>/system/notification-test</code>,
+(Story 0.2.3) with a <code>system-admin</code> role<br/>
+<strong>When</strong> they open <code>/system/notification-test</code><br/>
 <strong>Then</strong> they see a form with template-id selector (seeded
 templates: "test-email", "absence-ack", "booking-ack",
 "payment-schedule"), recipient email input, and payload JSON input (with
@@ -422,14 +422,14 @@ sensible defaults per template), <strong>And</strong> the form validates
 inputs client-side (valid email; JSON parseable), <strong>And</strong>
 the auto-generated TypeScript client from <code>nji-notification</code>
 OpenAPI is used for the API call.</p>
-<p><strong>Given</strong> the admin submits the form,
+<p><strong>Given</strong> the admin submits the form<br/>
 <strong>When</strong> the UI calls
 <code>POST /v1/notifications/send</code>, <strong>Then</strong> the
-response <code>202 Accepted</code> returns a <code>deliveryId</code>,
+response <code>202 Accepted</code> returns a <code>deliveryId</code><br/>
 <strong>And</strong> the UI displays the delivery in a sidebar panel
 showing <code>queued</code> status, <strong>And</strong> the panel polls
 (or subscribes to a WebSocket if added later — TanStack Query refetch
-interval is sufficient at Phase 0) for status changes,
+interval is sufficient at Phase 0) for status changes<br/>
 <strong>And</strong> within ~30 seconds the panel shows
 <code>sent</code> or <code>failed</code> based on SMTP outcome.</p>
 <p><strong>Given</strong> the test recipient receives the email in
@@ -447,11 +447,11 @@ into the delivery log via a link to
 <p><strong>Given</strong> a <code>/system/notification-log</code> view
 exists, <strong>When</strong> the admin opens it, <strong>Then</strong>
 they see a paginated table of recent delivery log entries (fetched via
-<code>GET /v1/notifications/delivery-log</code>) with filters,
+<code>GET /v1/notifications/delivery-log</code>) with filters<br/>
 <strong>And</strong> axe-core scans the table view without WCAG 2.2 AA
 violations.</p>
 <p><strong>Given</strong> Playwright E2E coverage, <strong>When</strong>
-<code>tests/e2e/notification-test.spec.ts</code> runs against dev,
+<code>tests/e2e/notification-test.spec.ts</code> runs against dev<br/>
 <strong>Then</strong> it covers: open test-send page → fill form →
 submit → see <code>queued</code> → wait for <code>sent</code> → verify
 Mailpit captured the message, <strong>And</strong> also covers the

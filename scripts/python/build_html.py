@@ -197,6 +197,13 @@ HEADING_RE = re.compile(r'<h([23])\s+id="([^"]+)">(.*?)</h\1>', re.DOTALL)
 H2_SECTION_RE = re.compile(r'<h2\s+id="([^"]+)">(.*?)</h2>', re.DOTALL)
 TAG_RE = re.compile(r"<[^>]+>")
 
+# Gherkin-AC line break: when pandoc renders a story's Given/When/Then/And as
+# one paragraph, find each keyword that follows an in-paragraph newline (i.e.
+# it's a continuation, not the first AC line) and inject <br/> before it.
+# The trailing comma on the prior line is consumed so the rendered lines read
+# cleanly without dangling punctuation.
+GHERKIN_KW_RE = re.compile(r',?\s*\n<strong>(Given|When|Then|And)</strong>')
+
 # Show in-page TOC and wrap H2 sections in <details> when a page has at least
 # this many H2 headings. Short pages don't benefit from progressive disclosure.
 TOC_THRESHOLD = 3
@@ -357,10 +364,14 @@ def md_to_html_body(md_path: Path) -> str:
     src = strip_frontmatter(src)
     src = rewrite_md_links(src)
     result = subprocess.run(
-        ["pandoc", "--from", "gfm", "--to", "html5", "--no-highlight"],
+        ["pandoc", "--from", "gfm", "--to", "html5", "--no-highlight", "--wrap=none"],
         input=src, capture_output=True, text=True, check=True,
     )
-    return result.stdout
+    html = result.stdout
+    # Break up Gherkin-style AC paragraphs so Given/When/Then/And land on
+    # separate lines visually. See GHERKIN_KW_RE for details.
+    html = GHERKIN_KW_RE.sub(r'<br/>\n<strong>\1</strong>', html)
+    return html
 
 
 def extract_title(md_path: Path) -> str:
