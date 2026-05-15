@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Epic 0.2: Admin manages reference data with named-owner migration sign-off — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2.site-title{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2.site-title a{color:inherit;text-decoration:none}
+aside.nav details.nav-group{margin:2px 0;border-radius:5px}
+aside.nav details.nav-group>summary{font-size:11px;padding:5px 8px 5px 4px;cursor:pointer;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-radius:4px;list-style:none;user-select:none;display:flex;align-items:center;gap:6px}
+aside.nav details.nav-group>summary::-webkit-details-marker{display:none}
+aside.nav details.nav-group>summary::before{content:'▸';display:inline-block;font-size:9px;color:#8c959f;transition:transform 0.15s ease;flex:0 0 10px;text-align:center}
+aside.nav details.nav-group[open]>summary::before{transform:rotate(90deg)}
+aside.nav details.nav-group>summary:hover{background:#eaeef2;color:#1f2328}
+aside.nav details.nav-group ul{list-style:none;margin:2px 0 6px;padding:0 0 0 16px}
+aside.nav details.nav-group li{margin:1px 0}
+aside.nav details.nav-group a{color:#0969da;text-decoration:none;display:block;padding:3px 8px;border-radius:6px;font-size:13px}
+aside.nav details.nav-group a:hover{background:#eaeef2}
+aside.nav details.nav-group a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+.nav-controls{margin:0 0 10px;font-size:11px}
+.nav-controls button{background:none;border:none;color:#0969da;cursor:pointer;padding:2px 4px;font-size:inherit;font-family:inherit;text-decoration:underline}
+.nav-controls button:hover{color:#0a3069}
+aside.toc{position:fixed;top:0;right:0;width:240px;height:100vh;overflow-y:auto;background:#fbfbfc;border-left:1px solid #eaeef2;padding:20px 14px;font-size:13px}
+aside.toc h4{font-size:11px;margin:0 0 8px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.toc ul{list-style:none;margin:0;padding:0}
+aside.toc li{margin:1px 0}
+aside.toc li.h3{padding-left:14px;font-size:12px}
+aside.toc a{color:#57606a;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;line-height:1.35;border-left:2px solid transparent}
+aside.toc a:hover{background:#eaeef2;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+body.has-toc main.content{margin-right:240px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+main details.section{border:1px solid #d0d7de;border-radius:6px;margin:14px 0;background:#fff;overflow:hidden}
+main details.section>summary{cursor:pointer;padding:10px 14px;background:#f6f8fa;list-style:none;user-select:none;display:flex;align-items:center;gap:10px;color:#1f2328;border-radius:5px}
+main details.section[open]>summary{border-bottom:1px solid #d0d7de;border-radius:5px 5px 0 0}
+main details.section>summary::-webkit-details-marker{display:none}
+main details.section>summary::before{content:'▸';display:inline-block;font-size:11px;color:#57606a;transition:transform 0.15s ease;flex:0 0 12px;text-align:center}
+main details.section[open]>summary::before{transform:rotate(90deg)}
+main details.section>summary:hover{background:#eaeef2}
+main details.section>summary .section-title{font-size:1.15em;font-weight:600;line-height:1.3}
+main details.section>summary .section-title code{font-size:.95em}
+main .section-body{padding:14px 18px 18px}
+main .section-body>h3:first-child,main .section-body>p:first-child,main .section-body>ul:first-child{margin-top:6px}
+.section-controls{margin:6px 0 18px;display:flex;gap:14px;font-size:13px;align-items:center}
+.section-controls .label{color:#57606a;font-size:12px}
+.section-controls button{background:none;border:1px solid #d0d7de;color:#0969da;cursor:pointer;padding:3px 10px;font-size:13px;font-family:inherit;border-radius:5px}
+.section-controls button:hover{background:#eaeef2;color:#0a3069}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+@media (max-width: 1200px){
+  aside.toc{display:none}
+  body.has-toc main.content{margin-right:0}
+}
+</style>
+</head>
+<body class="has-toc has-sections">
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
+<details class="nav-group" data-group="overview">
+<summary>Overview</summary>
+<ul>
+<li><a href="../../index.html">Index</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="product">
+<summary>Product</summary>
+<ul>
+<li><a href="../../prd.html">PRD (NJI)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="as-is-ji-architecture-views">
+<summary>As-is — JI Architecture Views</summary>
+<ul>
+<li><a href="../../asis/system-context.html">System Context (as-is)</a></li>
+<li><a href="../../asis/components.html">Components (as-is)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-architecture">
+<summary>To-be — NJI Architecture</summary>
+<ul>
+<li><a href="../../architecture.html">Architecture (index)</a></li>
+<li><a href="../../architecture-summary.html">Architecture summary</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-reference">
+<summary>To-be — NJI Reference</summary>
+<ul>
+<li><a href="../../architecture/user-types.html">User types</a></li>
+<li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../../architecture/conventions.html">Conventions</a></li>
+<li><a href="../../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
+<summary>To-be — NJI Sequence Diagrams</summary>
+<ul>
+<li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-open-items">
+<summary>To-be — NJI Open Items</summary>
+<ul>
+<li><a href="../../architecture/gaps.html">Gaps</a></li>
+<li><a href="../../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../../architecture/changelog.html">Changelog</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-readiness">
+<summary>Implementation Readiness</summary>
+<ul>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-epics-foundations">
+<summary>Implementation — Epics (Foundations)</summary>
+<ul>
+<li><a href="../../epics/index.html">Epics index</a></li>
+<li><a href="../../epics/requirements-inventory.html">Requirements inventory</a></li>
+<li><a href="../../epics/framework.html">Phase × Area framework</a></li>
+<li><a href="../../epics/fr-coverage-map.html">FR coverage map</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-phase-0" data-current="true" open>
+<summary>Implementation — Phase 0 ✓</summary>
+<ul>
+<li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html" class="current">Epic 0.2 — Reference Data</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+</ul>
+</details></aside>
+<main class="content">
+<div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
+<h1
+id="epic-02-admin-manages-reference-data-with-named-owner-migration-sign-off">Epic
+0.2: Admin manages reference data with named-owner migration
+sign-off</h1>
+<p><strong>User outcome:</strong> An admin user signs into
+<code>nji-admin-ui</code>, opens Reference Data maintenance, can view
+and edit Regions, Offices, judicial vocabularies (12 controlled lists),
+and calendar / financial-year boundaries. Phase 0 ETL has loaded initial
+data from APEX; named owners review the migration reconciliation report
+and sign off before downstream phases consume the data.</p>
+<p><strong>Vertical slice:</strong></p>
+<ul>
+<li><code>nji-reference-data</code> backend service scaffolded (per
+AR2–AR4)</li>
+<li>15 Reference Data tables (<code>regions</code>,
+<code>offices</code>, <code>calendar_periods</code> + 12 vocabulary
+tables) with service-owned Flyway migrations (per AR18, AR20)</li>
+<li>Per-service <code>SELECT</code> grants pattern established for
+direct-SQL reads (per FR7 / Principle 2)</li>
+<li>Reference Data maintenance API exposing versioned writes (FR6) with
+admin-gated <code>POST/PUT</code></li>
+<li><code>nji-admin-ui</code> repo scaffolded (React + TypeScript +
+Vite; same stack as <code>nji-ui</code>, separate Helm + Static Web App
++ distinct hostname per AR42–AR45b)</li>
+<li>Admin UI Reference Data module
+(<code>modules/reference-data/</code>) with list/edit/create flows +
+named-owner sign-off workflow</li>
+<li>Reference Data ETL stream at
+<code>nji-architecture/migration/reference-data/</code> (per AR46–AR48):
+reads APEX dumps, transforms to NJI shape, loads via Reference Data
+API</li>
+<li>Per-run reconciliation report under <code>migration/reports/</code>
+(Risk #13 mitigation)</li>
+<li>First end-to-end exercise of API-as-Product standards: URL
+versioning (<code>/v1/reference-data/...</code>), OpenAPI 3.x spec
+published as Maven artefact, RFC 9457 problem-details errors, RFC 9745
+<code>Deprecation</code> + RFC 8594 <code>Sunset</code> deprecation
+signalling</li>
+<li>First Postman collection for Phase 0 published under
+<code>postman/nji-reference-data-phase0.postman_collection.json</code>
+(NFR42 first instance)</li>
+</ul>
+<p><strong>FRs covered:</strong> FR4 (admin-foundation portion), FR6,
+FR7, FR57 (Reference Data portion), FR59, FR60</p>
+<p><strong>Key NFRs:</strong> NFR14 (no forbidden data — vocabularies
+contain no case/bank data by construction), NFR17–NFR19 (admin UI WCAG),
+NFR40 (admin UI independently deployable from business UI), NFR42
+(Postman collection)</p>
+<hr />
+<details class="section" id="story-021-scaffold-nji-reference-data-service--15-reference-data-tables-via-flyway"><summary><span class="section-title">Story
+0.2.1: Scaffold <code>nji-reference-data</code> service + 15 Reference
+Data tables via Flyway</span></summary><div class="section-body">
+<p>As a <strong>platform engineer</strong>, I want to scaffold
+<code>nji-reference-data</code> following the established pattern from
+Story 0.1.1 and create the 15 Reference Data tables via service-owned
+Flyway migrations, So that <strong>all other NJI services can read
+Reference Data via direct SQL on SELECT grants</strong> (per FR7
+revised, AR22) without each service having to own a copy of the
+schema.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> the engineer runs
+<code>nji-scaffold.sh nji-reference-data</code>, <strong>When</strong>
+the scaffold completes, <strong>Then</strong> the new repo follows all
+conventions from Story 0.1.1 (Spring Boot 4, Helm chart, GitHub Actions,
+Actuator, structured logs, OpenAPI tooling, Spectral, ArchUnit,
+Spotless, Checkstyle, Pact, Postman), <strong>And</strong> Group ID is
+<code>uk.gov.hmcts.nji</code>, artefact is
+<code>nji-reference-data</code>, package is
+<code>uk.gov.hmcts.nji.referencedata</code>, default port is 8082,
+<strong>And</strong> initial commit is <em>"Scaffold NJI reference-data
+from HMCTS starter"</em> (per AR4).</p>
+<p><strong>Given</strong> the engineer adds Flyway migration
+<code>V1__init_reference_data_schema.sql</code>, <strong>When</strong>
+the migration runs, <strong>Then</strong> 15 Reference Data tables exist
+with schemas per <code>architecture/data-tables.md</code>:
+<code>regions</code>, <code>offices</code>,
+<code>calendar_periods</code>, plus 12 vocabulary tables covering judge
+types, work types, ticket types, session types, booking types, absence
+types, fee entitlement types, location types, court types,
+jurisdictional categories, judicial vocabularies, and financial-year
+boundaries, <strong>And</strong> <code>nji_reference_data</code> DB role
+owns the tables (per AR19), <strong>And</strong> ArchUnit fitness
+function in CI verifies no other service writes to these tables.</p>
+<p><strong>Given</strong> the migration includes SELECT grants for
+downstream service DB roles, <strong>When</strong> Flyway applies the
+grants, <strong>Then</strong> every NJI service DB role
+(<code>nji_authorisation</code>, <code>nji_notification</code>, and
+placeholders for future domain service roles) has <code>SELECT</code> on
+all 15 Reference Data tables (per FR7 revised, AR22),
+<strong>And</strong> the grants are tested by a CI integration test
+asserting each placeholder role can SELECT.</p>
+<p><strong>Given</strong> the service is deployed to dev AKS,
+<strong>When</strong> <code>/actuator/health</code> is queried,
+<strong>Then</strong> the response is <code>200 OK</code>,
+<strong>And</strong> Application Insights receives the service's
+structured logs (per NFR27), <strong>And</strong>
+<code>/actuator/info</code> returns Git metadata (per NFR28).</p>
+<p><strong>References:</strong> FR7, FR8 (re-uses
+<code>configuration_values</code>), FR59, FR60; NFR25–NFR28, NFR31,
+NFR40; AR2–AR22.</p>
+<hr />
+</div></details><details class="section" id="story-022-reference-data-api-exposes-admin-gated-crud-with-versioning-openapi-rfc-9457-errors-deprecation-signalling"><summary><span class="section-title">Story
+0.2.2: Reference Data API exposes admin-gated CRUD with versioning,
+OpenAPI, RFC 9457 errors, deprecation signalling</span></summary><div class="section-body">
+<p>As an <strong>API consumer</strong> (admin UI now; downstream
+services in Phase 1+), I want a versioned Reference Data API with
+admin-gated writes and public reads, full OpenAPI spec, RFC 9457 error
+envelopes, and APIM-injected deprecation headers, So that
+<strong>Reference Data is the single writer for the controlled
+lists</strong> (per revised FR7) and the API-as-Product standards are
+validated on Reference Data before any domain service is built (per PRD
+Key Characteristic 4 / D1).</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> <code>nji-reference-data</code> is scaffolded
+per Story 0.2.1, <strong>When</strong> the engineer implements read
+endpoints, <strong>Then</strong>
+<code>GET /v1/reference-data/regions</code>, <code>/offices</code>,
+<code>/judicial-vocabularies</code>, <code>/calendar</code> return
+<code>200 OK</code> with structured JSON (per FR6 read surface, AR38),
+<strong>And</strong> read endpoints are protected by
+<code>JWTFilter</code> (any authenticated principal can read; per
+NFR13), <strong>And</strong> OpenAPI spec generated by springdoc lists
+all read endpoints with full request/response schemas.</p>
+<p><strong>Given</strong> the engineer implements write endpoints,
+<strong>When</strong> an authenticated user with <code>RSU</code> or
+<code>system-admin</code> role calls
+<code>POST /v1/reference-data/regions</code> with a valid body,
+<strong>Then</strong> the response is <code>201 Created</code> with the
+created resource and a <code>Location</code> header (per FR6 write
+surface), <strong>And</strong> the change enters a "pending" state
+requiring named-owner sign-off (per FR6 named-owner workflow),
+<strong>And</strong> an audit row is written recording who/when/what
+changed, <strong>And</strong> non-admin authenticated users get
+<code>403 Forbidden</code> with RFC 9457 problem-details (per
+NFR13).</p>
+<p><strong>Given</strong> the engineer implements validation,
+<strong>When</strong> a malformed request reaches a write endpoint,
+<strong>Then</strong> the response is <code>400 Bad Request</code> with
+an RFC 9457 problem-details body containing <code>type</code>,
+<code>title</code>, <code>status</code>, <code>detail</code>,
+<code>instance</code>, and a per-field errors extension (per AR37,
+NFR39), <strong>And</strong> validation rules align with table
+constraints (e.g. uniqueness on region code, valid date ranges on
+calendar periods).</p>
+<p><strong>Given</strong> the OpenAPI spec is generated and Spectral
+lint runs in CI, <strong>When</strong> the spec is built,
+<strong>Then</strong> the spec passes Spectral lint (per AR17),
+<strong>And</strong> the spec is published to internal Maven as
+<code>uk.gov.hmcts.nji:api-nji-reference-data:1.0.0</code> (per AR8),
+<strong>And</strong> Swagger UI is exposed for developer browsing
+(ops-restricted at APIM).</p>
+<p><strong>Given</strong> APIM is configured for
+<code>nji-reference-data</code> per AR27 + AR39, <strong>When</strong> a
+response leaves APIM to the client, <strong>Then</strong> rate-limit
+headers are present per APIM policy, <strong>And</strong>
+<code>Deprecation</code> (RFC 9745) and <code>Sunset</code> (RFC 8594)
+headers are injected on endpoints flagged in the OpenAPI spec as
+<code>deprecated: true</code> (none at Phase 0; mechanism verified by a
+test endpoint), <strong>And</strong> <code>/actuator/*</code> paths are
+blocked at APIM (per AR33).</p>
+<p><strong>Given</strong> the engineer publishes the first Phase 0
+Postman collection, <strong>When</strong> the collection runs in CI,
+<strong>Then</strong>
+<code>postman/nji-reference-data-phase0.postman_collection.json</code>
+exercises every endpoint in the API, <strong>And</strong> the collection
+covers happy path + 401 + 403 + 400 + 404 cases (per NFR42),
+<strong>And</strong> the collection is versioned alongside the
+service.</p>
+<p><strong>References:</strong> FR4 (admin-gated foundation), FR6, FR7,
+FR59, FR60; NFR12–NFR16, NFR39, NFR42; AR8, AR17, AR21, AR27, AR33,
+AR34, AR37, AR38, AR39, AR41.</p>
+<hr />
+</div></details><details class="section" id="story-023-scaffold-nji-admin-ui-repo-with-admin-distinct-accent-and-independent-deployment"><summary><span class="section-title">Story
+0.2.3: Scaffold <code>nji-admin-ui</code> repo with admin-distinct
+accent and independent deployment</span></summary><div class="section-body">
+<p>As a <strong>front-end engineer</strong>, I want to scaffold
+<code>nji-admin-ui</code> following the <code>nji-ui</code> pattern from
+Story 0.1.4 but as a separate repo with distinct visual treatment and
+independent deployment, So that <strong>admin workflows are
+unambiguously separated from business-user workflows</strong> (per AR42,
+AR45b) — different hostname, different review team, different release
+cadence, no risk of admin screens leaking into business navigation.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> the engineer initialises the
+<code>nji-admin-ui</code> repo from the same Vite React+TypeScript
+template as <code>nji-ui</code>, <strong>When</strong> scaffolding
+completes, <strong>Then</strong> the repo has the same baseline as Story
+0.1.4 (React + TypeScript + Vite + Vitest + Playwright; GOV.UK Design
+System base; TanStack Query; OpenAPI client generation tooling per
+AR43), <strong>And</strong> the repo is private under HMCTS org with
+branch protection on <code>main</code>, <strong>And</strong>
+<code>CODEOWNERS</code> defines a distinct admin-focused review team
+(per AR42 rationale 3).</p>
+<p><strong>Given</strong> the engineer applies the visual
+differentiation, <strong>When</strong> the foundation renders,
+<strong>Then</strong> the header and primary navigation use a distinct
+accent colour (configurable token; recommendation: HMCTS amber or
+charcoal) so the admin surface is visually unambiguous (per AR42),
+<strong>And</strong> a header banner reads <em>"NJI Administration"</em>
+with the user's email and sign-out, <strong>And</strong> the
+<code>&lt;PageLayout&gt;</code> is duplicated (not shared) with
+<code>nji-ui</code> per the polyrepo discipline (per AR44).</p>
+<p><strong>Given</strong> the engineer implements the auth wrapper,
+<strong>When</strong> wrapper is complete, <strong>Then</strong>
+<code>HmctsIdpProvider</code>, <code>ProtectedRoute</code>,
+<code>useAuth</code>, HTTP client with RFC 9457 handling are duplicated
+from <code>nji-ui</code> (not imported as a shared package — per AR44),
+<strong>And</strong> <code>ProtectedRoute</code> checks the
+authenticated principal's roles via <code>useAuth().user.roles</code>
+and rejects non-admin users with a <code>403</code> view (per AR44).</p>
+<p><strong>Given</strong> the engineer configures independent
+deployment, <strong>When</strong> the PR merges to <code>main</code>,
+<strong>Then</strong> the bundle deploys to a separate Azure Static Web
+App from <code>nji-ui</code> (per AR45b), <strong>And</strong> the dev
+environment uses a distinct hostname (configurable in production to
+<code>admin.nji.hmcts.gov.uk</code>), <strong>And</strong> the deploy
+pipeline can release <code>nji-admin-ui</code> without touching
+<code>nji-ui</code> (verified by deploying a no-op change to
+<code>nji-admin-ui</code> while watching the <code>nji-ui</code>
+deployment timestamp remain unchanged).</p>
+<p><strong>Given</strong> accessibility CI is configured,
+<strong>When</strong> axe-core checks run in <code>ci.yml</code>,
+<strong>Then</strong> the build fails on any new WCAG 2.2 AA violation,
+<strong>And</strong> keyboard navigation through the admin chrome is
+verified by a Playwright smoke test.</p>
+<p><strong>Given</strong> the first Admin UI E2E suite is written,
+<strong>When</strong> <code>tests/e2e/admin-foundation.spec.ts</code>
+runs in CI, <strong>Then</strong> it covers: unauthenticated redirect →
+sign-in → non-admin user blocked with <code>403</code> view → admin user
+lands on admin Home → sign-out flow.</p>
+<p><strong>References:</strong> FR4 (admin foundation), FR56 (admin
+stack); NFR17, NFR18, NFR19, NFR31, NFR40; AR42–AR45b.</p>
+<hr />
+</div></details><details class="section" id="story-024-admin-ui-reference-data-maintenance-module--list-view-edit-create-sign-off"><summary><span class="section-title">Story
+0.2.4: Admin UI Reference Data maintenance module — list, view, edit,
+create, sign-off</span></summary><div class="section-body">
+<p>As a <strong>named Reference Data owner</strong> (RSU lead or
+judicial-vocabulary owner), I want to list, view, edit, and create
+Reference Data entries through <code>nji-admin-ui</code>, with a
+named-owner sign-off workflow for changes, So that <strong>Reference
+Data evolves under explicit owner accountability</strong> (per FR6) —
+critical for Risk #13 (Reference Data + Users/Roles migration
+correctness).</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> an admin signs into <code>nji-admin-ui</code>
+(Story 0.2.3), <strong>When</strong> they open
+<code>/reference-data</code>, <strong>Then</strong> they see a list of
+Reference Data categories: Regions, Offices, Calendar Periods, and 12
+judicial vocabularies, <strong>And</strong> selecting a category renders
+a paginated list with search and filter inputs, <strong>And</strong> the
+auto-generated TypeScript client from <code>nji-reference-data</code>
+OpenAPI handles the HTTP calls (per AR43).</p>
+<p><strong>Given</strong> the admin opens an entry,
+<strong>When</strong> they edit a field and submit,
+<strong>Then</strong> the change enters a "pending sign-off" state (per
+FR6 workflow + Story 0.2.2 backend), <strong>And</strong> the UI shows a
+notification <em>"Change submitted — awaiting named-owner
+sign-off"</em>, <strong>And</strong> the entry appears in the admin's
+"Pending Changes" view.</p>
+<p><strong>Given</strong> a named owner views the "Pending Changes"
+queue, <strong>When</strong> they review a pending change and click
+"Approve", <strong>Then</strong> the API marks the change as approved,
+the audit log records who/when/why, <strong>And</strong> the change
+becomes live in Reference Data, <strong>And</strong> the admin who
+submitted the change receives a UI confirmation, <strong>And</strong> a
+named owner can also "Reject" with a mandatory reason field.</p>
+<p><strong>Given</strong> validation errors come back from the API,
+<strong>When</strong> the form receives an RFC 9457 problem-details
+response with field-level errors, <strong>Then</strong> the UI renders
+the field-level error messages inline, <strong>And</strong> the
+title/detail render in a page-level alert, <strong>And</strong> the user
+can fix and resubmit.</p>
+<p><strong>Given</strong> accessibility checks run on every page in the
+module, <strong>When</strong> axe-core scans the list, edit, and
+pending-changes views, <strong>Then</strong> no new WCAG 2.2 AA
+violations, <strong>And</strong> keyboard navigation works through the
+table, form, and modal interactions, <strong>And</strong> ARIA labels
+are correct on tabbed content (per NFR18).</p>
+<p><strong>Given</strong> Playwright E2E coverage for the module,
+<strong>When</strong> <code>tests/e2e/reference-data.spec.ts</code>
+runs, <strong>Then</strong> it covers: list → search → edit → submit →
+pending state → named-owner approve → live state, <strong>And</strong>
+also covers rejection path with mandatory reason, <strong>And</strong>
+also covers validation-error path.</p>
+<p><strong>References:</strong> FR4 (admin role enforcement), FR6
+(maintenance + sign-off), FR56 (admin stack); NFR12, NFR13, NFR14,
+NFR17, NFR18, NFR19; AR42–AR45.</p>
+<hr />
+</div></details><details class="section" id="story-025-phase-0-reference-data-etl--apex-dumps-to-nji-via-api--reconciliation-report--owner-sign-off"><summary><span class="section-title">Story
+0.2.5: Phase 0 Reference Data ETL — APEX dumps to NJI via API +
+reconciliation report + owner sign-off</span></summary><div class="section-body">
+<p>As a <strong>Reference Data named owner</strong>, I want the Phase 0
+ETL to load Reference Data from APEX into NJI via the Reference Data API
+(not direct DB writes) and produce a per-run reconciliation report for
+me to sign off on, So that <strong>the migration's correctness is
+auditably gated by domain owners</strong> (per FR57, D3, Risk #13) and
+re-runs are idempotent for incremental waves.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> the engineer creates the ETL at
+<code>nji-architecture/migration/reference-data/</code>,
+<strong>When</strong> the ETL is implemented, <strong>Then</strong> it
+reads APEX dumps (CSV files extracted from APEX, format defined per the
+migration spec at
+<code>nji-architecture/migration/reference-data/spec.md</code>),
+<strong>And</strong> it transforms rows into NJI shapes per the mapping
+tables defined in <code>architecture/data-tables.md</code>,
+<strong>And</strong> it loads data via
+<code>POST /v1/reference-data/...</code> admin endpoints with a
+service-token (per AR46, AR36), <strong>And</strong> it is NOT a Flyway
+migration (NJI Flyway owns NJI DDL only; APEX-to-NJI data transform is a
+separate programme-level activity per FR57 framing).</p>
+<p><strong>Given</strong> the ETL completes a run, <strong>When</strong>
+the reconciliation report is generated, <strong>Then</strong> the report
+at
+<code>nji-architecture/migration/reports/reference-data/{run-date}.md</code>
+shows: • source-row counts per APEX dump • target-row counts per NJI
+table • per-table diff (added / updated / unchanged / skipped) •
+anomalies (e.g. unmapped values, validation failures, character-encoding
+issues) • a "named owner sign-off required" footer, <strong>And</strong>
+the report is also exposed via the Admin UI Migration Reports module
+(placeholder per AR42 — promoted to real implementation in Story 0.3.4
+alongside the Users/Roles equivalent).</p>
+<p><strong>Given</strong> the ETL is re-run on the same APEX dump,
+<strong>When</strong> the second run completes, <strong>Then</strong> it
+is idempotent — no duplicate rows, no spurious updates (per AR49),
+<strong>And</strong> the reconciliation report shows zero new
+changes.</p>
+<p><strong>Given</strong> the ETL is re-run after an APEX-side update is
+dumped, <strong>When</strong> the second run completes,
+<strong>Then</strong> only the changed rows are updated,
+<strong>And</strong> the reconciliation report shows the per-table
+diff.</p>
+<p><strong>Given</strong> a named owner reviews the reconciliation
+report, <strong>When</strong> they sign off via a versioned commit to
+<code>nji-architecture/migration/reports/reference-data/signoffs/{run-date}-{owner-handle}.md</code>
+(containing owner identity, timestamp, the specific report version
+signed off, and a short approval note), <strong>Then</strong> the
+sign-off is recorded in git history (immutable audit trail),
+<strong>And</strong> the commit is co-signed by a second reviewer per
+the <code>CODEOWNERS</code> policy on <code>migration/reports/</code>,
+<strong>And</strong> unsigned reports block downstream Phase 1+
+consumption of Reference Data (enforced operationally at this stage by
+the Phase 1 first-consumer story; the same artefact also feeds the UI
+sign-off surface that Story 0.3.4 later adds — but Story 0.2.5 does
+<strong>not</strong> depend on Story 0.3.4 being delivered first).</p>
+<p><strong>Given</strong> the ETL encounters an anomaly it cannot
+resolve (e.g. an APEX value not in the NJI controlled list),
+<strong>When</strong> the run halts on the anomaly,
+<strong>Then</strong> the row is logged with detail to a
+<code>migration/reports/reference-data/anomalies/{run-date}.md</code>
+file, <strong>And</strong> the run continues with the remaining rows,
+<strong>And</strong> the reconciliation report includes the anomaly
+count and a link to the anomalies file, <strong>And</strong> the named
+owner can decide handling (correct in NJI controlled list / correct in
+APEX dump / drop) before re-run.</p>
+<p><strong>References:</strong> FR6 (load via API per FR6 write
+surface), FR7 (no direct DB writes), FR57 (ETL framing); NFR15 (audit),
+NFR40 (ETL independent of services); AR21, AR36, AR46, AR47, AR48,
+AR49.</p>
+</div></details>
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/phase-0/epic-0.2-admin-manages-ref-data.md</code></p>
+</main>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#story-021-scaffold-nji-reference-data-service--15-reference-data-tables-via-flyway">Story
+0.2.1: Scaffold nji-reference-data service + 15 Reference
+Data tables via Flyway</a></li><li><a href="#story-022-reference-data-api-exposes-admin-gated-crud-with-versioning-openapi-rfc-9457-errors-deprecation-signalling">Story
+0.2.2: Reference Data API exposes admin-gated CRUD with versioning,
+OpenAPI, RFC 9457 errors, deprecation signalling</a></li><li><a href="#story-023-scaffold-nji-admin-ui-repo-with-admin-distinct-accent-and-independent-deployment">Story
+0.2.3: Scaffold nji-admin-ui repo with admin-distinct
+accent and independent deployment</a></li><li><a href="#story-024-admin-ui-reference-data-maintenance-module--list-view-edit-create-sign-off">Story
+0.2.4: Admin UI Reference Data maintenance module — list, view, edit,
+create, sign-off</a></li><li><a href="#story-025-phase-0-reference-data-etl--apex-dumps-to-nji-via-api--reconciliation-report--owner-sign-off">Story
+0.2.5: Phase 0 Reference Data ETL — APEX dumps to NJI via API +
+reconciliation report + owner sign-off</a></li></ul></aside>
+<script>
+(function(){
+  // 1. Sidebar accordion: persist user's group open/close preference per group.
+  //    The current page's group is always open on load (regardless of stored state).
+  document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){
+    var key = 'nav-group-' + d.dataset.group;
+    if (d.dataset.current !== 'true') {
+      var stored = localStorage.getItem(key);
+      if (stored === 'open') d.open = true;
+      else if (stored === 'closed') d.open = false;
+    }
+    d.addEventListener('toggle', function(){
+      localStorage.setItem(key, d.open ? 'open' : 'closed');
+    });
+  });
+
+  // 2. Expand all / Collapse all (sidebar)
+  document.querySelectorAll('button[data-nav-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.navAction === 'expand';
+      document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){ d.open = open; });
+    });
+  });
+
+  // 3. When a fragment link points to a heading inside a collapsed <details>,
+  //    open all ancestor <details> elements so the target is visible.
+  function openAncestors(id){
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    var cur = el.parentElement;
+    while (cur) {
+      if (cur.tagName === 'DETAILS') cur.open = true;
+      cur = cur.parentElement;
+    }
+    setTimeout(function(){
+      try { el.scrollIntoView({block: 'start', behavior: 'smooth'}); } catch (e) {}
+    }, 60);
+  }
+  if (window.location.hash) {
+    openAncestors(window.location.hash.slice(1));
+  }
+  window.addEventListener('hashchange', function(){
+    openAncestors(window.location.hash.slice(1));
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.length < 2) return;
+    setTimeout(function(){ openAncestors(href.slice(1)); }, 10);
+  });
+
+  // 4. Expand all / Collapse all (content sections)
+  document.querySelectorAll('button[data-section-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.sectionAction === 'expand';
+      document.querySelectorAll('main.content details.section').forEach(function(d){ d.open = open; });
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -6,17 +6,34 @@
 <title>Product Requirements Document - ji-analysis — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
 aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
-aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
-aside.nav h2 a{color:inherit;text-decoration:none}
-aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-aside.nav ul{list-style:none;margin:0;padding:0}
-aside.nav li{margin:2px 0}
-aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
-aside.nav a:hover{background:#eaeef2}
-aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+aside.nav h2.site-title{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2.site-title a{color:inherit;text-decoration:none}
+aside.nav details.nav-group{margin:2px 0;border-radius:5px}
+aside.nav details.nav-group>summary{font-size:11px;padding:5px 8px 5px 4px;cursor:pointer;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-radius:4px;list-style:none;user-select:none;display:flex;align-items:center;gap:6px}
+aside.nav details.nav-group>summary::-webkit-details-marker{display:none}
+aside.nav details.nav-group>summary::before{content:'▸';display:inline-block;font-size:9px;color:#8c959f;transition:transform 0.15s ease;flex:0 0 10px;text-align:center}
+aside.nav details.nav-group[open]>summary::before{transform:rotate(90deg)}
+aside.nav details.nav-group>summary:hover{background:#eaeef2;color:#1f2328}
+aside.nav details.nav-group ul{list-style:none;margin:2px 0 6px;padding:0 0 0 16px}
+aside.nav details.nav-group li{margin:1px 0}
+aside.nav details.nav-group a{color:#0969da;text-decoration:none;display:block;padding:3px 8px;border-radius:6px;font-size:13px}
+aside.nav details.nav-group a:hover{background:#eaeef2}
+aside.nav details.nav-group a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+.nav-controls{margin:0 0 10px;font-size:11px}
+.nav-controls button{background:none;border:none;color:#0969da;cursor:pointer;padding:2px 4px;font-size:inherit;font-family:inherit;text-decoration:underline}
+.nav-controls button:hover{color:#0a3069}
+aside.toc{position:fixed;top:0;right:0;width:240px;height:100vh;overflow-y:auto;background:#fbfbfc;border-left:1px solid #eaeef2;padding:20px 14px;font-size:13px}
+aside.toc h4{font-size:11px;margin:0 0 8px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.toc ul{list-style:none;margin:0;padding:0}
+aside.toc li{margin:1px 0}
+aside.toc li.h3{padding-left:14px;font-size:12px}
+aside.toc a{color:#57606a;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;line-height:1.35;border-left:2px solid transparent}
+aside.toc a:hover{background:#eaeef2;color:#0a3069}
 main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+body.has-toc main.content{margin-right:240px}
 main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
 main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
 main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
@@ -36,33 +53,62 @@ main a:hover{text-decoration:underline}
 main ul,main ol{margin:6px 0 14px;padding-left:28px}
 main li{margin:2px 0}
 main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+main details.section{border:1px solid #d0d7de;border-radius:6px;margin:14px 0;background:#fff;overflow:hidden}
+main details.section>summary{cursor:pointer;padding:10px 14px;background:#f6f8fa;list-style:none;user-select:none;display:flex;align-items:center;gap:10px;color:#1f2328;border-radius:5px}
+main details.section[open]>summary{border-bottom:1px solid #d0d7de;border-radius:5px 5px 0 0}
+main details.section>summary::-webkit-details-marker{display:none}
+main details.section>summary::before{content:'▸';display:inline-block;font-size:11px;color:#57606a;transition:transform 0.15s ease;flex:0 0 12px;text-align:center}
+main details.section[open]>summary::before{transform:rotate(90deg)}
+main details.section>summary:hover{background:#eaeef2}
+main details.section>summary .section-title{font-size:1.15em;font-weight:600;line-height:1.3}
+main details.section>summary .section-title code{font-size:.95em}
+main .section-body{padding:14px 18px 18px}
+main .section-body>h3:first-child,main .section-body>p:first-child,main .section-body>ul:first-child{margin-top:6px}
+.section-controls{margin:6px 0 18px;display:flex;gap:14px;font-size:13px;align-items:center}
+.section-controls .label{color:#57606a;font-size:12px}
+.section-controls button{background:none;border:1px solid #d0d7de;color:#0969da;cursor:pointer;padding:3px 10px;font-size:13px;font-family:inherit;border-radius:5px}
+.section-controls button:hover{background:#eaeef2;color:#0a3069}
 .breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
 .breadcrumb a{color:#0969da;text-decoration:none}
 .source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
 .source-note a{color:#57606a;text-decoration:underline}
+@media (max-width: 1200px){
+  aside.toc{display:none}
+  body.has-toc main.content{margin-right:0}
+}
 </style>
 </head>
-<body>
-<aside class="nav"><h2><a href="./index.html">NJI Documentation</a></h2>
-<h3>Overview</h3>
+<body class="has-toc has-sections">
+<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
+<details class="nav-group" data-group="overview">
+<summary>Overview</summary>
 <ul>
 <li><a href="./index.html">Index</a></li>
 </ul>
-<h3>Product</h3>
+</details>
+<details class="nav-group" data-group="product" data-current="true" open>
+<summary>Product</summary>
 <ul>
 <li><a href="./prd.html" class="current">PRD (NJI)</a></li>
 </ul>
-<h3>As-is — JI Architecture Views</h3>
+</details>
+<details class="nav-group" data-group="as-is-ji-architecture-views">
+<summary>As-is — JI Architecture Views</summary>
 <ul>
 <li><a href="./asis/system-context.html">System Context (as-is)</a></li>
 <li><a href="./asis/components.html">Components (as-is)</a></li>
 </ul>
-<h3>To-be — NJI Architecture</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-architecture">
+<summary>To-be — NJI Architecture</summary>
 <ul>
 <li><a href="./architecture.html">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html">Architecture summary</a></li>
 </ul>
-<h3>To-be — NJI Reference</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-reference">
+<summary>To-be — NJI Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -73,7 +119,9 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <li><a href="./architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
-<h3>To-be — NJI Sequence Diagrams</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
+<summary>To-be — NJI Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -84,27 +132,50 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <li><a href="./architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
-<h3>To-be — NJI Open Items</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-open-items">
+<summary>To-be — NJI Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
 <li><a href="./architecture/changelog.html">Changelog</a></li>
 </ul>
-<h3>Implementation Readiness</h3>
+</details>
+<details class="nav-group" data-group="implementation-readiness">
+<summary>Implementation Readiness</summary>
 <ul>
-<li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
-<h3>Implementation</h3>
+</details>
+<details class="nav-group" data-group="implementation-epics-foundations">
+<summary>Implementation — Epics (Foundations)</summary>
 <ul>
-<li><a href="./epics.html">Epics & Stories</a></li>
-</ul></aside>
+<li><a href="./epics/index.html">Epics index</a></li>
+<li><a href="./epics/requirements-inventory.html">Requirements inventory</a></li>
+<li><a href="./epics/framework.html">Phase × Area framework</a></li>
+<li><a href="./epics/fr-coverage-map.html">FR coverage map</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-phase-0">
+<summary>Implementation — Phase 0 ✓</summary>
+<ul>
+<li><a href="./epics/phase-0/index.html">Phase 0 overview</a></li>
+<li><a href="./epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
+<li><a href="./epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
+<li><a href="./epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
+<li><a href="./epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
+<li><a href="./epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+</ul>
+</details></aside>
 <main class="content">
+<div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="product-requirements-document---ji-analysis">Product
 Requirements Document - ji-analysis</h1>
 <p><strong>Author:</strong> Ramnish <strong>Date:</strong>
 2026-05-05</p>
-<h2 id="document-map">Document Map</h2>
+<details class="section" id="document-map"><summary><span class="section-title">Document Map</span></summary><div class="section-body">
 <p>NJI (New JI) is a greenfield rebuild of HMCTS's Judicial Itineraries
 system. 11 services, modern UI, Azure-deployed. Replaces the unsupported
 Oracle APEX (OPT) platform. Built in isolation from APEX; cutover is
@@ -167,7 +238,7 @@ phased per region.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="executive-summary">Executive Summary</h2>
+</div></details><details class="section" id="executive-summary"><summary><span class="section-title">Executive Summary</span></summary><div class="section-body">
 <p>JI (Judicial Itineraries) is HMCTS's system for planning, allocating,
 confirming, and paying judicial sittings across Civil, Family, and Crown
 Courts. It runs on an unsupported Oracle APEX (OPT) platform and is
@@ -236,7 +307,7 @@ synchronisation.</p></li>
 <p><strong>Why now:</strong> OPT is unsupported. HMCTS programmes need
 integration patterns the export-only legacy cannot deliver. Each month
 on APEX delays API integration for the wider ecosystem.</p>
-<h2 id="project-classification">Project Classification</h2>
+</div></details><details class="section" id="project-classification"><summary><span class="section-title">Project Classification</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -281,7 +352,7 @@ fits an API-first product with UI in scope.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="success-criteria">Success Criteria</h2>
+</div></details><details class="section" id="success-criteria"><summary><span class="section-title">Success Criteria</span></summary><div class="section-body">
 <h3 id="user-success">User Success</h3>
 <p>Each role can complete its legacy workflow on NJI without
 re-training, and faster or no slower than APEX:</p>
@@ -415,7 +486,7 @@ designed</td>
 </tr>
 </tbody>
 </table>
-<h2 id="product-scope">Product Scope</h2>
+</div></details><details class="section" id="product-scope"><summary><span class="section-title">Product Scope</span></summary><div class="section-body">
 <h3 id="mvp--minimum-viable-product">MVP — Minimum Viable Product</h3>
 <p>The MVP is the smallest deliverable that supports phased per-region
 rollout (D8). It comprises:</p>
@@ -498,7 +569,7 @@ replacing today's manual flag-as-reconciled step.</li>
 <li><strong>Bi-temporal / audit-grade compliance trail</strong> if
 regulatory scope demands it (today out of scope; revisitable).</li>
 </ul>
-<h2 id="user-journeys">User Journeys</h2>
+</div></details><details class="section" id="user-journeys"><summary><span class="section-title">User Journeys</span></summary><div class="section-body">
 <h3
 id="journey-1--rsu-admin-cover-creation-through-payment-canonical-operational-cycle">Journey
 1 — RSU Admin: cover-creation through payment (canonical operational
@@ -679,7 +750,7 @@ policy via <code>Deprecation</code> + <code>Sunset</code> headers)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="domain-specific-requirements">Domain-Specific Requirements</h2>
+</div></details><details class="section" id="domain-specific-requirements"><summary><span class="section-title">Domain-Specific Requirements</span></summary><div class="section-body">
 <h3 id="compliance--regulatory-uk-govtech">Compliance &amp; Regulatory
 (UK govtech)</h3>
 <ul>
@@ -889,8 +960,8 @@ Phase 0, contingency to wire to a different HMCTS-approved IdP if needed
 here as a domain-specific concern because incorrect role assignments are
 a governance and access-control issue, not just a technical bug.</li>
 </ul>
-<h2 id="api-backend-specific-requirements">API Backend Specific
-Requirements</h2>
+</div></details><details class="section" id="api-backend-specific-requirements"><summary><span class="section-title">API Backend Specific
+Requirements</span></summary><div class="section-body">
 <h3 id="project-type-overview">Project-Type Overview</h3>
 <p>JI is composed of 11 services in three clusters (revised v2.2 —
 <code>nji-configuration</code> dropped; cross-service policy values live
@@ -1184,8 +1255,8 @@ negotiation, OpenAPI spec, <a
 href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a>
 errors, deprecation signalling) before any domain service is built.</li>
 </ul>
-<h2 id="project-scoping--phased-development">Project Scoping &amp;
-Phased Development</h2>
+</div></details><details class="section" id="project-scoping--phased-development"><summary><span class="section-title">Project Scoping &amp;
+Phased Development</span></summary><div class="section-body">
 <p>Extends Product Scope with MVP philosophy, phase-by-phase journey
 mapping, and risk-based scoping.</p>
 <h3 id="mvp-strategy">MVP Strategy</h3>
@@ -1289,7 +1360,7 @@ needed.</li>
 <p>No requirement from the brainstorming session, the as-is docs, or
 D1–D9 has been de-scoped here. The MVP / Growth / Vision split is
 unchanged from Step 3. This step adds framing only.</p>
-<h2 id="functional-requirements">Functional Requirements</h2>
+</div></details><details class="section" id="functional-requirements"><summary><span class="section-title">Functional Requirements</span></summary><div class="section-body">
 <p>This section is the binding capability contract for NJI. UX,
 architecture, and epic breakdown will all trace back to these
 requirements. A capability not listed here will not exist in the final
@@ -1571,7 +1642,7 @@ activity, not a CI gate. <em>Revised 2026-05-06; supersedes earlier
 wording about real APEX running as an automated comparison
 reference.</em></li>
 </ul>
-<h2 id="non-functional-requirements">Non-Functional Requirements</h2>
+</div></details><details class="section" id="non-functional-requirements"><summary><span class="section-title">Non-Functional Requirements</span></summary><div class="section-body">
 <h3 id="performance">Performance</h3>
 <p>Page-level NFRs are carried from the APEX baseline
 (<code>functional-modules.md</code> cross-cutting NFRs); NJI must match
@@ -1762,7 +1833,7 @@ contract tests only.</li>
 Postman collection that exercises the phase's endpoints; collections are
 versioned alongside the services.</li>
 </ul>
-<h2 id="decisions-log-d1d9">Decisions Log (D1–D9)</h2>
+</div></details><details class="section" id="decisions-log-d1d9"><summary><span class="section-title">Decisions Log (D1–D9)</span></summary><div class="section-body">
 <p>These are the 9 locked decisions taken during the 2026-05-05
 brainstorming follow-up. Each is referenced inline throughout the PRD;
 the consolidated list is here for navigability.</p>
@@ -1855,7 +1926,7 @@ ETL described in D3 + the architecture document.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="glossary">Glossary</h2>
+</div></details><details class="section" id="glossary"><summary><span class="section-title">Glossary</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -1993,7 +2064,7 @@ GDPR)</td>
 </tr>
 </tbody>
 </table>
-<h2 id="references">References</h2>
+</div></details><details class="section" id="references"><summary><span class="section-title">References</span></summary><div class="section-body">
 <p>Source documents consulted during PRD generation (also recorded in
 this PRD's <code>inputDocuments</code> frontmatter):</p>
 <ul>
@@ -2013,8 +2084,90 @@ JI's integration flows and mechanisms</li>
 2026-05-01 brainstorming session (migration sequencing) and the entirety
 of the 2026-05-05-1500 brainstorming draft (which was based on a
 strangler-fig assumption that has been retracted).</p>
-
+</div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/prd.md</code></p>
 </main>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#document-map">Document Map</a></li><li><a href="#executive-summary">Executive Summary</a></li><li class="h3"><a href="#key-characteristics">Key characteristics</a></li><li><a href="#project-classification">Project Classification</a></li><li><a href="#success-criteria">Success Criteria</a></li><li class="h3"><a href="#user-success">User Success</a></li><li class="h3"><a href="#business-success">Business Success</a></li><li class="h3"><a href="#technical-success">Technical Success</a></li><li class="h3"><a href="#measurable-outcomes">Measurable Outcomes</a></li><li><a href="#product-scope">Product Scope</a></li><li class="h3"><a href="#mvp--minimum-viable-product">MVP — Minimum Viable Product</a></li><li class="h3"><a href="#growth-features-post-mvp">Growth Features (Post-MVP)</a></li><li class="h3"><a href="#vision-future">Vision (Future)</a></li><li><a href="#user-journeys">User Journeys</a></li><li class="h3"><a href="#journey-1--rsu-admin-cover-creation-through-payment-canonical-operational-cycle">Journey
+1 — RSU Admin: cover-creation through payment (canonical operational
+cycle)</a></li><li class="h3"><a href="#journey-2--court-user-daily-sitting-confirmation">Journey 2 —
+Court user: daily sitting confirmation</a></li><li class="h3"><a href="#journey-3--judge-view-itinerary-and-request-absence">Journey 3 —
+Judge: view itinerary and request absence</a></li><li class="h3"><a href="#journey-4--dai-analyst-consume-mi-feed-api-instead-of-excel-exports">Journey
+4 — DA&amp;I analyst: consume MI Feed API instead of Excel exports</a></li><li class="h3"><a href="#journey-5--edge-case-cross-region-fee-paid-booking-during-partial-rollout-risk-1">Journey
+5 — Edge case: cross-region fee-paid booking during partial rollout
+(Risk #1)</a></li><li class="h3"><a href="#journey-requirements-summary">Journey Requirements Summary</a></li><li><a href="#domain-specific-requirements">Domain-Specific Requirements</a></li><li class="h3"><a href="#compliance--regulatory-uk-govtech">Compliance &amp; Regulatory
+(UK govtech)</a></li><li class="h3"><a href="#technical-constraints">Technical Constraints</a></li><li class="h3"><a href="#technology-stack-locked">Technology Stack (locked)</a></li><li class="h3"><a href="#integration-requirements">Integration Requirements</a></li><li class="h3"><a href="#risk-mitigations-domain-specific">Risk Mitigations
+(domain-specific)</a></li><li><a href="#api-backend-specific-requirements">API Backend Specific
+Requirements</a></li><li class="h3"><a href="#project-type-overview">Project-Type Overview</a></li><li class="h3"><a href="#technical-architecture-considerations">Technical Architecture
+Considerations</a></li><li class="h3"><a href="#endpoint-specifications">Endpoint Specifications</a></li><li class="h3"><a href="#authentication-model">Authentication Model</a></li><li class="h3"><a href="#data-schemas">Data Schemas</a></li><li class="h3"><a href="#error-codes">Error Codes</a></li><li class="h3"><a href="#rate-limits">Rate Limits</a></li><li class="h3"><a href="#api-versioning">API Versioning</a></li><li class="h3"><a href="#client-tooling">Client Tooling</a></li><li class="h3"><a href="#api-documentation">API Documentation</a></li><li class="h3"><a href="#implementation-considerations">Implementation
+Considerations</a></li><li><a href="#project-scoping--phased-development">Project Scoping &amp;
+Phased Development</a></li><li class="h3"><a href="#mvp-strategy">MVP Strategy</a></li><li class="h3"><a href="#phase-by-phase-journey-mapping">Phase-by-Phase Journey
+Mapping</a></li><li class="h3"><a href="#risk-based-scoping">Risk-Based Scoping</a></li><li class="h3"><a href="#scope-confirmation">Scope Confirmation</a></li><li><a href="#functional-requirements">Functional Requirements</a></li><li class="h3"><a href="#identity--authorisation">Identity &amp; Authorisation</a></li><li class="h3"><a href="#foundational-data-management">Foundational Data Management</a></li><li class="h3"><a href="#judge-records--working-patterns">Judge Records &amp; Working
+Patterns</a></li><li class="h3"><a href="#absence-workflow">Absence Workflow</a></li><li class="h3"><a href="#vacancy--cover">Vacancy &amp; Cover</a></li><li class="h3"><a href="#booking-management">Booking Management</a></li><li class="h3"><a href="#sitting-management">Sitting Management</a></li><li class="h3"><a href="#payment--reconciliation">Payment &amp; Reconciliation</a></li><li class="h3"><a href="#itineraries--reporting-read-models">Itineraries &amp; Reporting
+(Read Models)</a></li><li class="h3"><a href="#platform-operations--migration">Platform Operations &amp;
+Migration</a></li><li><a href="#non-functional-requirements">Non-Functional Requirements</a></li><li class="h3"><a href="#performance">Performance</a></li><li class="h3"><a href="#security">Security</a></li><li class="h3"><a href="#accessibility">Accessibility</a></li><li class="h3"><a href="#integration">Integration</a></li><li class="h3"><a href="#observability-mvp-minimum-per-d7">Observability (MVP minimum per
+D7)</a></li><li class="h3"><a href="#data-privacy--sovereignty">Data Privacy &amp; Sovereignty</a></li><li class="h3"><a href="#reliability--availability">Reliability &amp; Availability</a></li><li class="h3"><a href="#maintainability">Maintainability</a></li><li><a href="#decisions-log-d1d9">Decisions Log (D1–D9)</a></li><li><a href="#glossary">Glossary</a></li><li><a href="#references">References</a></li></ul></aside>
+<script>
+(function(){
+  // 1. Sidebar accordion: persist user's group open/close preference per group.
+  //    The current page's group is always open on load (regardless of stored state).
+  document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){
+    var key = 'nav-group-' + d.dataset.group;
+    if (d.dataset.current !== 'true') {
+      var stored = localStorage.getItem(key);
+      if (stored === 'open') d.open = true;
+      else if (stored === 'closed') d.open = false;
+    }
+    d.addEventListener('toggle', function(){
+      localStorage.setItem(key, d.open ? 'open' : 'closed');
+    });
+  });
+
+  // 2. Expand all / Collapse all (sidebar)
+  document.querySelectorAll('button[data-nav-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.navAction === 'expand';
+      document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){ d.open = open; });
+    });
+  });
+
+  // 3. When a fragment link points to a heading inside a collapsed <details>,
+  //    open all ancestor <details> elements so the target is visible.
+  function openAncestors(id){
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    var cur = el.parentElement;
+    while (cur) {
+      if (cur.tagName === 'DETAILS') cur.open = true;
+      cur = cur.parentElement;
+    }
+    setTimeout(function(){
+      try { el.scrollIntoView({block: 'start', behavior: 'smooth'}); } catch (e) {}
+    }, 60);
+  }
+  if (window.location.hash) {
+    openAncestors(window.location.hash.slice(1));
+  }
+  window.addEventListener('hashchange', function(){
+    openAncestors(window.location.hash.slice(1));
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.length < 2) return;
+    setTimeout(function(){ openAncestors(href.slice(1)); }, 10);
+  });
+
+  // 4. Expand all / Collapse all (content sections)
+  document.querySelectorAll('button[data-section-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.sectionAction === 'expand';
+      document.querySelectorAll('main.content details.section').forEach(function(d){ d.open = open; });
+    });
+  });
+})();
+</script>
 </body>
 </html>

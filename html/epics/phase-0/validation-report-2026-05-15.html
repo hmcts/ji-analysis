@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin maintenance flows in `nji-admin-ui` — NJI Documentation</title>
+<title>Phase 0 Step 4 — Final Validation Report — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -120,7 +120,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams" data-current="true" open>
+<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
 <summary>To-be — NJI Sequence Diagrams</summary>
 <ul>
 <li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
@@ -130,7 +130,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
 <li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
 <li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
-<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html" class="current">Admin maintenance flows</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="to-be-nji-open-items">
@@ -158,7 +158,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../epics/fr-coverage-map.html">FR coverage map</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="implementation-phase-0">
+<details class="nav-group" data-group="implementation-phase-0" data-current="true" open>
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
@@ -166,219 +166,102 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
 <li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
 <li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html" class="current">Phase 0 Validation Report</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="admin-maintenance-flows-in-nji-admin-ui">Admin maintenance flows
-in <code>nji-admin-ui</code></h1>
-<p>Sequence diagram of the two admin write paths exposed by
-<code>nji-admin-ui</code> at MVP. Both paths share the same actor
-(System Administrator), the same auth pattern, and the same UI shell —
-only the destination service and the downstream effect differ. Both run
-in <code>nji-admin-ui</code>, never in <code>nji-ui</code>, per the
-v2.10 architecture decision separating admin from business workflows at
-the repo boundary.</p>
+<h1 id="phase-0-step-4--final-validation-report">Phase 0 Step 4 — Final
+Validation Report</h1>
+<p><strong>Date:</strong> 2026-05-15 <strong>Scope:</strong> Phase 0
+(Epics 0.1–0.4, Stories 0.1.1–0.4.4)</p>
+<details class="section" id="fr-coverage-phase-0-scope"><summary><span class="section-title">FR Coverage (Phase 0 scope)</span></summary><div class="section-body">
+<p>All 14 Phase-0-applicable MVP FRs covered with explicit story
+references:</p>
+<p>FR1 ✅, FR2 ✅, FR3 ✅, FR4 ✅, FR5 (intentionally deferred
+post-MVP), FR6 ✅, FR7 ✅, FR8 ✅, FR9 ✅, FR55 ✅, FR56 ✅, FR57 ✅,
+FR58 ✅ (surface only — orchestration is Phase 9+), FR59 ✅, FR60 ✅</p>
+</div></details><details class="section" id="nfr-coverage-phase-0-scope"><summary><span class="section-title">NFR Coverage (Phase 0 scope)</span></summary><div class="section-body">
+<p>All in-scope Phase 0 NFRs explicitly addressed via story ACs:</p>
+<p>NFR10 ✅ (Story 0.1.1), NFR11 ✅ (Story 0.1.1), NFR12 ✅, NFR13 ✅,
+NFR14 ✅, NFR15 ✅, NFR16 ✅, NFR17–NFR19 ✅, NFR20 ✅, NFR22 ✅, NFR25
+✅, NFR26 ✅ (Story 0.1.1 — 90 day non-prod / 365 day prod default
+subject to HMCTS sign-off), NFR27 ✅, NFR28 ✅, NFR31 ✅, NFR39 ✅,
+NFR40 ✅, NFR42 ✅</p>
+</div></details><details class="section" id="dependency-validation"><summary><span class="section-title">Dependency Validation</span></summary><div class="section-body">
 <ul>
-<li><strong>Path A — Reference Data maintenance (FR6)</strong> — Sys
-Admin (or RSU-with-admin-rights — same admin module, same role-gate)
-creates / updates an entry in any of the 15 Reference Data tables
-(Regions, Offices, calendar / financial-year boundaries, the 12 judicial
-vocabularies). Writes go via the <code>nji-reference-data</code>
-versioned API. Other services pick up the change on their next
-direct-SQL read of the affected table (per revised FR7) — no cache
-invalidation needed because there is no cache (architecture Principle
-2).</li>
-<li><strong>Path B — User &amp; Role admin (FR4)</strong> — Sys Admin
-updates a user's role and Region/Area scope assignment, or creates a new
-user record. Writes go via the <code>nji-authorisation</code> versioned
-API. The change is reflected on the affected user's <em>next</em>
-request via the standard per-request <code>authz/check</code> (see <a
-href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
-Phase 3) — no propagation step is needed because authz is resolved per
-request.</li>
+<li>✅ <strong>Epic independence</strong> — no epic requires a later
+epic to function. Backward dependencies only (Epic 0.2 → Epic 0.1; Epic
+0.3 → Epic 0.1 + 0.2; Epic 0.4 → Epic 0.1 + 0.2).</li>
+<li>✅ <strong>Story sequencing within epics</strong> — strictly
+sequential; no forward references after fix to Story 0.2.5 (sign-off via
+versioned commits to <code>signoffs/</code> directory, independent of
+Story 0.3.4 UI promotion).</li>
+<li>✅ <strong>File-churn check</strong> — each epic targets its own
+slice; cross-epic touches on <code>nji-authorisation</code> and
+<code>nji-admin-ui</code> are additive (new endpoints / new module
+surfaces), not editing of existing code paths.</li>
 </ul>
-<p>Four phases: (1) admin login + role-gate; (2) Reference Data write
-path; (3) User &amp; Role write path; (4) downstream visibility (no
-propagation step).</p>
-<details class="section" id="not-in-this-diagram"><summary><span class="section-title">Not in this diagram</span></summary><div class="section-body">
+</div></details><details class="section" id="architecture-compliance"><summary><span class="section-title">Architecture Compliance</span></summary><div class="section-body">
 <ul>
-<li><strong>Phase 0 Data Migration ETL</strong> — bulk-loads Reference
-Data and Users/Roles from APEX in one shot, calling the same APIs shown
-here in Phases 2 and 3 but operator-initiated and not via
-<code>nji-admin-ui</code>. ETL lives at
-<code>nji-architecture/migration/</code>. Not drawn separately at this
-scope — it's a programme deliverable, not a runtime business flow.</li>
-<li><strong>Per-region phased activation cutover</strong> (FR58) —
-wave-cutover operation that flips
-<code>auth_user_activation_flags</code>. Same shape as Path B but
-operator-initiated per wave. Could be diagrammed if useful — flag if you
-want it.</li>
-<li><strong>Named-owner sign-off workflow detail</strong> — Reference
-Data writes are subject to named-owner sign-off per FR6; the diagram
-captures the validation point but not the full multi-step approval.
-Sign-off mechanics are programme-level.</li>
-<li><strong>Post-MVP admin modules</strong> — per-region activation
-dashboard, migration reconciliation viewer, user-action audit viewer.
-Module placeholders are reserved in <code>nji-admin-ui</code> but not
-built at MVP.</li>
+<li>✅ Starter template pattern (AR2–AR4) — Story 0.1.1 establishes;
+Stories 0.2.1, 0.4.1, and mock-auth scaffold in 0.1.2 follow with
+canonical <em>"Scaffold NJI {service-name} from HMCTS starter"</em>
+commit.</li>
+<li>✅ Database creation timing — every service's tables created in the
+service's own first or second story via service-owned Flyway; no upfront
+DB creation.</li>
+<li>✅ Shared baseline — <code>configuration_values</code> table managed
+exclusively by <code>nji-architecture</code> Flyway baseline (Story
+0.1.1), consumed read-only by all services.</li>
 </ul>
-</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps
-omitted for clarity</span></summary><div class="section-body">
+</div></details><details class="section" id="story-sizing-notes"><summary><span class="section-title">Story Sizing Notes</span></summary><div class="section-body">
 <ul>
-<li><strong>Authentication + per-request authorisation</strong> — Sys
-Admin's JWT is validated by both <code>nji-reference-data</code>'s and
-<code>nji-authorisation</code>'s <code>JWTFilter</code>. Admin role
-gating is enforced by <code>nji-authorisation</code> itself (role =
-<code>sys-admin</code>); for User &amp; Role admin, this means
-<code>nji-authorisation</code> is both the gatekeeper <em>and</em> the
-writer of the change. See <a
-href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
-Phase 3.</li>
-<li>All UI → service calls flow through Azure API Management.
-<code>nji-admin-ui</code> deploys to its own hostname (e.g.
-<code>admin.nji.hmcts.gov.uk</code>) but the same APIM tier handles its
-requests.</li>
+<li><strong>Story 0.1.1 (XL)</strong> — canonical platform-pattern
+story; intentionally large because it establishes scaffolding + CI/CD +
+first deployment + Flyway baseline + TLS / encryption / log-retention
+ACs. Dev agent picking this up should plan a multi-day session OR split
+into 0.1.1a (scaffold + local build), 0.1.1b (CI/CD + first deploy),
+0.1.1c (Flyway baseline + cross-cutting NFR setup) at implementation
+time. Decision deferred to dev agent.</li>
+<li>All other stories sized for single dev-agent sessions.</li>
 </ul>
-<p><img src="./admin-maintenance-flows.png"
-alt="Admin maintenance flows sequence" /></p>
-<p><em>Source: <a
-href="./admin-maintenance-flows.mmd"><code>./admin-maintenance-flows.mmd</code></a>
-(Mermaid). Regenerate with
-<code>mmdc -i admin-maintenance-flows.mmd -o admin-maintenance-flows.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
-</div></details><details class="section" id="phase-summary"><summary><span class="section-title">Phase summary</span></summary><div class="section-body">
-<table>
-<thead>
-<tr>
-<th>Phase</th>
-<th>Driver</th>
-<th>Architectural rule</th>
-<th>Outcome</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1 — Admin login + role-gate</td>
-<td>Sys Admin</td>
-<td>OIDC SSO same as business users; <code>nji-authorisation</code>
-role-gate restricts <code>nji-admin-ui</code> access to
-<code>sys-admin</code> role</td>
-<td>Admin lands on <code>nji-admin-ui</code> Home with admin-scoped
-navigation; non-admin users see a 403 if they try to reach this
-hostname</td>
-</tr>
-<tr>
-<td>2 — Reference Data write path (FR6)</td>
-<td>Sys Admin</td>
-<td><code>nji-reference-data</code> is the single writer for the 15
-Reference Data tables (revised FR7); writes are validated, audited, and
-persisted to the shared schema</td>
-<td>Reference Data row created / updated; visible to every other NJI
-service on its next direct-SQL read (no cache, no propagation step)</td>
-</tr>
-<tr>
-<td>3 — User &amp; Role write path (FR4)</td>
-<td>Sys Admin</td>
-<td><code>nji-authorisation</code> owns the 5 auth tables
-(<code>auth_users</code>, <code>auth_roles</code>,
-<code>auth_user_roles</code>, <code>auth_user_region_scopes</code>,
-<code>auth_user_activation_flags</code>); writes are validated and
-persisted</td>
-<td>User / role / scope row created / updated; affected user sees the
-new effective permissions on their <em>next</em> request via per-request
-<code>authz/check</code></td>
-</tr>
-<tr>
-<td>4 — Downstream visibility</td>
-<td>(none — passive)</td>
-<td>No cache, no event bus, no propagation step (architecture Principle
-2 + REST-first synchronous coordination)</td>
-<td>Next consumer call picks up the change naturally</td>
-</tr>
-</tbody>
-</table>
-</div></details><details class="section" id="where-to-find-more-detail"><summary><span class="section-title">Where to find more detail</span></summary><div class="section-body">
-<table>
-<thead>
-<tr>
-<th>Detail</th>
-<th>Location</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>nji-admin-ui</code> repo purpose, MVP modules, and
-future-surface placeholders</td>
-<td><a
-href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
-— new row added in v2.10</td>
-</tr>
-<tr>
-<td><code>nji-admin-ui</code> directory structure</td>
-<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
-Complete Project Directory Structure — UI repos →
-<code>nji-admin-ui</code></a></td>
-</tr>
-<tr>
-<td><code>nji-reference-data</code> repo purpose and key functions</td>
-<td><a
-href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
-Phase 0 row</td>
-</tr>
-<tr>
-<td><code>nji-authorisation</code> repo purpose and key functions</td>
-<td><a
-href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
-Phase 0 row</td>
-</tr>
-<tr>
-<td>15 Reference Data tables + 5 Authorisation tables (column-level
-detail)</td>
-<td><a
-href="../data-tables.html"><code>../data-tables.md</code></a></td>
-</tr>
-<tr>
-<td>FR4 (User &amp; Role admin) + FR6 (Reference Data maintenance)</td>
-<td>PRD <code>FR4</code>, <code>FR6</code>; both annotated in <a
-href="../functional-requirements-coverage.html"><code>./functional-requirements-coverage.md</code></a>
-with the admin UI location</td>
-</tr>
-<tr>
-<td>Why admin and business UI are separate repos (v2.10)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 4 <em>Frontend Architecture</em></a>; <a
-href="../changelog.html"><code>./changelog.md</code> v2.10</a></td>
-</tr>
-<tr>
-<td>Per-request authz resolution that picks up Path B changes on the
-next call</td>
-<td><a
-href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
-Phase 3</td>
-</tr>
-<tr>
-<td>Phase 0 Data Migration ETL — the bulk-load equivalent of Phases 2 +
-3</td>
-<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
-<code>nji-architecture/migration/</code></a>; epics.md AR46–AR49</td>
-</tr>
-<tr>
-<td>As-is equivalent — Module 11 <em>Admin</em> had only narrow
-self-service (password change, new-user request); higher-impact admin
-was off-screen in OPT Support. NJI brings it into a first-class admin
-module.</td>
-<td><a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code>
-→ Module 11</a></td>
-</tr>
-</tbody>
-</table>
+</div></details><details class="section" id="gaps-fixed-in-validation"><summary><span class="section-title">Gaps Fixed in Validation</span></summary><div class="section-body">
+<p>Three NFR gaps and one forward-dependency softness were identified
+and remediated:</p>
+<ol type="1">
+<li><strong>NFR10 (TLS)</strong> — added explicit AC to Story 0.1.1:
+APIM terminates TLS at the latest supported version; HTTP-only rejected;
+verified by CI <code>testssl.sh</code> check.</li>
+<li><strong>NFR11 (data-at-rest encryption)</strong> — added explicit AC
+to Story 0.1.1: Azure-managed PostgreSQL Flexible Server with encryption
+at rest; AKS persistent volumes encrypted; documented in ADR.</li>
+<li><strong>NFR26 (log retention)</strong> — added explicit AC to Story
+0.1.1: log retention policy set in Phase 0 (default 90/365 days, subject
+to HMCTS owner sign-off); documented in ADR; applied via IaC.</li>
+<li><strong>Story 0.2.5 → Story 0.3.4 forward reference</strong> —
+tightened: sign-off via versioned commit to <code>signoffs/</code>
+directory with <code>CODEOWNERS</code>-enforced two-reviewer policy;
+Story 0.2.5 no longer depends on Story 0.3.4 being delivered first.</li>
+</ol>
+</div></details><details class="section" id="verdict"><summary><span class="section-title">Verdict</span></summary><div class="section-body">
+<p>🟢 <strong>Phase 0 epics + stories are validated and ready for
+implementation.</strong></p>
+<p>Next steps:</p>
+<ol type="1">
+<li>Re-run <code>bmad-check-implementation-readiness</code> to confirm
+overall status moves to 🟢 READY for Phase 0.</li>
+<li>Begin Phase 1 story design (run
+<code>bmad-create-epics-and-stories</code> step 2 + 3 again, scoped to
+Phase 1: Judge Records &amp; Working Patterns).</li>
+<li>Begin implementation of Story 0.1.1 (the canonical platform-pattern
+story) via <code>bmad-sprint-planning</code> →
+<code>bmad-create-story</code> → <code>bmad-dev-story</code>.</li>
+</ol>
 </div></details>
-<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/admin-maintenance-flows.md</code></p>
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/phase-0/validation-report-2026-05-15.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
-omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#fr-coverage-phase-0-scope">FR Coverage (Phase 0 scope)</a></li><li><a href="#nfr-coverage-phase-0-scope">NFR Coverage (Phase 0 scope)</a></li><li><a href="#dependency-validation">Dependency Validation</a></li><li><a href="#architecture-compliance">Architecture Compliance</a></li><li><a href="#story-sizing-notes">Story Sizing Notes</a></li><li><a href="#gaps-fixed-in-validation">Gaps Fixed in Validation</a></li><li><a href="#verdict">Verdict</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

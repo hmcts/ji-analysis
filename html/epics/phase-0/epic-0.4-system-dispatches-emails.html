@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Epic 0.4: System dispatches transactional emails and admin can verify delivery — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2.site-title{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2.site-title a{color:inherit;text-decoration:none}
+aside.nav details.nav-group{margin:2px 0;border-radius:5px}
+aside.nav details.nav-group>summary{font-size:11px;padding:5px 8px 5px 4px;cursor:pointer;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-radius:4px;list-style:none;user-select:none;display:flex;align-items:center;gap:6px}
+aside.nav details.nav-group>summary::-webkit-details-marker{display:none}
+aside.nav details.nav-group>summary::before{content:'▸';display:inline-block;font-size:9px;color:#8c959f;transition:transform 0.15s ease;flex:0 0 10px;text-align:center}
+aside.nav details.nav-group[open]>summary::before{transform:rotate(90deg)}
+aside.nav details.nav-group>summary:hover{background:#eaeef2;color:#1f2328}
+aside.nav details.nav-group ul{list-style:none;margin:2px 0 6px;padding:0 0 0 16px}
+aside.nav details.nav-group li{margin:1px 0}
+aside.nav details.nav-group a{color:#0969da;text-decoration:none;display:block;padding:3px 8px;border-radius:6px;font-size:13px}
+aside.nav details.nav-group a:hover{background:#eaeef2}
+aside.nav details.nav-group a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+.nav-controls{margin:0 0 10px;font-size:11px}
+.nav-controls button{background:none;border:none;color:#0969da;cursor:pointer;padding:2px 4px;font-size:inherit;font-family:inherit;text-decoration:underline}
+.nav-controls button:hover{color:#0a3069}
+aside.toc{position:fixed;top:0;right:0;width:240px;height:100vh;overflow-y:auto;background:#fbfbfc;border-left:1px solid #eaeef2;padding:20px 14px;font-size:13px}
+aside.toc h4{font-size:11px;margin:0 0 8px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.toc ul{list-style:none;margin:0;padding:0}
+aside.toc li{margin:1px 0}
+aside.toc li.h3{padding-left:14px;font-size:12px}
+aside.toc a{color:#57606a;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;line-height:1.35;border-left:2px solid transparent}
+aside.toc a:hover{background:#eaeef2;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+body.has-toc main.content{margin-right:240px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+main details.section{border:1px solid #d0d7de;border-radius:6px;margin:14px 0;background:#fff;overflow:hidden}
+main details.section>summary{cursor:pointer;padding:10px 14px;background:#f6f8fa;list-style:none;user-select:none;display:flex;align-items:center;gap:10px;color:#1f2328;border-radius:5px}
+main details.section[open]>summary{border-bottom:1px solid #d0d7de;border-radius:5px 5px 0 0}
+main details.section>summary::-webkit-details-marker{display:none}
+main details.section>summary::before{content:'▸';display:inline-block;font-size:11px;color:#57606a;transition:transform 0.15s ease;flex:0 0 12px;text-align:center}
+main details.section[open]>summary::before{transform:rotate(90deg)}
+main details.section>summary:hover{background:#eaeef2}
+main details.section>summary .section-title{font-size:1.15em;font-weight:600;line-height:1.3}
+main details.section>summary .section-title code{font-size:.95em}
+main .section-body{padding:14px 18px 18px}
+main .section-body>h3:first-child,main .section-body>p:first-child,main .section-body>ul:first-child{margin-top:6px}
+.section-controls{margin:6px 0 18px;display:flex;gap:14px;font-size:13px;align-items:center}
+.section-controls .label{color:#57606a;font-size:12px}
+.section-controls button{background:none;border:1px solid #d0d7de;color:#0969da;cursor:pointer;padding:3px 10px;font-size:13px;font-family:inherit;border-radius:5px}
+.section-controls button:hover{background:#eaeef2;color:#0a3069}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+@media (max-width: 1200px){
+  aside.toc{display:none}
+  body.has-toc main.content{margin-right:0}
+}
+</style>
+</head>
+<body class="has-toc has-sections">
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
+<details class="nav-group" data-group="overview">
+<summary>Overview</summary>
+<ul>
+<li><a href="../../index.html">Index</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="product">
+<summary>Product</summary>
+<ul>
+<li><a href="../../prd.html">PRD (NJI)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="as-is-ji-architecture-views">
+<summary>As-is — JI Architecture Views</summary>
+<ul>
+<li><a href="../../asis/system-context.html">System Context (as-is)</a></li>
+<li><a href="../../asis/components.html">Components (as-is)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-architecture">
+<summary>To-be — NJI Architecture</summary>
+<ul>
+<li><a href="../../architecture.html">Architecture (index)</a></li>
+<li><a href="../../architecture-summary.html">Architecture summary</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-reference">
+<summary>To-be — NJI Reference</summary>
+<ul>
+<li><a href="../../architecture/user-types.html">User types</a></li>
+<li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../../architecture/conventions.html">Conventions</a></li>
+<li><a href="../../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
+<summary>To-be — NJI Sequence Diagrams</summary>
+<ul>
+<li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-open-items">
+<summary>To-be — NJI Open Items</summary>
+<ul>
+<li><a href="../../architecture/gaps.html">Gaps</a></li>
+<li><a href="../../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../../architecture/changelog.html">Changelog</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-readiness">
+<summary>Implementation Readiness</summary>
+<ul>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-epics-foundations">
+<summary>Implementation — Epics (Foundations)</summary>
+<ul>
+<li><a href="../../epics/index.html">Epics index</a></li>
+<li><a href="../../epics/requirements-inventory.html">Requirements inventory</a></li>
+<li><a href="../../epics/framework.html">Phase × Area framework</a></li>
+<li><a href="../../epics/fr-coverage-map.html">FR coverage map</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-phase-0" data-current="true" open>
+<summary>Implementation — Phase 0 ✓</summary>
+<ul>
+<li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html" class="current">Epic 0.4 — Transactional Emails</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+</ul>
+</details></aside>
+<main class="content">
+<div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
+<h1
+id="epic-04-system-dispatches-transactional-emails-and-admin-can-verify-delivery">Epic
+0.4: System dispatches transactional emails and admin can verify
+delivery</h1>
+<p><strong>User outcome:</strong> An admin can trigger a test email
+through a system-admin utility in <code>nji-admin-ui</code>; NJI
+dispatches via HMCTS email infrastructure; the delivery log records
+attempt and outcome. This establishes the pattern that downstream domain
+phases (Phase 2 Absence acknowledgement, Phase 4 Booking
+acknowledgement, Phase 6 Payment Batch dispatch) consume.</p>
+<p><strong>Vertical slice:</strong></p>
+<ul>
+<li><code>nji-notification</code> backend service scaffolded (per
+AR2–AR4)</li>
+<li>Delivery log table with service-owned Flyway migration (per
+AR18)</li>
+<li>SMTP integration with HMCTS email infrastructure</li>
+<li>Retry-on-transient-failure pattern (DB row locking / optimistic
+locking per AR21 — no custom idempotency tables)</li>
+<li>API endpoint: <code>POST /notifications/send</code> with structured
+request (template + recipient + payload)</li>
+<li>Admin UI "Send Test Email" utility under a system-admin route in
+<code>nji-admin-ui</code> (guarded by Authorisation as system-admin
+role)</li>
+<li>First-exercise of OAuth <code>client_credentials</code> pattern for
+batch service-to-service auth (per NFR12 revised v2.6 + AR36) — even
+though <code>nji-payment-batch</code> is Phase 6, the
+<code>client_credentials</code> flow is established here for the Admin
+test send and re-used later</li>
+<li>Postman tests appended to the Phase 0 collection</li>
+</ul>
+<p><strong>FRs covered:</strong> FR9</p>
+<p><strong>Key NFRs:</strong> NFR22 (HMCTS email infrastructure)</p>
+<p><strong>Why Phase 0 rather than deferring to Phase 2 as a
+consumer:</strong> Three downstream phases depend on Notification's API
+contract, retry semantics, and delivery-log schema (FR20 ack, FR32 ack,
+FR43 schedule dispatch). Locking those in Phase 0 with an
+admin-triggered demoable path avoids re-work and unblocks parallel
+development of the downstream consumers. The Admin test-send utility
+gives Phase 0 a thin but real user outcome (the admin can verify the
+integration works) rather than shipping a service nobody can demo.</p>
+<hr />
+<details class="section" id="story-041-scaffold-nji-notification-service--delivery-log-table--smtp-integration"><summary><span class="section-title">Story
+0.4.1: Scaffold <code>nji-notification</code> service + delivery log
+table + SMTP integration</span></summary><div class="section-body">
+<p>As a <strong>platform engineer</strong>, I want to scaffold
+<code>nji-notification</code> following the established pattern, create
+the delivery log table via Flyway, and configure SMTP integration with
+HMCTS email infrastructure, So that <strong>downstream phases</strong>
+(Phase 2 absence ack, Phase 4 booking ack, Phase 6 payment schedule)
+<strong>can dispatch transactional emails</strong> via a consistent
+contract from day one of consuming them.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> the engineer runs
+<code>nji-scaffold.sh nji-notification</code>, <strong>When</strong> the
+scaffold completes, <strong>Then</strong> the new repo has the same
+baseline as Stories 0.1.1 / 0.2.1 (Spring Boot 4, Helm chart, GitHub
+Actions, Actuator, structured logs, OpenAPI tooling, Spectral, ArchUnit,
+Spotless, Checkstyle, Pact, Postman), <strong>And</strong> Group ID is
+<code>uk.gov.hmcts.nji</code>, artefact is
+<code>nji-notification</code>, package is
+<code>uk.gov.hmcts.nji.notification</code>, default port is 8082,
+<strong>And</strong> initial commit is <em>"Scaffold NJI notification
+from HMCTS starter"</em> (per AR4).</p>
+<p><strong>Given</strong> the engineer adds Flyway migration
+<code>V1__init_notification_schema.sql</code>, <strong>When</strong> the
+migration runs, <strong>Then</strong> a
+<code>notification_delivery_log</code> table exists with columns:
+<code>id</code> (UUID PK), <code>template_id</code>,
+<code>recipient</code>, <code>payload</code> (JSONB),
+<code>status</code> (queued / sending / sent / failed / dead-lettered),
+<code>attempt_count</code>, <code>last_attempt_at</code>,
+<code>last_error</code>, <code>created_at</code>, <code>sent_at</code>,
+<code>version</code> (for <code>@Version</code> optimistic locking per
+AR21), <strong>And</strong> <code>nji_notification</code> DB role owns
+the table, <strong>And</strong> the schema is documented in
+<code>architecture/data-tables.md</code>.</p>
+<p><strong>Given</strong> the engineer configures SMTP,
+<strong>When</strong> the service starts in dev profile,
+<strong>Then</strong> SMTP settings are loaded from Spring profiles +
+Azure Key Vault (per AR25, NFR16), <strong>And</strong> in non-prod
+environments a SMTP mock (e.g. Mailpit container in docker-compose)
+intercepts outbound mail, <strong>And</strong> in production the
+configuration points to HMCTS email infrastructure (per NFR22).</p>
+<p><strong>Given</strong> the service is deployed to dev AKS,
+<strong>When</strong> <code>/actuator/health</code> is queried,
+<strong>Then</strong> the response is <code>200 OK</code> with SMTP
+health-check status, <strong>And</strong> the response includes a
+degraded status if SMTP is unreachable.</p>
+<p><strong>References:</strong> FR9, FR8 (consumes
+<code>configuration_values</code> for rate-limit policy), FR59, FR60;
+NFR16, NFR22, NFR25–NFR28, NFR40; AR2–AR22.</p>
+<hr />
+</div></details><details class="section" id="story-042-post-v1notificationssend-endpoint-with-retry-semantics-delivery-logging-and-rfc-9457-errors"><summary><span class="section-title">Story
+0.4.2: <code>POST /v1/notifications/send</code> endpoint with retry
+semantics, delivery logging, and RFC 9457 errors</span></summary><div class="section-body">
+<p>As a <strong>calling service</strong> (Admin UI test send now;
+Absence/Booking/Payment Batch later), I want a
+<code>POST /v1/notifications/send</code> endpoint that accepts a
+template + recipient + payload, persists a delivery log entry,
+dispatches via SMTP with retry on transient failure, and returns RFC
+9457 errors on validation failure, So that <strong>transactional email
+dispatch is a single, observable, retry-safe contract</strong> (per FR9,
+NFR22) that the rest of NJI consumes consistently.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> <code>nji-notification</code> is deployed per
+Story 0.4.1, <strong>When</strong> the engineer implements the send
+endpoint, <strong>Then</strong> <code>POST /v1/notifications/send</code>
+accepts a body with <code>{templateId, recipient, payload}</code> where
+<code>payload</code> is a JSON object, <strong>And</strong> the endpoint
+is protected by <code>JWTFilter</code> (any authenticated principal with
+the <code>notification-sender</code> role can call; service principals
+from <code>client_credentials</code> flow are accepted per NFR12 +
+AR36), <strong>And</strong> on a valid request, the endpoint inserts a
+row in <code>notification_delivery_log</code> with status
+<code>queued</code> and returns <code>202 Accepted</code> with
+<code>{deliveryId, status}</code>.</p>
+<p><strong>Given</strong> a worker (in-process scheduled task or message
+queue consumer — engineer to choose; recommendation at this scale:
+in-process Spring <code>@Scheduled</code> task picking
+<code>queued</code> rows with <code>FOR UPDATE SKIP LOCKED</code> per
+AR21 to avoid worker contention) processes queued rows,
+<strong>When</strong> the worker picks a row, <strong>Then</strong> it
+transitions to <code>sending</code>, <strong>And</strong> invokes SMTP
+send, <strong>And</strong> on success transitions to <code>sent</code>
+with <code>sent_at</code> populated, <strong>And</strong> on transient
+failure increments <code>attempt_count</code>, populates
+<code>last_error</code>, and resets status to <code>queued</code> (retry
+budget: 5 attempts at exponential backoff), <strong>And</strong> on
+exhausted retry budget transitions to <code>dead-lettered</code> with
+<code>last_error</code> retained for inspection.</p>
+<p><strong>Given</strong> an invalid request body reaches the send
+endpoint, <strong>When</strong> validation fails (missing template,
+invalid recipient, payload schema mismatch), <strong>Then</strong> the
+response is <code>400 Bad Request</code> with RFC 9457 problem-details
+including field-level errors (per AR37), <strong>And</strong> no
+delivery log row is created.</p>
+<p><strong>Given</strong> an unauthenticated request reaches the send
+endpoint, <strong>When</strong> the JWT is missing or invalid,
+<strong>Then</strong> the response is <code>401 Unauthorized</code> with
+RFC 9457 problem-details, <strong>And</strong> no delivery log row is
+created.</p>
+<p><strong>Given</strong> a
+<code>GET /v1/notifications/delivery-log</code> endpoint is added,
+<strong>When</strong> the caller is authenticated with a
+<code>system-admin</code> role, <strong>Then</strong> the response
+returns paginated delivery log entries with filters (recipient, status,
+date range), <strong>And</strong> non-admin callers get
+<code>403 Forbidden</code> with RFC 9457.</p>
+<p><strong>Given</strong> the OpenAPI spec is regenerated,
+<strong>When</strong>
+<code>uk.gov.hmcts.nji:api-nji-notification:1.0.0</code> is published,
+<strong>Then</strong> Spectral lint passes, <strong>And</strong> the
+spec documents the send + delivery-log endpoints.</p>
+<p><strong>Given</strong> a Postman collection is published,
+<strong>When</strong>
+<code>postman/nji-notification-phase0.postman_collection.json</code>
+runs, <strong>Then</strong> it covers happy path + 400 + 401 + 403 +
+retry behaviour (via a fault-injection test endpoint, removable
+post-Phase-0).</p>
+<p><strong>References:</strong> FR9, FR59, FR60; NFR12, NFR13, NFR15,
+NFR22, NFR25, NFR28, NFR39, NFR42; AR17, AR21, AR34, AR36, AR37, AR38,
+AR41.</p>
+<hr />
+</div></details><details class="section" id="story-043-establish-oauth-client_credentials-flow-against-nji-mock-auth-for-batchscheduled-callers"><summary><span class="section-title">Story
+0.4.3: Establish OAuth <code>client_credentials</code> flow against
+<code>nji-mock-auth</code> for batch/scheduled callers</span></summary><div class="section-body">
+<p>As a <strong>scheduled or batch component</strong> (the Admin UI
+test-send utility now; <code>nji-payment-batch</code> in Phase 6), I
+want a documented and tested OAuth 2.0 <code>client_credentials</code>
+flow against <code>nji-mock-auth</code> issuing service-principal JWTs
+that NJI services accept, So that <strong>inter-service authentication
+for non-user-initiated calls</strong> (per NFR12 revised v2.6, AR36) is
+in place from Phase 0 — locking in the pattern before downstream
+consumers depend on it.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> <code>nji-mock-auth</code> was scaffolded per
+Story 0.1.2 with <code>client_credentials</code> flow supported,
+<strong>When</strong> the engineer adds a
+<code>service-client-config</code> seed under
+<code>nji-mock-auth</code>, <strong>Then</strong> a service-token client
+<code>nji-notification-test-sender-client</code> is configured with
+client ID, client secret (in Key Vault per NFR16), and allowed scopes
+(e.g. <code>notification:send</code>), <strong>And</strong> the client
+config is repeatable for future batch components by adding new entries
+(engineer documents the pattern in
+<code>nji-architecture/ADR-XXXX-service-token-flow.md</code>).</p>
+<p><strong>Given</strong> a batch caller (or test harness) requests a
+token, <strong>When</strong> it calls <code>nji-mock-auth</code>'s token
+endpoint with
+<code>grant_type=client_credentials&amp;client_id=...&amp;client_secret=...&amp;scope=notification:send</code>,
+<strong>Then</strong> the response is <code>200 OK</code> with
+<code>{access_token, token_type: "Bearer", expires_in, scope}</code>,
+<strong>And</strong> the JWT validates against
+<code>nji-mock-auth</code>'s JWKS endpoint, <strong>And</strong> the JWT
+subject identifies the client.</p>
+<p><strong>Given</strong> the service-principal JWT is presented to
+<code>nji-notification</code>'s
+<code>POST /v1/notifications/send</code>, <strong>When</strong> the
+JWTFilter validates the token, <strong>Then</strong> the request is
+accepted, <strong>And</strong> <code>nji-authorisation</code>'s
+<code>POST /authz/check</code> returns the service principal's allowed
+scopes, <strong>And</strong> the send proceeds if the scope includes
+<code>notification:send</code>.</p>
+<p><strong>Given</strong> the production issuer for service tokens is
+documented as deferred per gaps.md G7.1 (default recommendation: Azure
+Workload Identity given AKS deployment per AR36), <strong>When</strong>
+the engineer writes the ADR, <strong>Then</strong> the ADR clearly
+states: (a) Phase 0 establishes <code>client_credentials</code> against
+<code>nji-mock-auth</code> for non-prod use only, (b) production issuer
+is a deferred decision, (c) default recommendation is Azure Workload
+Identity, (d) the JWT validation pattern in NJI services is
+issuer-agnostic so swap-in is mechanical at production cutover.</p>
+<p><strong>References:</strong> FR1 (service-principal authentication),
+FR59; NFR12, NFR16; AR35, AR36, gaps.md G7.1.</p>
+<hr />
+</div></details><details class="section" id="story-044-admin-can-trigger-a-test-email-through-nji-admin-ui-and-verify-delivery-in-the-log"><summary><span class="section-title">Story
+0.4.4: Admin can trigger a test email through <code>nji-admin-ui</code>
+and verify delivery in the log</span></summary><div class="section-body">
+<p>As a <strong>system administrator</strong>, I want a "Send Test
+Email" utility in <code>nji-admin-ui</code> that calls
+<code>nji-notification</code>'s send endpoint and shows the resulting
+delivery log entry, So that <strong>the Notification integration is
+end-to-end demoable at Phase 0</strong> (the demoable user outcome for
+Epic 0.4) — and so admins have a sanity-check tool when downstream
+phases start consuming Notification.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> an admin signs into <code>nji-admin-ui</code>
+(Story 0.2.3) with a <code>system-admin</code> role,
+<strong>When</strong> they open <code>/system/notification-test</code>,
+<strong>Then</strong> they see a form with template-id selector (seeded
+templates: "test-email", "absence-ack", "booking-ack",
+"payment-schedule"), recipient email input, and payload JSON input (with
+sensible defaults per template), <strong>And</strong> the form validates
+inputs client-side (valid email; JSON parseable), <strong>And</strong>
+the auto-generated TypeScript client from <code>nji-notification</code>
+OpenAPI is used for the API call.</p>
+<p><strong>Given</strong> the admin submits the form,
+<strong>When</strong> the UI calls
+<code>POST /v1/notifications/send</code>, <strong>Then</strong> the
+response <code>202 Accepted</code> returns a <code>deliveryId</code>,
+<strong>And</strong> the UI displays the delivery in a sidebar panel
+showing <code>queued</code> status, <strong>And</strong> the panel polls
+(or subscribes to a WebSocket if added later — TanStack Query refetch
+interval is sufficient at Phase 0) for status changes,
+<strong>And</strong> within ~30 seconds the panel shows
+<code>sent</code> or <code>failed</code> based on SMTP outcome.</p>
+<p><strong>Given</strong> the test recipient receives the email in
+non-prod (Mailpit catches outbound), <strong>When</strong> the admin
+opens the Mailpit UI in dev, <strong>Then</strong> the email is visible
+with rendered template + payload substitutions, <strong>And</strong> the
+admin can verify the rendering matches expectation before downstream
+phases consume the template.</p>
+<p><strong>Given</strong> the send fails (e.g. SMTP rejected the
+recipient), <strong>When</strong> the delivery log entry transitions to
+<code>dead-lettered</code>, <strong>Then</strong> the UI panel shows the
+failure with the last error, <strong>And</strong> the admin can drill
+into the delivery log via a link to
+<code>/system/notification-log</code>.</p>
+<p><strong>Given</strong> a <code>/system/notification-log</code> view
+exists, <strong>When</strong> the admin opens it, <strong>Then</strong>
+they see a paginated table of recent delivery log entries (fetched via
+<code>GET /v1/notifications/delivery-log</code>) with filters,
+<strong>And</strong> axe-core scans the table view without WCAG 2.2 AA
+violations.</p>
+<p><strong>Given</strong> Playwright E2E coverage, <strong>When</strong>
+<code>tests/e2e/notification-test.spec.ts</code> runs against dev,
+<strong>Then</strong> it covers: open test-send page → fill form →
+submit → see <code>queued</code> → wait for <code>sent</code> → verify
+Mailpit captured the message, <strong>And</strong> also covers the
+failure path (using an intentionally rejected recipient).</p>
+<p><strong>References:</strong> FR4 (admin gating), FR9, FR56 (admin
+stack); NFR12, NFR13, NFR17, NFR18, NFR19, NFR22; AR42–AR45.</p>
+</div></details>
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/phase-0/epic-0.4-system-dispatches-emails.md</code></p>
+</main>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#story-041-scaffold-nji-notification-service--delivery-log-table--smtp-integration">Story
+0.4.1: Scaffold nji-notification service + delivery log
+table + SMTP integration</a></li><li><a href="#story-042-post-v1notificationssend-endpoint-with-retry-semantics-delivery-logging-and-rfc-9457-errors">Story
+0.4.2: POST /v1/notifications/send endpoint with retry
+semantics, delivery logging, and RFC 9457 errors</a></li><li><a href="#story-043-establish-oauth-client_credentials-flow-against-nji-mock-auth-for-batchscheduled-callers">Story
+0.4.3: Establish OAuth client_credentials flow against
+nji-mock-auth for batch/scheduled callers</a></li><li><a href="#story-044-admin-can-trigger-a-test-email-through-nji-admin-ui-and-verify-delivery-in-the-log">Story
+0.4.4: Admin can trigger a test email through nji-admin-ui
+and verify delivery in the log</a></li></ul></aside>
+<script>
+(function(){
+  // 1. Sidebar accordion: persist user's group open/close preference per group.
+  //    The current page's group is always open on load (regardless of stored state).
+  document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){
+    var key = 'nav-group-' + d.dataset.group;
+    if (d.dataset.current !== 'true') {
+      var stored = localStorage.getItem(key);
+      if (stored === 'open') d.open = true;
+      else if (stored === 'closed') d.open = false;
+    }
+    d.addEventListener('toggle', function(){
+      localStorage.setItem(key, d.open ? 'open' : 'closed');
+    });
+  });
+
+  // 2. Expand all / Collapse all (sidebar)
+  document.querySelectorAll('button[data-nav-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.navAction === 'expand';
+      document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){ d.open = open; });
+    });
+  });
+
+  // 3. When a fragment link points to a heading inside a collapsed <details>,
+  //    open all ancestor <details> elements so the target is visible.
+  function openAncestors(id){
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    var cur = el.parentElement;
+    while (cur) {
+      if (cur.tagName === 'DETAILS') cur.open = true;
+      cur = cur.parentElement;
+    }
+    setTimeout(function(){
+      try { el.scrollIntoView({block: 'start', behavior: 'smooth'}); } catch (e) {}
+    }, 60);
+  }
+  if (window.location.hash) {
+    openAncestors(window.location.hash.slice(1));
+  }
+  window.addEventListener('hashchange', function(){
+    openAncestors(window.location.hash.slice(1));
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.length < 2) return;
+    setTimeout(function(){ openAncestors(href.slice(1)); }, 10);
+  });
+
+  // 4. Expand all / Collapse all (content sections)
+  document.querySelectorAll('button[data-section-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.sectionAction === 'expand';
+      document.querySelectorAll('main.content details.section').forEach(function(d){ d.open = open; });
+    });
+  });
+})();
+</script>
+</body>
+</html>

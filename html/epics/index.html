@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Starter Template — Initialisation Flow, Build Tool, Dependency Inventory, NJI Conventions — NJI Documentation</title>
+<title>ji-analysis (NJI) — Epic Breakdown — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -107,7 +107,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference" data-current="true" open>
+<details class="nav-group" data-group="to-be-nji-reference">
 <summary>To-be — NJI Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html">User types</a></li>
@@ -115,7 +115,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/conventions.html">Conventions</a></li>
 <li><a href="../architecture/repository-strategy.html">Repository strategy</a></li>
 <li><a href="../architecture/repo-structure.html">Repository structure</a></li>
-<li><a href="../architecture/starter-template.html" class="current">Starter template</a></li>
+<li><a href="../architecture/starter-template.html">Starter template</a></li>
 <li><a href="../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
 <li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
@@ -149,10 +149,10 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="implementation-epics-foundations">
+<details class="nav-group" data-group="implementation-epics-foundations" data-current="true" open>
 <summary>Implementation — Epics (Foundations)</summary>
 <ul>
-<li><a href="../epics/index.html">Epics index</a></li>
+<li><a href="../epics/index.html" class="current">Epics index</a></li>
 <li><a href="../epics/requirements-inventory.html">Requirements inventory</a></li>
 <li><a href="../epics/framework.html">Phase × Area framework</a></li>
 <li><a href="../epics/fr-coverage-map.html">FR coverage map</a></li>
@@ -171,219 +171,155 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1
-id="starter-template--initialisation-flow-build-tool-dependency-inventory-nji-conventions">Starter
-Template — Initialisation Flow, Build Tool, Dependency Inventory, NJI
-Conventions</h1>
-<blockquote>
-<p>Sibling of <a
-href="../architecture.html"><code>../architecture.md</code></a>.
-Selection rationale lives in the parent. This file holds the per-service
-initialisation flow, dependency inventory, and NJI conventions overlaid
-by the scaffolding script.</p>
-</blockquote>
-<details class="section" id="initialisation-flow-per-service"><summary><span class="section-title">Initialisation Flow (per
-service)</span></summary><div class="section-body">
-<p>Each new NJI service is scaffolded from the HMCTS starter, then
-customised. The exact CLI depends on what HMCTS publishes; conceptual
-flow:</p>
-<pre class="bash"><code># Conceptual — actual command per HMCTS published documentation
-git clone https://github.com/hmcts/spring-boot-template.git nji-{service-name}
-cd nji-{service-name}
-git remote remove origin
-git remote add origin &lt;new-repo-url&gt;
-
-# Rename package, artifact, application name to match the service
-# (specific tooling / scripts per HMCTS starter conventions)
-./scripts/rename uk.gov.hmcts.nji.{service-name}
-
-# Verify build
-./gradlew build
-
-# Initial commit on new repo
-git add . &amp;&amp; git commit -m &quot;Scaffold NJI {service-name} from HMCTS starter&quot;
-git push -u origin main</code></pre>
-<p><strong>NJI scaffolding script:</strong> a thin wrapper over the
-HMCTS starter clone-and-rename steps, with NJI-specific defaults (Azure
-UK region, Application Insights workspace, naming conventions). Used at
-service-creation time only — not a runtime dependency.</p>
-</div></details><details class="section" id="build-tool-gradle"><summary><span class="section-title">Build Tool: Gradle</span></summary><div class="section-body">
-<p>Gradle for all 11 services and the scaffolding script.</p>
-<p>Reasons:</p>
+<h1 id="ji-analysis-nji--epic-breakdown">ji-analysis (NJI) — Epic
+Breakdown</h1>
+<p>This is the <strong>sharded entry point</strong> for the NJI epic and
+story breakdown. Each section below lives in its own file for
+maintainability — the prior single-file <code>epics.md</code> reached
+~1,500 lines covering Phase 0 alone, and Phases 1–9+ would push it past
+4,000 lines.</p>
+<details class="section" id="overview"><summary><span class="section-title">Overview</span></summary><div class="section-body">
+<p>NJI (New JI) is the greenfield rebuild of HMCTS's Judicial
+Itineraries system. This document decomposes the requirements from the
+PRD (61 FRs, 42 NFRs, D1–D9) and the Architecture (HMCTS Crime
+SpringBoot starter, polyrepo, shared-DB + per-service DB roles,
+Kubernetes on Azure AKS) into implementable stories.</p>
+<p>UX Design document is not present; downstream epics inherit UI
+requirements directly from PRD FRs (FR55, FR56) and architecture
+conventions (GOV.UK Design System base, WCAG 2.2 AA per NFR17). This gap
+is documented in the 2026-05-06 readiness report.</p>
+</div></details><details class="section" id="document-map"><summary><span class="section-title">Document Map</span></summary><div class="section-body">
+<h3 id="foundations-project-wide-context">Foundations (project-wide
+context)</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="requirements-inventory.html">requirements-inventory.md</a></td>
+<td>All FRs (FR1–FR61), NFRs (NFR1–NFR42), Architecture-derived ARs
+(AR1–AR50), and UX Design Requirements (none — accepted gap)</td>
+</tr>
+<tr>
+<td><a href="framework.html">framework.md</a></td>
+<td>Phase × Area architectural framework — the spine that organises
+concrete epics across 10 sequential phases</td>
+</tr>
+<tr>
+<td><a href="fr-coverage-map.html">fr-coverage-map.md</a></td>
+<td>Single source of truth for FR → Epic mapping across the whole
+programme</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-level-breakdowns-one-folder-per-phase">Phase-level
+breakdowns (one folder per phase)</h3>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Folder</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong> — Foundations</td>
+<td><a href="phase-0/index.html">phase-0/</a></td>
+<td>🟢 Epics + stories + validation complete (2026-05-15)</td>
+</tr>
+<tr>
+<td><strong>1</strong> — Judge</td>
+<td><em>to be storied</em></td>
+<td>⚪ Framework only</td>
+</tr>
+<tr>
+<td><strong>2</strong> — Absence</td>
+<td><em>to be storied</em></td>
+<td>⚪ Framework only</td>
+</tr>
+<tr>
+<td><strong>3</strong> — Vacancy</td>
+<td><em>to be storied</em></td>
+<td>⚪ Framework only</td>
+</tr>
+<tr>
+<td><strong>4</strong> — Booking</td>
+<td><em>to be storied</em></td>
+<td>⚪ Framework only</td>
+</tr>
+<tr>
+<td><strong>5</strong> — Sitting</td>
+<td><em>to be storied</em></td>
+<td>⚪ Framework only</td>
+</tr>
+<tr>
+<td><strong>6</strong> — Payment</td>
+<td><em>to be storied</em></td>
+<td>⚪ Framework only</td>
+</tr>
+<tr>
+<td><strong>7</strong> — Itineraries</td>
+<td><em>to be storied</em></td>
+<td>⚪ Framework only</td>
+</tr>
+<tr>
+<td><strong>8</strong> — MI Feed &amp; Reporting</td>
+<td><em>to be storied</em></td>
+<td>⚪ Framework only</td>
+</tr>
+<tr>
+<td><strong>9+</strong> — Pilot Rollout</td>
+<td><em>to be storied</em></td>
+<td>⚪ Framework only</td>
+</tr>
+</tbody>
+</table>
+</div></details><details class="section" id="how-this-document-is-produced"><summary><span class="section-title">How this document is
+produced</span></summary><div class="section-body">
+<p>Each phase advances through four steps of the
+<code>bmad-create-epics-and-stories</code> workflow:</p>
+<ol type="1">
+<li><strong>Validate prerequisites</strong> — confirm PRD + Architecture
+available, extract requirements</li>
+<li><strong>Design epics</strong> — group requirements into user-value
+epics (not technical milestones)</li>
+<li><strong>Create stories</strong> — produce Gherkin-AC user stories
+sized for a single dev-agent session</li>
+<li><strong>Final validation</strong> — verify FR/NFR coverage,
+dependency soundness, architecture compliance</li>
+</ol>
+<p>Phase 0 has completed all four steps. Phases 1–9+ are at the
+framework stage only (Step 1 inputs ready; Steps 2–4 not yet run).</p>
+</div></details><details class="section" id="how-to-find-your-way"><summary><span class="section-title">How to find your way</span></summary><div class="section-body">
 <ul>
-<li>Flexible for per-service repos + occasional cross-repo
-conventions.</li>
-<li>Fast incremental builds; works well for per-service Postman
-collection generation and OpenAPI artefact publication.</li>
-<li>Matches the HMCTS starter's typical default.</li>
-<li>Consistent across all services.</li>
+<li><strong>Looking for what to build next?</strong> Start at the phase
+index (e.g. <a href="phase-0/index.html">phase-0/index.md</a>) and pick
+an epic.</li>
+<li><strong>Looking for a specific story?</strong> Stories are named
+<code>Story {phase}.{epic}.{n}</code> (e.g. Story 0.1.5). They live
+under <code>phase-{n}/epic-{n}.{m}-{slug}.md</code>.</li>
+<li><strong>Looking for an FR?</strong> Use <a
+href="fr-coverage-map.html">fr-coverage-map.md</a>.</li>
+<li><strong>Looking for an architecture rule?</strong> Use <a
+href="requirements-inventory.html">requirements-inventory.md</a> — ARs
+are in the Additional Requirements section.</li>
+<li><strong>Verifying readiness?</strong> Run
+<code>bmad-check-implementation-readiness</code> from the repo root; it
+understands this sharded shape.</li>
 </ul>
-</div></details><details class="section" id="architectural-decisions-provided-by-starter"><summary><span class="section-title">Architectural
-Decisions Provided by Starter</span></summary><div class="section-body">
-<p>The HMCTS Crime SpringBoot template provides (verified by review on
-2026-05-06):</p>
-<p><strong>Language &amp; Runtime:</strong></p>
-<ul>
-<li>Java 25 (current LTS).</li>
-<li>Spring Boot 4.0.x (released Q4 2025).</li>
-<li>Gradle build with Gradle Wrapper (<code>gradlew</code>)
-committed.</li>
-</ul>
-<p><strong>Build Tooling (per HMCTS Crime SpringBoot
-template):</strong></p>
-<ul>
-<li><strong>Gradle Groovy DSL</strong> with Gradle Wrapper.</li>
-<li><strong>Spring Boot Gradle plugin 4.0.6</strong> for fat-jar
-packaging.</li>
-<li><strong><code>io.spring.dependency-management:1.1.7</code></strong>
-for BOM-based dependency management.</li>
-<li><strong>JaCoCo</strong> plugin for code coverage reports.</li>
-<li><strong><code>org.cyclonedx.bom:3.2.4</code></strong> for SBOM
-(Software Bill of Materials) generation — supply-chain security.</li>
-<li><strong><code>com.gorylenko.gradle-git-properties:2.5.7</code></strong>
-to embed Git metadata in <code>/actuator/info</code>.</li>
-<li><strong><code>com.github.ben-manes.versions:0.54.0</code></strong>
-for dependency-update reports.</li>
-<li><strong><code>com.avast.gradle.docker-compose:0.17.21</code></strong>
-for local development with docker-compose-managed dependencies.</li>
-<li>Gradle multi-task layout: <code>build</code>, <code>test</code>,
-<code>bootRun</code>, <code>bootJar</code>, <code>dockerBuild</code>,
-<code>helmLint</code>.</li>
-</ul>
-<p><strong>Testing Framework (per HMCTS Crime SpringBoot
-template):</strong></p>
-<ul>
-<li><strong>Spring Boot Test</strong> (JUnit 5 via
-<code>junit-bom:6.0.3</code>).</li>
-<li><strong><code>spring-boot-testcontainers:4.0.6</code></strong> +
-<strong><code>testcontainers-postgresql:1.21.4</code></strong> +
-<strong><code>testcontainers-junit-jupiter:1.21.4</code></strong> for
-integration tests with real PostgreSQL.</li>
-<li><strong>AssertJ</strong> for assertions (transitively via Spring
-Boot Test).</li>
-<li><strong><code>spring-boot-starter-webmvc-test</code></strong> for
-controller-layer testing.</li>
-<li>Pact or similar for consumer-driven contract tests — added per
-service (not in HMCTS Crime template).</li>
-</ul>
-<p><strong>Observability (per HMCTS Crime SpringBoot
-template):</strong></p>
-<ul>
-<li><strong>Logstash Logback Encoder</strong>
-(<code>net.logstash.logback:logstash-logback-encoder:9.0</code>) for
-structured JSON logs; async appender.</li>
-<li><strong>OpenTelemetry</strong>
-(<code>spring-boot-starter-opentelemetry</code>) for traces; OTel
-Collector → Azure Application Insights as the export target.</li>
-<li>Correlation ID filter at request entry; correlation ID propagation
-in service-to-service calls.</li>
-<li>Spring Boot Actuator endpoints (<code>/actuator/health</code>,
-<code>/actuator/info</code>, <code>/actuator/readiness</code>);
-<code>/actuator/metrics</code> and Prometheus endpoint not exposed at
-MVP per D7.</li>
-<li>Application Insights instrumentation key configured via env vars
-(<code>APPINSIGHTS_INSTRUMENTATIONKEY</code>).</li>
-</ul>
-<p><strong>Security defaults (per HMCTS Crime SpringBoot
-template):</strong></p>
-<ul>
-<li>TLS-only configuration (no HTTP).</li>
-<li>Secure header defaults.</li>
-<li><strong>Custom <code>JWTFilter</code></strong> (using
-<code>io.jsonwebtoken:jjwt:0.13.0</code>) for JWT validation; integrates
-with NJI Authorisation service per Step 4 of <a
-href="../architecture.html"><code>../architecture.md</code></a>.</li>
-<li><strong><code>org.owasp.encoder:encoder:1.4.0</code></strong> for
-XSS-safe output encoding.</li>
-<li>Azure Key Vault integration for secret retrieval (added per service
-via Spring Cloud Azure — not in template baseline).</li>
-</ul>
-<p><strong>Deployment:</strong></p>
-<ul>
-<li>Dockerfile (multi-stage build, JDK image) — provided by HMCTS
-template.</li>
-<li>Standard health probe configuration via Spring Actuator — provided
-by HMCTS template.</li>
-<li><strong>Helm chart for AKS deployment is NOT in the template
-baseline</strong> (G1.4a in <a
-href="./gaps.html"><code>./gaps.md</code></a>) — NJI scaffolding script
-adds it.</li>
-</ul>
-<p><strong>Code Organisation:</strong></p>
-<ul>
-<li>Standard Gradle directory layout: <code>src/main/java</code>,
-<code>src/main/resources</code>, <code>src/test/java</code>.</li>
-<li>Per-service top-level package:
-<code>uk.gov.hmcts.nji.{service-name}</code> (e.g.
-<code>uk.gov.hmcts.nji.judge</code>,
-<code>uk.gov.hmcts.nji.booking</code>).</li>
-<li>Standard Spring Boot application class with
-<code>@SpringBootApplication</code>.</li>
-<li>Service internals follow a layered approach (controller / service /
-repository) — the precise pattern is settled in <a
-href="./conventions.html"><code>./conventions.md</code></a>.</li>
-</ul>
-<p><strong>Productivity libraries (per HMCTS Crime SpringBoot
-template):</strong></p>
-<ul>
-<li><strong>Lombok 1.18.46</strong> for boilerplate reduction
-(<code>@Data</code>, <code>@Builder</code>,
-<code>@RequiredArgsConstructor</code>, <code>@Slf4j</code>, etc.).</li>
-<li><strong>MapStruct 1.6.3</strong> for compile-time bean mapping (DTO
-↔︎ entity); pairs naturally with the per-service <code>dto/</code> and
-<code>domain/</code> package layout.</li>
-</ul>
-</div></details><details class="section" id="per-service-nji-conventions-encoded-in-scaffolding-script-not-in-shared-library"><summary><span class="section-title">Per-service
-NJI Conventions (encoded in scaffolding script, not in shared
-library)</span></summary><div class="section-body">
-<p>The scaffolding script applies NJI-specific defaults on top of the
-HMCTS starter:</p>
-<ul>
-<li>Group ID: <code>uk.gov.hmcts.nji</code>.</li>
-<li>Naming: artefact <code>nji-{service-name}</code>, package
-<code>uk.gov.hmcts.nji.{service-name}</code>.</li>
-<li>Default Azure UK region: UK South. (DR scope and target region are
-an open gap — see <a href="./gaps.html"><code>./gaps.md</code>
-G3.6</a>.)</li>
-<li>Default Application Insights workspace: NJI shared workspace
-(HMCTS-provided).</li>
-<li>Default Reference Data and Authorisation service URL
-placeholders.</li>
-<li>Boilerplate <code>@ControllerAdvice</code> for <a
-href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a>
-problem-details error envelopes (formerly RFC 7807; obsoleted July 2023
-— content type and field shape unchanged).</li>
-<li>Boilerplate <code>JWTFilter</code> + <code>AuthDetails</code> bean
-(per HMCTS template pattern); modified to call NJI Authorisation service
-per request (NJI variance from template's claims-only approach —
-required by FR58).</li>
-<li>Boilerplate Reference Data direct-SQL access (JPA entities mapped to
-whitelisted Reference Data tables — 15 tables, see <a
-href="./data-tables.html"><code>./data-tables.md</code></a>:
-<code>regions</code>, <code>offices</code>,
-<code>calendar_periods</code>, plus the 12 vocabulary tables); no client
-class.</li>
-<li><em>(removed 2026-05-06)</em> Boilerplate APEX-comparison test base
-class — retracted. Behavioural parity is verified via <strong>manual UAT
-performed by APEX-experienced users</strong> (FR61 / NFR41 revised).
-Per-service UAT scripts live under <code>docs/uat/</code> in the service
-repo, not as test code.</li>
-<li>Default port <code>8082</code> (per HMCTS template).</li>
-</ul>
-<p>These are <strong>scaffolded once per service</strong>; subsequent
-edits live in the service's own repo. There is no upstream library that
-can force a redeployment.</p>
-<p><strong>Note:</strong> Project initialisation using these commands
-and the scaffolding script should be the first implementation story per
-service.</p>
 </div></details>
-<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/starter-template.md</code></p>
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/index.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#initialisation-flow-per-service">Initialisation Flow (per
-service)</a></li><li><a href="#build-tool-gradle">Build Tool: Gradle</a></li><li><a href="#architectural-decisions-provided-by-starter">Architectural
-Decisions Provided by Starter</a></li><li><a href="#per-service-nji-conventions-encoded-in-scaffolding-script-not-in-shared-library">Per-service
-NJI Conventions (encoded in scaffolding script, not in shared
-library)</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#overview">Overview</a></li><li><a href="#document-map">Document Map</a></li><li class="h3"><a href="#foundations-project-wide-context">Foundations (project-wide
+context)</a></li><li class="h3"><a href="#phase-level-breakdowns-one-folder-per-phase">Phase-level
+breakdowns (one folder per phase)</a></li><li><a href="#how-this-document-is-produced">How this document is
+produced</a></li><li><a href="#how-to-find-your-way">How to find your way</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

@@ -6,17 +6,34 @@
 <title>NJI Architecture Summary — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
 aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
-aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
-aside.nav h2 a{color:inherit;text-decoration:none}
-aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-aside.nav ul{list-style:none;margin:0;padding:0}
-aside.nav li{margin:2px 0}
-aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
-aside.nav a:hover{background:#eaeef2}
-aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+aside.nav h2.site-title{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2.site-title a{color:inherit;text-decoration:none}
+aside.nav details.nav-group{margin:2px 0;border-radius:5px}
+aside.nav details.nav-group>summary{font-size:11px;padding:5px 8px 5px 4px;cursor:pointer;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-radius:4px;list-style:none;user-select:none;display:flex;align-items:center;gap:6px}
+aside.nav details.nav-group>summary::-webkit-details-marker{display:none}
+aside.nav details.nav-group>summary::before{content:'▸';display:inline-block;font-size:9px;color:#8c959f;transition:transform 0.15s ease;flex:0 0 10px;text-align:center}
+aside.nav details.nav-group[open]>summary::before{transform:rotate(90deg)}
+aside.nav details.nav-group>summary:hover{background:#eaeef2;color:#1f2328}
+aside.nav details.nav-group ul{list-style:none;margin:2px 0 6px;padding:0 0 0 16px}
+aside.nav details.nav-group li{margin:1px 0}
+aside.nav details.nav-group a{color:#0969da;text-decoration:none;display:block;padding:3px 8px;border-radius:6px;font-size:13px}
+aside.nav details.nav-group a:hover{background:#eaeef2}
+aside.nav details.nav-group a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+.nav-controls{margin:0 0 10px;font-size:11px}
+.nav-controls button{background:none;border:none;color:#0969da;cursor:pointer;padding:2px 4px;font-size:inherit;font-family:inherit;text-decoration:underline}
+.nav-controls button:hover{color:#0a3069}
+aside.toc{position:fixed;top:0;right:0;width:240px;height:100vh;overflow-y:auto;background:#fbfbfc;border-left:1px solid #eaeef2;padding:20px 14px;font-size:13px}
+aside.toc h4{font-size:11px;margin:0 0 8px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.toc ul{list-style:none;margin:0;padding:0}
+aside.toc li{margin:1px 0}
+aside.toc li.h3{padding-left:14px;font-size:12px}
+aside.toc a{color:#57606a;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;line-height:1.35;border-left:2px solid transparent}
+aside.toc a:hover{background:#eaeef2;color:#0a3069}
 main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+body.has-toc main.content{margin-right:240px}
 main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
 main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
 main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
@@ -36,33 +53,62 @@ main a:hover{text-decoration:underline}
 main ul,main ol{margin:6px 0 14px;padding-left:28px}
 main li{margin:2px 0}
 main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+main details.section{border:1px solid #d0d7de;border-radius:6px;margin:14px 0;background:#fff;overflow:hidden}
+main details.section>summary{cursor:pointer;padding:10px 14px;background:#f6f8fa;list-style:none;user-select:none;display:flex;align-items:center;gap:10px;color:#1f2328;border-radius:5px}
+main details.section[open]>summary{border-bottom:1px solid #d0d7de;border-radius:5px 5px 0 0}
+main details.section>summary::-webkit-details-marker{display:none}
+main details.section>summary::before{content:'▸';display:inline-block;font-size:11px;color:#57606a;transition:transform 0.15s ease;flex:0 0 12px;text-align:center}
+main details.section[open]>summary::before{transform:rotate(90deg)}
+main details.section>summary:hover{background:#eaeef2}
+main details.section>summary .section-title{font-size:1.15em;font-weight:600;line-height:1.3}
+main details.section>summary .section-title code{font-size:.95em}
+main .section-body{padding:14px 18px 18px}
+main .section-body>h3:first-child,main .section-body>p:first-child,main .section-body>ul:first-child{margin-top:6px}
+.section-controls{margin:6px 0 18px;display:flex;gap:14px;font-size:13px;align-items:center}
+.section-controls .label{color:#57606a;font-size:12px}
+.section-controls button{background:none;border:1px solid #d0d7de;color:#0969da;cursor:pointer;padding:3px 10px;font-size:13px;font-family:inherit;border-radius:5px}
+.section-controls button:hover{background:#eaeef2;color:#0a3069}
 .breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
 .breadcrumb a{color:#0969da;text-decoration:none}
 .source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
 .source-note a{color:#57606a;text-decoration:underline}
+@media (max-width: 1200px){
+  aside.toc{display:none}
+  body.has-toc main.content{margin-right:0}
+}
 </style>
 </head>
-<body>
-<aside class="nav"><h2><a href="./index.html">NJI Documentation</a></h2>
-<h3>Overview</h3>
+<body class="has-toc has-sections">
+<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
+<details class="nav-group" data-group="overview">
+<summary>Overview</summary>
 <ul>
 <li><a href="./index.html">Index</a></li>
 </ul>
-<h3>Product</h3>
+</details>
+<details class="nav-group" data-group="product">
+<summary>Product</summary>
 <ul>
 <li><a href="./prd.html">PRD (NJI)</a></li>
 </ul>
-<h3>As-is — JI Architecture Views</h3>
+</details>
+<details class="nav-group" data-group="as-is-ji-architecture-views">
+<summary>As-is — JI Architecture Views</summary>
 <ul>
 <li><a href="./asis/system-context.html">System Context (as-is)</a></li>
 <li><a href="./asis/components.html">Components (as-is)</a></li>
 </ul>
-<h3>To-be — NJI Architecture</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-architecture" data-current="true" open>
+<summary>To-be — NJI Architecture</summary>
 <ul>
 <li><a href="./architecture.html">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html" class="current">Architecture summary</a></li>
 </ul>
-<h3>To-be — NJI Reference</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-reference">
+<summary>To-be — NJI Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -73,7 +119,9 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <li><a href="./architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
-<h3>To-be — NJI Sequence Diagrams</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
+<summary>To-be — NJI Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -84,22 +132,45 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <li><a href="./architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
-<h3>To-be — NJI Open Items</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-open-items">
+<summary>To-be — NJI Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
 <li><a href="./architecture/changelog.html">Changelog</a></li>
 </ul>
-<h3>Implementation Readiness</h3>
+</details>
+<details class="nav-group" data-group="implementation-readiness">
+<summary>Implementation Readiness</summary>
 <ul>
-<li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
-<h3>Implementation</h3>
+</details>
+<details class="nav-group" data-group="implementation-epics-foundations">
+<summary>Implementation — Epics (Foundations)</summary>
 <ul>
-<li><a href="./epics.html">Epics & Stories</a></li>
-</ul></aside>
+<li><a href="./epics/index.html">Epics index</a></li>
+<li><a href="./epics/requirements-inventory.html">Requirements inventory</a></li>
+<li><a href="./epics/framework.html">Phase × Area framework</a></li>
+<li><a href="./epics/fr-coverage-map.html">FR coverage map</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-phase-0">
+<summary>Implementation — Phase 0 ✓</summary>
+<ul>
+<li><a href="./epics/phase-0/index.html">Phase 0 overview</a></li>
+<li><a href="./epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
+<li><a href="./epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
+<li><a href="./epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
+<li><a href="./epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
+<li><a href="./epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+</ul>
+</details></aside>
 <main class="content">
+<div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="nji-architecture-summary">NJI Architecture Summary</h1>
 <p>NJI (New Judicial Itineraries) — HMCTS's API-driven greenfield
 rebuild of the Oracle APEX Judicial Itineraries platform.</p>
@@ -109,11 +180,11 @@ conventions, repo structure, changelog, and build sequence, see <a
 href="./architecture.html"><code>./architecture.md</code></a> and the
 siblings under <a
 href="./architecture/"><code>./architecture/</code></a>.</p>
-<h2 id="system-context">System context</h2>
+<details class="section" id="system-context"><summary><span class="section-title">System context</span></summary><div class="section-body">
 <p><img src="./architecture/diagrams/system-context.png"
 alt="NJI System Context — high-level service map and key interactions" /></p>
-<h2 id="service-decomposition-11-services--ui">Service decomposition (11
-services + UI)</h2>
+</div></details><details class="section" id="service-decomposition-11-services--ui"><summary><span class="section-title">Service decomposition (11
+services + UI)</span></summary><div class="section-body">
 <h3 id="domain-services">Domain services</h3>
 <table>
 <thead>
@@ -232,7 +303,7 @@ HMCTS IdP SSO</td>
 </tr>
 </tbody>
 </table>
-<h2 id="technology-stack">Technology stack</h2>
+</div></details><details class="section" id="technology-stack"><summary><span class="section-title">Technology stack</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -310,7 +381,7 @@ Insights / Log Analytics</td>
 </tr>
 </tbody>
 </table>
-<h2 id="data-tier">Data tier</h2>
+</div></details><details class="section" id="data-tier"><summary><span class="section-title">Data tier</span></summary><div class="section-body">
 <ul>
 <li>One PostgreSQL Flexible Server instance in UK South. One shared
 schema. Zone-redundant HA (primary + standby in different AZs;
@@ -333,8 +404,8 @@ API fan-out.</li>
 </ul>
 <p>Full per-table inventory: <a
 href="./architecture/data-tables.html"><code>./architecture/data-tables.md</code></a>.</p>
-<h2 id="authentication--authorisation">Authentication &amp;
-Authorisation</h2>
+</div></details><details class="section" id="authentication--authorisation"><summary><span class="section-title">Authentication &amp;
+Authorisation</span></summary><div class="section-body">
 <p>Most runtime requests are user-initiated. The one exception is the
 payment-processing batch (<code>nji-payment-batch</code>), which runs on
 a schedule and authenticates as a service principal.</p>
@@ -408,7 +479,7 @@ G4.7</a>.</li>
 <li>Production service-auth issuer — <code>nji-mock-auth</code> covers
 Phase 0–8; deferred per G7.1.</li>
 </ul>
-<h2 id="api-patterns">API patterns</h2>
+</div></details><details class="section" id="api-patterns"><summary><span class="section-title">API patterns</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -468,8 +539,8 @@ href="./architecture.html"><code>./architecture.md</code></a>.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="cross-service-interaction-patterns">Cross-service interaction
-patterns</h2>
+</div></details><details class="section" id="cross-service-interaction-patterns"><summary><span class="section-title">Cross-service interaction
+patterns</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -552,7 +623,7 @@ direct SQL; no API).</td>
 </tr>
 </tbody>
 </table>
-<h2 id="deployment-topology">Deployment topology</h2>
+</div></details><details class="section" id="deployment-topology"><summary><span class="section-title">Deployment topology</span></summary><div class="section-body">
 <ul>
 <li><strong>Production region</strong> — Azure UK South.</li>
 <li><strong>HA</strong> — multi-AZ within UK South for every component:
@@ -578,7 +649,7 @@ Registry → Helm upgrade to AKS.</li>
 with correlation IDs; OpenTelemetry export to Application Insights; 30
 days hot in App Insights + 90 days cold in Log Analytics archive.</li>
 </ul>
-<h2 id="phased-rollout">Phased rollout</h2>
+</div></details><details class="section" id="phased-rollout"><summary><span class="section-title">Phased rollout</span></summary><div class="section-body">
 <ul>
 <li><strong>Boundary</strong> — per HMCTS judicial region (Northern,
 Western, etc.), with all applicable user roles in that region migrating
@@ -598,7 +669,7 @@ dependency order (Judge → Absence → Vacancy → Booking → Sitting →
 Payment); Phases 7–8 read-models (Itinerary, MI Feed); Pre-Phase-9
 real-IdP cutover; Phase 9+ per-region rollout waves.</li>
 </ul>
-<h2 id="phase-0-data-migration-etl">Phase 0 Data Migration ETL</h2>
+</div></details><details class="section" id="phase-0-data-migration-etl"><summary><span class="section-title">Phase 0 Data Migration ETL</span></summary><div class="section-body">
 <p>A programme deliverable, not a runtime service:</p>
 <ul>
 <li>Lives at <code>nji-architecture/migration/</code>.</li>
@@ -609,7 +680,7 @@ scope mappings. No transactional data.</li>
 <li>Re-runs per rollout wave for incremental user activation.</li>
 <li>APEX is the source. NJI's schema is set by NJI design.</li>
 </ul>
-<h2 id="external-integrations">External integrations</h2>
+</div></details><details class="section" id="external-integrations"><summary><span class="section-title">External integrations</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -653,7 +724,7 @@ post-cutover</td>
 </tr>
 </tbody>
 </table>
-<h2 id="foundational-principles">Foundational principles</h2>
+</div></details><details class="section" id="foundational-principles"><summary><span class="section-title">Foundational principles</span></summary><div class="section-body">
 <ol type="1">
 <li><strong>API for workflows; shared database for simple data
 access.</strong> Multi-step operations with business rules and state
@@ -667,7 +738,7 @@ measurement post-MVP shows the need. Use native platform constructs (DB
 locking, optimistic concurrency, uniqueness constraints, Spring profiles
 + Key Vault) before custom entities.</li>
 </ol>
-<h2 id="where-to-find-more-detail">Where to find more detail</h2>
+</div></details><details class="section" id="where-to-find-more-detail"><summary><span class="section-title">Where to find more detail</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -723,8 +794,75 @@ href="./architecture/changelog.html"><code>./architecture/changelog.md</code></a
 </tr>
 </tbody>
 </table>
-
+</div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture-summary.md</code></p>
 </main>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#system-context">System context</a></li><li><a href="#service-decomposition-11-services--ui">Service decomposition (11
+services + UI)</a></li><li class="h3"><a href="#domain-services">Domain services</a></li><li class="h3"><a href="#cross-cutting-services">Cross-cutting services</a></li><li class="h3"><a href="#read-model-services">Read-model services</a></li><li class="h3"><a href="#frontend">Frontend</a></li><li class="h3"><a href="#non-production-support">Non-production support</a></li><li><a href="#technology-stack">Technology stack</a></li><li><a href="#data-tier">Data tier</a></li><li><a href="#authentication--authorisation">Authentication &amp;
+Authorisation</a></li><li><a href="#api-patterns">API patterns</a></li><li><a href="#cross-service-interaction-patterns">Cross-service interaction
+patterns</a></li><li><a href="#deployment-topology">Deployment topology</a></li><li><a href="#phased-rollout">Phased rollout</a></li><li><a href="#phase-0-data-migration-etl">Phase 0 Data Migration ETL</a></li><li><a href="#external-integrations">External integrations</a></li><li><a href="#foundational-principles">Foundational principles</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
+<script>
+(function(){
+  // 1. Sidebar accordion: persist user's group open/close preference per group.
+  //    The current page's group is always open on load (regardless of stored state).
+  document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){
+    var key = 'nav-group-' + d.dataset.group;
+    if (d.dataset.current !== 'true') {
+      var stored = localStorage.getItem(key);
+      if (stored === 'open') d.open = true;
+      else if (stored === 'closed') d.open = false;
+    }
+    d.addEventListener('toggle', function(){
+      localStorage.setItem(key, d.open ? 'open' : 'closed');
+    });
+  });
+
+  // 2. Expand all / Collapse all (sidebar)
+  document.querySelectorAll('button[data-nav-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.navAction === 'expand';
+      document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){ d.open = open; });
+    });
+  });
+
+  // 3. When a fragment link points to a heading inside a collapsed <details>,
+  //    open all ancestor <details> elements so the target is visible.
+  function openAncestors(id){
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    var cur = el.parentElement;
+    while (cur) {
+      if (cur.tagName === 'DETAILS') cur.open = true;
+      cur = cur.parentElement;
+    }
+    setTimeout(function(){
+      try { el.scrollIntoView({block: 'start', behavior: 'smooth'}); } catch (e) {}
+    }, 60);
+  }
+  if (window.location.hash) {
+    openAncestors(window.location.hash.slice(1));
+  }
+  window.addEventListener('hashchange', function(){
+    openAncestors(window.location.hash.slice(1));
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.length < 2) return;
+    setTimeout(function(){ openAncestors(href.slice(1)); }, 10);
+  });
+
+  // 4. Expand all / Collapse all (content sections)
+  document.querySelectorAll('button[data-section-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.sectionAction === 'expand';
+      document.querySelectorAll('main.content details.section').forEach(function(d){ d.open = open; });
+    });
+  });
+})();
+</script>
 </body>
 </html>

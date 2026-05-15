@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Epic 0.3: Admin manages users, roles, and per-region activation with migration sign-off — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2.site-title{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2.site-title a{color:inherit;text-decoration:none}
+aside.nav details.nav-group{margin:2px 0;border-radius:5px}
+aside.nav details.nav-group>summary{font-size:11px;padding:5px 8px 5px 4px;cursor:pointer;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-radius:4px;list-style:none;user-select:none;display:flex;align-items:center;gap:6px}
+aside.nav details.nav-group>summary::-webkit-details-marker{display:none}
+aside.nav details.nav-group>summary::before{content:'▸';display:inline-block;font-size:9px;color:#8c959f;transition:transform 0.15s ease;flex:0 0 10px;text-align:center}
+aside.nav details.nav-group[open]>summary::before{transform:rotate(90deg)}
+aside.nav details.nav-group>summary:hover{background:#eaeef2;color:#1f2328}
+aside.nav details.nav-group ul{list-style:none;margin:2px 0 6px;padding:0 0 0 16px}
+aside.nav details.nav-group li{margin:1px 0}
+aside.nav details.nav-group a{color:#0969da;text-decoration:none;display:block;padding:3px 8px;border-radius:6px;font-size:13px}
+aside.nav details.nav-group a:hover{background:#eaeef2}
+aside.nav details.nav-group a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+.nav-controls{margin:0 0 10px;font-size:11px}
+.nav-controls button{background:none;border:none;color:#0969da;cursor:pointer;padding:2px 4px;font-size:inherit;font-family:inherit;text-decoration:underline}
+.nav-controls button:hover{color:#0a3069}
+aside.toc{position:fixed;top:0;right:0;width:240px;height:100vh;overflow-y:auto;background:#fbfbfc;border-left:1px solid #eaeef2;padding:20px 14px;font-size:13px}
+aside.toc h4{font-size:11px;margin:0 0 8px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.toc ul{list-style:none;margin:0;padding:0}
+aside.toc li{margin:1px 0}
+aside.toc li.h3{padding-left:14px;font-size:12px}
+aside.toc a{color:#57606a;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;line-height:1.35;border-left:2px solid transparent}
+aside.toc a:hover{background:#eaeef2;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+body.has-toc main.content{margin-right:240px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+main details.section{border:1px solid #d0d7de;border-radius:6px;margin:14px 0;background:#fff;overflow:hidden}
+main details.section>summary{cursor:pointer;padding:10px 14px;background:#f6f8fa;list-style:none;user-select:none;display:flex;align-items:center;gap:10px;color:#1f2328;border-radius:5px}
+main details.section[open]>summary{border-bottom:1px solid #d0d7de;border-radius:5px 5px 0 0}
+main details.section>summary::-webkit-details-marker{display:none}
+main details.section>summary::before{content:'▸';display:inline-block;font-size:11px;color:#57606a;transition:transform 0.15s ease;flex:0 0 12px;text-align:center}
+main details.section[open]>summary::before{transform:rotate(90deg)}
+main details.section>summary:hover{background:#eaeef2}
+main details.section>summary .section-title{font-size:1.15em;font-weight:600;line-height:1.3}
+main details.section>summary .section-title code{font-size:.95em}
+main .section-body{padding:14px 18px 18px}
+main .section-body>h3:first-child,main .section-body>p:first-child,main .section-body>ul:first-child{margin-top:6px}
+.section-controls{margin:6px 0 18px;display:flex;gap:14px;font-size:13px;align-items:center}
+.section-controls .label{color:#57606a;font-size:12px}
+.section-controls button{background:none;border:1px solid #d0d7de;color:#0969da;cursor:pointer;padding:3px 10px;font-size:13px;font-family:inherit;border-radius:5px}
+.section-controls button:hover{background:#eaeef2;color:#0a3069}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+@media (max-width: 1200px){
+  aside.toc{display:none}
+  body.has-toc main.content{margin-right:0}
+}
+</style>
+</head>
+<body class="has-toc has-sections">
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
+<details class="nav-group" data-group="overview">
+<summary>Overview</summary>
+<ul>
+<li><a href="../../index.html">Index</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="product">
+<summary>Product</summary>
+<ul>
+<li><a href="../../prd.html">PRD (NJI)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="as-is-ji-architecture-views">
+<summary>As-is — JI Architecture Views</summary>
+<ul>
+<li><a href="../../asis/system-context.html">System Context (as-is)</a></li>
+<li><a href="../../asis/components.html">Components (as-is)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-architecture">
+<summary>To-be — NJI Architecture</summary>
+<ul>
+<li><a href="../../architecture.html">Architecture (index)</a></li>
+<li><a href="../../architecture-summary.html">Architecture summary</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-reference">
+<summary>To-be — NJI Reference</summary>
+<ul>
+<li><a href="../../architecture/user-types.html">User types</a></li>
+<li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../../architecture/conventions.html">Conventions</a></li>
+<li><a href="../../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
+<summary>To-be — NJI Sequence Diagrams</summary>
+<ul>
+<li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-open-items">
+<summary>To-be — NJI Open Items</summary>
+<ul>
+<li><a href="../../architecture/gaps.html">Gaps</a></li>
+<li><a href="../../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../../architecture/changelog.html">Changelog</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-readiness">
+<summary>Implementation Readiness</summary>
+<ul>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-epics-foundations">
+<summary>Implementation — Epics (Foundations)</summary>
+<ul>
+<li><a href="../../epics/index.html">Epics index</a></li>
+<li><a href="../../epics/requirements-inventory.html">Requirements inventory</a></li>
+<li><a href="../../epics/framework.html">Phase × Area framework</a></li>
+<li><a href="../../epics/fr-coverage-map.html">FR coverage map</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-phase-0" data-current="true" open>
+<summary>Implementation — Phase 0 ✓</summary>
+<ul>
+<li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html" class="current">Epic 0.3 — Users, Roles, Activation</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+</ul>
+</details></aside>
+<main class="content">
+<div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
+<h1
+id="epic-03-admin-manages-users-roles-and-per-region-activation-with-migration-sign-off">Epic
+0.3: Admin manages users, roles, and per-region activation with
+migration sign-off</h1>
+<p><strong>User outcome:</strong> An admin user signs into
+<code>nji-admin-ui</code>, opens the User &amp; Role admin module, can
+search users (migrated from APEX + new), edit role and Region/Area scope
+assignments, view per-user effective permissions, and flip per-user
+activation flags. Phase 0 ETL has loaded the active APEX users and
+produced a reconciliation report keyed to HMCTS IdP principals (email
+primary, employee number fallback); named owners review and sign off,
+with explicit handling decisions (drop / hold / manual map) for
+unmatched records.</p>
+<p><strong>Vertical slice:</strong></p>
+<ul>
+<li>Admin UI Users &amp; Role module (<code>modules/users-roles/</code>)
+in <code>nji-admin-ui</code> — list and search users, edit role and
+Region/Area scope, view effective permissions, view and toggle per-user
+activation flag</li>
+<li><code>nji-authorisation</code> API extensions: role/scope edit
+endpoints, effective-permissions endpoint, activation-flag
+endpoints</li>
+<li>Users/Roles ETL stream at
+<code>nji-architecture/migration/users-roles/</code> (per AR46–AR48):
+reads APEX user dumps, reconciles to HMCTS IdP (email primary, employee
+number fallback per D9 / Risk #14), loads via
+<code>nji-authorisation</code> API</li>
+<li>Per-run reconciliation report under
+<code>migration/reports/users-roles/</code></li>
+<li><code>unmatched/</code> bucket with explicit handling-decision
+workflow (drop / hold / manual map)</li>
+<li>Per-user activation flag surface (FR58 — orchestration of flag-flips
+at cutover lives in Phase 9+, but the admin-side toggle and reporting
+view live here)</li>
+</ul>
+<p><strong>FRs covered:</strong> FR4 (full role/scope edits), FR57
+(Users/Roles portion), FR58 (flag wire-up surface)</p>
+<p><strong>Key NFRs:</strong> NFR12–NFR13 (auth enforcement on admin
+endpoints), NFR17–NFR19 (admin UI WCAG)</p>
+<p><strong>Why separate from Epic 0.2:</strong> Different ETL stream,
+different domain owners (judicial-team owners for Reference Data vs
+identity / IT owners for Users/Roles), different reconciliation
+methodology (controlled-list vs identity-reconciliation), different risk
+profile (Risk #13 vs Risk #14). Bundling would dilute the user value and
+the sign-off accountability.</p>
+<hr />
+<details class="section" id="story-031-nji-authorisation-api-extensions-for-user-role-scope-and-activation-administration"><summary><span class="section-title">Story
+0.3.1: <code>nji-authorisation</code> API extensions for user, role,
+scope, and activation administration</span></summary><div class="section-body">
+<p>As an <strong>API consumer</strong> (admin UI now; downstream Phase
+9+ rollout orchestration later), I want <code>nji-authorisation</code>
+to expose admin-gated endpoints for managing users, role assignments,
+Region/Area scope, and per-user activation flags, So that <strong>admins
+can edit migrated user data</strong> (per FR4) and the activation
+surface (per FR58) is available before Phase 9+ rollout orchestration
+uses it.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> <code>nji-authorisation</code> is deployed per
+Epic 0.1 (Story 0.1.3) with the 5 auth tables in place,
+<strong>When</strong> the engineer adds admin endpoints,
+<strong>Then</strong> <code>GET /v1/admin/users</code> supports list +
+search + filter by email, employee number, role, region, area,
+activation state (per FR4), <strong>And</strong>
+<code>GET /v1/admin/users/{id}</code> returns full user detail including
+role assignments and Region/Area scope, <strong>And</strong>
+<code>PUT /v1/admin/users/{id}/roles</code> updates the user's role
+assignments (writes <code>auth_user_roles</code>), <strong>And</strong>
+<code>PUT /v1/admin/users/{id}/region-scopes</code> updates Region/Area
+scope (writes <code>auth_user_region_scopes</code>),
+<strong>And</strong> <code>PUT /v1/admin/users/{id}/activation</code>
+toggles per-region activation flags (writes
+<code>auth_user_activation_flags</code>) — per FR58.</p>
+<p><strong>Given</strong> any admin endpoint is called,
+<strong>When</strong> the authenticated principal does NOT have a
+<code>system-admin</code> role, <strong>Then</strong> the response is
+<code>403 Forbidden</code> with an RFC 9457 problem-details body (per
+NFR13).</p>
+<p><strong>Given</strong> an admin user updates another user's roles,
+<strong>When</strong> the API processes the request,
+<strong>Then</strong> an audit row is written to a
+<code>auth_audit</code> table (added via Flyway migration in this story)
+recording principal / target user / before-state / after-state /
+timestamp, <strong>And</strong> the response is <code>200 OK</code> with
+the updated user resource (or <code>409 Conflict</code> if optimistic
+locking via <code>@Version</code> detects a concurrent edit — per AR21),
+<strong>And</strong> the change is reflected in the next
+<code>POST /v1/authz/check</code> call for the target user.</p>
+<p><strong>Given</strong> the admin endpoints are tested via Postman
+collection, <strong>When</strong> the collection runs in CI,
+<strong>Then</strong> it covers happy path + <code>403</code> (non-admin
+caller) + <code>404</code> (missing user) + <code>409</code>
+(optimistic-lock conflict) + <code>400</code> (validation failure with
+RFC 9457), <strong>And</strong> the collection is appended to
+<code>postman/nji-authorisation-phase0.postman_collection.json</code>.</p>
+<p><strong>Given</strong> the OpenAPI spec is regenerated,
+<strong>When</strong>
+<code>uk.gov.hmcts.nji:api-nji-authorisation:1.1.0</code> is published,
+<strong>Then</strong> all admin endpoints are documented with full
+request/response schemas, <strong>And</strong> Spectral lint passes,
+<strong>And</strong> the spec version bumps from 1.0.0 (Story 0.1.3) to
+1.1.0 reflecting backwards-compatible additions (per AR38 versioning
+policy).</p>
+<p><strong>References:</strong> FR4, FR58 (activation surface);
+NFR12–NFR13, NFR15, NFR39, NFR42; AR18–AR21, AR34, AR37–AR39, AR41.</p>
+<hr />
+</div></details><details class="section" id="story-032-admin-ui-users--roles-module--search-edit-roles-edit-scope-toggle-activation-view-permissions"><summary><span class="section-title">Story
+0.3.2: Admin UI Users &amp; Roles module — search, edit roles, edit
+scope, toggle activation, view permissions</span></summary><div class="section-body">
+<p>As a <strong>system administrator</strong>, I want to search NJI
+users, edit their role and Region/Area scope assignments, view their
+effective permissions, and toggle their per-region activation flag
+through <code>nji-admin-ui</code>, So that <strong>migrated APEX users
+can be onboarded to NJI</strong> (per FR4) and rollout orchestration
+(per FR58) has a UI surface to verify activation state before
+flag-flip.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> an admin signs into <code>nji-admin-ui</code>
+(Story 0.2.3) with a <code>system-admin</code> role,
+<strong>When</strong> they open <code>/users-roles</code>,
+<strong>Then</strong> they see a paginated user list with search by
+email, employee number, name, role, region, <strong>And</strong> the
+list is fetched via the auto-generated TypeScript client from
+<code>nji-authorisation</code> OpenAPI (per AR43).</p>
+<p><strong>Given</strong> the admin opens a user, <strong>When</strong>
+the detail view renders, <strong>Then</strong> they see user identity
+(email, employee number, name), current roles, current Region/Area
+scope, current activation state per region, and effective permissions
+(computed by <code>GET /v1/users/{id}/effective-permissions</code>),
+<strong>And</strong> an "Edit roles" form lists available roles with
+checkboxes, <strong>And</strong> an "Edit Region/Area scope" form lists
+regions and areas, <strong>And</strong> a "Toggle activation" control
+shows the current state per region with a confirmation modal before
+flip.</p>
+<p><strong>Given</strong> the admin edits and submits,
+<strong>When</strong> the form posts via the auto-generated client,
+<strong>Then</strong> a success toast confirms the change,
+<strong>And</strong> the effective permissions panel refreshes to show
+the new state, <strong>And</strong> on optimistic-lock conflict
+(<code>409</code>), the UI shows <em>"This user was edited by someone
+else — please reload"</em> with a refresh button.</p>
+<p><strong>Given</strong> the admin clicks the activation toggle for a
+region, <strong>When</strong> the confirmation modal asks <em>"Activate
+user <code>judge.test@…</code> for region Northern?"</em>,
+<strong>Then</strong> the admin confirms, <strong>And</strong> the API
+call updates <code>auth_user_activation_flags</code> for that user +
+region, <strong>And</strong> the user immediately sees (per Story 0.1.5)
+the new state on next sign-in (banner appears/disappears).</p>
+<p><strong>Given</strong> accessibility CI runs, <strong>When</strong>
+axe-core scans the list, detail, edit forms, and confirmation modal,
+<strong>Then</strong> no new WCAG 2.2 AA violations,
+<strong>And</strong> keyboard navigation works through all forms and the
+modal, <strong>And</strong> ARIA labels are correct on the toggle
+controls.</p>
+<p><strong>Given</strong> Playwright E2E coverage, <strong>When</strong>
+<code>tests/e2e/users-roles.spec.ts</code> runs, <strong>Then</strong>
+it covers: search → open user → edit roles → submit →
+effective-permissions refreshed → activation toggle → confirmation modal
+→ flip → user sees new banner, <strong>And</strong> also covers the
+optimistic-lock conflict path, <strong>And</strong> also covers
+non-admin rejection.</p>
+<p><strong>References:</strong> FR4 (full edits), FR58 (activation
+surface), FR56 (admin stack); NFR12–NFR13, NFR17–NFR19; AR42–AR45.</p>
+<hr />
+</div></details><details class="section" id="story-033-phase-0-usersroles-etl--apex-users-to-nji-authorisation--idp-reconciliation--reconciliation-report"><summary><span class="section-title">Story
+0.3.3: Phase 0 Users/Roles ETL — APEX users to NJI Authorisation + IdP
+reconciliation + reconciliation report</span></summary><div class="section-body">
+<p>As a <strong>Users/Roles named owner</strong> (identity / HMCTS IT
+lead), I want the Phase 0 ETL to read APEX user dumps, reconcile to
+HMCTS IdP principals (email primary, employee number fallback), load
+matched users into NJI Authorisation, and route unmatched users into an
+explicit handling-decision workflow, So that <strong>migration
+correctness is auditably owned</strong> (per FR57, D9, Risk #14) and
+unmatched records are not silently dropped.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> the engineer creates the ETL at
+<code>nji-architecture/migration/users-roles/</code>,
+<strong>When</strong> the ETL is implemented, <strong>Then</strong> it
+reads APEX user dumps (format per the migration spec),
+<strong>And</strong> for each row, it reconciles to an HMCTS IdP
+principal: • try exact email match against the HMCTS IdP directory
+(primary key per D9) • on no email match, try employee-number match
+(fallback per D9) • on neither match, route the row to the unmatched
+bucket, <strong>And</strong> matched rows load via
+<code>nji-authorisation</code> admin API
+(<code>POST /v1/admin/users</code> and friends) using a service-token
+(per AR36, AR46).</p>
+<p><strong>Given</strong> the ETL completes a run, <strong>When</strong>
+the reconciliation report is generated at
+<code>nji-architecture/migration/reports/users-roles/{run-date}.md</code>,
+<strong>Then</strong> the report shows: • source-row count per APEX dump
+• matched count (email primary, employee-number fallback breakdown) •
+unmatched count with per-row reason • per-role assignment counts •
+per-Region/Area scope counts • anomalies (e.g. APEX role not in NJI
+controlled list, ambiguous email match), <strong>And</strong> the
+unmatched rows are written to
+<code>nji-architecture/migration/reports/users-roles/unmatched/{run-date}/</code>
+as one file per row, <strong>And</strong> each unmatched-row file
+includes the raw APEX row + a "handling decision" placeholder (drop /
+hold / manual map).</p>
+<p><strong>Given</strong> the ETL is re-run incrementally for a
+subsequent wave, <strong>When</strong> the second run completes,
+<strong>Then</strong> previously-matched users are not re-created
+(idempotency per AR49), <strong>And</strong> new APEX rows are matched
+fresh against IdP, <strong>And</strong> previously-unmatched rows whose
+APEX side has changed re-enter the unmatched bucket with an updated
+reason.</p>
+<p><strong>Given</strong> an unmatched row's named-owner decision is
+<code>manual map</code>, <strong>When</strong> the engineer (or named
+owner via Story 0.3.4 promoted UI) creates the mapping by providing an
+IdP principal email, <strong>Then</strong> the mapping is recorded in
+the ETL's reconciliation state, <strong>And</strong> subsequent re-runs
+pick up the manual map and load the user normally.</p>
+<p><strong>Given</strong> an APEX role appears that does not exist in
+<code>auth_roles</code>, <strong>When</strong> the ETL encounters the
+row, <strong>Then</strong> the row routes to the unmatched bucket with
+reason <em>"Unknown APEX role: {role-name}"</em>, <strong>And</strong>
+the row does not load with a partial role assignment.</p>
+<p><strong>References:</strong> FR4 (load via admin API), FR57 (ETL
+framing per D9), FR58 (activation flag initial state); NFR15 (audit);
+AR21, AR36, AR46, AR47, AR48, AR49.</p>
+<hr />
+</div></details><details class="section" id="story-034-admin-ui-migration-reports-module--view-reports--resolve-unmatched-records-with-sign-off"><summary><span class="section-title">Story
+0.3.4: Admin UI Migration Reports module — view reports + resolve
+unmatched records with sign-off</span></summary><div class="section-body">
+<p>As a <strong>named migration owner</strong> (Reference Data owner
+from Epic 0.2 or Users/Roles owner from Epic 0.3), I want a Migration
+Reports view in <code>nji-admin-ui</code> to review the latest ETL
+reconciliation reports, drill into unmatched records, apply handling
+decisions (drop / hold / manual map), and sign off on the migration, So
+that <strong>the named-owner sign-off workflow</strong> (per FR57 + Risk
+#13/#14) is properly auditable and unmatched user records cannot pass
+into NJI without an explicit decision.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Given</strong> an admin with <code>migration-owner</code>
+role signs into <code>nji-admin-ui</code>, <strong>When</strong> they
+open <code>/migration-reports</code>, <strong>Then</strong> they see a
+list of available reconciliation reports grouped by stream (Reference
+Data + Users/Roles) and date, <strong>And</strong> each report row shows
+status (Pending / Signed off / Rejected), matched/unmatched counts,
+owner identity if signed, <strong>And</strong> the list is fetched from
+a new <code>nji-architecture/migration-reports</code> API exposure
+(engineer to decide at story implementation: read directly from the
+<code>nji-architecture/migration/reports/</code> directory via a thin
+file-system API, OR expose a per-service endpoint — recommend a single
+read-only endpoint on <code>nji-authorisation</code> to centralise the
+auth/audit surface).</p>
+<p><strong>Given</strong> the owner opens a Users/Roles reconciliation
+report, <strong>When</strong> the detail view renders,
+<strong>Then</strong> they see the report's summary (matched / unmatched
+/ anomalies counts), <strong>And</strong> a list of unmatched rows with
+reason, raw APEX data, and a "handling decision" dropdown (drop / hold /
+manual map), <strong>And</strong> for "manual map", a text input accepts
+the IdP principal email to bind to.</p>
+<p><strong>Given</strong> the owner applies decisions to all unmatched
+rows, <strong>When</strong> they click "Submit decisions",
+<strong>Then</strong> each decision is persisted to the ETL's
+reconciliation state (per Story 0.3.3), <strong>And</strong> a
+confirmation banner shows the per-decision counts.</p>
+<p><strong>Given</strong> all unmatched rows have decisions,
+<strong>When</strong> the owner clicks "Sign off", <strong>Then</strong>
+a confirmation modal appears with the summary, <strong>And</strong> on
+confirm, the sign-off is recorded with owner identity, timestamp, report
+version, <strong>And</strong> the report status moves to "Signed off",
+<strong>And</strong> downstream Phase 1+ consumption is no longer
+operationally blocked (enforcement gate at this stage is operational;
+can be wired to an activation flag in a follow-up).</p>
+<p><strong>Given</strong> axe-core checks run on every page in the
+module, <strong>When</strong> the scans complete, <strong>Then</strong>
+no new WCAG 2.2 AA violations, <strong>And</strong> keyboard navigation
+works through the report list, unmatched-rows table, decision dropdowns,
+manual-map input, and confirmation modal.</p>
+<p><strong>Given</strong> Playwright E2E coverage, <strong>When</strong>
+<code>tests/e2e/migration-reports.spec.ts</code> runs,
+<strong>Then</strong> it covers: list → open report → apply
+drop/hold/manual-map decisions → submit → sign off → report status
+updates to signed off, <strong>And</strong> also covers the rejection
+path (owner rejects with mandatory reason).</p>
+<p><strong>References:</strong> FR4 (admin role), FR57 (sign-off
+workflow), FR56 (admin stack); NFR12, NFR13, NFR15, NFR17, NFR18, NFR19;
+AR42–AR45, AR47, AR48.</p>
+</div></details>
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/phase-0/epic-0.3-admin-manages-users-roles.md</code></p>
+</main>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#story-031-nji-authorisation-api-extensions-for-user-role-scope-and-activation-administration">Story
+0.3.1: nji-authorisation API extensions for user, role,
+scope, and activation administration</a></li><li><a href="#story-032-admin-ui-users--roles-module--search-edit-roles-edit-scope-toggle-activation-view-permissions">Story
+0.3.2: Admin UI Users &amp; Roles module — search, edit roles, edit
+scope, toggle activation, view permissions</a></li><li><a href="#story-033-phase-0-usersroles-etl--apex-users-to-nji-authorisation--idp-reconciliation--reconciliation-report">Story
+0.3.3: Phase 0 Users/Roles ETL — APEX users to NJI Authorisation + IdP
+reconciliation + reconciliation report</a></li><li><a href="#story-034-admin-ui-migration-reports-module--view-reports--resolve-unmatched-records-with-sign-off">Story
+0.3.4: Admin UI Migration Reports module — view reports + resolve
+unmatched records with sign-off</a></li></ul></aside>
+<script>
+(function(){
+  // 1. Sidebar accordion: persist user's group open/close preference per group.
+  //    The current page's group is always open on load (regardless of stored state).
+  document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){
+    var key = 'nav-group-' + d.dataset.group;
+    if (d.dataset.current !== 'true') {
+      var stored = localStorage.getItem(key);
+      if (stored === 'open') d.open = true;
+      else if (stored === 'closed') d.open = false;
+    }
+    d.addEventListener('toggle', function(){
+      localStorage.setItem(key, d.open ? 'open' : 'closed');
+    });
+  });
+
+  // 2. Expand all / Collapse all (sidebar)
+  document.querySelectorAll('button[data-nav-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.navAction === 'expand';
+      document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){ d.open = open; });
+    });
+  });
+
+  // 3. When a fragment link points to a heading inside a collapsed <details>,
+  //    open all ancestor <details> elements so the target is visible.
+  function openAncestors(id){
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    var cur = el.parentElement;
+    while (cur) {
+      if (cur.tagName === 'DETAILS') cur.open = true;
+      cur = cur.parentElement;
+    }
+    setTimeout(function(){
+      try { el.scrollIntoView({block: 'start', behavior: 'smooth'}); } catch (e) {}
+    }, 60);
+  }
+  if (window.location.hash) {
+    openAncestors(window.location.hash.slice(1));
+  }
+  window.addEventListener('hashchange', function(){
+    openAncestors(window.location.hash.slice(1));
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.length < 2) return;
+    setTimeout(function(){ openAncestors(href.slice(1)); }, 10);
+  });
+
+  // 4. Expand all / Collapse all (content sections)
+  document.querySelectorAll('button[data-section-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.sectionAction === 'expand';
+      document.querySelectorAll('main.content details.section').forEach(function(d){ d.open = open; });
+    });
+  });
+})();
+</script>
+</body>
+</html>

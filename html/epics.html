@@ -6,17 +6,34 @@
 <title>ji-analysis (NJI) — Epic Breakdown — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
 aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
-aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
-aside.nav h2 a{color:inherit;text-decoration:none}
-aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-aside.nav ul{list-style:none;margin:0;padding:0}
-aside.nav li{margin:2px 0}
-aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
-aside.nav a:hover{background:#eaeef2}
-aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+aside.nav h2.site-title{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2.site-title a{color:inherit;text-decoration:none}
+aside.nav details.nav-group{margin:2px 0;border-radius:5px}
+aside.nav details.nav-group>summary{font-size:11px;padding:5px 8px 5px 4px;cursor:pointer;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-radius:4px;list-style:none;user-select:none;display:flex;align-items:center;gap:6px}
+aside.nav details.nav-group>summary::-webkit-details-marker{display:none}
+aside.nav details.nav-group>summary::before{content:'▸';display:inline-block;font-size:9px;color:#8c959f;transition:transform 0.15s ease;flex:0 0 10px;text-align:center}
+aside.nav details.nav-group[open]>summary::before{transform:rotate(90deg)}
+aside.nav details.nav-group>summary:hover{background:#eaeef2;color:#1f2328}
+aside.nav details.nav-group ul{list-style:none;margin:2px 0 6px;padding:0 0 0 16px}
+aside.nav details.nav-group li{margin:1px 0}
+aside.nav details.nav-group a{color:#0969da;text-decoration:none;display:block;padding:3px 8px;border-radius:6px;font-size:13px}
+aside.nav details.nav-group a:hover{background:#eaeef2}
+aside.nav details.nav-group a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+.nav-controls{margin:0 0 10px;font-size:11px}
+.nav-controls button{background:none;border:none;color:#0969da;cursor:pointer;padding:2px 4px;font-size:inherit;font-family:inherit;text-decoration:underline}
+.nav-controls button:hover{color:#0a3069}
+aside.toc{position:fixed;top:0;right:0;width:240px;height:100vh;overflow-y:auto;background:#fbfbfc;border-left:1px solid #eaeef2;padding:20px 14px;font-size:13px}
+aside.toc h4{font-size:11px;margin:0 0 8px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.toc ul{list-style:none;margin:0;padding:0}
+aside.toc li{margin:1px 0}
+aside.toc li.h3{padding-left:14px;font-size:12px}
+aside.toc a{color:#57606a;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;line-height:1.35;border-left:2px solid transparent}
+aside.toc a:hover{background:#eaeef2;color:#0a3069}
 main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+body.has-toc main.content{margin-right:240px}
 main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
 main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
 main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
@@ -36,33 +53,62 @@ main a:hover{text-decoration:underline}
 main ul,main ol{margin:6px 0 14px;padding-left:28px}
 main li{margin:2px 0}
 main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+main details.section{border:1px solid #d0d7de;border-radius:6px;margin:14px 0;background:#fff;overflow:hidden}
+main details.section>summary{cursor:pointer;padding:10px 14px;background:#f6f8fa;list-style:none;user-select:none;display:flex;align-items:center;gap:10px;color:#1f2328;border-radius:5px}
+main details.section[open]>summary{border-bottom:1px solid #d0d7de;border-radius:5px 5px 0 0}
+main details.section>summary::-webkit-details-marker{display:none}
+main details.section>summary::before{content:'▸';display:inline-block;font-size:11px;color:#57606a;transition:transform 0.15s ease;flex:0 0 12px;text-align:center}
+main details.section[open]>summary::before{transform:rotate(90deg)}
+main details.section>summary:hover{background:#eaeef2}
+main details.section>summary .section-title{font-size:1.15em;font-weight:600;line-height:1.3}
+main details.section>summary .section-title code{font-size:.95em}
+main .section-body{padding:14px 18px 18px}
+main .section-body>h3:first-child,main .section-body>p:first-child,main .section-body>ul:first-child{margin-top:6px}
+.section-controls{margin:6px 0 18px;display:flex;gap:14px;font-size:13px;align-items:center}
+.section-controls .label{color:#57606a;font-size:12px}
+.section-controls button{background:none;border:1px solid #d0d7de;color:#0969da;cursor:pointer;padding:3px 10px;font-size:13px;font-family:inherit;border-radius:5px}
+.section-controls button:hover{background:#eaeef2;color:#0a3069}
 .breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
 .breadcrumb a{color:#0969da;text-decoration:none}
 .source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
 .source-note a{color:#57606a;text-decoration:underline}
+@media (max-width: 1200px){
+  aside.toc{display:none}
+  body.has-toc main.content{margin-right:0}
+}
 </style>
 </head>
-<body>
-<aside class="nav"><h2><a href="./index.html">NJI Documentation</a></h2>
-<h3>Overview</h3>
+<body class="">
+<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
+<details class="nav-group" data-group="overview">
+<summary>Overview</summary>
 <ul>
 <li><a href="./index.html">Index</a></li>
 </ul>
-<h3>Product</h3>
+</details>
+<details class="nav-group" data-group="product">
+<summary>Product</summary>
 <ul>
 <li><a href="./prd.html">PRD (NJI)</a></li>
 </ul>
-<h3>As-is — JI Architecture Views</h3>
+</details>
+<details class="nav-group" data-group="as-is-ji-architecture-views">
+<summary>As-is — JI Architecture Views</summary>
 <ul>
 <li><a href="./asis/system-context.html">System Context (as-is)</a></li>
 <li><a href="./asis/components.html">Components (as-is)</a></li>
 </ul>
-<h3>To-be — NJI Architecture</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-architecture">
+<summary>To-be — NJI Architecture</summary>
 <ul>
 <li><a href="./architecture.html">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html">Architecture summary</a></li>
 </ul>
-<h3>To-be — NJI Reference</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-reference">
+<summary>To-be — NJI Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -73,7 +119,9 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <li><a href="./architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
-<h3>To-be — NJI Sequence Diagrams</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
+<summary>To-be — NJI Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -84,1305 +132,154 @@ main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
 <li><a href="./architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
-<h3>To-be — NJI Open Items</h3>
+</details>
+<details class="nav-group" data-group="to-be-nji-open-items">
+<summary>To-be — NJI Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
 <li><a href="./architecture/changelog.html">Changelog</a></li>
 </ul>
-<h3>Implementation Readiness</h3>
+</details>
+<details class="nav-group" data-group="implementation-readiness">
+<summary>Implementation Readiness</summary>
 <ul>
-<li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
-<h3>Implementation</h3>
+</details>
+<details class="nav-group" data-group="implementation-epics-foundations">
+<summary>Implementation — Epics (Foundations)</summary>
 <ul>
-<li><a href="./epics.html" class="current">Epics & Stories</a></li>
-</ul></aside>
+<li><a href="./epics/index.html">Epics index</a></li>
+<li><a href="./epics/requirements-inventory.html">Requirements inventory</a></li>
+<li><a href="./epics/framework.html">Phase × Area framework</a></li>
+<li><a href="./epics/fr-coverage-map.html">FR coverage map</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-phase-0">
+<summary>Implementation — Phase 0 ✓</summary>
+<ul>
+<li><a href="./epics/phase-0/index.html">Phase 0 overview</a></li>
+<li><a href="./epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
+<li><a href="./epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
+<li><a href="./epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
+<li><a href="./epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
+<li><a href="./epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+</ul>
+</details></aside>
 <main class="content">
+
 <h1 id="ji-analysis-nji--epic-breakdown">ji-analysis (NJI) — Epic
 Breakdown</h1>
-<h2 id="section-navigation">Section Navigation</h2>
-<table>
-<thead>
-<tr>
-<th>Section</th>
-<th>Sub-sections</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="#overview">Overview</a></td>
-<td>—</td>
-</tr>
-<tr>
-<td><a href="#requirements-inventory">Requirements Inventory</a></td>
-<td><a href="#functional-requirements">Functional Requirements</a> · <a
-href="#nonfunctional-requirements">NonFunctional Requirements</a> · <a
-href="#additional-requirements">Additional Requirements</a> · <a
-href="#ux-design-requirements">UX Design Requirements</a> · <a
-href="#fr-coverage-map">FR Coverage Map</a></td>
-</tr>
-<tr>
-<td><a href="#functional-requirements">Functional Requirements</a></td>
-<td><a href="#identity--authorisation">Identity &amp; Authorisation</a>
-· <a href="#foundational-data-management">Foundational Data
-Management</a> · <a href="#judge-records--working-patterns">Judge
-Records &amp; Working Patterns</a> · <a href="#absence-workflow">Absence
-Workflow</a> · <a href="#vacancy--cover">Vacancy &amp; Cover</a> · <a
-href="#booking-management">Booking Management</a> · <a
-href="#sitting-management">Sitting Management</a> · <a
-href="#payment--reconciliation">Payment &amp; Reconciliation</a> · <a
-href="#itineraries--reporting-read-models">Itineraries &amp;
-Reporting</a> · <a href="#platform-operations--migration">Platform
-Operations &amp; Migration</a></td>
-</tr>
-<tr>
-<td><a href="#nonfunctional-requirements">NonFunctional
-Requirements</a></td>
-<td><a href="#performance">Performance</a> · <a
-href="#security">Security</a> · <a
-href="#accessibility">Accessibility</a> · <a
-href="#integration">Integration</a> · <a
-href="#observability-mvp-minimum-per-d7">Observability</a> · <a
-href="#data-privacy--sovereignty">Data Privacy &amp; Sovereignty</a> ·
-<a href="#reliability--availability">Reliability &amp; Availability</a>
-· <a href="#maintainability">Maintainability</a></td>
-</tr>
-<tr>
-<td><a href="#additional-requirements">Additional Requirements</a></td>
-<td><a href="#repository-strategy">Repository strategy</a> · <a
-href="#starter-template-story-1-of-every-service-epic">Starter
-template</a> · <a
-href="#locked-technology-stack-carried-from-prd-enumerated-here-as-architecture-confirmed-dependency-versions">Locked
-technology stack</a> · <a
-href="#build--supply-chain-tooling-per-hmcts-crime-template">Build /
-supply-chain tooling</a> · <a
-href="#testing-framework-per-hmcts-crime-template">Testing framework</a>
-· <a href="#data-architecture">Data architecture</a> · <a
-href="#infrastructure--deployment">Infrastructure / deployment</a> · <a
-href="#ci--cd-pipeline-per-service">CI / CD pipeline</a> · <a
-href="#observability-mvp-per-d7">Observability (MVP per D7)</a> · <a
-href="#security-implementation">Security implementation</a> · <a
-href="#api-surface--standards">API surface / standards</a> · <a
-href="#ui-stack-architecture-decisions-on-top-of-prd-d4">UI stack</a> ·
-<a href="#phase-0-data-migration-etl-not-a-runtime-service">Phase 0 Data
-Migration ETL</a> · <a
-href="#manual-uat-fr61--nfr41-revised-2026-05-06">Manual UAT</a></td>
-</tr>
-<tr>
-<td><a href="#epic-list">Epic List</a></td>
-<td><a href="#epic-phase--area-summary">Phase × Area Summary</a> · <a
-href="#phase-0--foundations">Phase 0</a> · <a
-href="#phase-1--judge">Phase 1</a> · <a href="#phase-2--absence">Phase
-2</a> · <a href="#phase-3--vacancy">Phase 3</a> · <a
-href="#phase-4--booking">Phase 4</a> · <a href="#phase-5--sitting">Phase
-5</a> · <a href="#phase-6--payment">Phase 6</a> · <a
-href="#phase-7--itineraries">Phase 7</a> · <a
-href="#phase-8--mi-feed--reporting">Phase 8</a> · <a
-href="#phase-9--pilot-rollout-wave-1-and-subsequent-waves">Phase
-9+</a></td>
-</tr>
-</tbody>
-</table>
-<h2 id="overview">Overview</h2>
-<p>This document provides the complete epic and story breakdown for
-<strong>NJI (New JI)</strong> — the greenfield rebuild of HMCTS's
-Judicial Itineraries system — decomposing the requirements from the PRD
-(61 FRs, 42 NFRs, D1–D9) and the Architecture (HMCTS Crime SpringBoot
-starter, polyrepo, shared-DB + per-service DB roles, Kubernetes on Azure
-AKS) into implementable stories.</p>
-<p>UX Design document is not present; downstream epics inherit UI
-requirements directly from PRD FRs (FR55, FR56) and architecture
-conventions (GOV.UK Design System base, WCAG 2.2 AA per NFR17). This gap
-is documented in the 2026-05-06 readiness report.</p>
-<h2 id="requirements-inventory">Requirements Inventory</h2>
-<h3 id="functional-requirements">Functional Requirements</h3>
-<h4 id="identity--authorisation">Identity &amp; Authorisation</h4>
-<ul>
-<li>FR1: Authenticated users access NJI via HMCTS IdP single sign-on;
-password, session, and account lifecycle are owned by the IdP and not
-duplicated in NJI.</li>
-<li>FR2: NJI's Authorisation service maps each authenticated principal
-to one or more roles and a Region/Area scope, and authorises every
-system call against that mapping.</li>
-<li>FR3: Authorised users can retrieve their effective permissions for
-their authenticated session.</li>
-<li>FR4: System administrators can update role and Region/Area
-assignments for migrated and new users.</li>
-<li>FR5 <em>(post-MVP per v2.5)</em>: External machine-to-machine
-consumers require an authentication mechanism. At MVP, no
-machine-to-machine consumers are in scope; mechanism for genuine
-service-principal authentication is a post-MVP open question (see
-<code>architecture/gaps.md</code> G7).</li>
-</ul>
-<h4 id="foundational-data-management">Foundational Data Management</h4>
-<ul>
-<li>FR6: RSU users can view and maintain Reference Data lists — Regions,
-Offices, judicial vocabularies, calendar / financial-year boundaries —
-with named-owner sign-off on changes.</li>
-<li>FR7 <em>(revised 2026-05-11)</em>: Every NJI service reads Reference
-Data via <strong>direct SQL</strong> on the shared schema's Reference
-Data tables (15 tables, SELECT-granted to each service's DB role) — no
-client class, no API fan-out, no cache (per architecture Principle 2).
-Reference Data is the <strong>single writer</strong> — all writes (Phase
-0 ETL load + ongoing RSU maintenance per FR6) go through the versioned
-Reference Data API. No service holds duplicate or cached copies of
-Reference Data in its own tables.</li>
-<li>FR8 <em>(revised v2.2)</em>: Cross-service runtime policy values are
-stored in a shared <code>configuration_values</code> infrastructure
-table, schema-managed by <code>nji-architecture</code>'s Flyway baseline
-migration and SELECT-granted to every NJI service DB role. Per-service
-config uses Spring profiles + <code>application.yml</code> + Azure Key
-Vault.</li>
-<li>FR9: NJI dispatches transactional emails (booking acknowledgements,
-absence acknowledgements, payment schedules) via HMCTS email
-infrastructure, with a delivery log retained.</li>
-</ul>
-<h4 id="judge-records--working-patterns">Judge Records &amp; Working
-Patterns</h4>
-<ul>
-<li>FR10: RSU users can search and filter judges by name, base location,
-location type, and judge type.</li>
-<li>FR11: RSU users can maintain judge profiles, including personal
-details, judge type, base office, active/inactive status, and
-role-specific data (payroll number, retirement date, fee entitlement,
-London weighting, name-for-itinerary, heading).</li>
-<li>FR12: Authorised users can define and update Working Patterns (None
-/ Daily / Weekly) with target sit %, jurisdictional split, and per-day
-work-type pattern.</li>
-<li>FR13: NJI auto-populates judge itineraries up to the next 31st March
-from the working pattern, preserving any prior absences.</li>
-<li>FR14: RSU users can convert salaried judges between full-time and
-part-time, adjusting mandatory sitting days.</li>
-<li>FR15: RSU users can maintain ticket information per judge role,
-requiring start date and ticket type.</li>
-<li>FR16: NJI validates that jurisdictional split percentages total 100%
-before saving.</li>
-<li>FR17: RSU users can switch a judge's base location to another office
-within the same Region; cross-Region changes require OPT Advice Point
-and are out-of-system.</li>
-<li>FR18: Authorised users can link to judges managed by other offices
-(off-circuit / cross-Region) for booking purposes.</li>
-</ul>
-<h4 id="absence-workflow">Absence Workflow</h4>
-<ul>
-<li>FR19: Authorised users (RSU, Court, Judges where permitted) can
-record absence requests with start/end date, partial-day option (full /
-AM / PM), type from a controlled list, and an NTBF flag.</li>
-<li>FR20: NJI distinguishes auto-confirmed absences (from judicial
-teams) from those requiring confirmation (from Courts or judges);
-confirmation can trigger an acknowledgement email.</li>
-<li>FR21: Sickness absences can be extended without creating a new
-record; non-sickness extensions require a new absence record.</li>
-<li>FR22: Authorised users can mark absences as <em>Not To Be
-Filled</em> (NTBF) or as <em>needs fee-paid cover</em>.</li>
-</ul>
-<h4 id="vacancy--cover">Vacancy &amp; Cover</h4>
-<ul>
-<li>FR23: NJI auto-creates a vacancy when an approved absence requires
-fee-paid cover, pre-populated with judge type, work type, ticket, and
-dates.</li>
-<li>FR24: Authorised users can create standalone vacancies independent
-of any absence.</li>
-<li>FR25: Authorised users can edit a vacancy's daily breakdown — cancel
-individual days with a captured reason; extend or shorten the
-period.</li>
-<li>FR26: NJI marks a vacancy as filled when a booking is created
-against it; vacancy days cannot be cancelled once a booking is
-recorded.</li>
-<li>FR27: NJI surfaces fee-paid judges matching a vacancy's filter as a
-hint for advertising; advertising itself is performed out-of-system by
-judicial teams.</li>
-<li>FR28: Authorised users can cancel or close vacancies (e.g. when a
-parent absence becomes NTBF).</li>
-</ul>
-<h4 id="booking-management">Booking Management</h4>
-<ul>
-<li>FR29: Authorised users can create fee-paid bookings (linked to a
-vacancy or standalone), capturing judge, court, date, session type (full
-/ AM / PM / evening / reserved-matter), booking type, and work
-type.</li>
-<li>FR30: Booking creation marks the linked vacancy as filled within the
-same transaction when a <code>vacancyId</code> is supplied (in-process
-direct DB update on the <code>vacancies</code> row using a per-service
-DB role grant, per architecture Principle 1).</li>
-<li>FR31: NJI tracks booking status (planned, provisional, confirmed,
-cancelled, rejected) with reason capture for cancellation.</li>
-<li>FR32: NJI sends booking acknowledgement emails to fee-paid judges,
-batched overnight or sent immediately via <em>Create and Email
-Now</em>.</li>
-<li>FR33: NJI requires a Y/N answer at booking time when a judge's fee
-entitlement is <em>Ask when booking</em>.</li>
-<li>FR34: NJI prevents double-booking of fee-paid judges for overlapping
-sessions.</li>
-</ul>
-<h4 id="sitting-management">Sitting Management</h4>
-<ul>
-<li>FR35: NJI generates planned sittings for salaried judges from their
-working patterns, court, date, and work type.</li>
-<li>FR36: Authorised users can filter sitting records by Region/Office,
-judge type, judge, and date range.</li>
-<li>FR37: Authorised users can confirm that a sitting actually took
-place, updating outcome (confirmed, cancelled, rejected) and actual work
-type.</li>
-<li>FR38: Authorised users can split a sitting into AM/PM with different
-work types within a single day.</li>
-<li>FR39: Authorised users can create ad-hoc sittings for salaried
-judges, including DJ(MC)s and Legal Advisers in County Courts.</li>
-<li>FR40 <em>(revised 2026-05-11)</em>: Verifiers can verify confirmed
-sittings; once verified, the data is read-only. Amendments after
-verification require <strong>re-opening</strong> via a UI re-open action
-gated by a distinct authorised role — different from the original
-confirmer (SIT-NFR-02) and from a standard Verifier (at MVP, the
-permission is granted to RSU Admin only). The action captures a
-mandatory justification field and is fully audited. No external
-Request-for-Change ticketing — re-open is a first-class UI action with
-RBAC controls.</li>
-</ul>
-<h4 id="payment--reconciliation">Payment &amp; Reconciliation</h4>
-<ul>
-<li>FR41 <em>(revised v2.6)</em>: Authorised users can list confirmed
-bookings and salaried sittings, filterable by Region/Office, judge, date
-range, and payment lifecycle status (pending, requested, paid,
-reconciled).</li>
-<li>FR42 <em>(revised v2.6)</em>: NJI's payment-processing batch
-(<code>nji-payment-batch</code>, scheduled cron — typically end-of-week)
-automatically marks eligible bookings as <em>payment requested</em> and
-creates the corresponding <code>payments</code> +
-<code>payment_schedules</code> records via SQL JOIN; no user click
-required.</li>
-<li>FR43 <em>(revised v2.6)</em>: The payment batch generates
-JFEPS-compatible payment schedules and dispatches them as Excel
-attachments to a configured Payment Authoriser via email (using its
-service-principal identity to call the Notification API).</li>
-<li>FR44: NJI exposes the payment schedule via API with content-type
-negotiation (<code>application/vnd.hmcts.jfeps+json</code> or
-<code>+xlsx</code>); the JFEPS shape evolves independently of Payment
-internals.</li>
-<li>FR45: NJI prevents double submission of the same booking for payment
-via natural-key unique constraint on
-<code>(payment_cycle_id, booking_id)</code>; re-runs of the same cycle
-are idempotent.</li>
-<li>FR46: Authorised users (Finance, RSU) can flag payments as
-reconciled, capturing notes for mismatches; once fully reconciled, a
-payment cannot be re-requested.</li>
-<li>FR47: NJI does not store or expose bank details for any judge —
-those remain in the finance system.</li>
-</ul>
-<h4 id="itineraries--reporting-read-models">Itineraries &amp; Reporting
-(Read Models)</h4>
-<ul>
-<li>FR48: Authorised users can render the Court Itinerary (monthly or
-annual) for a given Office, Financial Year, and Month, showing sittings,
-bookings, vacancies, and NTBF absences for each day.</li>
-<li>FR49: Authorised users can render the Judge Itinerary for one or
-more judges over a date range, scoped by Authorisation (judges see only
-their own; courts see their office; RSU sees their region).</li>
-<li>FR50: Authorised users can use the Forward Look view across a Region
-with paged or filtered access for performance.</li>
-<li>FR51: Itinerary cells are clickable and drill into the underlying
-record (Sitting, Absence, Vacancy, or Booking).</li>
-<li>FR52: Authorised users can copy/export Itinerary and Report contents
-to Excel and PDF.</li>
-<li>FR53: NJI provides a fixed catalogue of standard Reports (weekly
-sitting projections, weekly vacancies, absence analysis, vacancy by
-court, confirmed sittings/bookings by judge or judge type, judge
-utilisation, jurisdictional split, summary by court / work type) with
-parameter filters per report.</li>
-<li>FR54: NJI exposes aggregated MI Feed APIs for external consumers
-(DA&amp;I, future programmes); MI Feed responses contain no case-level
-data and are aggregate-only by contract.</li>
-</ul>
-<h4 id="platform-operations--migration">Platform Operations &amp;
-Migration</h4>
-<ul>
-<li>FR55: Authenticated users land on a Home page showing role-scoped
-navigation, Region/Area selector, summary tiles for the selected scope
-(judges, absences, vacancies, pending payments, payments made,
-unreconciled), and contextual help.</li>
-<li>FR56: NJI's UI replicates the functional surface of the as-is APEX
-UI on a modern UI stack and meets WCAG 2.2 Level AA accessibility
-standards.</li>
-<li>FR57: A Phase 0 Data Migration ETL takes Reference Data and active
-user records from APEX, transforms them into NJI's own shape, and loads
-them via the NJI Reference Data API and Authorisation API. Migrated user
-records are keyed to HMCTS IdP principals (email primary, employee
-number fallback). Phase 0 deliverable with named-owner sign-off;
-unmatched records flagged for explicit handling.</li>
-<li>FR58: NJI supports per-region phased activation — a region's user
-accounts can be activated for NJI use only when that region's
-feature-parity gate is passed; activation is a flag flip on
-<code>auth_user_activation_flags</code>, not a data migration.</li>
-<li>FR59: Every NJI service exposes a versioned API contract, RFC 9457
-problem-details for errors, and a published OpenAPI specification.
-Deprecation signalling uses <code>Deprecation</code> (RFC 9745) and
-<code>Sunset</code> (RFC 8594) headers.</li>
-<li>FR60: Every NJI service emits structured logs with correlation IDs
-and consistent error categorisation, retained for pilot incident
-triage.</li>
-<li>FR61 <em>(revised 2026-05-06)</em>: Every NJI domain service has a
-manual user acceptance test (UAT) script capturing the workflows and
-edge cases an APEX-experienced user verifies against APEX before that
-service's region rollout. UAT performed by users from in-region
-applicable roles, recorded with explicit per-role sign-off. No automated
-APEX-comparison harness.</li>
-</ul>
-<h3 id="nonfunctional-requirements">NonFunctional Requirements</h3>
-<h4 id="performance">Performance</h4>
-<ul>
-<li>NFR1 — Static page load: ≤ 3 s for static UI loads (e.g. Home
-initial render).</li>
-<li>NFR2 — Dashboard refresh: ≤ 5 s when Region/Area selection
-changes.</li>
-<li>NFR3 — List / filter operations: ≤ 10 s for typical operational
-lists at Region scope.</li>
-<li>NFR4 — Batch / annual operations: ≤ 15 s (e.g. annual itinerary
-render, batch payment-request processing).</li>
-<li>NFR5 — Reports / Forward Look: ≤ 30 s for standard report parameters
-and for the Forward Look view at Region scope.</li>
-<li>NFR6 — Single-resource API read: ≤ 500 ms p95.</li>
-<li>NFR7 — Domain write API: ≤ 1 s p95 for typical write
-operations.</li>
-<li>NFR8 — Federated read (Itinerary, Forward Look): ≤ 30 s p95 under
-Strategy A (SQL JOIN over shared schema).</li>
-<li>NFR9 — Capacity: concurrent users per region ~50–100; national
-~200–500 once all regions migrated.</li>
-</ul>
-<h4 id="security">Security</h4>
-<ul>
-<li>NFR10 — Transport encryption: Latest TLS only on every endpoint;
-HTTP-only endpoints rejected.</li>
-<li>NFR11 — Data-at-rest encryption: All personal data encrypted at
-rest.</li>
-<li>NFR12 <em>(revised v2.6)</em>: Human users authenticated via HMCTS
-IdP SSO (per FR1). Inter-service authentication for user-initiated calls
-is JWT propagation, validated by <code>JWTFilter</code> against IdP
-JWKS. Batch / scheduled components use OAuth 2.0
-<code>client_credentials</code> against <code>nji-mock-auth</code> in
-non-prod; production issuer is deferred per gaps.md G7.1.</li>
-<li>NFR13 — Authorisation enforcement: Every API call resolves
-principal's roles + Region/Area scope through the Authorisation service;
-no operation bypasses this check.</li>
-<li>NFR14 — Forbidden data scope: No bank details stored or exposed
-(PAY-NFR-05). No case-level data in any read model or report
-(REP-BR-NFR-03).</li>
-<li>NFR15 — Government Functional Standard 7 alignment: protective
-marking, access control, secure development practices.</li>
-<li>NFR16 — Secret management: Service credentials, signing keys,
-integration secrets in Azure Key Vault; never in source control or
-env-baked images.</li>
-</ul>
-<h4 id="accessibility">Accessibility</h4>
-<ul>
-<li>NFR17 — WCAG 2.2 Level AA: Every UI page meets WCAG 2.2 Level AA;
-tested per UI page in each domain phase before that phase's gate is
-passed.</li>
-<li>NFR18 — Assistive technology compatibility: Keyboard navigation,
-ARIA labels, screen-reader compatibility per HMCTS accessibility
-standards.</li>
-<li>NFR19 — Public Sector Bodies Accessibility Regulations 2018:
-compliance including publication of an accessibility statement.</li>
-</ul>
-<h4 id="integration">Integration</h4>
-<ul>
-<li>NFR20 — HMCTS IdP integration: Hard Phase 0 dependency. NJI
-integrates with whichever AuthN protocol the HMCTS IdP exposes (OIDC or
-SAML).</li>
-<li>NFR21 — JFEPS / Liberata unchanged: Payment schedule format
-(JFEPS-compatible Excel), email-to-Authoriser delivery,
-authoriser-forwards-to-Liberata preserved exactly as APEX.</li>
-<li>NFR22 — HMCTS email infrastructure: Outbound transactional emails
-dispatch via HMCTS email; overnight batch acceptable for booking
-acks.</li>
-<li>NFR23 — DA&amp;I MI Feed: Aggregate-only REST API contract; no
-case-level data under any consumer authorisation.</li>
-<li>NFR24 — eLinks / HR systems: No automated integration in MVP
-scope.</li>
-</ul>
-<h4 id="observability-mvp-minimum-per-d7">Observability (MVP minimum per
-D7)</h4>
-<ul>
-<li>NFR25 — Structured logging: Every service emits structured logs with
-consistent fields, correlation IDs threaded through service-to-service
-calls, defined error-categorisation taxonomy.</li>
-<li>NFR26 — Log retention: Logs retained sufficient for pilot incident
-triage; specific period set in Phase 0 within HMCTS data-retention
-policy.</li>
-<li>NFR27 — Log ingestion: Logs ingested into Azure-native logging
-(Application Insights / Log Analytics).</li>
-<li>NFR28 — Health and readiness probes: Every service exposes
-Kubernetes-compatible liveness/readiness endpoints (Spring
-Actuator).</li>
-<li>NFR29 — Roadmap commitments (post-MVP, not MVP): Structured
-user-action auditing per D7. Metrics and trace observability beyond logs
-is post-MVP.</li>
-</ul>
-<h4 id="data-privacy--sovereignty">Data Privacy &amp; Sovereignty</h4>
-<ul>
-<li>NFR30 — UK GDPR / DPA 2018 compliance: Personal data scope limited
-to user/judge identity, contact details, payroll numbers, operational
-metadata. No case-level data anywhere.</li>
-<li>NFR31 — Data residency: All NJI services and data hosted in Azure UK
-regions only.</li>
-<li>NFR32 — Retention: Per HMCTS retention schedules. Migrated
-transactional history remains in APEX (D3).</li>
-<li>NFR33 — FOI scope: Aggregate operational data exposable per FOI;
-case-level data forbidden by contract.</li>
-</ul>
-<h4 id="reliability--availability">Reliability &amp; Availability</h4>
-<ul>
-<li>NFR34 — Operational availability: Available during HMCTS operational
-hours (typically 07:00–19:00 UK weekdays).</li>
-<li>NFR35 — Payment-cycle continuity: Zero failed JFEPS payment cycles
-attributable to NJI. Manual handling is operational contingency, not
-normal-mode expectation.</li>
-<li>NFR36 — Per-wave rollback: Each rollout wave has a documented
-rollback path within one operational cycle if the wave's gate is
-breached post-cutover.</li>
-<li>NFR37 — Strategy A degraded-mode contract: If federated read latency
-breaches NFR8, NJI degrades to Strategy C cached projection.</li>
-<li>NFR38 — HMCTS-judicial-region rollout isolation: Wave activation
-targeting one HMCTS judicial region does not affect users in other HMCTS
-regions. Enforcement via per-user
-<code>auth_user_activation_flags</code>. Production runs in a single
-Azure region (UK South) with multi-AZ HA. DR scope is an open gap per
-gaps.md G3.6.</li>
-</ul>
-<h4 id="maintainability">Maintainability</h4>
-<ul>
-<li>NFR39 — API-as-Product standards: Versioned contracts, RFC 9457
-problem-details, OpenAPI per service. Deprecation via RFC 9745 + RFC
-8594.</li>
-<li>NFR40 — Per-service deployment unit: Each of the 11 services is
-independently deployable on Kubernetes; rolling updates per service per
-region without coupling.</li>
-<li>NFR41 — Behavioural-parity UAT suite: Every domain service has a
-manual UAT script. Sign-off per role per region is the wave gate. No
-automated parity test suite — automated CI is unit, integration
-(Testcontainers), and contract tests only.</li>
-<li>NFR42 — Postman collections: Each phase produces a Postman
-collection that exercises the phase's endpoints; versioned alongside the
-services.</li>
-</ul>
-<h3 id="additional-requirements">Additional Requirements</h3>
-<p><strong>(Derived from Architecture — these are technical / platform
-requirements that materially impact Epic and Story shape, particularly
-Epic 1 Story 1 service scaffolding.)</strong></p>
-<h4 id="repository-strategy">Repository strategy</h4>
-<ul>
-<li>AR1 <em>(revised 2026-05-11)</em> — Polyrepo: <strong>15
-repositories</strong> total — 11 production service repos +
-<code>nji-ui</code> (business-user-facing SPA) +
-<code>nji-admin-ui</code> (admin-facing SPA, separate from
-<code>nji-ui</code>) + <code>nji-architecture</code> +
-<code>nji-mock-auth</code>. Each repo has its own CI pipeline,
-CODEOWNERS, branch protection, and review policy. No monorepo, no Gradle
-root project. The two UI repos use the same stack and conventions but
-never share runtime code — admin workflows live exclusively in
-<code>nji-admin-ui</code> and never appear in <code>nji-ui</code>'s
-nav.</li>
-</ul>
-<h4 id="starter-template-story-1-of-every-service-epic">Starter template
-(Story 1 of every service epic)</h4>
-<ul>
-<li>AR2 — Each NJI backend service is scaffolded from the <strong>HMCTS
-Crime SpringBoot template</strong>
-(<code>https://github.com/hmcts/spring-boot-template</code>) cloned via
-the <code>nji-scaffold.sh</code> script in
-<code>nji-architecture/scaffolding/</code>. The scaffolding script
-applies NJI conventions on top of the starter and is used at
-service-creation time only.</li>
-<li>AR3 — Group ID <code>uk.gov.hmcts.nji</code>; artefact
-<code>nji-{service-name}</code>; package
-<code>uk.gov.hmcts.nji.{service-name}</code>. Default port 8082.</li>
-<li>AR4 — Initial commit for every new service is <em>"Scaffold NJI
-{service-name} from HMCTS starter"</em> — this is the first
-implementation story per service.</li>
-</ul>
-<h4
-id="locked-technology-stack-carried-from-prd-enumerated-here-as-architecture-confirmed-dependency-versions">Locked
-technology stack (carried from PRD; enumerated here as
-architecture-confirmed dependency versions)</h4>
-<ul>
-<li>AR5 — Java 25 (LTS), Spring Boot 4.0.x, Gradle Groovy DSL with
-Gradle Wrapper, Spring Boot Gradle plugin 4.0.6,
-<code>io.spring.dependency-management:1.1.7</code>.</li>
-<li>AR6 — Lombok 1.18.46, MapStruct 1.6.3 for boilerplate reduction and
-DTO ↔︎ entity mapping.</li>
-<li>AR7 — <code>io.jsonwebtoken:jjwt:0.13.0</code> for JWT validation in
-custom <code>JWTFilter</code>;
-<code>org.owasp.encoder:encoder:1.4.0</code> for XSS-safe output
-encoding.</li>
-<li>AR8 — <code>springdoc-openapi</code> (Swagger Core) for OpenAPI 3.x
-generation. Per-service OpenAPI spec published as a Maven artefact
-<code>uk.gov.hmcts.nji:api-nji-{service}:{version}</code>.</li>
-</ul>
-<h4 id="build--supply-chain-tooling-per-hmcts-crime-template">Build /
-supply-chain tooling (per HMCTS Crime template)</h4>
-<ul>
-<li>AR9 — JaCoCo for code coverage reports.</li>
-<li>AR10 — <code>org.cyclonedx.bom:3.2.4</code> for SBOM (Software Bill
-of Materials) — supply-chain security.</li>
-<li>AR11 — <code>com.gorylenko.gradle-git-properties:2.5.7</code> to
-embed Git metadata in <code>/actuator/info</code>.</li>
-<li>AR12 — <code>com.github.ben-manes.versions:0.54.0</code> for
-dependency-update reports.</li>
-<li>AR13 — <code>com.avast.gradle.docker-compose:0.17.21</code> for
-local development with docker-compose-managed dependencies.</li>
-</ul>
-<h4 id="testing-framework-per-hmcts-crime-template">Testing framework
-(per HMCTS Crime template)</h4>
-<ul>
-<li>AR14 — Spring Boot Test (JUnit 5 via <code>junit-bom:6.0.3</code>),
-<code>spring-boot-testcontainers:4.0.6</code>,
-<code>testcontainers-postgresql:1.21.4</code>,
-<code>testcontainers-junit-jupiter:1.21.4</code> for integration tests
-with real PostgreSQL. AssertJ for assertions (transitive).</li>
-<li>AR15 — <code>spring-boot-starter-webmvc-test</code> for
-controller-layer testing.</li>
-<li>AR16 — Pact (or equivalent) for consumer-driven contract tests under
-<code>src/test/java/.../contract/</code> — added per service (not in
-HMCTS template baseline).</li>
-<li>AR17 — Spectral for OpenAPI lint in CI; ArchUnit for architectural
-fitness functions (table ownership, layer rules); Spotless + Checkstyle
-for code style.</li>
-</ul>
-<h4 id="data-architecture">Data architecture</h4>
-<ul>
-<li>AR18 — One global PostgreSQL 17 instance, <strong>single shared
-schema</strong>. Per-service DB roles with explicit grants. Table
-ownership encoded in table name (entity-plural for primary tables;
-service-prefix for service-internal) and enforced by ArchUnit fitness
-functions in CI.</li>
-<li>AR19 — Flyway per-service for DDL (each service owns the creation of
-its tables, columns, indexes, grants). Flyway baseline in
-<code>nji-architecture</code> owns the shared
-<code>configuration_values</code> table.</li>
-<li>AR20 — 39 NJI tables total grouped by owning service (15 Reference
-Data tables + 5 Authorisation tables + domain tables). See
-<code>architecture/data-tables.md</code> for the authoritative ownership
-mapping.</li>
-<li>AR21 — Retry safety uses native DB primitives: natural-key unique
-constraints, optimistic locking (<code>@Version</code>), pessimistic row
-locking. No custom idempotency-key tables.</li>
-<li>AR22 — Cross-service read patterns: direct SQL on Reference Data (no
-client class); Itinerary and MI Feed use SQL JOINs over the shared
-schema (no API fan-out, no cache).</li>
-</ul>
-<h4 id="infrastructure--deployment">Infrastructure / deployment</h4>
-<ul>
-<li>AR23 — Kubernetes on Azure AKS, production in UK South, multi-AZ HA.
-Container images → Azure Container Registry. Each of the 11 services is
-a containerised Spring Boot app.</li>
-<li>AR24 — Helm chart per service with <code>values-{env}.yaml</code>
-overlay per environment (<code>dev</code>, <code>staging</code>,
-<code>production</code>). Production values include
-<code>topologySpreadConstraints</code> for AZ spread, min replicas,
-multi-AZ node pool selection. Helm chart is <strong>not</strong> in
-HMCTS template baseline — added by <code>nji-scaffold.sh</code> per
-G1.4a.</li>
-<li>AR25 — Secrets in Azure Key Vault (via Spring Cloud Azure); no
-secrets in source control or env-baked images.</li>
-<li>AR26 — Per-environment configuration via Spring profiles +
-<code>application-{env}.yml</code>; cross-service runtime policy values
-in the shared <code>configuration_values</code> table (read-only via
-direct SQL).</li>
-<li>AR27 — Azure API Management (APIM) at the edge for rate limits,
-header injection, deprecation/<code>Sunset</code> policies, and
-ops-restricting <code>/actuator/*</code> namespace.</li>
-</ul>
-<h4 id="ci--cd-pipeline-per-service">CI / CD pipeline (per service)</h4>
-<ul>
-<li>AR28 — GitHub Actions workflows in <code>.github/workflows/</code>:
-<code>ci.yml</code> (build + test + lint + ArchUnit + Spectral + Helm
-lint), <code>deploy-dev.yml</code> (auto on PR merge to main),
-<code>deploy-staging.yml</code> (manual approval),
-<code>deploy-production.yml</code> (per-region per-wave gated, manual
-UAT sign-off as gate).</li>
-<li>AR29 — <code>PULL_REQUEST_TEMPLATE.md</code> includes patterns
-checklist; <code>CODEOWNERS</code> defines NJI team + service-specific
-reviewers.</li>
-</ul>
-<h4 id="observability-mvp-per-d7">Observability (MVP per D7)</h4>
-<ul>
-<li>AR30 — Logstash Logback Encoder
-(<code>net.logstash.logback:logstash-logback-encoder:9.0</code>) for
-structured JSON logs with async appender. Logback config in
-<code>src/main/resources/logback-spring.xml</code>.</li>
-<li>AR31 — OpenTelemetry
-(<code>spring-boot-starter-opentelemetry</code>) for traces; OTel
-Collector → Azure Application Insights as the export target.
-Instrumentation key configured via env var
-<code>APPINSIGHTS_INSTRUMENTATIONKEY</code>.</li>
-<li>AR32 — <code>CorrelationIdFilter</code> at request entry;
-correlation ID propagated in service-to-service HTTP client calls and
-threaded through MDC into log statements.</li>
-<li>AR33 — Spring Boot Actuator endpoints exposed:
-<code>/actuator/health</code>, <code>/actuator/info</code>,
-<code>/actuator/readiness</code>. <code>/actuator/metrics</code> and
-Prometheus endpoint <strong>not exposed at MVP</strong> per D7.
-<code>/actuator/*</code> namespace ops-restricted at the APIM
-layer.</li>
-</ul>
-<h4 id="security-implementation">Security implementation</h4>
-<ul>
-<li>AR34 — Custom <code>JWTFilter</code> in
-<code>config/JWTFilter.java</code> validates JWTs against the IdP's JWKS
-endpoint (mock-auth for Phase 0–8; HMCTS IdP from pre-Phase-9 cutover).
-On each request, calls <code>nji-authorisation</code>
-<code>POST /authz/check</code> to resolve principal → roles +
-Region/Area scope; populates request-scoped <code>AuthDetails</code>
-bean.</li>
-<li>AR35 — <code>nji-mock-auth</code> is the OIDC issuer for
-dev/CI/integration: issues human-user JWTs via
-<code>authorization_code</code> and service tokens via
-<code>client_credentials</code> for batch components. Refuses to start
-with <code>production</code> profile (per gaps.md G5.3). <strong>Never
-deployed to production.</strong></li>
-<li>AR36 — Batch / scheduled component authentication:
-<code>nji-payment-batch</code> authenticates via OAuth 2.0
-<code>client_credentials</code> to obtain a service-principal token;
-uses that token to call <code>nji-notification</code>. Production issuer
-for service tokens is a deferred decision per gaps.md G7.1 (default
-recommendation: Azure Workload Identity given AKS deployment).</li>
-<li>AR37 — Boilerplate <code>@ControllerAdvice</code>
-(<code>GlobalExceptionHandler.java</code>) emitting RFC 9457
-problem-details with <code>ProblemDetailFactory</code>. Domain
-exceptions: <code>{Resource}NotFoundException</code>,
-<code>BusinessRuleViolation</code>,
-<code>DependencyException</code>.</li>
-</ul>
-<h4 id="api-surface--standards">API surface / standards</h4>
-<ul>
-<li>AR38 — Versioning via URI path prefix (e.g. <code>/v1/judges</code>,
-<code>/v2/judges</code>) for major versions; backwards-compatible
-additions don't require a new path. Versioning policy itself is a Phase
-0 deliverable per D1.</li>
-<li>AR39 — Deprecation signalling: <code>Deprecation</code> (RFC 9745)
-and <code>Sunset</code> (RFC 8594) response headers; injected at APIM
-layer per AR27.</li>
-<li>AR40 — Versioned content-type for Payment:
-<code>application/vnd.hmcts.jfeps+json</code> (canonical) or
-<code>application/vnd.hmcts.jfeps+xlsx</code> (Excel for Liberata
-workflow). JFEPS shape evolves independently of Payment internals.</li>
-<li>AR41 — Postman collections per phase under <code>postman/</code> in
-each service repo, named
-<code>nji-{service}-phase{N}.postman_collection.json</code>. Each phase
-produces a collection that exercises the phase's endpoints (per NFR42);
-also serves as executable API documentation pre-UI demo.</li>
-</ul>
-<h4 id="ui-stack-architecture-decisions-on-top-of-prd-d4">UI stack
-(architecture decisions on top of PRD D4)</h4>
-<ul>
-<li>AR42 <em>(revised 2026-05-11)</em> — <strong>Two UI repos</strong>,
-same stack, separated by audience: <code>nji-ui</code>
-(business-user-facing SPA) and <code>nji-admin-ui</code> (admin-facing
-SPA). Stack for both: React + TypeScript + Vite + Vitest (unit) +
-Playwright (E2E). <code>nji-ui</code> carries per-domain operational
-modules under <code>src/modules/{domain}/</code> (Judge, Absence,
-Vacancy, Booking, Sitting, Payment, Itinerary, Reports).
-<code>nji-admin-ui</code> carries admin modules under
-<code>src/modules/</code> — <code>reference-data/</code> (FR6) and
-<code>users-roles/</code> (FR4) at MVP; future hooks for
-<code>activation/</code> (FR58 admin), <code>migration-reports/</code>
-(FR57 viewer), <code>audit/</code> (D7 post-MVP). TanStack Query for
-HTTP. GOV.UK Design System base styling with HMCTS / NJI extensions;
-<code>nji-admin-ui</code> uses a distinct accent in the header/nav so
-the admin surface is visually unambiguous.</li>
-<li>AR43 — Auto-generated TypeScript clients per service from
-per-service OpenAPI specs (regenerated in CI). Clients live under
-<code>src/modules/{domain}/api/</code> and
-<code>api-clients/{service}-client/</code>. Each UI repo regenerates its
-own clients independently — no shared client package between
-<code>nji-ui</code> and <code>nji-admin-ui</code>.</li>
-<li>AR44 — <code>HmctsIdpProvider.tsx</code> (OIDC client wrapper) +
-<code>ProtectedRoute.tsx</code> + <code>useAuth.ts</code> hook in
-<code>src/shared/auth/</code>. HTTP client
-(<code>src/shared/api/httpClient.ts</code>) attaches auth header;
-<code>errorHandling.ts</code> translates RFC 9457 problem-details into
-UI display. Same pattern duplicated (not shared) across both
-<code>nji-ui</code> and <code>nji-admin-ui</code>.
-<code>nji-admin-ui</code>'s <code>ProtectedRoute</code> gates by admin
-role resolved via <code>nji-authorisation</code>'s
-<code>POST /authz/check</code>.</li>
-<li>AR45 <em>(revised 2026-05-11)</em> — E2E test suites:
-<code>nji-ui</code> has one Playwright suite per backend phase under
-<code>tests/e2e/phase-{N}-{domain}.spec.ts</code>;
-<code>nji-admin-ui</code> has one Playwright suite per admin module
-under <code>tests/e2e/{module}.spec.ts</code> (e.g.
-<code>reference-data.spec.ts</code>, <code>users-roles.spec.ts</code>).
-axe-core accessibility checks in each repo's <code>ci.yml</code>.</li>
-<li>AR45b <em>(new 2026-05-11)</em> — <strong>Independent deployment for
-the two UI repos</strong>: separate Helm charts, separate Azure Static
-Web Apps (or CDN) deployments, distinct hostnames (e.g.
-<code>nji.hmcts.gov.uk</code> for business surface;
-<code>admin.nji.hmcts.gov.uk</code> for admin surface). Admin surface
-can deploy without touching the business surface and vice versa. Both
-share the same backend services, same SSO, same Authorisation
-service.</li>
-</ul>
-<h4 id="phase-0-data-migration-etl-not-a-runtime-service">Phase 0 Data
-Migration ETL (not a runtime service)</h4>
-<ul>
-<li>AR46 — ETL lives at <code>nji-architecture/migration/</code> (not as
-a runtime service; not in Flyway). Reads APEX dumps, transforms to NJI
-shape, and <strong>calls NJI APIs</strong>
-(<code>nji-reference-data</code> and <code>nji-authorisation</code>) to
-load.</li>
-<li>AR47 — Two ETL streams: <code>migration/reference-data/</code>
-(Regions, Offices, calendar, 12 vocabularies; signed off by named owners
-per Risk #13) and <code>migration/users-roles/</code> (active users,
-role/scope mappings; reconciled to HMCTS IdP by email primary, employee
-number fallback per D9 / Risk #14).</li>
-<li>AR48 — Per-run reconciliation reports under
-<code>migration/reports/</code> for named-owner sign-off. Unmatched user
-records flagged in <code>unmatched/</code> bucket with explicit handling
-decision (drop / hold / manual map).</li>
-<li>AR49 — ETL re-run per wave for incremental user activation. Re-runs
-are idempotent.</li>
-</ul>
-<h4 id="manual-uat-fr61--nfr41-revised-2026-05-06">Manual UAT (FR61 /
-NFR41 revised 2026-05-06)</h4>
-<ul>
-<li>AR50 — Per-service manual UAT scripts live under
-<code>docs/uat/</code> in each domain service repo (markdown
-walkthroughs for APEX-experienced users to follow side-by-side against
-APEX). Not part of automated CI. Sign-off (per role per region) is the
-wave-cutover gate.</li>
-</ul>
-<h3 id="ux-design-requirements">UX Design Requirements</h3>
-<p><strong>(Not applicable — no UX design document was produced. UI
-requirements inherit directly from PRD FR55, FR56 and architecture
-decisions AR42–AR45. The 2026-05-06 readiness report documents this as
-an accepted gap.)</strong></p>
-<h3 id="fr-coverage-map">FR Coverage Map</h3>
-<p><em>(Placeholder — populated in Step 3 once epics and stories are
-designed.)</em></p>
-<h2 id="epic-list">Epic List</h2>
-<p>NJI is built in <strong>10 sequential phases (0–9+)</strong> per the
-PRD's Phase-by-Phase Journey Mapping and the architecture's Repository
-Strategy:</p>
-<ul>
-<li><strong>Phase 0</strong> is cross-cutting foundations (multiple
-parallel areas).</li>
-<li><strong>Phases 1–8</strong> each deliver one service end-to-end
-(backend + UI module).</li>
-<li><strong>Phase 9+</strong> is the per-region rollout (wave 1, then
-subsequent waves).</li>
-</ul>
-<p>The first level of grouping below is <strong>Phase</strong> (delivery
-sequence); the second level is <strong>Area</strong> (the capability or
-cross-cutting concern that anchors the epic). Within each Area, Step 2
-will produce one or more concrete epics with goals, story breakdowns,
-and acceptance criteria.</p>
-<h3 id="epic-phase--area-summary">Epic Phase × Area Summary</h3>
-<table>
-<thead>
-<tr>
-<th>Phase</th>
-<th>Area</th>
-<th>Component(s)</th>
-<th>Primary FR/NFR coverage</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>0</strong></td>
-<td><a href="#phase-0--area-platform--devex">Platform &amp;
-DevEx</a></td>
-<td><code>nji-architecture</code> (scaffolding), GitHub Actions, APIM,
-AKS, Application Insights, shared <code>configuration_values</code></td>
-<td>FR8, FR59, FR60, NFR25–NFR28, NFR40, NFR42</td>
-</tr>
-<tr>
-<td><strong>0</strong></td>
-<td><a href="#phase-0--area-identity--authorisation">Identity &amp;
-Authorisation</a></td>
-<td><code>nji-mock-auth</code>, <code>nji-authorisation</code></td>
-<td>FR1–FR4, NFR12, NFR13</td>
-</tr>
-<tr>
-<td><strong>0</strong></td>
-<td><a href="#phase-0--area-reference-data">Reference Data</a></td>
-<td><code>nji-reference-data</code> (backend); maintenance UI in
-<code>nji-admin-ui</code></td>
-<td>FR6, FR7 <em>(revised)</em></td>
-</tr>
-<tr>
-<td><strong>0</strong></td>
-<td><a href="#phase-0--area-notification">Notification</a></td>
-<td><code>nji-notification</code></td>
-<td>FR9, NFR22</td>
-</tr>
-<tr>
-<td><strong>0</strong></td>
-<td><a href="#phase-0--area-data-migration-etl">Phase 0 Data Migration
-ETL</a></td>
-<td><code>nji-architecture/migration/</code></td>
-<td>FR57, FR58 <em>(data side)</em></td>
-</tr>
-<tr>
-<td><strong>0</strong></td>
-<td><a href="#phase-0--area-business-ui-foundation">Business UI
-Foundation</a></td>
-<td><code>nji-ui</code> (shell, auth, design system)</td>
-<td>FR55 <em>(shell)</em>, FR56 <em>(stack)</em>, NFR17</td>
-</tr>
-<tr>
-<td><strong>0</strong></td>
-<td><a href="#phase-0--area-admin-ui-foundation">Admin UI
-Foundation</a></td>
-<td><code>nji-admin-ui</code> (shell, auth, design system, Reference
-Data maintenance, User &amp; Role admin)</td>
-<td>FR4 <em>(UI surface)</em>, FR6 <em>(UI surface)</em>, FR56
-<em>(stack)</em>, NFR17</td>
-</tr>
-<tr>
-<td><strong>1</strong></td>
-<td><a href="#phase-1--area-judge-records--working-patterns">Judge
-Records &amp; Working Patterns</a></td>
-<td><code>nji-judge</code> + UI module</td>
-<td>FR10–FR18</td>
-</tr>
-<tr>
-<td><strong>2</strong></td>
-<td><a href="#phase-2--area-absence-workflow">Absence Workflow</a></td>
-<td><code>nji-absence</code> + UI module</td>
-<td>FR19–FR22</td>
-</tr>
-<tr>
-<td><strong>3</strong></td>
-<td><a href="#phase-3--area-vacancy--cover">Vacancy &amp; Cover</a></td>
-<td><code>nji-vacancy</code> + UI module</td>
-<td>FR23–FR28</td>
-</tr>
-<tr>
-<td><strong>4</strong></td>
-<td><a href="#phase-4--area-booking-management">Booking
-Management</a></td>
-<td><code>nji-booking</code> + UI module</td>
-<td>FR29–FR34</td>
-</tr>
-<tr>
-<td><strong>5</strong></td>
-<td><a href="#phase-5--area-sitting-management">Sitting
-Management</a></td>
-<td><code>nji-sitting</code> + UI module</td>
-<td>FR35–FR40</td>
-</tr>
-<tr>
-<td><strong>6</strong></td>
-<td><a href="#phase-6--area-payment-processing--reconciliation">Payment
-Processing &amp; Reconciliation</a></td>
-<td><code>nji-payment</code> + UI module</td>
-<td>FR41 <em>(part)</em>, FR44, FR46, FR47, NFR21, NFR35</td>
-</tr>
-<tr>
-<td><strong>6</strong></td>
-<td><a href="#phase-6--area-payment-batch">Payment Batch</a></td>
-<td><code>nji-payment-batch</code> (scheduled)</td>
-<td>FR42, FR43, FR45</td>
-</tr>
-<tr>
-<td><strong>7</strong></td>
-<td><a href="#phase-7--area-itineraries-read-model">Itineraries Read
-Model</a></td>
-<td><code>nji-itinerary</code> <em>(no own tables)</em> + UI views</td>
-<td>FR48–FR52, NFR8, NFR37</td>
-</tr>
-<tr>
-<td><strong>8</strong></td>
-<td><a href="#phase-8--area-mi-feed--reporting">MI Feed &amp;
-Reporting</a></td>
-<td><code>nji-mi-feed</code> <em>(no own tables)</em> + Reports UI
-module</td>
-<td>FR53, FR54, NFR23</td>
-</tr>
-<tr>
-<td><strong>9+</strong></td>
-<td><a href="#phase-9--area-pilot-rollout--subsequent-waves">Pilot
-Rollout &amp; Subsequent Waves</a></td>
-<td>per-region activation, manual UAT, rollback playbook</td>
-<td>FR58 <em>(activation)</em>, FR61, NFR36, NFR38, NFR41</td>
-</tr>
-</tbody>
-</table>
-<p>Cross-cutting NFRs (performance NFR1–NFR9, security/data NFR10–NFR16,
-NFR30–NFR33, accessibility NFR17–NFR19, maintainability NFR39) are
-inherited by every phase; their architectural support lives in Phase 0
-(Platform &amp; DevEx) and is exercised in every domain phase.</p>
-<h3 id="phase-0--foundations">Phase 0 — Foundations</h3>
 <blockquote>
-<p>Phase 0 is the platform smoke-test (per PRD Key Characteristic 4).
-All API-as-Product standards (versioning, OpenAPI, <a
-href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a>,
-<code>Deprecation</code>/<code>Sunset</code>) are exercised on Reference
-Data writes and Authorisation lookups before any domain service is
-built.</p>
+<p>This document has been <strong>sharded for maintainability</strong>.
+The canonical content lives under <a
+href="epics/index.html"><code>epics/</code></a>.</p>
+<p>The original monolithic <code>epics.md</code> reached ~1,500 lines
+covering Phase 0 alone and would have passed 4,000 lines once Phases
+1–9+ were storied. Sharding by phase keeps each file small, makes
+per-phase reviews easier, and matches BMad's sharded-document convention
+(the readiness check skill discovers either <code>*epic*.md</code> whole
+OR <code>*epic*/index.md</code> sharded).</p>
 </blockquote>
-<h4 id="phase-0--area-platform--devex">Phase 0 · Area: Platform &amp;
-DevEx</h4>
-<p><strong>Scope</strong>: Service scaffolding
-(<code>nji-scaffold.sh</code> over HMCTS Crime SpringBoot template),
-per-service GitHub Actions pipeline (<code>ci.yml</code> +
-<code>deploy-{env}.yml</code> + per-region per-wave gated production
-deploy), OpenAPI/Spectral/ArchUnit/Spotless/Checkstyle tooling,
-structured Logback JSON logging conventions, OpenTelemetry → Application
-Insights wiring, shared <code>configuration_values</code> infrastructure
-table managed by <code>nji-architecture</code> Flyway baseline, Azure
-API Management at the edge (rate limits, deprecation headers,
-<code>/actuator/*</code> restriction), AKS UK South multi-AZ HA, Helm
-chart conventions, Azure Key Vault integration.</p>
-<p><strong>Component(s)</strong>: <code>nji-architecture</code>
-(scaffolding script + ADRs), GitHub Actions workflows, shared Flyway
-baseline, APIM policies, Helm chart conventions.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR8, FR59, FR60,
-NFR25–NFR28, NFR40, NFR42; underpins every AR1–AR45.</p>
-<h4 id="phase-0--area-identity--authorisation">Phase 0 · Area: Identity
-&amp; Authorisation</h4>
-<p><strong>Scope</strong>: <code>nji-mock-auth</code> OIDC issuer for
-non-prod (human users via <code>authorization_code</code>; batch
-components via <code>client_credentials</code>; refuses production
-profile). <code>nji-authorisation</code> service owning the 5 auth
-tables (<code>auth_users</code>, <code>auth_roles</code>,
-<code>auth_user_roles</code>, <code>auth_user_region_scopes</code>,
-<code>auth_user_activation_flags</code>). Custom <code>JWTFilter</code>
-pattern in every service that validates JWT against JWKS and calls
-<code>POST /authz/check</code> to populate request-scoped
-<code>AuthDetails</code>. Per-user activation flags (FR58) wired to
-enable per-region phased cutover. APEX → IdP principal reconciliation
-per D9 (email primary, employee number fallback).</p>
-<p><strong>Component(s)</strong>: <code>nji-mock-auth</code>,
-<code>nji-authorisation</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR1, FR2, FR3, FR4, FR58
-<em>(flags wired here; activation orchestrated in Phase 9+)</em>; NFR12
-<em>(revised v2.6)</em>, NFR13, NFR16, NFR20. <em>(FR5 is reframed as
-post-MVP per v2.5; out of scope here.)</em></p>
-<h4 id="phase-0--area-reference-data">Phase 0 · Area: Reference
-Data</h4>
-<p><strong>Scope</strong>: <code>nji-reference-data</code> service
-owning the 15 Reference Data tables (<code>regions</code>,
-<code>offices</code>, <code>calendar_periods</code>, plus the 12
-vocabulary tables). API for maintenance writes with named-owner sign-off
-workflow. Per-service DB SELECT grants for direct-SQL reads (per revised
-FR7 / Principle 2). API-as-Product standards exercised here first
-(versioning, OpenAPI, <a
-href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a>,
-deprecation signalling).</p>
-<p><strong>Component(s)</strong>: <code>nji-reference-data</code>
-(backend). The maintenance UI (FR6) lives in <code>nji-admin-ui</code> —
-see <a href="#phase-0--area-admin-ui-foundation">Phase 0 · Area: Admin
-UI Foundation</a>. It does <strong>not</strong> live in
-<code>nji-ui</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR6 <em>(backend API only —
-UI is in admin)</em>, FR7 <em>(revised 2026-05-11)</em>;
-cross-references NFR39 (API-as-Product), AR18, AR20, AR22.</p>
-<h4 id="phase-0--area-notification">Phase 0 · Area: Notification</h4>
-<p><strong>Scope</strong>: <code>nji-notification</code> service.
-Outbound transactional email dispatch to HMCTS email infrastructure
-(SMTP). Delivery log with retry on transient failure. Consumed in Phase
-1+ for booking acks (FR32), absence acks (FR20), and the Phase 6
-payment-schedule dispatch (FR43).</p>
-<p><strong>Component(s)</strong>: <code>nji-notification</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR9, NFR22.</p>
-<h4 id="phase-0--area-data-migration-etl">Phase 0 · Area: Data Migration
-ETL</h4>
-<p><strong>Scope</strong>: <code>nji-architecture/migration/</code>
-two-stream ETL — <code>reference-data/</code> (Regions, Offices,
-calendar, 12 vocabularies; named-owner sign-off per Risk #13) and
-<code>users-roles/</code> (active APEX users; reconciled to HMCTS IdP by
-email primary + employee number fallback per D9 / Risk #14). Loads via
-the Reference Data API and Authorisation API (not direct DB writes; not
-Flyway). Per-run reconciliation reports under
-<code>migration/reports/</code>; <code>unmatched/</code> bucket with
-explicit handling decisions (drop / hold / manual map). Re-runs are
-idempotent and gated per wave.</p>
-<p><strong>Component(s)</strong>:
-<code>nji-architecture/migration/</code> (programme-level deliverable;
-not a runtime service).</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR57; data side of FR58
-(initial seed).</p>
-<h4 id="phase-0--area-business-ui-foundation">Phase 0 · Area: Business
-UI Foundation</h4>
-<p><strong>Scope</strong>: <code>nji-ui</code> repo scaffolded (React +
-TypeScript + Vite + Vitest + Playwright). GOV.UK Design System base +
-HMCTS/NJI extensions. OIDC client wrapper
-(<code>HmctsIdpProvider</code>, <code>ProtectedRoute</code>,
-<code>useAuth</code>). HTTP client with auth header attachment and RFC
-9457 error handling. Business-user Home shell with role-scoped
-navigation and Region/Area selector (FR55). axe-core CI for WCAG 2.2 AA
-gate. Per-phase E2E test suite scaffolding under
-<code>tests/e2e/</code>. <strong>Excludes admin workflows</strong> —
-Reference Data maintenance (FR6) and User &amp; Role admin (FR4) live in
-<code>nji-admin-ui</code>, never here.</p>
-<p><strong>Component(s)</strong>: <code>nji-ui</code> (shared + business
-Home shell only — per-domain modules land in their respective
-phases).</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR55 <em>(business Home
-shell)</em>, FR56 <em>(modern UI stack)</em>, NFR17, NFR18, NFR19.</p>
-<h4 id="phase-0--area-admin-ui-foundation">Phase 0 · Area: Admin UI
-Foundation</h4>
-<p><strong>Scope</strong> <em>(new 2026-05-11)</em>:
-<code>nji-admin-ui</code> repo scaffolded with the <strong>same stack as
-<code>nji-ui</code></strong> (React + TypeScript + Vite + Vitest +
-Playwright; GOV.UK Design System base; OIDC client wrapper; RFC 9457
-error handling) but <strong>deployed independently</strong> to its own
-Static Web App / CDN on a distinct hostname (e.g.
-<code>admin.nji.hmcts.gov.uk</code>). Distinct accent in the header/nav
-to make the admin surface visually unambiguous.</p>
-<p><strong>MVP admin modules built in Phase 0:</strong></p>
+<h2 id="entry-points">Entry points</h2>
 <ul>
-<li><strong>Reference Data maintenance</strong> (FR6) — list/edit/create
-flows for Regions, Offices, judicial vocabularies (12 tables), calendar
-/ financial-year boundaries. Named-owner sign-off workflow per FR6.
-Calls <code>nji-reference-data</code> API.</li>
-<li><strong>User &amp; Role admin</strong> (FR4) — list and search users
-(migrated + new), edit role and Region/Area scope assignments, view
-per-user effective permissions. Calls <code>nji-authorisation</code>
-API.</li>
+<li><strong><a href="epics/index.html">epics/index.md</a></strong> —
+canonical entry point with full navigation</li>
+<li><strong><a
+href="epics/requirements-inventory.html">epics/requirements-inventory.md</a></strong>
+— FRs, NFRs, ARs, UX-DRs</li>
+<li><strong><a
+href="epics/framework.html">epics/framework.md</a></strong> — Phase ×
+Area architectural framework</li>
+<li><strong><a
+href="epics/fr-coverage-map.html">epics/fr-coverage-map.md</a></strong>
+— single-source FR → Epic mapping</li>
 </ul>
-<p><strong>Future admin surfaces reserved as module placeholders
-only</strong> (not built at MVP):</p>
+<h2 id="phase-level-breakdowns">Phase-level breakdowns</h2>
 <ul>
-<li><code>modules/activation/</code> — per-region activation flag
-dashboard (FR58 admin side)</li>
-<li><code>modules/migration-reports/</code> — Phase 0 reconciliation
-report viewer (FR57)</li>
-<li><code>modules/audit/</code> — post-MVP user-action audit viewer (D7
-roadmap)</li>
+<li><strong><a
+href="epics/phase-0/index.html">epics/phase-0/</a></strong> —
+Foundations (Epics 0.1–0.4, 18 stories, validated 2026-05-15) 🟢</li>
+<li><code>epics/phase-1/</code> — Judge — pending</li>
+<li><code>epics/phase-2/</code> — Absence — pending</li>
+<li><code>epics/phase-3/</code> — Vacancy — pending</li>
+<li><code>epics/phase-4/</code> — Booking — pending</li>
+<li><code>epics/phase-5/</code> — Sitting — pending</li>
+<li><code>epics/phase-6/</code> — Payment — pending</li>
+<li><code>epics/phase-7/</code> — Itineraries — pending</li>
+<li><code>epics/phase-8/</code> — MI Feed &amp; Reporting — pending</li>
+<li><code>epics/phase-9-plus/</code> — Pilot Rollout — pending</li>
 </ul>
-<p><strong>Why a separate repo, not just a separate route inside
-<code>nji-ui</code>:</strong></p>
-<ol type="1">
-<li><strong>Audience separation</strong> — admin role is a system
-administrator, not RSU/Court/Judge/Finance/MI. Different mental model,
-different training, different change-management posture.</li>
-<li><strong>Independent rollout</strong> — admin surface changes (e.g.
-adding a new vocabulary table) can deploy without touching the business
-surface or vice versa.</li>
-<li><strong>CODEOWNERS</strong> — distinct review teams.</li>
-<li><strong>No accidental nav-leakage</strong> — admin-only screens
-cannot accidentally appear in a business user's navigation via
-misconfiguration. Authorisation gating is enforced server-side too, but
-the repo-level boundary is defence-in-depth.</li>
-<li><strong>Consistency with backend polyrepo discipline</strong> — same
-logic as the per-service backend repos: minimise shared code, accept
-duplication, gain independence.</li>
-</ol>
-<p><strong>Component(s)</strong>: <code>nji-admin-ui</code> (full repo:
-shared + Reference Data module + User &amp; Role module at MVP).</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR4 <em>(UI surface)</em>,
-FR6 <em>(UI surface)</em>, FR56 <em>(stack)</em>, NFR17, NFR18, NFR19.
-Also AR42–AR45b.</p>
-<h3 id="phase-1--judge">Phase 1 — Judge</h3>
-<h4 id="phase-1--area-judge-records--working-patterns">Phase 1 · Area:
-Judge Records &amp; Working Patterns</h4>
-<p><strong>Scope</strong>: <code>nji-judge</code> backend service +
-<code>judge/</code> UI module in <code>nji-ui</code>. Judge profile CRUD
-(search/filter, personal details, judge type, base office,
-active/inactive, role-specific data). Working Patterns (None / Daily /
-Weekly) with target sit %, jurisdictional split (100% sum constraint),
-per-day work-type pattern. Forward-sitting generation up to next 31st
-March from working pattern, preserving prior absences. Tickets per judge
-role. Full-time ↔︎ part-time conversion. Same-Region base-location
-switching (cross-Region is out-of-system). Off-circuit / cross-Region
-judge linking for booking purposes. Demo: Journey <em>(stakeholder
-per-module demo of Judge management)</em>.</p>
-<p><strong>Component(s)</strong>: <code>nji-judge</code>,
-<code>nji-ui/src/modules/judge/</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR10, FR11, FR12, FR13,
-FR14, FR15, FR16, FR17, FR18.</p>
-<h3 id="phase-2--absence">Phase 2 — Absence</h3>
-<h4 id="phase-2--area-absence-workflow">Phase 2 · Area: Absence
-Workflow</h4>
-<p><strong>Scope</strong>: <code>nji-absence</code> backend +
-<code>absence/</code> UI module. Absence recording (start/end date,
-partial-day, type from controlled list, NTBF flag). Auto-confirmed
-(judicial team) vs confirmation-required (Court / judge) distinction;
-confirmation can trigger acknowledgement email via Notification.
-Sickness extension (no new record) vs non-sickness (new record
-required). NTBF and <em>needs fee-paid cover</em> flags. Hook to Vacancy
-auto-creation (Vacancy itself lives in Phase 3 — Phase 2 stubs the call;
-Phase 3 wires it).</p>
-<p><strong>Component(s)</strong>: <code>nji-absence</code>,
-<code>nji-ui/src/modules/absence/</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR19, FR20, FR21, FR22.</p>
-<h3 id="phase-3--vacancy">Phase 3 — Vacancy</h3>
-<h4 id="phase-3--area-vacancy--cover">Phase 3 · Area: Vacancy &amp;
-Cover</h4>
-<p><strong>Scope</strong>: <code>nji-vacancy</code> backend +
-<code>vacancy/</code> UI module. Auto-creation from approved absence
-with cover (R4, pre-populated with judge type, work type, ticket,
-dates). Standalone vacancies. Per-day breakdown editing (cancel
-individual days with captured reason; extend / shorten period).
-<code>markFilled</code> endpoint called by Booking (Phase 4) —
-implemented as a direct DB UPDATE per architecture Principle 1 with
-explicit cross-service grants. Vacancy days locked once a booking is
-recorded. Fee-paid judge filter as advertising hint (advertising itself
-is out-of-system). Cancel / close.</p>
-<p><strong>Component(s)</strong>: <code>nji-vacancy</code>,
-<code>nji-ui/src/modules/vacancy/</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR23, FR24, FR25, FR26,
-FR27, FR28.</p>
-<h3 id="phase-4--booking">Phase 4 — Booking</h3>
-<h4 id="phase-4--area-booking-management">Phase 4 · Area: Booking
-Management</h4>
-<p><strong>Scope</strong>: <code>nji-booking</code> backend +
-<code>booking/</code> UI module. Fee-paid booking creation (linked to
-vacancy or standalone), capturing judge, court, date, session type,
-booking type, work type. Same-transaction
-<code>Vacancy.markFilled</code> orchestration (R5, Principle 1 —
-in-process direct DB UPDATE via per-service grant). Status tracking
-(planned / provisional / confirmed / cancelled / rejected) with
-cancellation reason. Booking acknowledgement emails to fee-paid judges
-(batched overnight or <em>Create and Email Now</em>). Y/N answer at
-booking time when fee entitlement is <em>Ask when booking</em>.
-Double-booking prevention via DB unique constraints over overlapping
-sessions (FR34).</p>
-<p><strong>Component(s)</strong>: <code>nji-booking</code>,
-<code>nji-ui/src/modules/booking/</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR29, FR30, FR31, FR32,
-FR33, FR34.</p>
-<h3 id="phase-5--sitting">Phase 5 — Sitting</h3>
-<h4 id="phase-5--area-sitting-management">Phase 5 · Area: Sitting
-Management</h4>
-<p><strong>Scope</strong>: <code>nji-sitting</code> backend +
-<code>sitting/</code> UI module. Planned-sitting generation from working
-patterns (court, date, work type).
-Region/Office/judge-type/judge/date-range filtering. Confirmation
-(took-place / cancelled / rejected) with actual work-type recording.
-AM/PM session split within a single day (different work types). Ad-hoc
-sittings for salaried judges (including DJ(MC)s and Legal Advisers in
-County Courts). Verifier sign-off; once verified, data is read-only.
-Post-verification amendment via a UI <strong>re-open</strong> action
-gated by RBAC (RSU Admin only at MVP, distinct from confirmer and from
-standard Verifier) with mandatory justification and full audit — no
-external RFC ticketing.</p>
-<p><strong>Component(s)</strong>: <code>nji-sitting</code>,
-<code>nji-ui/src/modules/sitting/</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR35, FR36, FR37, FR38,
-FR39, FR40.</p>
-<blockquote>
-<p><strong>End-of-Phase-5 demo gate</strong>: Journey 2 (Court daily
-sitting confirmation) becomes demoable.</p>
-</blockquote>
-<h3 id="phase-6--payment">Phase 6 — Payment</h3>
-<h4 id="phase-6--area-payment-processing--reconciliation">Phase 6 ·
-Area: Payment Processing &amp; Reconciliation</h4>
-<p><strong>Scope</strong>: <code>nji-payment</code> synchronous backend
-+ <code>payment/</code> UI module. Authorised users list confirmed
-bookings and salaried sittings filterable by Region/Office/judge/date
-range/lifecycle status. Generated schedule review (pre/post dispatch).
-Reconciliation marking (Finance / RSU) with notes for mismatches; once
-fully reconciled, payment cannot be re-requested. Versioned content-type
-API for the payment schedule
-(<code>application/vnd.hmcts.jfeps+json</code> vs <code>+xlsx</code>).
-Hard architectural constraints: <strong>no bank details</strong> (FR47),
-<strong>no case-level data</strong>.</p>
-<p><strong>Component(s)</strong>: <code>nji-payment</code> (sync API),
-<code>nji-ui/src/modules/payment/</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR41 <em>(list/review
-surface)</em>, FR44, FR46, FR47, NFR21, NFR35.</p>
-<h4 id="phase-6--area-payment-batch">Phase 6 · Area: Payment Batch</h4>
-<p><strong>Scope</strong>: <code>nji-payment-batch</code> scheduled
-component (configurable cron; typically end-of-week). Authenticates via
-OAuth <code>client_credentials</code> against <code>nji-mock-auth</code>
-(non-prod) — production service-principal issuer deferred per gaps.md
-G7.1 (default recommendation: Azure Workload Identity). SQL JOIN over
-confirmed bookings + sittings without an existing payment record.
-Generates JFEPS-compatible Excel and dispatches to Payment Authoriser
-via <code>nji-notification</code> (using its service-principal token).
-Natural-key uniqueness on <code>(payment_cycle_id, booking_id)</code>
-for idempotent re-runs. No user interaction. Operational contingency to
-fall back to manual handling within a payment cycle if NJI is
-unavailable.</p>
-<p><strong>Component(s)</strong>: <code>nji-payment-batch</code>
-(deployed alongside <code>nji-payment</code>).</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR42 <em>(revised
-v2.6)</em>, FR43 <em>(revised v2.6)</em>, FR45.</p>
-<blockquote>
-<p><strong>End-of-Phase-6 demo gate</strong>: Journey 1 (RSU
-cover-creation through payment — the canonical operational cycle)
-becomes demoable.</p>
-</blockquote>
-<h3 id="phase-7--itineraries">Phase 7 — Itineraries</h3>
-<h4 id="phase-7--area-itineraries-read-model">Phase 7 · Area:
-Itineraries Read Model</h4>
-<p><strong>Scope</strong>: <code>nji-itinerary</code> backend +
-Itinerary UI views in <code>nji-ui</code>. <strong>No own
-tables</strong> — SQL JOINs across <code>judges</code>,
-<code>absences</code>, <code>vacancies</code>, <code>bookings</code>,
-<code>sittings</code>. Court Itinerary (monthly / annual for Office +
-Financial Year + Month). Judge Itinerary scoped by Authorisation per R2
-(judges see only their own; courts see their office; RSU sees their
-region). Forward Look across Region with paged / filtered access.
-Clickable drill into underlying record (Sitting, Absence, Vacancy,
-Booking). Copy / export to Excel and PDF. Strategy A degraded-mode
-contract: if NFR8 (≤ 30 s p95) is breached, fall back to Strategy C
-cached projection (designed but not built unless Phase 7 measurement
-shows the breach).</p>
-<p><strong>Component(s)</strong>: <code>nji-itinerary</code>,
-<code>nji-ui/src/modules/itinerary/</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR48, FR49, FR50, FR51,
-FR52, NFR8, NFR37.</p>
-<blockquote>
-<p><strong>End-of-Phase-7 demo gate</strong>: Journey 3 (Judge views
-itinerary) becomes demoable.</p>
-</blockquote>
-<h3 id="phase-8--mi-feed--reporting">Phase 8 — MI Feed &amp;
-Reporting</h3>
-<h4 id="phase-8--area-mi-feed--reporting">Phase 8 · Area: MI Feed &amp;
-Reporting</h4>
-<p><strong>Scope</strong>: <code>nji-mi-feed</code> backend + Reports UI
-module in <code>nji-ui</code>. <strong>No own tables</strong> — SQL
-JOINs over the shared schema. Fixed catalogue of standard Reports
-(weekly sitting projections, weekly vacancies, absence analysis, vacancy
-by court, confirmed sittings/bookings by judge or judge type, judge
-utilisation, jurisdictional split, summary by court / work type) with
-parameter filters per report and same parameter shape as APEX. MI Feed
-REST API for external consumers (DA&amp;I post-MVP, future programmes).
-<strong>Aggregate-only by contract</strong> (FR54, NFR23) — no
-case-level data in any read model or report under any consumer
-authorisation.</p>
-<p><strong>Component(s)</strong>: <code>nji-mi-feed</code>,
-<code>nji-ui/src/modules/reports/</code>.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR53, FR54, NFR23.</p>
-<blockquote>
-<p><strong>End-of-Phase-8 demo gate</strong>: Journey 4 (DA&amp;I MI
-Feed API consumer) becomes demoable post-MVP onboarding.</p>
-</blockquote>
-<h3 id="phase-9--pilot-rollout-wave-1-and-subsequent-waves">Phase 9+ —
-Pilot Rollout (Wave 1) and Subsequent Waves</h3>
-<h4 id="phase-9--area-pilot-rollout--subsequent-waves">Phase 9+ · Area:
-Pilot Rollout &amp; Subsequent Waves</h4>
-<p><strong>Scope</strong>: Per-region phased activation — flip
-<code>auth_user_activation_flags</code> for the region's users (FR58)
-once that region's feature-parity gate is passed. Manual UAT execution
-per role per region (FR61): RSU, Court, Judge, Judges' Clerks,
-Finance/Payment Authoriser, MI walk through per-service UAT scripts
-(under <code>docs/uat/</code> in each domain service repo) side-by-side
-against APEX; sign-off per role per region is the wave-cutover gate.
-Per-wave rollback playbook (NFR36): documented path returning the region
-to APEX within one operational cycle if the gate is breached
-post-cutover. Cross-region manual coordination during partial rollout
-(Risk #1 mitigation; operational, not application-level). Reference Data
-+ Users/Roles ETL re-run for incremental activation per wave
-(architecture/migration ownership). Wave 1 is the Pilot; Phases 10..N
-are subsequent regions until all regions are on NJI and APEX is retired
-(D8).</p>
-<p><strong>Component(s)</strong>: Programme-level (manual UAT scripts,
-runbooks, activation orchestration). Cross-region edge case (Journey 5)
-handled out-of-system per Risk #1 — no application capability built.</p>
-<p><strong>Primary FR/NFR coverage</strong>: FR58 <em>(activation
-orchestration)</em>, FR61, NFR36, NFR38, NFR41. Closes the MVP.</p>
-<hr />
-<p><strong>Next step (Step 2 of this workflow)</strong>: For each Phase
-× Area row above, design one or more concrete epics with an explicit
-goal, story breakdown, and Gherkin-style acceptance criteria. The
-phase/area framework above is the spine; Step 2 fleshes it out.</p>
+<p>Do not edit this file. Add content under <code>epics/</code>.</p>
 
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics.md</code></p>
 </main>
+
+<script>
+(function(){
+  // 1. Sidebar accordion: persist user's group open/close preference per group.
+  //    The current page's group is always open on load (regardless of stored state).
+  document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){
+    var key = 'nav-group-' + d.dataset.group;
+    if (d.dataset.current !== 'true') {
+      var stored = localStorage.getItem(key);
+      if (stored === 'open') d.open = true;
+      else if (stored === 'closed') d.open = false;
+    }
+    d.addEventListener('toggle', function(){
+      localStorage.setItem(key, d.open ? 'open' : 'closed');
+    });
+  });
+
+  // 2. Expand all / Collapse all (sidebar)
+  document.querySelectorAll('button[data-nav-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.navAction === 'expand';
+      document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){ d.open = open; });
+    });
+  });
+
+  // 3. When a fragment link points to a heading inside a collapsed <details>,
+  //    open all ancestor <details> elements so the target is visible.
+  function openAncestors(id){
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    var cur = el.parentElement;
+    while (cur) {
+      if (cur.tagName === 'DETAILS') cur.open = true;
+      cur = cur.parentElement;
+    }
+    setTimeout(function(){
+      try { el.scrollIntoView({block: 'start', behavior: 'smooth'}); } catch (e) {}
+    }, 60);
+  }
+  if (window.location.hash) {
+    openAncestors(window.location.hash.slice(1));
+  }
+  window.addEventListener('hashchange', function(){
+    openAncestors(window.location.hash.slice(1));
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.length < 2) return;
+    setTimeout(function(){ openAncestors(href.slice(1)); }, 10);
+  });
+
+  // 4. Expand all / Collapse all (content sections)
+  document.querySelectorAll('button[data-section-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.sectionAction === 'expand';
+      document.querySelectorAll('main.content details.section').forEach(function(d){ d.open = open; });
+    });
+  });
+})();
+</script>
 </body>
 </html>

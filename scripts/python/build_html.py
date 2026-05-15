@@ -94,30 +94,66 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
         ("Changelog", "architecture/changelog", False),
     ]),
     ("Implementation Readiness", [
-        ("Report — 2026-05-06 (current)", "implementation-readiness-report-2026-05-06", False),
+        ("Report — 2026-05-15 (current)", "implementation-readiness-report-2026-05-15", False),
+        ("Report — 2026-05-06 (historical)", "implementation-readiness-report-2026-05-06", False),
         ("Report — 2026-05-05 (historical)", "implementation-readiness-report-2026-05-05", False),
     ]),
-    ("Implementation", [
-        ("Epics & Stories", "epics", False),
+    ("Implementation — Epics (Foundations)", [
+        ("Epics index", "epics/index", False),
+        ("Requirements inventory", "epics/requirements-inventory", False),
+        ("Phase × Area framework", "epics/framework", False),
+        ("FR coverage map", "epics/fr-coverage-map", False),
+    ]),
+    ("Implementation — Phase 0 ✓", [
+        ("Phase 0 overview", "epics/phase-0/index", False),
+        ("Epic 0.1 — User authenticates", "epics/phase-0/epic-0.1-user-authenticates", False),
+        ("Epic 0.2 — Reference Data", "epics/phase-0/epic-0.2-admin-manages-ref-data", False),
+        ("Epic 0.3 — Users, Roles, Activation", "epics/phase-0/epic-0.3-admin-manages-users-roles", False),
+        ("Epic 0.4 — Transactional Emails", "epics/phase-0/epic-0.4-system-dispatches-emails", False),
+        ("Phase 0 Validation Report", "epics/phase-0/validation-report-2026-05-15", False),
     ]),
 ]
 
 FRONTMATTER_RE = re.compile(r"\A---\n.*?\n---\n", re.DOTALL)
 MD_LINK_RE = re.compile(r"(\]\()([^)]+?)(\.md)(#[^)]+)?(\))")
+HEADING_RE = re.compile(r'<h([23])\s+id="([^"]+)">(.*?)</h\1>', re.DOTALL)
+H2_SECTION_RE = re.compile(r'<h2\s+id="([^"]+)">(.*?)</h2>', re.DOTALL)
+TAG_RE = re.compile(r"<[^>]+>")
+
+# Show in-page TOC and wrap H2 sections in <details> when a page has at least
+# this many H2 headings. Short pages don't benefit from progressive disclosure.
+TOC_THRESHOLD = 3
 
 CSS = """
 *{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
 aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
-aside.nav h2{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
-aside.nav h2 a{color:inherit;text-decoration:none}
-aside.nav h3{font-size:11px;margin:14px 0 4px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-aside.nav ul{list-style:none;margin:0;padding:0}
-aside.nav li{margin:2px 0}
-aside.nav a{color:#0969da;text-decoration:none;display:block;padding:4px 8px;border-radius:6px}
-aside.nav a:hover{background:#eaeef2}
-aside.nav a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+aside.nav h2.site-title{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2.site-title a{color:inherit;text-decoration:none}
+aside.nav details.nav-group{margin:2px 0;border-radius:5px}
+aside.nav details.nav-group>summary{font-size:11px;padding:5px 8px 5px 4px;cursor:pointer;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-radius:4px;list-style:none;user-select:none;display:flex;align-items:center;gap:6px}
+aside.nav details.nav-group>summary::-webkit-details-marker{display:none}
+aside.nav details.nav-group>summary::before{content:'▸';display:inline-block;font-size:9px;color:#8c959f;transition:transform 0.15s ease;flex:0 0 10px;text-align:center}
+aside.nav details.nav-group[open]>summary::before{transform:rotate(90deg)}
+aside.nav details.nav-group>summary:hover{background:#eaeef2;color:#1f2328}
+aside.nav details.nav-group ul{list-style:none;margin:2px 0 6px;padding:0 0 0 16px}
+aside.nav details.nav-group li{margin:1px 0}
+aside.nav details.nav-group a{color:#0969da;text-decoration:none;display:block;padding:3px 8px;border-radius:6px;font-size:13px}
+aside.nav details.nav-group a:hover{background:#eaeef2}
+aside.nav details.nav-group a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+.nav-controls{margin:0 0 10px;font-size:11px}
+.nav-controls button{background:none;border:none;color:#0969da;cursor:pointer;padding:2px 4px;font-size:inherit;font-family:inherit;text-decoration:underline}
+.nav-controls button:hover{color:#0a3069}
+aside.toc{position:fixed;top:0;right:0;width:240px;height:100vh;overflow-y:auto;background:#fbfbfc;border-left:1px solid #eaeef2;padding:20px 14px;font-size:13px}
+aside.toc h4{font-size:11px;margin:0 0 8px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.toc ul{list-style:none;margin:0;padding:0}
+aside.toc li{margin:1px 0}
+aside.toc li.h3{padding-left:14px;font-size:12px}
+aside.toc a{color:#57606a;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;line-height:1.35;border-left:2px solid transparent}
+aside.toc a:hover{background:#eaeef2;color:#0a3069}
 main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+body.has-toc main.content{margin-right:240px}
 main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
 main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
 main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
@@ -137,10 +173,93 @@ main a:hover{text-decoration:underline}
 main ul,main ol{margin:6px 0 14px;padding-left:28px}
 main li{margin:2px 0}
 main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+main details.section{border:1px solid #d0d7de;border-radius:6px;margin:14px 0;background:#fff;overflow:hidden}
+main details.section>summary{cursor:pointer;padding:10px 14px;background:#f6f8fa;list-style:none;user-select:none;display:flex;align-items:center;gap:10px;color:#1f2328;border-radius:5px}
+main details.section[open]>summary{border-bottom:1px solid #d0d7de;border-radius:5px 5px 0 0}
+main details.section>summary::-webkit-details-marker{display:none}
+main details.section>summary::before{content:'▸';display:inline-block;font-size:11px;color:#57606a;transition:transform 0.15s ease;flex:0 0 12px;text-align:center}
+main details.section[open]>summary::before{transform:rotate(90deg)}
+main details.section>summary:hover{background:#eaeef2}
+main details.section>summary .section-title{font-size:1.15em;font-weight:600;line-height:1.3}
+main details.section>summary .section-title code{font-size:.95em}
+main .section-body{padding:14px 18px 18px}
+main .section-body>h3:first-child,main .section-body>p:first-child,main .section-body>ul:first-child{margin-top:6px}
+.section-controls{margin:6px 0 18px;display:flex;gap:14px;font-size:13px;align-items:center}
+.section-controls .label{color:#57606a;font-size:12px}
+.section-controls button{background:none;border:1px solid #d0d7de;color:#0969da;cursor:pointer;padding:3px 10px;font-size:13px;font-family:inherit;border-radius:5px}
+.section-controls button:hover{background:#eaeef2;color:#0a3069}
 .breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
 .breadcrumb a{color:#0969da;text-decoration:none}
 .source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
 .source-note a{color:#57606a;text-decoration:underline}
+@media (max-width: 1200px){
+  aside.toc{display:none}
+  body.has-toc main.content{margin-right:0}
+}
+"""
+
+INLINE_JS = """
+(function(){
+  // 1. Sidebar accordion: persist user's group open/close preference per group.
+  //    The current page's group is always open on load (regardless of stored state).
+  document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){
+    var key = 'nav-group-' + d.dataset.group;
+    if (d.dataset.current !== 'true') {
+      var stored = localStorage.getItem(key);
+      if (stored === 'open') d.open = true;
+      else if (stored === 'closed') d.open = false;
+    }
+    d.addEventListener('toggle', function(){
+      localStorage.setItem(key, d.open ? 'open' : 'closed');
+    });
+  });
+
+  // 2. Expand all / Collapse all (sidebar)
+  document.querySelectorAll('button[data-nav-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.navAction === 'expand';
+      document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){ d.open = open; });
+    });
+  });
+
+  // 3. When a fragment link points to a heading inside a collapsed <details>,
+  //    open all ancestor <details> elements so the target is visible.
+  function openAncestors(id){
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    var cur = el.parentElement;
+    while (cur) {
+      if (cur.tagName === 'DETAILS') cur.open = true;
+      cur = cur.parentElement;
+    }
+    setTimeout(function(){
+      try { el.scrollIntoView({block: 'start', behavior: 'smooth'}); } catch (e) {}
+    }, 60);
+  }
+  if (window.location.hash) {
+    openAncestors(window.location.hash.slice(1));
+  }
+  window.addEventListener('hashchange', function(){
+    openAncestors(window.location.hash.slice(1));
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.length < 2) return;
+    setTimeout(function(){ openAncestors(href.slice(1)); }, 10);
+  });
+
+  // 4. Expand all / Collapse all (content sections)
+  document.querySelectorAll('button[data-section-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.sectionAction === 'expand';
+      document.querySelectorAll('main.content details.section').forEach(function(d){ d.open = open; });
+    });
+  });
+})();
 """
 
 
@@ -175,17 +294,83 @@ def extract_title(md_path: Path) -> str:
     return md_path.stem.replace("-", " ").title()
 
 
+def build_inpage_toc(body_html: str) -> str:
+    """Build a right-side in-page TOC from H2/H3 headings.
+
+    Returns empty string when the page has fewer than TOC_THRESHOLD H2 headings —
+    short pages don't benefit from an in-page TOC.
+    """
+    headings = HEADING_RE.findall(body_html)
+    h2_count = sum(1 for level, _, _ in headings if level == "2")
+    if h2_count < TOC_THRESHOLD:
+        return ""
+    items = []
+    for level, slug, inner in headings:
+        text = TAG_RE.sub("", inner).strip()
+        cls = ' class="h3"' if level == "3" else ""
+        items.append(f'<li{cls}><a href="#{slug}">{text}</a></li>')
+    return '<aside class="toc"><h4>On this page</h4><ul>' + "".join(items) + "</ul></aside>"
+
+
+def slugify_group(group_name: str) -> str:
+    """Stable group key for localStorage and data-group attributes."""
+    return re.sub(r"[^a-z0-9]+", "-", group_name.lower()).strip("-")
+
+
 def nav_html(current_relpath: str, page_to_root: str) -> str:
-    parts = [f'<h2><a href="{page_to_root}index.html">NJI Documentation</a></h2>']
+    parts = [f'<h2 class="site-title"><a href="{page_to_root}index.html">NJI Documentation</a></h2>']
+    parts.append(
+        '<div class="nav-controls">'
+        '<button data-nav-action="expand" title="Expand all groups">Expand all</button> '
+        '<button data-nav-action="collapse" title="Collapse all groups">Collapse all</button>'
+        '</div>'
+    )
     for group_name, items in NAV:
-        parts.append(f"<h3>{group_name}</h3>")
+        is_current_group = any(relpath == current_relpath for _label, relpath, _is_special in items)
+        open_attr = " open" if is_current_group else ""
+        current_attr = ' data-current="true"' if is_current_group else ""
+        group_key = slugify_group(group_name)
+        parts.append(
+            f'<details class="nav-group" data-group="{group_key}"{current_attr}{open_attr}>'
+        )
+        parts.append(f"<summary>{group_name}</summary>")
         parts.append("<ul>")
         for label, relpath, _is_special in items:
             href = f"{page_to_root}{relpath}.html"
             cls = ' class="current"' if relpath == current_relpath else ""
             parts.append(f'<li><a href="{href}"{cls}>{label}</a></li>')
         parts.append("</ul>")
+        parts.append("</details>")
     return "\n".join(parts)
+
+
+def wrap_h2_sections(body_html: str) -> Tuple[str, bool]:
+    """Wrap each H2 + its following content in a <details> accordion.
+
+    Content above the first H2 stays visible (preamble). Returns the transformed
+    HTML and a flag indicating whether any sections were wrapped (used by the
+    page template to show the expand-all controls).
+
+    Pages with fewer than TOC_THRESHOLD H2 headings are returned unchanged: the
+    overhead of collapsing 1–2 sections is worse than the linear scan.
+    """
+    parts = H2_SECTION_RE.split(body_html)
+    h2_count = (len(parts) - 1) // 3 if len(parts) > 1 else 0
+    if h2_count < TOC_THRESHOLD:
+        return body_html, False
+
+    out = [parts[0]]  # preamble: everything before the first H2
+    for i in range(1, len(parts), 3):
+        sec_id = parts[i]
+        sec_title_html = parts[i + 1]
+        sec_content = parts[i + 2] if i + 2 < len(parts) else ""
+        out.append(
+            f'<details class="section" id="{sec_id}">'
+            f'<summary><span class="section-title">{sec_title_html}</span></summary>'
+            f'<div class="section-body">{sec_content}</div>'
+            f'</details>'
+        )
+    return "".join(out), True
 
 
 PAGE_TEMPLATE = """<!DOCTYPE html>
@@ -196,12 +381,15 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <title>{title} — NJI Documentation</title>
 <style>{css}</style>
 </head>
-<body>
+<body class="{body_class}">
 <aside class="nav">{nav}</aside>
 <main class="content">
+{section_controls}
 {content}
 {source_note}
 </main>
+{toc}
+<script>{js}</script>
 </body>
 </html>
 """
@@ -216,12 +404,37 @@ def write_page(out_path: Path, title: str, content: str, current_relpath: str, s
         source_note = f'<p class="source-note">Source: <code>{src_rel}</code></p>'
     else:
         source_note = ""
+
+    # Build right-side in-page TOC from the original H2/H3 headings BEFORE we wrap
+    # H2s into <details> — TOC anchor targets remain stable (id is preserved on the
+    # <details> element).
+    toc = build_inpage_toc(content)
+
+    # Wrap H2 sections in <details>. Pages with <3 H2s are returned unchanged.
+    content, has_sections = wrap_h2_sections(content)
+    if has_sections:
+        section_controls = (
+            '<div class="section-controls">'
+            '<span class="label">Sections:</span>'
+            '<button data-section-action="expand">Expand all</button>'
+            '<button data-section-action="collapse">Collapse all</button>'
+            '</div>'
+        )
+    else:
+        section_controls = ""
+
+    body_class = " ".join(c for c in ["has-toc" if toc else "", "has-sections" if has_sections else ""] if c)
+
     html = PAGE_TEMPLATE.format(
         title=title,
         css=CSS,
+        js=INLINE_JS,
         nav=nav_html(current_relpath, page_to_root),
+        section_controls=section_controls,
         content=content,
         source_note=source_note,
+        toc=toc,
+        body_class=body_class,
     )
     out_path.write_text(html)
 
