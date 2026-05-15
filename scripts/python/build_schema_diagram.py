@@ -511,7 +511,7 @@ def build_overview_dot(schema: Dict, fks: List[Dict]) -> str:
 
     lines = [
         'digraph JI_Schema_Overview {',
-        '  graph [rankdir=LR, splines=true, overlap=false, nodesep=0.6, ranksep=1.6, newrank=true, bgcolor="white", fontname="Helvetica", fontsize=14, labelloc="t", label=<<b>JI as-is database schema — overview</b><br/><font point-size="11">46 production tables in 6 areas · inter-area FK relationships aggregated · 0 explicit FK constraints in source DDL</font>>];',
+        '  graph [rankdir=TB, splines=true, overlap=false, nodesep=0.35, ranksep=0.6, newrank=true, bgcolor="white", fontname="Helvetica", fontsize=14, labelloc="t", label=<<b>JI as-is database schema — overview</b><br/><font point-size="11">46 production tables in 6 areas · inter-area FK relationships aggregated · 0 explicit FK constraints in source DDL</font>>];',
         '  node [shape=plain, fontname="Helvetica"];',
         '  edge [fontname="Helvetica", fontsize=10];',
         '',
@@ -549,6 +549,22 @@ def build_overview_dot(schema: Dict, fks: List[Dict]) -> str:
 
     lines.append('')
 
+    # Force a compact 3-column × 2-row grid by ranking clusters explicitly.
+    # In rankdir=TB, rank=same puts nodes on the same horizontal row.
+    grid_cols = 3
+    cluster_keys = [k for k, *_ in CLUSTERS]
+    rows = [cluster_keys[i:i + grid_cols] for i in range(0, len(cluster_keys), grid_cols)]
+    for row in rows:
+        row_nodes = "; ".join(f'"_cluster_{k.replace("-", "_")}"' for k in row)
+        lines.append(f'  {{ rank=same; {row_nodes}; }}')
+    # Force row1 above row2 via an invisible weighted edge between first
+    # nodes of consecutive rows. This avoids dot ordering rows by FK direction.
+    for top_row, bot_row in zip(rows, rows[1:]):
+        sk_top = top_row[0].replace("-", "_")
+        sk_bot = bot_row[0].replace("-", "_")
+        lines.append(f'  "_cluster_{sk_top}" -> "_cluster_{sk_bot}" [style=invis, weight=20];')
+    lines.append('')
+
     # Inter-cluster arrows (sized by edge count for visual weight)
     for (c_from, c_to), count in cluster_edges.items():
         safe_from = c_from.replace("-", "_")
@@ -556,21 +572,19 @@ def build_overview_dot(schema: Dict, fks: List[Dict]) -> str:
         pw = min(1.0 + (count / 8.0), 4.0)  # 1.0 → 4.0 stroke width
         lines.append(
             f'  "_cluster_{safe_from}" -> "_cluster_{safe_to}" '
-            f'[label="  {count}  ", color="#1f6feb", penwidth={pw:.2f}, arrowsize=0.9, fontcolor="#0a3069"];'
+            f'[label="  {count}  ", color="#1f6feb", penwidth={pw:.2f}, arrowsize=0.9, fontcolor="#0a3069", constraint=false];'
         )
 
-    # Legend, pinned to bottom-right. Strategy:
-    #   - rank=sink forces the legend into the rightmost rank (LR mode)
-    #   - invisible edges from EVERY cluster to the legend make it the
-    #     ultimate sink — guaranteed to land past all clusters horizontally
-    #   - high-weight invisible edge from the LAST cluster pulls the legend
-    #     vertically toward the bottom edge of the rightmost column
+    # Legend pinned to bottom-right. In TB mode with rank=same rows in place,
+    # rank=sink puts the legend below row 2; pairing it with the last cluster
+    # of the bottom row encourages right-alignment.
     legend_html = write_overview_legend_node()
     lines.append('')
     lines.append(f'  "_legend" [shape=plain, label=<{legend_html}>];')
-    for key, _label, _tables, _color in CLUSTERS:
-        safe = key.replace("-", "_")
-        lines.append(f'  "_cluster_{safe}" -> "_legend" [style=invis, weight=1, constraint=true];')
+    if rows:
+        last_row = rows[-1]
+        anchor = last_row[-1].replace("-", "_")  # bottom-right cluster
+        lines.append(f'  "_cluster_{anchor}" -> "_legend" [style=invis, weight=10];')
     lines.append('  { rank=sink; "_legend"; }')
 
     lines.append('}')
@@ -609,7 +623,7 @@ def build_detail_dot(schema: Dict, fks: List[Dict], cluster_key: str, cluster_la
     safe_key = cluster_key.replace("-", "_")
     lines = [
         f'digraph JI_Schema_{safe_key} {{',
-        f'  graph [rankdir=TB, splines=polyline, overlap=false, nodesep=0.7, ranksep=1.4, newrank=true, bgcolor="white", fontname="Helvetica", fontsize=14, labelloc="t", label=<<b>JI as-is schema — {html_escape(cluster_label)}</b><br/><font point-size="11">Full columns · PK/FK/UK markers · trigger badges · intra-area FK edges only</font>>];',
+        f'  graph [rankdir=TB, splines=true, overlap=false, nodesep=0.35, ranksep=0.7, newrank=true, bgcolor="white", fontname="Helvetica", fontsize=14, labelloc="t", label=<<b>JI as-is schema — {html_escape(cluster_label)}</b><br/><font point-size="11">Full columns · PK/FK/UK markers · trigger badges · intra-area FK edges only</font>>];',
         '  node [shape=plain, fontname="Helvetica"];',
         '  edge [fontname="Helvetica", fontsize=9];',
         '',
@@ -653,14 +667,18 @@ def build_detail_dot(schema: Dict, fks: List[Dict], cluster_key: str, cluster_la
     lines.append('  }')
     lines.append('')
 
-    # Intra-cluster FK edges (only). Attach ports by column for precise routing.
+    # Intra-cluster FK edges. The source attaches to the originating column
+    # row (so the reader can see WHERE the FK leaves from) and exits east
+    # (`:e`) to the right. The destination attaches to the target TABLE as a
+    # whole — no column port — letting Graphviz pick the shortest attachment
+    # point on the target box. With splines=true edge routing is curved; for
+    # tightest paths we'd use splines=ortho but that loses cluster routing.
     drawn = set()
     for fk in intra_fks:
         from_port = re.sub(r'[^A-Za-z0-9]', '_', fk["from_col"].lower())
-        to_port = re.sub(r'[^A-Za-z0-9]', '_', fk["to_col"].lower())
         attrs = fk_edge_attrs(fk["confidence"])
         src = f'"{fk["from_table"]}":{from_port}:e'
-        dst = f'"{fk["to_table"]}":{to_port}:w'
+        dst = f'"{fk["to_table"]}"'
         key = (src, dst)
         if key in drawn:
             continue
@@ -849,7 +867,9 @@ def main() -> int:
     overview_png = DB_DIR / "ji_schema_overview.png"
     overview_dot.write_text(build_overview_dot(schema, fks))
     print(f"wrote {overview_dot.name}")
-    render_dot(overview_dot, overview_png, dpi=150)
+    # Overview renders at lower DPI so the on-screen image fits without
+    # horizontal scrolling. Detail diagrams stay at 150 DPI for legibility.
+    render_dot(overview_dot, overview_png, dpi=110)
     print(f"rendered {overview_png.name}")
 
     # Per-cluster detail DOTs + PNGs
@@ -858,7 +878,7 @@ def main() -> int:
         png_path = DB_DIR / f"ji_schema_{key}.png"
         dot_path.write_text(build_detail_dot(schema, fks, key, label, tables, color))
         print(f"wrote {dot_path.name}")
-        render_dot(dot_path, png_path, dpi=150)
+        render_dot(dot_path, png_path, dpi=120)
         print(f"rendered {png_path.name}")
 
     # Companion markdown
