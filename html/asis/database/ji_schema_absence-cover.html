@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FR Coverage Map — NJI Documentation</title>
+<title>Database — Absence & Cover Workflow — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,309 +79,118 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
 <ul>
-<li><a href="../index.html">Index</a></li>
+<li><a href="../../index.html">Index</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../../prd.html">PRD (NJI)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
 <summary>As-is — JI Architecture Views</summary>
 <ul>
-<li><a href="../asis/system-context.html">System Context (as-is)</a></li>
-<li><a href="../asis/components.html">Components (as-is)</a></li>
+<li><a href="../../asis/system-context.html">System Context (as-is)</a></li>
+<li><a href="../../asis/components.html">Components (as-is)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="as-is-ji-database-schema">
+<details class="nav-group" data-group="as-is-ji-database-schema" data-current="true" open>
 <summary>As-is — JI Database Schema</summary>
 <ul>
-<li><a href="../asis/database/index.html">Database index</a></li>
-<li><a href="../asis/database/ji_schema_overview.html">Schema overview</a></li>
-<li><a href="../asis/database/ji_schema_judges-profile.html">Judges Profile & Reference</a></li>
-<li><a href="../asis/database/ji_schema_judges-patterns.html">Working Patterns, Tickets & Stats</a></li>
-<li><a href="../asis/database/ji_schema_absence-cover.html">Absence & Cover Workflow</a></li>
-<li><a href="../asis/database/ji_schema_bookings-sittings.html">Bookings & Sittings</a></li>
-<li><a href="../asis/database/ji_schema_reference-work.html">Reference Data</a></li>
-<li><a href="../asis/database/ji_schema_audit-cross-cutting.html">Audit & Cross-cutting</a></li>
-<li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
+<li><a href="../../asis/database/index.html">Database index</a></li>
+<li><a href="../../asis/database/ji_schema_overview.html">Schema overview</a></li>
+<li><a href="../../asis/database/ji_schema_judges-profile.html">Judges Profile & Reference</a></li>
+<li><a href="../../asis/database/ji_schema_judges-patterns.html">Working Patterns, Tickets & Stats</a></li>
+<li><a href="../../asis/database/ji_schema_absence-cover.html" class="current">Absence & Cover Workflow</a></li>
+<li><a href="../../asis/database/ji_schema_bookings-sittings.html">Bookings & Sittings</a></li>
+<li><a href="../../asis/database/ji_schema_reference-work.html">Reference Data</a></li>
+<li><a href="../../asis/database/ji_schema_audit-cross-cutting.html">Audit & Cross-cutting</a></li>
+<li><a href="../../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="to-be-nji-architecture">
 <summary>To-be — NJI Architecture</summary>
 <ul>
-<li><a href="../architecture.html">Architecture (index)</a></li>
-<li><a href="../architecture-summary.html">Architecture summary</a></li>
+<li><a href="../../architecture.html">Architecture (index)</a></li>
+<li><a href="../../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="to-be-nji-reference">
 <summary>To-be — NJI Reference</summary>
 <ul>
-<li><a href="../architecture/user-types.html">User types</a></li>
-<li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
-<li><a href="../architecture/conventions.html">Conventions</a></li>
-<li><a href="../architecture/repository-strategy.html">Repository strategy</a></li>
-<li><a href="../architecture/repo-structure.html">Repository structure</a></li>
-<li><a href="../architecture/starter-template.html">Starter template</a></li>
-<li><a href="../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
-<li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+<li><a href="../../architecture/user-types.html">User types</a></li>
+<li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="../../architecture/conventions.html">Conventions</a></li>
+<li><a href="../../architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="../../architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="../../architecture/starter-template.html">Starter template</a></li>
+<li><a href="../../architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="to-be-nji-sequence-diagrams">
 <summary>To-be — NJI Sequence Diagrams</summary>
 <ul>
-<li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
-<li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
-<li><a href="../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
-<li><a href="../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
-<li><a href="../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
-<li><a href="../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
-<li><a href="../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
-<li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+<li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="../../architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="../../architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="to-be-nji-open-items">
 <summary>To-be — NJI Open Items</summary>
 <ul>
-<li><a href="../architecture/gaps.html">Gaps</a></li>
-<li><a href="../architecture/assumptions.html">Assumptions</a></li>
-<li><a href="../architecture/changelog.html">Changelog</a></li>
+<li><a href="../../architecture/gaps.html">Gaps</a></li>
+<li><a href="../../architecture/assumptions.html">Assumptions</a></li>
+<li><a href="../../architecture/changelog.html">Changelog</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
-<li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
-<li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="implementation-epics-foundations" data-current="true" open>
+<details class="nav-group" data-group="implementation-epics-foundations">
 <summary>Implementation — Epics (Foundations)</summary>
 <ul>
-<li><a href="../epics/index.html">Epics index</a></li>
-<li><a href="../epics/requirements-inventory.html">Requirements inventory</a></li>
-<li><a href="../epics/framework.html">Phase × Area framework</a></li>
-<li><a href="../epics/fr-coverage-map.html" class="current">FR coverage map</a></li>
+<li><a href="../../epics/index.html">Epics index</a></li>
+<li><a href="../../epics/requirements-inventory.html">Requirements inventory</a></li>
+<li><a href="../../epics/framework.html">Phase × Area framework</a></li>
+<li><a href="../../epics/fr-coverage-map.html">FR coverage map</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="implementation-phase-0">
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
-<li><a href="../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
 </ul>
 </details></aside>
 <main class="content">
 
-<h1 id="fr-coverage-map">FR Coverage Map</h1>
-<p>This is the canonical FR-to-Epic mapping. It is updated each time a
-phase advances from framework to concrete epics + stories. The Phase ×
-Area framework in <a href="framework.html">framework.md</a> is the
-architectural spine; this map is the implementation index.</p>
-<h2 id="phase-0-concrete-epics-0104--complete">Phase 0 (concrete epics
-0.1–0.4 — complete)</h2>
-<table>
-<thead>
-<tr>
-<th>FR</th>
-<th>Epic</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FR1</td>
-<td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a></td>
-<td>SSO via <code>nji-mock-auth</code> in non-prod</td>
-</tr>
-<tr>
-<td>FR2</td>
-<td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a></td>
-<td>Authorisation principal → roles + scope mapping</td>
-</tr>
-<tr>
-<td>FR3</td>
-<td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a></td>
-<td><code>GET /users/{id}/effective-permissions</code></td>
-</tr>
-<tr>
-<td>FR4</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a>
-(foundation) + <a
-href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3</a>
-(full edits)</td>
-<td>Admin role/scope edits</td>
-</tr>
-<tr>
-<td>FR5</td>
-<td>—</td>
-<td>Post-MVP per PRD v2.5 (intentional deferral)</td>
-</tr>
-<tr>
-<td>FR6</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic
-0.2</a></td>
-<td>Ref Data maintenance with named-owner sign-off</td>
-</tr>
-<tr>
-<td>FR7</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic
-0.2</a></td>
-<td>Direct SQL via SELECT grants — pattern established</td>
-</tr>
-<tr>
-<td>FR8</td>
-<td>distributed (lands in <a
-href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a> first)</td>
-<td>Shared <code>configuration_values</code> Flyway baseline</td>
-</tr>
-<tr>
-<td>FR9</td>
-<td><a href="phase-0/epic-0.4-system-dispatches-emails.html">Epic
-0.4</a></td>
-<td>Notification dispatch + delivery log</td>
-</tr>
-<tr>
-<td>FR55</td>
-<td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a></td>
-<td>Home shell with role-scoped navigation</td>
-</tr>
-<tr>
-<td>FR56</td>
-<td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a>
-(business stack) + <a
-href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a>/<a
-href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3</a>
-(admin stack)</td>
-<td>Modern UI stack</td>
-</tr>
-<tr>
-<td>FR57</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a>
-(Ref Data ETL) + <a
-href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3</a>
-(Users/Roles ETL)</td>
-<td>Phase 0 migration with named-owner sign-off</td>
-</tr>
-<tr>
-<td>FR58</td>
-<td><a href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic
-0.3</a> (flag wire-up) — orchestration in Phase 9+</td>
-<td>Per-user activation flags</td>
-</tr>
-<tr>
-<td>FR59</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic
-0.2</a></td>
-<td>API-as-Product first exercise (Reference Data API)</td>
-</tr>
-<tr>
-<td>FR60</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic
-0.2</a></td>
-<td>Structured logs first exercise</td>
-</tr>
-</tbody>
-</table>
-<h2 id="phases-19-fr10fr54-fr61--pending">Phases 1–9+ (FR10–FR54, FR61)
-— pending</h2>
-<p>To be populated by subsequent runs of
-<code>bmad-create-epics-and-stories</code> step 2 against the
-corresponding Phase × Area entries in <a
-href="framework.html">framework.md</a>. Phase 0 sets the pattern; later
-phases follow the same vertical-slice user-value framing.</p>
-<table>
-<thead>
-<tr>
-<th>FR</th>
-<th>Phase</th>
-<th>Area</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FR10–FR18</td>
-<td>1</td>
-<td>Judge Records &amp; Working Patterns</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR19–FR22</td>
-<td>2</td>
-<td>Absence Workflow</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR23–FR28</td>
-<td>3</td>
-<td>Vacancy &amp; Cover</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR29–FR34</td>
-<td>4</td>
-<td>Booking Management</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR35–FR40</td>
-<td>5</td>
-<td>Sitting Management</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR41</td>
-<td>6</td>
-<td>Payment Processing</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR42, FR43, FR45</td>
-<td>6</td>
-<td>Payment Batch</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR44, FR46, FR47</td>
-<td>6</td>
-<td>Payment Processing</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR48–FR52</td>
-<td>7</td>
-<td>Itineraries</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR53, FR54</td>
-<td>8</td>
-<td>MI Feed &amp; Reporting</td>
-<td>⚪</td>
-</tr>
-<tr>
-<td>FR61</td>
-<td>9+</td>
-<td>Pilot Rollout</td>
-<td>⚪</td>
-</tr>
-</tbody>
-</table>
+<h1>Database — Absence & Cover Workflow</h1>
+<p>8 tables: the absence record (<code>TBL_JI_ABS_OB</code>) and its daily breakdown, absence categories/types, vacancy auto-creation, vacancy groups, and cancellation reasons. Internal FK chain: ABS_OB → ABS_OB_DETAIL → VACANCIES.</p>
+<p><img src="./ji_schema_absence-cover.png" alt="Database — Absence & Cover Workflow"></p>
+<p class="source-note">Source PNG: <code>docs/architecture/asis/database/ji_schema_absence-cover.png</code> · See the <a href="./ji_schema_companion.html">companion reference</a> for trigger bodies and external-reference inventory.</p>
 
-<p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/fr-coverage-map.md</code></p>
+<p class="source-note">Source: <code>docs/architecture/asis/database/ji_schema_absence-cover.png</code></p>
 </main>
 
 <script>

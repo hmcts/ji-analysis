@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin maintenance flows in `nji-admin-ui` — NJI Documentation</title>
+<title>JI as-is database schema — diagrams — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -100,10 +100,10 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../asis/components.html">Components (as-is)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="as-is-ji-database-schema">
+<details class="nav-group" data-group="as-is-ji-database-schema" data-current="true" open>
 <summary>As-is — JI Database Schema</summary>
 <ul>
-<li><a href="../../asis/database/index.html">Database index</a></li>
+<li><a href="../../asis/database/index.html" class="current">Database index</a></li>
 <li><a href="../../asis/database/ji_schema_overview.html">Schema overview</a></li>
 <li><a href="../../asis/database/ji_schema_judges-profile.html">Judges Profile & Reference</a></li>
 <li><a href="../../asis/database/ji_schema_judges-patterns.html">Working Patterns, Tickets & Stats</a></li>
@@ -134,7 +134,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams" data-current="true" open>
+<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
 <summary>To-be — NJI Sequence Diagrams</summary>
 <ul>
 <li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
@@ -144,7 +144,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
 <li><a href="../../architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
 <li><a href="../../architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
-<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html" class="current">Admin maintenance flows</a></li>
+<li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="to-be-nji-open-items">
@@ -185,214 +185,271 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="admin-maintenance-flows-in-nji-admin-ui">Admin maintenance flows
-in <code>nji-admin-ui</code></h1>
-<p>Sequence diagram of the two admin write paths exposed by
-<code>nji-admin-ui</code> at MVP. Both paths share the same actor
-(System Administrator), the same auth pattern, and the same UI shell —
-only the destination service and the downstream effect differ. Both run
-in <code>nji-admin-ui</code>, never in <code>nji-ui</code>, per the
-v2.10 architecture decision separating admin from business workflows at
-the repo boundary.</p>
+<h1 id="ji-as-is-database-schema--diagrams">JI as-is database schema —
+diagrams</h1>
+<p>Schema diagrams reverse-engineered from
+<code>JI Tables - 1.pdf</code> (the Oracle DDL dump of the legacy JI
+APEX database).</p>
+<details class="section" id="scope"><summary><span class="section-title">Scope</span></summary><div class="section-body">
 <ul>
-<li><strong>Path A — Reference Data maintenance (FR6)</strong> — Sys
-Admin (or RSU-with-admin-rights — same admin module, same role-gate)
-creates / updates an entry in any of the 15 Reference Data tables
-(Regions, Offices, calendar / financial-year boundaries, the 12 judicial
-vocabularies). Writes go via the <code>nji-reference-data</code>
-versioned API. Other services pick up the change on their next
-direct-SQL read of the affected table (per revised FR7) — no cache
-invalidation needed because there is no cache (architecture Principle
-2).</li>
-<li><strong>Path B — User &amp; Role admin (FR4)</strong> — Sys Admin
-updates a user's role and Region/Area scope assignment, or creates a new
-user record. Writes go via the <code>nji-authorisation</code> versioned
-API. The change is reflected on the affected user's <em>next</em>
-request via the standard per-request <code>authz/check</code> (see <a
-href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
-Phase 3) — no propagation step is needed because authz is resolved per
-request.</li>
+<li><strong>46 production tables</strong> (<code>TBL_*</code>) from the
+source PDF</li>
+<li><strong>0 explicit foreign-key constraints</strong> — APEX pattern.
+All relationships in the diagrams are inferred from column-naming
+conventions and labelled by confidence</li>
+<li><strong>24 triggers</strong> — predominantly <code>BI_*</code>
+(auto-PK from sequence) and <code>BU_*</code> (audit timestamp
+maintenance)</li>
+<li><strong>26 indexes</strong> (non-PK)</li>
+<li><strong>6 production tables without declared PK</strong> —
+backfilled from unique <code>*_PK</code> indexes where present</li>
+<li><em><em>TMP_</em> staging tables excluded</em>* by design — they're
+session-scoped, not part of the schema</li>
 </ul>
-<p>Four phases: (1) admin login + role-gate; (2) Reference Data write
-path; (3) User &amp; Role write path; (4) downstream visibility (no
-propagation step).</p>
-<details class="section" id="not-in-this-diagram"><summary><span class="section-title">Not in this diagram</span></summary><div class="section-body">
-<ul>
-<li><strong>Phase 0 Data Migration ETL</strong> — bulk-loads Reference
-Data and Users/Roles from APEX in one shot, calling the same APIs shown
-here in Phases 2 and 3 but operator-initiated and not via
-<code>nji-admin-ui</code>. ETL lives at
-<code>nji-architecture/migration/</code>. Not drawn separately at this
-scope — it's a programme deliverable, not a runtime business flow.</li>
-<li><strong>Per-region phased activation cutover</strong> (FR58) —
-wave-cutover operation that flips
-<code>auth_user_activation_flags</code>. Same shape as Path B but
-operator-initiated per wave. Could be diagrammed if useful — flag if you
-want it.</li>
-<li><strong>Named-owner sign-off workflow detail</strong> — Reference
-Data writes are subject to named-owner sign-off per FR6; the diagram
-captures the validation point but not the full multi-step approval.
-Sign-off mechanics are programme-level.</li>
-<li><strong>Post-MVP admin modules</strong> — per-region activation
-dashboard, migration reconciliation viewer, user-action audit viewer.
-Module placeholders are reserved in <code>nji-admin-ui</code> but not
-built at MVP.</li>
-</ul>
-</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps
-omitted for clarity</span></summary><div class="section-body">
-<ul>
-<li><strong>Authentication + per-request authorisation</strong> — Sys
-Admin's JWT is validated by both <code>nji-reference-data</code>'s and
-<code>nji-authorisation</code>'s <code>JWTFilter</code>. Admin role
-gating is enforced by <code>nji-authorisation</code> itself (role =
-<code>sys-admin</code>); for User &amp; Role admin, this means
-<code>nji-authorisation</code> is both the gatekeeper <em>and</em> the
-writer of the change. See <a
-href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
-Phase 3.</li>
-<li>All UI → service calls flow through Azure API Management.
-<code>nji-admin-ui</code> deploys to its own hostname (e.g.
-<code>admin.nji.hmcts.gov.uk</code>) but the same APIM tier handles its
-requests.</li>
-</ul>
-<p><img src="./admin-maintenance-flows.png"
-alt="Admin maintenance flows sequence" /></p>
-<p><em>Source: <a
-href="./admin-maintenance-flows.mmd"><code>./admin-maintenance-flows.mmd</code></a>
-(Mermaid). Regenerate with
-<code>mmdc -i admin-maintenance-flows.mmd -o admin-maintenance-flows.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
-</div></details><details class="section" id="phase-summary"><summary><span class="section-title">Phase summary</span></summary><div class="section-body">
+</div></details><details class="section" id="files-in-this-folder"><summary><span class="section-title">Files in this folder</span></summary><div class="section-body">
+<h3 id="diagrams">Diagrams</h3>
 <table>
 <thead>
 <tr>
-<th>Phase</th>
-<th>Driver</th>
-<th>Architectural rule</th>
-<th>Outcome</th>
+<th>File</th>
+<th>What it shows</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1 — Admin login + role-gate</td>
-<td>Sys Admin</td>
-<td>OIDC SSO same as business users; <code>nji-authorisation</code>
-role-gate restricts <code>nji-admin-ui</code> access to
-<code>sys-admin</code> role</td>
-<td>Admin lands on <code>nji-admin-ui</code> Home with admin-scoped
-navigation; non-admin users see a 403 if they try to reach this
-hostname</td>
+<td><a
+href="ji_schema_overview.png"><code>ji_schema_overview.png</code></a></td>
+<td>All 46 tables grouped into 6 colour-coded clusters; relationship
+lines visible; no columns</td>
 </tr>
 <tr>
-<td>2 — Reference Data write path (FR6)</td>
-<td>Sys Admin</td>
-<td><code>nji-reference-data</code> is the single writer for the 15
-Reference Data tables (revised FR7); writes are validated, audited, and
-persisted to the shared schema</td>
-<td>Reference Data row created / updated; visible to every other NJI
-service on its next direct-SQL read (no cache, no propagation step)</td>
+<td><a
+href="ji_schema_judges-profile.png"><code>ji_schema_judges-profile.png</code></a></td>
+<td><strong>Judges Profile &amp; Reference</strong> (8 tables) — Judges,
+Master, User Links, Types, Statuses, Circuits, Leadership, Type
+Promotion</td>
 </tr>
 <tr>
-<td>3 — User &amp; Role write path (FR4)</td>
-<td>Sys Admin</td>
-<td><code>nji-authorisation</code> owns the 5 auth tables
-(<code>auth_users</code>, <code>auth_roles</code>,
-<code>auth_user_roles</code>, <code>auth_user_region_scopes</code>,
-<code>auth_user_activation_flags</code>); writes are validated and
-persisted</td>
-<td>User / role / scope row created / updated; affected user sees the
-new effective permissions on their <em>next</em> request via per-request
-<code>authz/check</code></td>
+<td><a
+href="ji_schema_judges-patterns.png"><code>ji_schema_judges-patterns.png</code></a></td>
+<td><strong>Working Patterns, Tickets &amp; Stats</strong> (11 tables) —
+Work patterns, WP detail, Juris split, Tickets, Courts link, Fee rates,
+Annual leave, Booking/Monthly stats</td>
 </tr>
 <tr>
-<td>4 — Downstream visibility</td>
-<td>(none — passive)</td>
-<td>No cache, no event bus, no propagation step (architecture Principle
-2 + REST-first synchronous coordination)</td>
-<td>Next consumer call picks up the change naturally</td>
+<td><a
+href="ji_schema_absence-cover.png"><code>ji_schema_absence-cover.png</code></a></td>
+<td><strong>Absence &amp; Cover Workflow</strong> (8 tables) — ABS_OB
+family + Vacancies + Vacancy Groups + Cancel reasons</td>
+</tr>
+<tr>
+<td><a
+href="ji_schema_bookings-sittings.png"><code>ji_schema_bookings-sittings.png</code></a></td>
+<td><strong>Bookings &amp; Sittings</strong> (5 tables) — FP bookings +
+detail + types + cancellers + Planned Sittings</td>
+</tr>
+<tr>
+<td><a
+href="ji_schema_reference-work.png"><code>ji_schema_reference-work.png</code></a></td>
+<td><strong>Reference Data</strong> (11 tables) — Planned/Actual work
+types and cats, Sitting durations, Areas, Extra NWDs, Loc-JT links,
+UA-JT links</td>
+</tr>
+<tr>
+<td><a
+href="ji_schema_audit-cross-cutting.png"><code>ji_schema_audit-cross-cutting.png</code></a></td>
+<td><strong>Audit &amp; Cross-cutting</strong> (3 tables) — Changes +
+Change Types + Restricted Itinerary Users</td>
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="where-to-find-more-detail"><summary><span class="section-title">Where to find more detail</span></summary><div class="section-body">
+<h3 id="companion-reference">Companion reference</h3>
 <table>
 <thead>
 <tr>
-<th>Detail</th>
-<th>Location</th>
+<th>File</th>
+<th>What it contains</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>nji-admin-ui</code> repo purpose, MVP modules, and
-future-surface placeholders</td>
 <td><a
-href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
-— new row added in v2.10</td>
+href="ji_schema_companion.html"><code>ji_schema_companion.md</code></a></td>
+<td>Full trigger bodies (all 24), external-reference inventory (columns
+pointing to tables not in this PDF), FK inference confidence rationale,
+and a complete table of every inferred FK with confidence label</td>
 </tr>
 <tr>
-<td><code>nji-admin-ui</code> directory structure</td>
-<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
-Complete Project Directory Structure — UI repos →
-<code>nji-admin-ui</code></a></td>
+<td><a href="ji_schema.json"><code>ji_schema.json</code></a></td>
+<td>Parsed structured data (tables, columns, PKs, indexes, triggers) —
+input for the diagram generator</td>
 </tr>
+</tbody>
+</table>
+<h3 id="source">Source</h3>
+<table>
+<thead>
 <tr>
-<td><code>nji-reference-data</code> repo purpose and key functions</td>
+<th>File</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td><a
-href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
-Phase 0 row</td>
+href="JI%20Tables%20-%20%201.pdf"><code>JI Tables - 1.pdf</code></a></td>
+<td>Original Oracle DDL dump from APEX</td>
 </tr>
 <tr>
-<td><code>nji-authorisation</code> repo purpose and key functions</td>
+<td><code>JI_Tables_1.txt</code></td>
+<td>Text extraction of the PDF (via <code>pdftotext -layout</code>) —
+input for the parser</td>
+</tr>
+</tbody>
+</table>
+<h3 id="build-pipeline">Build pipeline</h3>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td><a
-href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
-Phase 0 row</td>
+href="../../../../scripts/python/parse_ji_ddl.py"><code>scripts/python/parse_ji_ddl.py</code></a></td>
+<td>Parses <code>JI_Tables_1.txt</code> →
+<code>ji_schema.json</code></td>
 </tr>
 <tr>
-<td>15 Reference Data tables + 5 Authorisation tables (column-level
-detail)</td>
 <td><a
-href="../data-tables.html"><code>../data-tables.md</code></a></td>
+href="../../../../scripts/python/build_schema_diagram.py"><code>scripts/python/build_schema_diagram.py</code></a></td>
+<td>Loads JSON → infers FKs + clusters → generates Graphviz DOT →
+renders PNG → writes companion markdown</td>
+</tr>
+</tbody>
+</table>
+<p>Regenerate everything from scratch:</p>
+<pre class="sh"><code>cd &lt;repo-root&gt;
+python3 scripts/python/parse_ji_ddl.py
+python3 scripts/python/build_schema_diagram.py</code></pre>
+</div></details><details class="section" id="how-to-read-the-diagrams"><summary><span class="section-title">How to read the diagrams</span></summary><div class="section-body">
+<h3 id="overview-ji_schema_overviewpng">Overview
+(<code>ji_schema_overview.png</code>)</h3>
+<ul>
+<li><strong>Each box is an area cluster</strong> containing the list of
+its tables. Numbers in parentheses after each table name are column
+counts. Trigger badges <code>[BI BU…]</code> appear after tables with
+triggers.</li>
+<li><strong>Arrows between boxes</strong> are inter-area aggregate FK
+relationships. The label is the count of inferred FKs crossing the area
+boundary; line weight scales with the count.</li>
+<li><strong>No per-table edges</strong>. To see column-level FKs, open
+the relevant per-area detail PNG.</li>
+</ul>
+<h3 id="detail-diagrams-per-area">Detail diagrams (per area)</h3>
+<p>Every detail PNG includes a built-in legend.</p>
+<ul>
+<li><strong>Tables are laid out in a grid</strong> of ~√N tables per row
+to spread the diagram horizontally rather than stacking.</li>
+<li><strong>Header bar</strong>: <code>TBL_NAME</code> + trigger badges
+(e.g. <code>[BI BU]</code> = before-insert + before-update); next row
+shows the PK columns.</li>
+<li><strong>Column rows</strong> list every column with type and inline
+markers.</li>
+<li><strong>Column markers</strong>:
+<ul>
+<li><code>PK</code> — primary key</li>
+<li><code>FK</code> — foreign key, <strong>target is in the same
+area</strong> (line is drawn)</li>
+<li><code>UK</code> — unique key (from a <code>*_UK</code> named
+index)</li>
+<li><code>NN</code> — NOT NULL</li>
+</ul></li>
+<li><strong>Italicised column name + <code>→ TBL_NAME</code>
+marker</strong> — the column references a table in <strong>another
+area</strong>. <strong>No edge is drawn</strong> (open the named area's
+detail diagram, or the overview, to see the relationship visually).</li>
+<li><strong>Italicised column name + italic hint</strong> (e.g.
+<code>→ LOCATIONS / OFFICES</code>) — the column references a table
+<strong>not in the source PDF</strong>. See
+<code>ji_schema_companion.md</code> for the full external-reference
+inventory.</li>
+<li><strong>Edge styles</strong> (intra-area lines only):
+<ul>
+<li>Solid blue — <strong>HIGH</strong> confidence FK (exact PK
+match)</li>
+<li>Dashed grey — <strong>MEDIUM</strong> confidence FK (prefixed PK
+match, e.g. <code>START_SITTING_DUR_ID</code> →
+<code>SITTING_DUR_ID</code>)</li>
+</ul></li>
+</ul>
+</div></details><details class="section" id="notable-findings"><summary><span class="section-title">Notable findings</span></summary><div class="section-body">
+<ul>
+<li><strong><code>TBL_JUDGES</code> is the central hub</strong> —
+referenced by ~16 tables via <code>JUDGE_CODE</code>. Sits in the
+<em>Judges Profile</em> cluster.</li>
+<li><strong>No explicit FK constraints anywhere</strong> — typical for
+APEX-managed schemas where referential integrity is enforced at the
+application layer. This means the database itself permits orphaned
+rows.</li>
+<li><strong>Composite link tables</strong> in <em>Reference Data</em>
+(<code>TBL_JI_LOC_JT_*_LINKS</code>) connect Location × Judge Type to
+Work / Sitting Duration controlled lists.</li>
+<li><strong>6 tables ship without explicit PK</strong> in the DDL but do
+have unique <code>*_PK</code> indexes that effectively serve as PKs:
+<code>TBL_JUDGES</code>, <code>TBL_JUDGE_TYPES</code>,
+<code>TBL_JUDGE_CIRCUITS</code>, <code>TBL_JUDGE_COURTS_LINK</code>,
+plus two that have <em>neither</em> PK nor <code>*_PK</code> index:
+<code>TBL_JUDGE_TYPE_PROMOTION</code> and
+<code>TBL_JUDGES_MONTHLY_STATS</code>. The latter two are flagged in the
+diagrams as "(no PK declared)".</li>
+<li><strong>External-reference columns</strong> account for 58 inferred
+relationships pointing to tables not in this PDF: locations
+(<code>LOC_ID</code>, <code>LOC_TYPE_ID</code>, <code>BASE_LOC_*</code>,
+<code>HEARING_LOC_*</code>), regions (<code>REGION_ID</code>),
+courtrooms (<code>CUT_*</code>), courts (<code>COURT_ID</code>), and
+several status/lookup columns. See the companion markdown for the full
+list.</li>
+</ul>
+</div></details><details class="section" id="fk-inference-summary"><summary><span class="section-title">FK inference summary</span></summary><div class="section-body">
+<table>
+<thead>
+<tr>
+<th>Confidence</th>
+<th>Count</th>
+<th>Visual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HIGH</td>
+<td>68</td>
+<td>solid blue line</td>
 </tr>
 <tr>
-<td>FR4 (User &amp; Role admin) + FR6 (Reference Data maintenance)</td>
-<td>PRD <code>FR4</code>, <code>FR6</code>; both annotated in <a
-href="../functional-requirements-coverage.html"><code>./functional-requirements-coverage.md</code></a>
-with the admin UI location</td>
+<td>MEDIUM</td>
+<td>11</td>
+<td>dashed grey line</td>
 </tr>
 <tr>
-<td>Why admin and business UI are separate repos (v2.10)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 4 <em>Frontend Architecture</em></a>; <a
-href="../changelog.html"><code>./changelog.md</code> v2.10</a></td>
+<td>EXTERNAL</td>
+<td>58</td>
+<td>dotted light-grey line (detail diagrams only)</td>
 </tr>
 <tr>
-<td>Per-request authz resolution that picks up Path B changes on the
-next call</td>
-<td><a
-href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>
-Phase 3</td>
-</tr>
-<tr>
-<td>Phase 0 Data Migration ETL — the bulk-load equivalent of Phases 2 +
-3</td>
-<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
-<code>nji-architecture/migration/</code></a>; epics.md AR46–AR49</td>
-</tr>
-<tr>
-<td>As-is equivalent — Module 11 <em>Admin</em> had only narrow
-self-service (password change, new-user request); higher-impact admin
-was off-screen in OPT Support. NJI brings it into a first-class admin
-module.</td>
-<td><a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code>
-→ Module 11</a></td>
+<td><strong>Total inferred relationships</strong></td>
+<td><strong>137</strong></td>
+<td></td>
 </tr>
 </tbody>
 </table>
 </div></details>
-<p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/admin-maintenance-flows.md</code></p>
+<p class="source-note">Source: <code>docs/architecture/asis/database/README.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
-omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#scope">Scope</a></li><li><a href="#files-in-this-folder">Files in this folder</a></li><li class="h3"><a href="#diagrams">Diagrams</a></li><li class="h3"><a href="#companion-reference">Companion reference</a></li><li class="h3"><a href="#source">Source</a></li><li class="h3"><a href="#build-pipeline">Build pipeline</a></li><li><a href="#how-to-read-the-diagrams">How to read the diagrams</a></li><li class="h3"><a href="#overview-ji_schema_overviewpng">Overview
+(ji_schema_overview.png)</a></li><li class="h3"><a href="#detail-diagrams-per-area">Detail diagrams (per area)</a></li><li><a href="#notable-findings">Notable findings</a></li><li><a href="#fk-inference-summary">FK inference summary</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

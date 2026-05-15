@@ -23,6 +23,7 @@ from typing import List, Tuple
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SRC = REPO_ROOT / "_bmad-output" / "planning-artifacts"
 ASIS_SRC = REPO_ROOT / "docs" / "architecture" / "asis"
+DATABASE_SRC = REPO_ROOT / "docs" / "architecture" / "asis" / "database"
 OUT = REPO_ROOT / "html"
 
 # As-is architecture views generated from PNGs in docs/architecture/asis/.
@@ -50,6 +51,71 @@ ASIS_VIEWS: List[Tuple[str, str, str, str]] = [
     ),
 ]
 
+# As-is database schema views generated from PNGs in docs/architecture/asis/database/.
+# Each entry: (display title, intro paragraph, source PNG filename, output relpath without .html)
+# Output is mirrored under html/asis/database/.
+DATABASE_VIEWS: List[Tuple[str, str, str, str]] = [
+    (
+        "Database schema — overview (as-is JI)",
+        "All 46 production tables reverse-engineered from <code>JI Tables - 1.pdf</code>, grouped into 6 areas. "
+        "Per-table edges are intentionally suppressed; arrows between areas show the count of inferred FK relationships crossing that boundary. "
+        "Source DDL contains zero explicit FK constraints — every relationship is inferred from column-naming conventions. "
+        "Drill into a per-area detail diagram below for in-area FK lines and full column listings.",
+        "ji_schema_overview.png",
+        "asis/database/ji_schema_overview",
+    ),
+    (
+        "Database — Judges Profile & Reference",
+        "8 tables covering judge identity (<code>TBL_JUDGES</code>, <code>TBL_JUDGES_MASTER</code>, <code>TBL_JUDGES_USER_LINKS</code>) "
+        "and core reference data (judge types / statuses / circuits / leadership). "
+        "Full columns, PK/FK/UK markers, trigger badges. Cross-area references render as italicised columns with the target table named in italics.",
+        "ji_schema_judges-profile.png",
+        "asis/database/ji_schema_judges-profile",
+    ),
+    (
+        "Database — Working Patterns, Tickets & Stats",
+        "11 tables: working-pattern records and their daily breakdown, judge tickets, jurisdiction split, fee rates, annual leave, "
+        "and monthly/booking statistics. <code>TBL_JUDGES_MONTHLY_STATS</code> is wide (≈70 columns) and dominates the cluster footprint.",
+        "ji_schema_judges-patterns.png",
+        "asis/database/ji_schema_judges-patterns",
+    ),
+    (
+        "Database — Absence & Cover Workflow",
+        "8 tables: the absence record (<code>TBL_JI_ABS_OB</code>) and its daily breakdown, absence categories/types, vacancy auto-creation, "
+        "vacancy groups, and cancellation reasons. Internal FK chain: ABS_OB → ABS_OB_DETAIL → VACANCIES.",
+        "ji_schema_absence-cover.png",
+        "asis/database/ji_schema_absence-cover",
+    ),
+    (
+        "Database — Bookings & Sittings",
+        "5 tables: fee-paid bookings + booking detail + booking types + canceller reasons, plus the planned-sittings record. "
+        "Many cross-area references into Reference Data (work types, sitting durations) and Judges Profile (judge code).",
+        "ji_schema_bookings-sittings.png",
+        "asis/database/ji_schema_bookings-sittings",
+    ),
+    (
+        "Database — Reference Data (Work, Durations, Areas, Links)",
+        "11 tables: planned/actual work types and categories, sitting durations, areas, extra non-working-day calendar, "
+        "and the location × judge-type link tables that map allowed combinations.",
+        "ji_schema_reference-work.png",
+        "asis/database/ji_schema_reference-work",
+    ),
+    (
+        "Database — Audit & Cross-cutting",
+        "3 tables: <code>TBL_JI_CHANGES</code> + <code>TBL_JI_CHANGE_TYPES</code> as the change-log lookup pair, "
+        "plus <code>TBL_JI_RESTR_ITIN_USERS</code> for restricted itinerary user/region scoping. Smallest cluster.",
+        "ji_schema_audit-cross-cutting.png",
+        "asis/database/ji_schema_audit-cross-cutting",
+    ),
+]
+
+# Markdown files in the database folder to render as standalone HTML pages.
+# Each entry: (source filename relative to DATABASE_SRC, output relpath without .html)
+DATABASE_MARKDOWN: List[Tuple[str, str]] = [
+    ("README.md", "asis/database/index"),
+    ("ji_schema_companion.md", "asis/database/ji_schema_companion"),
+]
+
 # Sidebar navigation. Each entry: (display label, source path without .md, is_special)
 # is_special marks entries that have no source file (e.g. the index page).
 # Group naming convention: "As-is — …" for legacy JI; "To-be — …" for NJI.
@@ -63,6 +129,17 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
     ("As-is — JI Architecture Views", [
         ("System Context (as-is)", "asis/system-context", False),
         ("Components (as-is)", "asis/components", False),
+    ]),
+    ("As-is — JI Database Schema", [
+        ("Database index", "asis/database/index", False),
+        ("Schema overview", "asis/database/ji_schema_overview", False),
+        ("Judges Profile & Reference", "asis/database/ji_schema_judges-profile", False),
+        ("Working Patterns, Tickets & Stats", "asis/database/ji_schema_judges-patterns", False),
+        ("Absence & Cover Workflow", "asis/database/ji_schema_absence-cover", False),
+        ("Bookings & Sittings", "asis/database/ji_schema_bookings-sittings", False),
+        ("Reference Data", "asis/database/ji_schema_reference-work", False),
+        ("Audit & Cross-cutting", "asis/database/ji_schema_audit-cross-cutting", False),
+        ("Companion reference (triggers, FKs, externals)", "asis/database/ji_schema_companion", False),
     ]),
     ("To-be — NJI Architecture", [
         ("Architecture (index)", "architecture", False),
@@ -489,6 +566,55 @@ def build_asis_views() -> None:
         print(f"build: {out_relpath}.html")
 
 
+def build_database_views() -> None:
+    """Generate HTML pages for the as-is database schema artefacts.
+
+    Copies each schema PNG from docs/architecture/asis/database/ into
+    html/asis/database/ and wraps it in a standalone HTML page. Also renders
+    the database README (as the section index) and the companion markdown
+    (triggers + external refs + FK rationale) as HTML pages.
+    """
+    if not DATABASE_SRC.exists():
+        print(f"warn: database source not found: {DATABASE_SRC} — skipping database views", file=sys.stderr)
+        return
+
+    # 1) PNG wrappers
+    for title, intro, source_png, out_relpath in DATABASE_VIEWS:
+        src_png = DATABASE_SRC / source_png
+        if not src_png.exists():
+            print(f"warn: database view source not found: {src_png} — skipping", file=sys.stderr)
+            continue
+        # Copy PNG with its original filename into the output dir so README
+        # links to e.g. `ji_schema_overview.png` still resolve there.
+        dst_png = OUT / "asis" / "database" / source_png
+        dst_png.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src_png, dst_png)
+        print(f"copy:  asis/database/{source_png}  (from {src_png.relative_to(REPO_ROOT)})")
+        # Generate the wrapper page that references that PNG.
+        body = (
+            f"<h1>{title}</h1>\n"
+            f"<p>{intro}</p>\n"
+            f'<p><img src="./{source_png}" alt="{title}"></p>\n'
+            f'<p class="source-note">Source PNG: <code>docs/architecture/asis/database/{source_png}</code> · '
+            f'See the <a href="./ji_schema_companion.html">companion reference</a> for trigger bodies and external-reference inventory.</p>\n'
+        )
+        out_html = OUT / (out_relpath + ".html")
+        write_page(out_html, title, body, out_relpath, src_png)
+        print(f"build: {out_relpath}.html")
+
+    # 2) Markdown pages (README → index, companion → companion)
+    for source_md, out_relpath in DATABASE_MARKDOWN:
+        src_md = DATABASE_SRC / source_md
+        if not src_md.exists():
+            print(f"warn: database markdown source not found: {src_md} — skipping", file=sys.stderr)
+            continue
+        title = extract_title(src_md)
+        body = md_to_html_body(src_md)
+        out_html = OUT / (out_relpath + ".html")
+        write_page(out_html, title, body, out_relpath, src_md)
+        print(f"build: {out_relpath}.html")
+
+
 def main() -> int:
     if not SRC.exists():
         print(f"error: source directory not found: {SRC}", file=sys.stderr)
@@ -527,6 +653,9 @@ def main() -> int:
 
     # generate as-is architecture view pages from docs/architecture/asis/
     build_asis_views()
+
+    # generate as-is database schema pages from docs/architecture/asis/database/
+    build_database_views()
 
     # write index page
     write_page(OUT / "index.html", "JI / NJI Documentation", build_index_body(), "index", None)
