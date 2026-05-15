@@ -1,125 +1,48 @@
 ---
 parent: 'epics/phase-0/index.md'
 epic: 0.3
-title: 'Admin manages users, roles, and per-region activation with migration sign-off'
-storyCount: 4
+title: 'Users, roles, and activation flags are SQL-loaded'
+storyCount: 1
 status: 'validated'
+revisedAt: '2026-05-15'
+revisionNote: 'Admin UI for Users/Roles management is post-MVP (was Stories 0.3.2 + 0.3.4). Admin API extensions are not needed because there is no admin UI consumer (was Story 0.3.1). Only the SQL-driven ETL remains in Phase 0 (was Story 0.3.3, now renumbered to 0.3.1).'
 ---
 
-# Epic 0.3: Admin manages users, roles, and per-region activation with migration sign-off
+# Epic 0.3: Users, roles, and activation flags are SQL-loaded
 
-**User outcome:** An admin user signs into `nji-admin-ui`, opens the User & Role admin module, can search users (migrated from APEX + new), edit role and Region/Area scope assignments, view per-user effective permissions, and flip per-user activation flags. Phase 0 ETL has loaded the active APEX users and produced a reconciliation report keyed to HMCTS IdP principals (email primary, employee number fallback); named owners review and sign off, with explicit handling decisions (drop / hold / manual map) for unmatched records.
+**User outcome:** Active APEX users and their role/Region/Area assignments are loaded into the NJI Authorisation tables via a direct-SQL ETL, with named-owner sign-off and explicit handling of unmatched records via versioned CSV decision files. Per-region activation flags are initialised based on Phase 9+ planned cutover order (all `FALSE` initially; flipped per region during cutover via direct SQL). **No admin UI in MVP** — operational user/role/scope maintenance happens via direct SQL by DBAs; an admin UI surface is on the post-MVP roadmap.
 
 **Vertical slice:**
-- Admin UI Users & Role module (`modules/users-roles/`) in `nji-admin-ui` — list and search users, edit role and Region/Area scope, view effective permissions, view and toggle per-user activation flag
-- `nji-authorisation` API extensions: role/scope edit endpoints, effective-permissions endpoint, activation-flag endpoints
-- Users/Roles ETL stream at `nji-architecture/migration/users-roles/` (per AR46–AR48): reads APEX user dumps, reconciles to HMCTS IdP (email primary, employee number fallback per D9 / Risk #14), loads via `nji-authorisation` API
-- Per-run reconciliation report under `migration/reports/users-roles/`
-- `unmatched/` bucket with explicit handling-decision workflow (drop / hold / manual map)
-- Per-user activation flag surface (FR58 — orchestration of flag-flips at cutover lives in Phase 9+, but the admin-side toggle and reporting view live here)
+- Phase 0 Users/Roles ETL stream at `nji-architecture/migration/users-roles/` (per AR46–AR48)
+- Reads APEX user dumps, reconciles to HMCTS IdP principals (email primary, employee number fallback per D9 / Risk #14)
+- **Loads matched records via direct SQL INSERT** into `auth_users`, `auth_user_roles`, `auth_user_region_scopes`, `auth_user_activation_flags` (using the `nji_authorisation` DB role — write access for the ETL runner is granted via a one-time DBA-issued credential held in Azure Key Vault)
+- Unmatched records routed to `unmatched/{run-date}.csv` with an editable `decision` column (drop / hold / `manual_map:<idp_email>`)
+- Named owner edits the CSV; ETL re-run applies decisions
+- Per-run reconciliation report under `migration/reports/users-roles/{run-date}.md`
+- Owner sign-off via versioned git commits in `migration/reports/users-roles/signoffs/{run-date}-{owner-handle}.md` with `CODEOWNERS`-enforced two-reviewer policy
+- **Activation flag initial state:** all FALSE; flipped per region during Phase 9+ cutover via direct SQL by DBA on cutover day (no UI for activation toggle in MVP)
+- ETL re-run for incremental waves is idempotent (`INSERT ... ON CONFLICT DO NOTHING`)
 
-**FRs covered:** FR4 (full role/scope edits), FR57 (Users/Roles portion), FR58 (flag wire-up surface)
+**FRs covered:**
+- **FR57** — Users/Roles portion of the Phase 0 ETL, now via direct SQL
+- **FR58** — initial activation flag state set by ETL; cutover flips happen per region during Phase 9+ via direct SQL
 
-**Key NFRs:** NFR12–NFR13 (auth enforcement on admin endpoints), NFR17–NFR19 (admin UI WCAG)
+**FRs deferred to post-MVP:**
+- **FR4** (admin role updates) — the data exists in the auth tables and can be edited by DBAs via direct SQL, but the **admin UI surface for system administrators to update assignments is post-MVP** (was Story 0.3.2 in the prior plan, removed)
 
-**Why separate from Epic 0.2:** Different ETL stream, different domain owners (judicial-team owners for Reference Data vs identity / IT owners for Users/Roles), different reconciliation methodology (controlled-list vs identity-reconciliation), different risk profile (Risk #13 vs Risk #14). Bundling would dilute the user value and the sign-off accountability.
-
----
-
-## Story 0.3.1: `nji-authorisation` API extensions for user, role, scope, and activation administration
-
-As an **API consumer** (admin UI now; downstream Phase 9+ rollout orchestration later),
-I want `nji-authorisation` to expose admin-gated endpoints for managing users, role assignments, Region/Area scope, and per-user activation flags,
-So that **admins can edit migrated user data** (per FR4) and the activation surface (per FR58) is available before Phase 9+ rollout orchestration uses it.
-
-**Acceptance Criteria:**
-
-**Given** `nji-authorisation` is deployed per Epic 0.1 (Story 0.1.3) with the 5 auth tables in place,
-**When** the engineer adds admin endpoints,
-**Then** `GET /v1/admin/users` supports list + search + filter by email, employee number, role, region, area, activation state (per FR4),
-**And** `GET /v1/admin/users/{id}` returns full user detail including role assignments and Region/Area scope,
-**And** `PUT /v1/admin/users/{id}/roles` updates the user's role assignments (writes `auth_user_roles`),
-**And** `PUT /v1/admin/users/{id}/region-scopes` updates Region/Area scope (writes `auth_user_region_scopes`),
-**And** `PUT /v1/admin/users/{id}/activation` toggles per-region activation flags (writes `auth_user_activation_flags`) — per FR58.
-
-**Given** any admin endpoint is called,
-**When** the authenticated principal does NOT have a `system-admin` role,
-**Then** the response is `403 Forbidden` with an RFC 9457 problem-details body (per NFR13).
-
-**Given** an admin user updates another user's roles,
-**When** the API processes the request,
-**Then** an audit row is written to a `auth_audit` table (added via Flyway migration in this story) recording principal / target user / before-state / after-state / timestamp,
-**And** the response is `200 OK` with the updated user resource (or `409 Conflict` if optimistic locking via `@Version` detects a concurrent edit — per AR21),
-**And** the change is reflected in the next `POST /v1/authz/check` call for the target user.
-
-**Given** the admin endpoints are tested via Postman collection,
-**When** the collection runs in CI,
-**Then** it covers happy path + `403` (non-admin caller) + `404` (missing user) + `409` (optimistic-lock conflict) + `400` (validation failure with RFC 9457),
-**And** the collection is appended to `postman/nji-authorisation-phase0.postman_collection.json`.
-
-**Given** the OpenAPI spec is regenerated,
-**When** `uk.gov.hmcts.nji:api-nji-authorisation:1.1.0` is published,
-**Then** all admin endpoints are documented with full request/response schemas,
-**And** Spectral lint passes,
-**And** the spec version bumps from 1.0.0 (Story 0.1.3) to 1.1.0 reflecting backwards-compatible additions (per AR38 versioning policy).
-
-**References:** FR4, FR58 (activation surface); NFR12–NFR13, NFR15, NFR39, NFR42; AR18–AR21, AR34, AR37–AR39, AR41.
+**Out of scope for Phase 0 (deferred post-MVP):**
+- `nji-authorisation` admin write endpoints (was Story 0.3.1 in the prior plan, removed)
+- `nji-admin-ui` Users & Roles module (was Story 0.3.2)
+- `nji-admin-ui` Migration Reports module with decisions UI (was Story 0.3.4 — replaced by editable CSV files in MVP)
+- Activation flag toggle UI (Phase 9+ cutover happens via direct SQL only in MVP)
 
 ---
 
-## Story 0.3.2: Admin UI Users & Roles module — search, edit roles, edit scope, toggle activation, view permissions
-
-As a **system administrator**,
-I want to search NJI users, edit their role and Region/Area scope assignments, view their effective permissions, and toggle their per-region activation flag through `nji-admin-ui`,
-So that **migrated APEX users can be onboarded to NJI** (per FR4) and rollout orchestration (per FR58) has a UI surface to verify activation state before flag-flip.
-
-**Acceptance Criteria:**
-
-**Given** an admin signs into `nji-admin-ui` (Story 0.2.3) with a `system-admin` role,
-**When** they open `/users-roles`,
-**Then** they see a paginated user list with search by email, employee number, name, role, region,
-**And** the list is fetched via the auto-generated TypeScript client from `nji-authorisation` OpenAPI (per AR43).
-
-**Given** the admin opens a user,
-**When** the detail view renders,
-**Then** they see user identity (email, employee number, name), current roles, current Region/Area scope, current activation state per region, and effective permissions (computed by `GET /v1/users/{id}/effective-permissions`),
-**And** an "Edit roles" form lists available roles with checkboxes,
-**And** an "Edit Region/Area scope" form lists regions and areas,
-**And** a "Toggle activation" control shows the current state per region with a confirmation modal before flip.
-
-**Given** the admin edits and submits,
-**When** the form posts via the auto-generated client,
-**Then** a success toast confirms the change,
-**And** the effective permissions panel refreshes to show the new state,
-**And** on optimistic-lock conflict (`409`), the UI shows *"This user was edited by someone else — please reload"* with a refresh button.
-
-**Given** the admin clicks the activation toggle for a region,
-**When** the confirmation modal asks *"Activate user `judge.test@…` for region Northern?"*,
-**Then** the admin confirms,
-**And** the API call updates `auth_user_activation_flags` for that user + region,
-**And** the user immediately sees (per Story 0.1.5) the new state on next sign-in (banner appears/disappears).
-
-**Given** accessibility CI runs,
-**When** axe-core scans the list, detail, edit forms, and confirmation modal,
-**Then** no new WCAG 2.2 AA violations,
-**And** keyboard navigation works through all forms and the modal,
-**And** ARIA labels are correct on the toggle controls.
-
-**Given** Playwright E2E coverage,
-**When** `tests/e2e/users-roles.spec.ts` runs,
-**Then** it covers: search → open user → edit roles → submit → effective-permissions refreshed → activation toggle → confirmation modal → flip → user sees new banner,
-**And** also covers the optimistic-lock conflict path,
-**And** also covers non-admin rejection.
-
-**References:** FR4 (full edits), FR58 (activation surface), FR56 (admin stack); NFR12–NFR13, NFR17–NFR19; AR42–AR45.
-
----
-
-## Story 0.3.3: Phase 0 Users/Roles ETL — APEX users to NJI Authorisation + IdP reconciliation + reconciliation report
+## Story 0.3.1: Phase 0 Users/Roles ETL — APEX users via direct SQL + decisions CSV + reconciliation report + owner sign-off
 
 As a **Users/Roles named owner** (identity / HMCTS IT lead),
-I want the Phase 0 ETL to read APEX user dumps, reconcile to HMCTS IdP principals (email primary, employee number fallback), load matched users into NJI Authorisation, and route unmatched users into an explicit handling-decision workflow,
-So that **migration correctness is auditably owned** (per FR57, D9, Risk #14) and unmatched records are not silently dropped.
+I want the Phase 0 ETL to read APEX user dumps, reconcile to HMCTS IdP principals (email primary, employee number fallback), load matched users via direct SQL into the NJI Authorisation tables, and route unmatched users into an explicit decisions CSV that I edit and approve via versioned git commits,
+So that **migration correctness is auditably owned** (per FR57, D9, Risk #14), unmatched records are not silently dropped, and the workflow works without an admin UI (which is now post-MVP).
 
 **Acceptance Criteria:**
 
@@ -130,7 +53,8 @@ So that **migration correctness is auditably owned** (per FR57, D9, Risk #14) an
    • try exact email match against the HMCTS IdP directory (primary key per D9)
    • on no email match, try employee-number match (fallback per D9)
    • on neither match, route the row to the unmatched bucket,
-**And** matched rows load via `nji-authorisation` admin API (`POST /v1/admin/users` and friends) using a service-token (per AR36, AR46).
+**And** matched rows are **inserted via direct SQL** into `auth_users`, `auth_user_roles`, `auth_user_region_scopes`, and `auth_user_activation_flags` using the `nji_authorisation` DB role,
+**And** the ETL does NOT call the Authorisation API (which is read-only in Phase 0).
 
 **Given** the ETL completes a run,
 **When** the reconciliation report is generated at `nji-architecture/migration/reports/users-roles/{run-date}.md`,
@@ -140,70 +64,41 @@ So that **migration correctness is auditably owned** (per FR57, D9, Risk #14) an
    • unmatched count with per-row reason
    • per-role assignment counts
    • per-Region/Area scope counts
+   • activation-flag initial state per region (all FALSE at MVP)
    • anomalies (e.g. APEX role not in NJI controlled list, ambiguous email match),
-**And** the unmatched rows are written to `nji-architecture/migration/reports/users-roles/unmatched/{run-date}/` as one file per row,
-**And** each unmatched-row file includes the raw APEX row + a "handling decision" placeholder (drop / hold / manual map).
+**And** the unmatched rows are written to `nji-architecture/migration/reports/users-roles/unmatched/{run-date}.csv` with columns `apex_id`, `apex_email`, `apex_employee_number`, `apex_name`, `apex_role`, `apex_region`, `apex_area`, `reason`, `decision` (last column empty for owner to fill).
+
+**Given** a named owner edits the decisions CSV with `drop` / `hold` / `manual_map:<idp_email>` per row,
+**When** the owner commits the updated CSV to git,
+**Then** the next ETL re-run reads the decisions,
+**And** applies them: `drop` rows are skipped; `hold` rows remain unmatched (carried forward); `manual_map:<email>` rows are loaded with the specified IdP email binding (the email is recorded in `auth_users.idp_principal` alongside the original APEX identifiers for audit).
 
 **Given** the ETL is re-run incrementally for a subsequent wave,
 **When** the second run completes,
-**Then** previously-matched users are not re-created (idempotency per AR49),
+**Then** previously-matched users are not re-created (idempotency per AR49, via `INSERT ... ON CONFLICT DO NOTHING`),
 **And** new APEX rows are matched fresh against IdP,
-**And** previously-unmatched rows whose APEX side has changed re-enter the unmatched bucket with an updated reason.
-
-**Given** an unmatched row's named-owner decision is `manual map`,
-**When** the engineer (or named owner via Story 0.3.4 promoted UI) creates the mapping by providing an IdP principal email,
-**Then** the mapping is recorded in the ETL's reconciliation state,
-**And** subsequent re-runs pick up the manual map and load the user normally.
+**And** previously-unmatched rows whose APEX side has changed re-enter the unmatched CSV with an updated reason.
 
 **Given** an APEX role appears that does not exist in `auth_roles`,
 **When** the ETL encounters the row,
-**Then** the row routes to the unmatched bucket with reason *"Unknown APEX role: {role-name}"*,
+**Then** the row routes to the unmatched CSV with reason *"Unknown APEX role: {role-name}"*,
 **And** the row does not load with a partial role assignment.
 
-**References:** FR4 (load via admin API), FR57 (ETL framing per D9), FR58 (activation flag initial state); NFR15 (audit); AR21, AR36, AR46, AR47, AR48, AR49.
+**Given** the activation flag initial state is being set,
+**When** the ETL inserts `auth_user_activation_flags`,
+**Then** every user has an entry per applicable region with `activated = FALSE`,
+**And** Phase 9+ cutover flips these flags per region via direct SQL (no UI in MVP).
 
----
+**Given** a named owner reviews the reconciliation report,
+**When** they sign off via a versioned commit to `nji-architecture/migration/reports/users-roles/signoffs/{run-date}-{owner-handle}.md`,
+**Then** the sign-off is recorded in git history (immutable audit trail),
+**And** the commit is co-signed by a second reviewer per the `CODEOWNERS` policy on `migration/reports/`,
+**And** the absence of a signoff file blocks Phase 9+ regional activation (enforced operationally — the cutover runbook checks for the signoff before flipping flags).
 
-## Story 0.3.4: Admin UI Migration Reports module — view reports + resolve unmatched records with sign-off
+**References:** FR57 (Users/Roles via SQL ETL per D9), FR58 (initial activation flag state); NFR15 (audit via git); AR21, AR46, AR47, AR48, AR49.
 
-As a **named migration owner** (Reference Data owner from Epic 0.2 or Users/Roles owner from Epic 0.3),
-I want a Migration Reports view in `nji-admin-ui` to review the latest ETL reconciliation reports, drill into unmatched records, apply handling decisions (drop / hold / manual map), and sign off on the migration,
-So that **the named-owner sign-off workflow** (per FR57 + Risk #13/#14) is properly auditable and unmatched user records cannot pass into NJI without an explicit decision.
-
-**Acceptance Criteria:**
-
-**Given** an admin with `migration-owner` role signs into `nji-admin-ui`,
-**When** they open `/migration-reports`,
-**Then** they see a list of available reconciliation reports grouped by stream (Reference Data + Users/Roles) and date,
-**And** each report row shows status (Pending / Signed off / Rejected), matched/unmatched counts, owner identity if signed,
-**And** the list is fetched from a new `nji-architecture/migration-reports` API exposure (engineer to decide at story implementation: read directly from the `nji-architecture/migration/reports/` directory via a thin file-system API, OR expose a per-service endpoint — recommend a single read-only endpoint on `nji-authorisation` to centralise the auth/audit surface).
-
-**Given** the owner opens a Users/Roles reconciliation report,
-**When** the detail view renders,
-**Then** they see the report's summary (matched / unmatched / anomalies counts),
-**And** a list of unmatched rows with reason, raw APEX data, and a "handling decision" dropdown (drop / hold / manual map),
-**And** for "manual map", a text input accepts the IdP principal email to bind to.
-
-**Given** the owner applies decisions to all unmatched rows,
-**When** they click "Submit decisions",
-**Then** each decision is persisted to the ETL's reconciliation state (per Story 0.3.3),
-**And** a confirmation banner shows the per-decision counts.
-
-**Given** all unmatched rows have decisions,
-**When** the owner clicks "Sign off",
-**Then** a confirmation modal appears with the summary,
-**And** on confirm, the sign-off is recorded with owner identity, timestamp, report version,
-**And** the report status moves to "Signed off",
-**And** downstream Phase 1+ consumption is no longer operationally blocked (enforcement gate at this stage is operational; can be wired to an activation flag in a follow-up).
-
-**Given** axe-core checks run on every page in the module,
-**When** the scans complete,
-**Then** no new WCAG 2.2 AA violations,
-**And** keyboard navigation works through the report list, unmatched-rows table, decision dropdowns, manual-map input, and confirmation modal.
-
-**Given** Playwright E2E coverage,
-**When** `tests/e2e/migration-reports.spec.ts` runs,
-**Then** it covers: list → open report → apply drop/hold/manual-map decisions → submit → sign off → report status updates to signed off,
-**And** also covers the rejection path (owner rejects with mandatory reason).
-
-**References:** FR4 (admin role), FR57 (sign-off workflow), FR56 (admin stack); NFR12, NFR13, NFR15, NFR17, NFR18, NFR19; AR42–AR45, AR47, AR48.
+**Explicitly NOT in scope (deferred post-MVP):**
+- Admin API for user / role / scope edits on `nji-authorisation` (was Story 0.3.1 in the prior plan)
+- Admin UI Users & Roles module in `nji-admin-ui` (was Story 0.3.2)
+- Admin UI Migration Reports module with decisions UI (was Story 0.3.4 — replaced by editable CSV files)
+- UI for activation flag toggle

@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,35 +178,25 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="ji-as-is-database-schema--diagrams">JI as-is database schema —
-diagrams</h1>
-<p>Schema diagrams reverse-engineered from
-<code>JI Tables - 1.pdf</code> (the Oracle DDL dump of the legacy JI
-APEX database).</p>
+<h1 id="ji-as-is-database-schema--diagrams">JI as-is database schema — diagrams</h1>
+<p>Schema diagrams reverse-engineered from <code>JI Tables - 1.pdf</code> (the Oracle DDL dump of the legacy JI APEX database).</p>
 <details class="section" id="scope"><summary><span class="section-title">Scope</span></summary><div class="section-body">
 <ul>
-<li><strong>46 production tables</strong> (<code>TBL_*</code>) from the
-source PDF</li>
-<li><strong>0 explicit foreign-key constraints</strong> — APEX pattern.
-All relationships in the diagrams are inferred from column-naming
-conventions and labelled by confidence</li>
-<li><strong>24 triggers</strong> — predominantly <code>BI_*</code>
-(auto-PK from sequence) and <code>BU_*</code> (audit timestamp
-maintenance)</li>
+<li><strong>46 production tables</strong> (<code>TBL_*</code>) from the source PDF</li>
+<li><strong>0 explicit foreign-key constraints</strong> — APEX pattern. All relationships in the diagrams are inferred from column-naming conventions and labelled by confidence</li>
+<li><strong>24 triggers</strong> — predominantly <code>BI_*</code> (auto-PK from sequence) and <code>BU_*</code> (audit timestamp maintenance)</li>
 <li><strong>26 indexes</strong> (non-PK)</li>
-<li><strong>6 production tables without declared PK</strong> —
-backfilled from unique <code>*_PK</code> indexes where present</li>
-<li><em><em>TMP_</em> staging tables excluded</em>* by design — they're
-session-scoped, not part of the schema</li>
+<li><strong>6 production tables without declared PK</strong> — backfilled from unique <code>*_PK</code> indexes where present</li>
+<li><em><em>TMP_</em> staging tables excluded</em>* by design — they're session-scoped, not part of the schema</li>
 </ul>
 </div></details><details class="section" id="files-in-this-folder"><summary><span class="section-title">Files in this folder</span></summary><div class="section-body">
 <h3 id="diagrams">Diagrams</h3>
@@ -217,49 +209,32 @@ session-scoped, not part of the schema</li>
 </thead>
 <tbody>
 <tr>
-<td><a
-href="ji_schema_overview.png"><code>ji_schema_overview.png</code></a></td>
-<td>All 46 tables grouped into 6 colour-coded clusters; relationship
-lines visible; no columns</td>
+<td><a href="ji_schema_overview.png"><code>ji_schema_overview.png</code></a></td>
+<td>All 46 tables grouped into 6 colour-coded clusters; relationship lines visible; no columns</td>
 </tr>
 <tr>
-<td><a
-href="ji_schema_judges-profile.png"><code>ji_schema_judges-profile.png</code></a></td>
-<td><strong>Judges Profile &amp; Reference</strong> (8 tables) — Judges,
-Master, User Links, Types, Statuses, Circuits, Leadership, Type
-Promotion</td>
+<td><a href="ji_schema_judges-profile.png"><code>ji_schema_judges-profile.png</code></a></td>
+<td><strong>Judges Profile &amp; Reference</strong> (8 tables) — Judges, Master, User Links, Types, Statuses, Circuits, Leadership, Type Promotion</td>
 </tr>
 <tr>
-<td><a
-href="ji_schema_judges-patterns.png"><code>ji_schema_judges-patterns.png</code></a></td>
-<td><strong>Working Patterns, Tickets &amp; Stats</strong> (11 tables) —
-Work patterns, WP detail, Juris split, Tickets, Courts link, Fee rates,
-Annual leave, Booking/Monthly stats</td>
+<td><a href="ji_schema_judges-patterns.png"><code>ji_schema_judges-patterns.png</code></a></td>
+<td><strong>Working Patterns, Tickets &amp; Stats</strong> (11 tables) — Work patterns, WP detail, Juris split, Tickets, Courts link, Fee rates, Annual leave, Booking/Monthly stats</td>
 </tr>
 <tr>
-<td><a
-href="ji_schema_absence-cover.png"><code>ji_schema_absence-cover.png</code></a></td>
-<td><strong>Absence &amp; Cover Workflow</strong> (8 tables) — ABS_OB
-family + Vacancies + Vacancy Groups + Cancel reasons</td>
+<td><a href="ji_schema_absence-cover.png"><code>ji_schema_absence-cover.png</code></a></td>
+<td><strong>Absence &amp; Cover Workflow</strong> (8 tables) — ABS_OB family + Vacancies + Vacancy Groups + Cancel reasons</td>
 </tr>
 <tr>
-<td><a
-href="ji_schema_bookings-sittings.png"><code>ji_schema_bookings-sittings.png</code></a></td>
-<td><strong>Bookings &amp; Sittings</strong> (5 tables) — FP bookings +
-detail + types + cancellers + Planned Sittings</td>
+<td><a href="ji_schema_bookings-sittings.png"><code>ji_schema_bookings-sittings.png</code></a></td>
+<td><strong>Bookings &amp; Sittings</strong> (5 tables) — FP bookings + detail + types + cancellers + Planned Sittings</td>
 </tr>
 <tr>
-<td><a
-href="ji_schema_reference-work.png"><code>ji_schema_reference-work.png</code></a></td>
-<td><strong>Reference Data</strong> (11 tables) — Planned/Actual work
-types and cats, Sitting durations, Areas, Extra NWDs, Loc-JT links,
-UA-JT links</td>
+<td><a href="ji_schema_reference-work.png"><code>ji_schema_reference-work.png</code></a></td>
+<td><strong>Reference Data</strong> (11 tables) — Planned/Actual work types and cats, Sitting durations, Areas, Extra NWDs, Loc-JT links, UA-JT links</td>
 </tr>
 <tr>
-<td><a
-href="ji_schema_audit-cross-cutting.png"><code>ji_schema_audit-cross-cutting.png</code></a></td>
-<td><strong>Audit &amp; Cross-cutting</strong> (3 tables) — Changes +
-Change Types + Restricted Itinerary Users</td>
+<td><a href="ji_schema_audit-cross-cutting.png"><code>ji_schema_audit-cross-cutting.png</code></a></td>
+<td><strong>Audit &amp; Cross-cutting</strong> (3 tables) — Changes + Change Types + Restricted Itinerary Users</td>
 </tr>
 </tbody>
 </table>
@@ -273,16 +248,12 @@ Change Types + Restricted Itinerary Users</td>
 </thead>
 <tbody>
 <tr>
-<td><a
-href="ji_schema_companion.html"><code>ji_schema_companion.md</code></a></td>
-<td>Full trigger bodies (all 24), external-reference inventory (columns
-pointing to tables not in this PDF), FK inference confidence rationale,
-and a complete table of every inferred FK with confidence label</td>
+<td><a href="ji_schema_companion.html"><code>ji_schema_companion.md</code></a></td>
+<td>Full trigger bodies (all 24), external-reference inventory (columns pointing to tables not in this PDF), FK inference confidence rationale, and a complete table of every inferred FK with confidence label</td>
 </tr>
 <tr>
 <td><a href="ji_schema.json"><code>ji_schema.json</code></a></td>
-<td>Parsed structured data (tables, columns, PKs, indexes, triggers) —
-input for the diagram generator</td>
+<td>Parsed structured data (tables, columns, PKs, indexes, triggers) — input for the diagram generator</td>
 </tr>
 </tbody>
 </table>
@@ -296,14 +267,12 @@ input for the diagram generator</td>
 </thead>
 <tbody>
 <tr>
-<td><a
-href="JI%20Tables%20-%20%201.pdf"><code>JI Tables - 1.pdf</code></a></td>
+<td><a href="JI%20Tables%20-%20%201.pdf"><code>JI Tables - 1.pdf</code></a></td>
 <td>Original Oracle DDL dump from APEX</td>
 </tr>
 <tr>
 <td><code>JI_Tables_1.txt</code></td>
-<td>Text extraction of the PDF (via <code>pdftotext -layout</code>) —
-input for the parser</td>
+<td>Text extraction of the PDF (via <code>pdftotext -layout</code>) — input for the parser</td>
 </tr>
 </tbody>
 </table>
@@ -317,16 +286,12 @@ input for the parser</td>
 </thead>
 <tbody>
 <tr>
-<td><a
-href="../../../../scripts/python/parse_ji_ddl.py"><code>scripts/python/parse_ji_ddl.py</code></a></td>
-<td>Parses <code>JI_Tables_1.txt</code> →
-<code>ji_schema.json</code></td>
+<td><a href="../../../../scripts/python/parse_ji_ddl.py"><code>scripts/python/parse_ji_ddl.py</code></a></td>
+<td>Parses <code>JI_Tables_1.txt</code> → <code>ji_schema.json</code></td>
 </tr>
 <tr>
-<td><a
-href="../../../../scripts/python/build_schema_diagram.py"><code>scripts/python/build_schema_diagram.py</code></a></td>
-<td>Loads JSON → infers FKs + clusters → generates Graphviz DOT →
-renders PNG → writes companion markdown</td>
+<td><a href="../../../../scripts/python/build_schema_diagram.py"><code>scripts/python/build_schema_diagram.py</code></a></td>
+<td>Loads JSON → infers FKs + clusters → generates Graphviz DOT → renders PNG → writes companion markdown</td>
 </tr>
 </tbody>
 </table>
@@ -335,83 +300,40 @@ renders PNG → writes companion markdown</td>
 python3 scripts/python/parse_ji_ddl.py
 python3 scripts/python/build_schema_diagram.py</code></pre>
 </div></details><details class="section" id="how-to-read-the-diagrams"><summary><span class="section-title">How to read the diagrams</span></summary><div class="section-body">
-<h3 id="overview-ji_schema_overviewpng">Overview
-(<code>ji_schema_overview.png</code>)</h3>
+<h3 id="overview-ji_schema_overviewpng">Overview (<code>ji_schema_overview.png</code>)</h3>
 <ul>
-<li><strong>Each box is an area cluster</strong> containing the list of
-its tables. Numbers in parentheses after each table name are column
-counts. Trigger badges <code>[BI BU…]</code> appear after tables with
-triggers.</li>
-<li><strong>Arrows between boxes</strong> are inter-area aggregate FK
-relationships. The label is the count of inferred FKs crossing the area
-boundary; line weight scales with the count.</li>
-<li><strong>No per-table edges</strong>. To see column-level FKs, open
-the relevant per-area detail PNG.</li>
+<li><strong>Each box is an area cluster</strong> containing the list of its tables. Numbers in parentheses after each table name are column counts. Trigger badges <code>[BI BU…]</code> appear after tables with triggers.</li>
+<li><strong>Arrows between boxes</strong> are inter-area aggregate FK relationships. The label is the count of inferred FKs crossing the area boundary; line weight scales with the count.</li>
+<li><strong>No per-table edges</strong>. To see column-level FKs, open the relevant per-area detail PNG.</li>
 </ul>
 <h3 id="detail-diagrams-per-area">Detail diagrams (per area)</h3>
 <p>Every detail PNG includes a built-in legend.</p>
 <ul>
-<li><strong>Tables are laid out in a grid</strong> of ~√N tables per row
-to spread the diagram horizontally rather than stacking.</li>
-<li><strong>Header bar</strong>: <code>TBL_NAME</code> + trigger badges
-(e.g. <code>[BI BU]</code> = before-insert + before-update); next row
-shows the PK columns.</li>
-<li><strong>Column rows</strong> list every column with type and inline
-markers.</li>
+<li><strong>Tables are laid out in a grid</strong> of ~√N tables per row to spread the diagram horizontally rather than stacking.</li>
+<li><strong>Header bar</strong>: <code>TBL_NAME</code> + trigger badges (e.g. <code>[BI BU]</code> = before-insert + before-update); next row shows the PK columns.</li>
+<li><strong>Column rows</strong> list every column with type and inline markers.</li>
 <li><strong>Column markers</strong>:
 <ul>
 <li><code>PK</code> — primary key</li>
-<li><code>FK</code> — foreign key, <strong>target is in the same
-area</strong> (line is drawn)</li>
-<li><code>UK</code> — unique key (from a <code>*_UK</code> named
-index)</li>
+<li><code>FK</code> — foreign key, <strong>target is in the same area</strong> (line is drawn)</li>
+<li><code>UK</code> — unique key (from a <code>*_UK</code> named index)</li>
 <li><code>NN</code> — NOT NULL</li>
 </ul></li>
-<li><strong>Italicised column name + <code>→ TBL_NAME</code>
-marker</strong> — the column references a table in <strong>another
-area</strong>. <strong>No edge is drawn</strong> (open the named area's
-detail diagram, or the overview, to see the relationship visually).</li>
-<li><strong>Italicised column name + italic hint</strong> (e.g.
-<code>→ LOCATIONS / OFFICES</code>) — the column references a table
-<strong>not in the source PDF</strong>. See
-<code>ji_schema_companion.md</code> for the full external-reference
-inventory.</li>
+<li><strong>Italicised column name + <code>→ TBL_NAME</code> marker</strong> — the column references a table in <strong>another area</strong>. <strong>No edge is drawn</strong> (open the named area's detail diagram, or the overview, to see the relationship visually).</li>
+<li><strong>Italicised column name + italic hint</strong> (e.g. <code>→ LOCATIONS / OFFICES</code>) — the column references a table <strong>not in the source PDF</strong>. See <code>ji_schema_companion.md</code> for the full external-reference inventory.</li>
 <li><strong>Edge styles</strong> (intra-area lines only):
 <ul>
-<li>Solid blue — <strong>HIGH</strong> confidence FK (exact PK
-match)</li>
-<li>Dashed grey — <strong>MEDIUM</strong> confidence FK (prefixed PK
-match, e.g. <code>START_SITTING_DUR_ID</code> →
-<code>SITTING_DUR_ID</code>)</li>
+<li>Solid blue — <strong>HIGH</strong> confidence FK (exact PK match)</li>
+<li>Dashed grey — <strong>MEDIUM</strong> confidence FK (prefixed PK match, e.g. <code>START_SITTING_DUR_ID</code> → <code>SITTING_DUR_ID</code>)</li>
 </ul></li>
 </ul>
 </div></details><details class="section" id="notable-findings"><summary><span class="section-title">Notable findings</span></summary><div class="section-body">
 <ul>
-<li><strong><code>TBL_JUDGES</code> is the central hub</strong> —
-referenced by ~16 tables via <code>JUDGE_CODE</code>. Sits in the
-<em>Judges Profile</em> cluster.</li>
-<li><strong>No explicit FK constraints anywhere</strong> — typical for
-APEX-managed schemas where referential integrity is enforced at the
-application layer. This means the database itself permits orphaned
-rows.</li>
-<li><strong>Composite link tables</strong> in <em>Reference Data</em>
-(<code>TBL_JI_LOC_JT_*_LINKS</code>) connect Location × Judge Type to
-Work / Sitting Duration controlled lists.</li>
-<li><strong>6 tables ship without explicit PK</strong> in the DDL but do
-have unique <code>*_PK</code> indexes that effectively serve as PKs:
-<code>TBL_JUDGES</code>, <code>TBL_JUDGE_TYPES</code>,
-<code>TBL_JUDGE_CIRCUITS</code>, <code>TBL_JUDGE_COURTS_LINK</code>,
-plus two that have <em>neither</em> PK nor <code>*_PK</code> index:
-<code>TBL_JUDGE_TYPE_PROMOTION</code> and
-<code>TBL_JUDGES_MONTHLY_STATS</code>. The latter two are flagged in the
-diagrams as "(no PK declared)".</li>
-<li><strong>External-reference columns</strong> account for 58 inferred
-relationships pointing to tables not in this PDF: locations
-(<code>LOC_ID</code>, <code>LOC_TYPE_ID</code>, <code>BASE_LOC_*</code>,
-<code>HEARING_LOC_*</code>), regions (<code>REGION_ID</code>),
-courtrooms (<code>CUT_*</code>), courts (<code>COURT_ID</code>), and
-several status/lookup columns. See the companion markdown for the full
-list.</li>
+<li><strong><code>TBL_JUDGES</code> is the central hub</strong> — referenced by ~16 tables via <code>JUDGE_CODE</code>. Sits in the <em>Judges Profile</em> cluster.</li>
+<li><strong>No explicit FK constraints anywhere</strong> — typical for APEX-managed schemas where referential integrity is enforced at the application layer. This means the database itself permits orphaned rows.</li>
+<li><strong>Composite link tables</strong> in <em>Reference Data</em> (<code>TBL_JI_LOC_JT_*_LINKS</code>) connect Location × Judge Type to Work / Sitting Duration controlled lists.</li>
+<li><strong>6 tables ship without explicit PK</strong> in the DDL but do have unique <code>*_PK</code> indexes that effectively serve as PKs: <code>TBL_JUDGES</code>, <code>TBL_JUDGE_TYPES</code>, <code>TBL_JUDGE_CIRCUITS</code>, <code>TBL_JUDGE_COURTS_LINK</code>, plus two that have <em>neither</em> PK nor <code>*_PK</code> index: <code>TBL_JUDGE_TYPE_PROMOTION</code> and <code>TBL_JUDGES_MONTHLY_STATS</code>. The latter two are flagged in the diagrams as "(no PK declared)".</li>
+<li><strong>External-reference columns</strong> account for 58 inferred relationships pointing to tables not in this PDF: locations (<code>LOC_ID</code>, <code>LOC_TYPE_ID</code>, <code>BASE_LOC_*</code>, <code>HEARING_LOC_*</code>), regions (<code>REGION_ID</code>), courtrooms (<code>CUT_*</code>), courts (<code>COURT_ID</code>), and several status/lookup columns. See the companion markdown for the full list.</li>
 </ul>
 </div></details><details class="section" id="fk-inference-summary"><summary><span class="section-title">FK inference summary</span></summary><div class="section-body">
 <table>
@@ -448,8 +370,7 @@ list.</li>
 </div></details>
 <p class="source-note">Source: <code>docs/architecture/asis/database/README.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#scope">Scope</a></li><li><a href="#files-in-this-folder">Files in this folder</a></li><li class="h3"><a href="#diagrams">Diagrams</a></li><li class="h3"><a href="#companion-reference">Companion reference</a></li><li class="h3"><a href="#source">Source</a></li><li class="h3"><a href="#build-pipeline">Build pipeline</a></li><li><a href="#how-to-read-the-diagrams">How to read the diagrams</a></li><li class="h3"><a href="#overview-ji_schema_overviewpng">Overview
-(ji_schema_overview.png)</a></li><li class="h3"><a href="#detail-diagrams-per-area">Detail diagrams (per area)</a></li><li><a href="#notable-findings">Notable findings</a></li><li><a href="#fk-inference-summary">FK inference summary</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#scope">Scope</a></li><li><a href="#files-in-this-folder">Files in this folder</a></li><li class="h3"><a href="#diagrams">Diagrams</a></li><li class="h3"><a href="#companion-reference">Companion reference</a></li><li class="h3"><a href="#source">Source</a></li><li class="h3"><a href="#build-pipeline">Build pipeline</a></li><li><a href="#how-to-read-the-diagrams">How to read the diagrams</a></li><li class="h3"><a href="#overview-ji_schema_overviewpng">Overview (ji_schema_overview.png)</a></li><li class="h3"><a href="#detail-diagrams-per-area">Detail diagrams (per area)</a></li><li><a href="#notable-findings">Notable findings</a></li><li><a href="#fk-inference-summary">FK inference summary</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

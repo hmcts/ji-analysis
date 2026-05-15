@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Epic 0.2: Admin manages reference data with named-owner migration sign-off — NJI Documentation</title>
+<title>Epic 0.2: Reference data is SQL-loaded and served read-only — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,388 +178,88 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html" class="current">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html" class="current">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1
-id="epic-02-admin-manages-reference-data-with-named-owner-migration-sign-off">Epic
-0.2: Admin manages reference data with named-owner migration
-sign-off</h1>
-<p><strong>User outcome:</strong> An admin user signs into
-<code>nji-admin-ui</code>, opens Reference Data maintenance, can view
-and edit Regions, Offices, judicial vocabularies (12 controlled lists),
-and calendar / financial-year boundaries. Phase 0 ETL has loaded initial
-data from APEX; named owners review the migration reconciliation report
-and sign off before downstream phases consume the data.</p>
+<h1 id="epic-02-reference-data-is-sql-loaded-and-served-read-only">Epic 0.2: Reference data is SQL-loaded and served read-only</h1>
+<p><strong>User outcome:</strong> Reference Data (Regions, Offices, judicial vocabularies, calendar / financial-year boundaries) is loaded into NJI via a direct-SQL ETL with named-owner sign-off, and is queryable read-only by downstream NJI services via a versioned REST API. Named owners approve the migration through versioned git commits — <strong>no admin UI is in scope for MVP</strong> (per the 2026-05-15 scope decision). Ongoing post-load updates happen operationally via direct SQL; a maintenance UI is on the post-MVP roadmap.</p>
 <p><strong>Vertical slice:</strong></p>
 <ul>
-<li><code>nji-reference-data</code> backend service scaffolded (per
-AR2–AR4)</li>
-<li>15 Reference Data tables (<code>regions</code>,
-<code>offices</code>, <code>calendar_periods</code> + 12 vocabulary
-tables) with service-owned Flyway migrations (per AR18, AR20)</li>
-<li>Per-service <code>SELECT</code> grants pattern established for
-direct-SQL reads (per FR7 / Principle 2)</li>
-<li>Reference Data maintenance API exposing versioned writes (FR6) with
-admin-gated <code>POST/PUT</code></li>
-<li><code>nji-admin-ui</code> repo scaffolded (React + TypeScript +
-Vite; same stack as <code>nji-ui</code>, separate Helm + Static Web App
-+ distinct hostname per AR42–AR45b)</li>
-<li>Admin UI Reference Data module
-(<code>modules/reference-data/</code>) with list/edit/create flows +
-named-owner sign-off workflow</li>
-<li>Reference Data ETL stream at
-<code>nji-architecture/migration/reference-data/</code> (per AR46–AR48):
-reads APEX dumps, transforms to NJI shape, loads via Reference Data
-API</li>
-<li>Per-run reconciliation report under <code>migration/reports/</code>
-(Risk #13 mitigation)</li>
-<li>First end-to-end exercise of API-as-Product standards: URL
-versioning (<code>/v1/reference-data/...</code>), OpenAPI 3.x spec
-published as Maven artefact, RFC 9457 problem-details errors, RFC 9745
-<code>Deprecation</code> + RFC 8594 <code>Sunset</code> deprecation
-signalling</li>
-<li>First Postman collection for Phase 0 published under
-<code>postman/nji-reference-data-phase0.postman_collection.json</code>
-(NFR42 first instance)</li>
+<li><code>nji-reference-data</code> backend service scaffolded (per AR2–AR4)</li>
+<li>15 Reference Data tables (<code>regions</code>, <code>offices</code>, <code>calendar_periods</code> + 12 vocabulary tables) with service-owned Flyway migrations (per AR18, AR20)</li>
+<li>Per-service <code>SELECT</code> grants pattern established for direct-SQL reads (per FR7 / Principle 2)</li>
+<li>Reference Data <strong>read-only</strong> REST API: <code>GET</code> endpoints for consumption by <code>nji-ui</code>, downstream services, and OpenAPI clients. <strong>No <code>POST</code>/<code>PUT</code>/<code>DELETE</code> endpoints</strong> at Phase 0 — writes happen only via Flyway/SQL (the ETL load + future operational changes by DBA)</li>
+<li>Reference Data ETL stream at <code>nji-architecture/migration/reference-data/</code> (per AR46–AR48): reads APEX dumps, transforms to NJI shape, <strong>loads via direct SQL INSERT statements</strong> (not via API — API is read-only). The ETL is NOT a Flyway migration; it's a programme-level data-transform script per FR57 framing.</li>
+<li>Per-run reconciliation report under <code>migration/reports/reference-data/{run-date}.md</code> (Risk #13 mitigation)</li>
+<li>Named-owner sign-off via versioned commits to <code>migration/reports/reference-data/signoffs/{run-date}-{owner-handle}.md</code> with <code>CODEOWNERS</code>-enforced two-reviewer policy</li>
+<li>First end-to-end exercise of API-as-Product <strong>read-side</strong> standards: URL versioning (<code>/v1/reference-data/...</code>), OpenAPI 3.x spec published as Maven artefact, RFC 9457 problem-details errors, RFC 9745 <code>Deprecation</code> + RFC 8594 <code>Sunset</code> deprecation signalling</li>
+<li>First Postman collection for Phase 0 published under <code>postman/nji-reference-data-phase0.postman_collection.json</code> (NFR42 first instance)</li>
 </ul>
-<p><strong>FRs covered:</strong> FR4 (admin-foundation portion), FR6,
-FR7, FR57 (Reference Data portion), FR59, FR60</p>
-<p><strong>Key NFRs:</strong> NFR14 (no forbidden data — vocabularies
-contain no case/bank data by construction), NFR17–NFR19 (admin UI WCAG),
-NFR40 (admin UI independently deployable from business UI), NFR42
-(Postman collection)</p>
+<p><strong>FRs covered:</strong> FR7 (direct-SQL read pattern + SELECT grants), FR57 (Reference Data portion of Phase 0 ETL, now via SQL), FR59 (versioned read API contract), FR60 (structured logs first-exercised here)</p>
+<p><strong>FRs partially covered / deferred:</strong></p>
+<ul>
+<li><strong>FR6</strong> — the read API surface and ETL load are in Phase 0; the <strong>RSU maintenance UI surface is post-MVP</strong> (was Story 0.2.4 in the prior plan, removed)</li>
+<li><strong>FR4</strong> — the auth tables exist and are loaded; the <strong>admin UI for updating role / Region/Area assignments is post-MVP</strong> (was Epic 0.3 stories in the prior plan, removed)</li>
+</ul>
+<p><strong>Key NFRs:</strong> NFR14 (no forbidden data — vocabularies contain no case/bank data by construction), NFR40 (service independently deployable), NFR42 (Postman collection). <strong>NFR17–NFR19 (accessibility) do not apply in Phase 0</strong> because no UI surface for this domain is delivered; they re-engage when the maintenance UI ships post-MVP.</p>
+<p><strong>Out of scope for Phase 0 (deferred post-MVP):</strong></p>
+<ul>
+<li>Admin-gated <code>POST/PUT/DELETE</code> endpoints on Reference Data API</li>
+<li><code>nji-admin-ui</code> Reference Data maintenance module with named-owner sign-off workflow</li>
+<li>Sign-off UI surface (sign-off in MVP is via git commits only)</li>
+</ul>
 <hr />
-<details class="section" id="story-021-scaffold-nji-reference-data-service--15-reference-data-tables-via-flyway"><summary><span class="section-title">Story
-0.2.1: Scaffold <code>nji-reference-data</code> service + 15 Reference
-Data tables via Flyway</span></summary><div class="section-body">
-<p>As a <strong>platform engineer</strong>, I want to scaffold
-<code>nji-reference-data</code> following the established pattern from
-Story 0.1.1 and create the 15 Reference Data tables via service-owned
-Flyway migrations, So that <strong>all other NJI services can read
-Reference Data via direct SQL on SELECT grants</strong> (per FR7
-revised, AR22) without each service having to own a copy of the
-schema.</p>
+<details class="section" id="story-021-scaffold-nji-reference-data-service--15-reference-data-tables-via-flyway"><summary><span class="section-title">Story 0.2.1: Scaffold <code>nji-reference-data</code> service + 15 Reference Data tables via Flyway</span></summary><div class="section-body">
+<p>As a <strong>platform engineer</strong>, I want to scaffold <code>nji-reference-data</code> following the established pattern from Story 0.1.1 and create the 15 Reference Data tables via service-owned Flyway migrations, So that <strong>all other NJI services can read Reference Data via direct SQL on SELECT grants</strong> (per FR7 revised, AR22) without each service having to own a copy of the schema.</p>
 <p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> the engineer runs
-<code>nji-scaffold.sh nji-reference-data</code>, <strong>When</strong>
-the scaffold completes, <strong>Then</strong> the new repo follows all
-conventions from Story 0.1.1 (Spring Boot 4, Helm chart, GitHub Actions,
-Actuator, structured logs, OpenAPI tooling, Spectral, ArchUnit,
-Spotless, Checkstyle, Pact, Postman), <strong>And</strong> Group ID is
-<code>uk.gov.hmcts.nji</code>, artefact is
-<code>nji-reference-data</code>, package is
-<code>uk.gov.hmcts.nji.referencedata</code>, default port is 8082<br/>
-<strong>And</strong> initial commit is <em>"Scaffold NJI reference-data
-from HMCTS starter"</em> (per AR4).</p>
-<p><strong>Given</strong> the engineer adds Flyway migration
-<code>V1__init_reference_data_schema.sql</code>, <strong>When</strong>
-the migration runs, <strong>Then</strong> 15 Reference Data tables exist
-with schemas per <code>architecture/data-tables.md</code>:
-<code>regions</code>, <code>offices</code>,
-<code>calendar_periods</code>, plus 12 vocabulary tables covering judge
-types, work types, ticket types, session types, booking types, absence
-types, fee entitlement types, location types, court types,
-jurisdictional categories, judicial vocabularies, and financial-year
-boundaries, <strong>And</strong> <code>nji_reference_data</code> DB role
-owns the tables (per AR19), <strong>And</strong> ArchUnit fitness
-function in CI verifies no other service writes to these tables.</p>
-<p><strong>Given</strong> the migration includes SELECT grants for
-downstream service DB roles, <strong>When</strong> Flyway applies the
-grants, <strong>Then</strong> every NJI service DB role
-(<code>nji_authorisation</code>, <code>nji_notification</code>, and
-placeholders for future domain service roles) has <code>SELECT</code> on
-all 15 Reference Data tables (per FR7 revised, AR22)<br/>
-<strong>And</strong> the grants are tested by a CI integration test
-asserting each placeholder role can SELECT.</p>
-<p><strong>Given</strong> the service is deployed to dev AKS<br/>
-<strong>When</strong> <code>/actuator/health</code> is queried<br/>
-<strong>Then</strong> the response is <code>200 OK</code><br/>
-<strong>And</strong> Application Insights receives the service's
-structured logs (per NFR27), <strong>And</strong>
-<code>/actuator/info</code> returns Git metadata (per NFR28).</p>
-<p><strong>References:</strong> FR7, FR8 (re-uses
-<code>configuration_values</code>), FR59, FR60; NFR25–NFR28, NFR31,
-NFR40; AR2–AR22.</p>
+<p><strong>Given</strong> the engineer has manually pre-created the private GitHub repo <code>nji-reference-data</code> with branch protection on <code>main</code> via the GitHub web UI (per <code>nji-architecture/runbooks/github-setup.md</code>; the <code>gh</code> CLI is <strong>not</strong> available — see Story 0.1.1 for the canonical manual-setup pattern)<br/><strong>And</strong> runs <code>nji-scaffold.sh nji-reference-data</code><br/><strong>When</strong> the scaffold completes<br/><strong>Then</strong> the new repo follows all conventions from Story 0.1.1 (Spring Boot 4, Helm chart, GitHub Actions, Actuator, structured logs, OpenAPI tooling, Spectral, ArchUnit, Spotless, Checkstyle, Pact, Postman)<br/><strong>And</strong> Group ID is <code>uk.gov.hmcts.nji</code>, artefact is <code>nji-reference-data</code>, package is <code>uk.gov.hmcts.nji.referencedata</code>, default port is 8082<br/><strong>And</strong> initial commit is <em>"Scaffold NJI reference-data from HMCTS starter"</em> (per AR4).</p>
+<p><strong>Given</strong> the engineer adds Flyway migration <code>V1__init_reference_data_schema.sql</code><br/><strong>When</strong> the migration runs<br/><strong>Then</strong> 15 Reference Data tables exist with schemas per <code>architecture/data-tables.md</code>: <code>regions</code>, <code>offices</code>, <code>calendar_periods</code>, plus 12 vocabulary tables covering judge types, work types, ticket types, session types, booking types, absence types, fee entitlement types, location types, court types, jurisdictional categories, judicial vocabularies, and financial-year boundaries<br/><strong>And</strong> <code>nji_reference_data</code> DB role owns the tables (per AR19)<br/><strong>And</strong> ArchUnit fitness function in CI verifies no other service has WRITE permission on these tables.</p>
+<p><strong>Given</strong> the migration includes SELECT grants for downstream service DB roles<br/><strong>When</strong> Flyway applies the grants<br/><strong>Then</strong> every NJI service DB role (<code>nji_authorisation</code>, <code>nji_notification</code>, and placeholders for future domain service roles) has <code>SELECT</code> on all 15 Reference Data tables (per FR7 revised, AR22)<br/><strong>And</strong> the grants are tested by a CI integration test asserting each placeholder role can SELECT<br/><strong>And</strong> no role other than <code>nji_reference_data</code> itself has INSERT/UPDATE/DELETE on these tables.</p>
+<p><strong>Given</strong> the service is deployed to dev AKS<br/><strong>When</strong> <code>/actuator/health</code> is queried<br/><strong>Then</strong> the response is <code>200 OK</code><br/><strong>And</strong> Application Insights receives the service's structured logs (per NFR27)<br/><strong>And</strong> <code>/actuator/info</code> returns Git metadata (per NFR28).</p>
+<p><strong>References:</strong> FR7, FR8 (re-uses <code>configuration_values</code>), FR59, FR60; NFR25–NFR28, NFR31, NFR40; AR2–AR22.</p>
 <hr />
-</div></details><details class="section" id="story-022-reference-data-api-exposes-admin-gated-crud-with-versioning-openapi-rfc-9457-errors-deprecation-signalling"><summary><span class="section-title">Story
-0.2.2: Reference Data API exposes admin-gated CRUD with versioning,
-OpenAPI, RFC 9457 errors, deprecation signalling</span></summary><div class="section-body">
-<p>As an <strong>API consumer</strong> (admin UI now; downstream
-services in Phase 1+), I want a versioned Reference Data API with
-admin-gated writes and public reads, full OpenAPI spec, RFC 9457 error
-envelopes, and APIM-injected deprecation headers, So that
-<strong>Reference Data is the single writer for the controlled
-lists</strong> (per revised FR7) and the API-as-Product standards are
-validated on Reference Data before any domain service is built (per PRD
-Key Characteristic 4 / D1).</p>
+</div></details><details class="section" id="story-022-reference-data-read-only-rest-api-with-versioning-openapi-rfc-9457-errors"><summary><span class="section-title">Story 0.2.2: Reference Data read-only REST API with versioning, OpenAPI, RFC 9457 errors</span></summary><div class="section-body">
+<p>As an <strong>API consumer</strong> (<code>nji-ui</code> now; downstream services in Phase 1+), I want a versioned <strong>read-only</strong> Reference Data API with full OpenAPI spec, RFC 9457 error envelopes, and APIM-injected deprecation headers, So that <strong>Phase 1+ services can query controlled lists at runtime</strong> and the API-as-Product read-side standards are validated on Reference Data before any domain service is built (per PRD Key Characteristic 4 / D1). Write operations are explicitly out of scope at Phase 0 — Reference Data updates happen only via Flyway migrations (DDL) and direct SQL during ETL load and ongoing operational maintenance.</p>
 <p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> <code>nji-reference-data</code> is scaffolded
-per Story 0.2.1, <strong>When</strong> the engineer implements read
-endpoints, <strong>Then</strong>
-<code>GET /v1/reference-data/regions</code>, <code>/offices</code>,
-<code>/judicial-vocabularies</code>, <code>/calendar</code> return
-<code>200 OK</code> with structured JSON (per FR6 read surface, AR38)<br/>
-<strong>And</strong> read endpoints are protected by
-<code>JWTFilter</code> (any authenticated principal can read; per
-NFR13), <strong>And</strong> OpenAPI spec generated by springdoc lists
-all read endpoints with full request/response schemas.</p>
-<p><strong>Given</strong> the engineer implements write endpoints<br/>
-<strong>When</strong> an authenticated user with <code>RSU</code> or
-<code>system-admin</code> role calls
-<code>POST /v1/reference-data/regions</code> with a valid body<br/>
-<strong>Then</strong> the response is <code>201 Created</code> with the
-created resource and a <code>Location</code> header (per FR6 write
-surface), <strong>And</strong> the change enters a "pending" state
-requiring named-owner sign-off (per FR6 named-owner workflow)<br/>
-<strong>And</strong> an audit row is written recording who/when/what
-changed, <strong>And</strong> non-admin authenticated users get
-<code>403 Forbidden</code> with RFC 9457 problem-details (per
-NFR13).</p>
-<p><strong>Given</strong> the engineer implements validation<br/>
-<strong>When</strong> a malformed request reaches a write endpoint<br/>
-<strong>Then</strong> the response is <code>400 Bad Request</code> with
-an RFC 9457 problem-details body containing <code>type</code>,
-<code>title</code>, <code>status</code>, <code>detail</code>,
-<code>instance</code>, and a per-field errors extension (per AR37,
-NFR39), <strong>And</strong> validation rules align with table
-constraints (e.g. uniqueness on region code, valid date ranges on
-calendar periods).</p>
-<p><strong>Given</strong> the OpenAPI spec is generated and Spectral
-lint runs in CI, <strong>When</strong> the spec is built<br/>
-<strong>Then</strong> the spec passes Spectral lint (per AR17)<br/>
-<strong>And</strong> the spec is published to internal Maven as
-<code>uk.gov.hmcts.nji:api-nji-reference-data:1.0.0</code> (per AR8)<br/>
-<strong>And</strong> Swagger UI is exposed for developer browsing
-(ops-restricted at APIM).</p>
-<p><strong>Given</strong> APIM is configured for
-<code>nji-reference-data</code> per AR27 + AR39, <strong>When</strong> a
-response leaves APIM to the client, <strong>Then</strong> rate-limit
-headers are present per APIM policy, <strong>And</strong>
-<code>Deprecation</code> (RFC 9745) and <code>Sunset</code> (RFC 8594)
-headers are injected on endpoints flagged in the OpenAPI spec as
-<code>deprecated: true</code> (none at Phase 0; mechanism verified by a
-test endpoint), <strong>And</strong> <code>/actuator/*</code> paths are
-blocked at APIM (per AR33).</p>
-<p><strong>Given</strong> the engineer publishes the first Phase 0
-Postman collection, <strong>When</strong> the collection runs in CI<br/>
-<strong>Then</strong>
-<code>postman/nji-reference-data-phase0.postman_collection.json</code>
-exercises every endpoint in the API, <strong>And</strong> the collection
-covers happy path + 401 + 403 + 400 + 404 cases (per NFR42)<br/>
-<strong>And</strong> the collection is versioned alongside the
-service.</p>
-<p><strong>References:</strong> FR4 (admin-gated foundation), FR6, FR7,
-FR59, FR60; NFR12–NFR16, NFR39, NFR42; AR8, AR17, AR21, AR27, AR33,
-AR34, AR37, AR38, AR39, AR41.</p>
+<p><strong>Given</strong> <code>nji-reference-data</code> is scaffolded per Story 0.2.1<br/><strong>When</strong> the engineer implements read endpoints<br/><strong>Then</strong> <code>GET /v1/reference-data/regions</code>, <code>/offices</code>, <code>/judicial-vocabularies</code>, <code>/calendar</code> return <code>200 OK</code> with structured JSON<br/><strong>And</strong> read endpoints are protected by <code>JWTFilter</code> (any authenticated principal can read; per NFR13)<br/><strong>And</strong> OpenAPI spec generated by springdoc lists all read endpoints with full request/response schemas<br/><strong>And</strong> <strong>no write endpoints</strong> (<code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>) are implemented at Phase 0 — controller layer rejects with <code>405 Method Not Allowed</code> and an RFC 9457 problem-details body explaining "Reference Data writes are operationally managed; admin UI deferred post-MVP".</p>
+<p><strong>Given</strong> the engineer implements pagination + filtering<br/><strong>When</strong> a consumer queries <code>GET /v1/reference-data/offices?region=northern&amp;page=2&amp;size=50</code><br/><strong>Then</strong> the response includes paginated data with a standard envelope <code>{items, page, size, totalElements, totalPages}</code><br/><strong>And</strong> invalid query parameters return <code>400 Bad Request</code> with RFC 9457 problem-details (per AR37, NFR39).</p>
+<p><strong>Given</strong> the engineer implements validation<br/><strong>When</strong> a malformed query reaches a read endpoint (e.g. invalid date range, unknown region code)<br/><strong>Then</strong> the response is <code>400 Bad Request</code> with an RFC 9457 problem-details body containing <code>type</code>, <code>title</code>, <code>status</code>, <code>detail</code>, <code>instance</code><br/><strong>And</strong> the error is logged via structured JSON with correlation ID (per AR32).</p>
+<p><strong>Given</strong> the OpenAPI spec is generated and Spectral lint runs in CI<br/><strong>When</strong> the spec is built<br/><strong>Then</strong> the spec passes Spectral lint (per AR17)<br/><strong>And</strong> the spec is published to internal Maven as <code>uk.gov.hmcts.nji:api-nji-reference-data:1.0.0</code> (per AR8)<br/><strong>And</strong> Swagger UI is exposed for developer browsing (ops-restricted at APIM).</p>
+<p><strong>Given</strong> APIM is configured for <code>nji-reference-data</code> per AR27 + AR39<br/><strong>When</strong> a response leaves APIM to the client<br/><strong>Then</strong> rate-limit headers are present per APIM policy<br/><strong>And</strong> <code>Deprecation</code> (RFC 9745) and <code>Sunset</code> (RFC 8594) headers are injected on endpoints flagged in the OpenAPI spec as <code>deprecated: true</code> (none at Phase 0; mechanism verified by a test endpoint)<br/><strong>And</strong> <code>/actuator/*</code> paths are blocked at APIM (per AR33).</p>
+<p><strong>Given</strong> the engineer publishes the first Phase 0 Postman collection<br/><strong>When</strong> the collection runs in CI<br/><strong>Then</strong> <code>postman/nji-reference-data-phase0.postman_collection.json</code> exercises every read endpoint in the API<br/><strong>And</strong> the collection covers happy path + 400 (invalid query) + 401 (unauthenticated) + 405 (write attempt) (per NFR42)<br/><strong>And</strong> the collection is versioned alongside the service.</p>
+<p><strong>References:</strong> FR6 (read-side surface only — UI maintenance is post-MVP), FR7, FR59, FR60; NFR12, NFR13, NFR14, NFR39, NFR42; AR8, AR17, AR27, AR33, AR34, AR37, AR38, AR39, AR41.</p>
+<p><strong>Explicitly NOT in scope (deferred post-MVP):</strong></p>
+<ul>
+<li>Admin write endpoints (<code>POST/PUT/PATCH/DELETE</code>)</li>
+<li>Named-owner sign-off API workflow (UI deferred; sign-off in MVP is via git commits on the ETL reconciliation reports)</li>
+<li>Pending-change queue + approval API</li>
+</ul>
 <hr />
-</div></details><details class="section" id="story-023-scaffold-nji-admin-ui-repo-with-admin-distinct-accent-and-independent-deployment"><summary><span class="section-title">Story
-0.2.3: Scaffold <code>nji-admin-ui</code> repo with admin-distinct
-accent and independent deployment</span></summary><div class="section-body">
-<p>As a <strong>front-end engineer</strong>, I want to scaffold
-<code>nji-admin-ui</code> following the <code>nji-ui</code> pattern from
-Story 0.1.4 but as a separate repo with distinct visual treatment and
-independent deployment, So that <strong>admin workflows are
-unambiguously separated from business-user workflows</strong> (per AR42,
-AR45b) — different hostname, different review team, different release
-cadence, no risk of admin screens leaking into business navigation.</p>
+</div></details><details class="section" id="story-023-phase-0-reference-data-etl--apex-dumps-via-direct-sql--reconciliation-report--owner-sign-off"><summary><span class="section-title">Story 0.2.3: Phase 0 Reference Data ETL — APEX dumps via direct SQL + reconciliation report + owner sign-off</span></summary><div class="section-body">
+<p>As a <strong>Reference Data named owner</strong> (RSU lead or judicial-vocabulary owner), I want the Phase 0 ETL to load Reference Data from APEX directly via SQL INSERT statements and produce a per-run reconciliation report for me to sign off on via a versioned git commit, So that <strong>the migration's correctness is auditably gated by domain owners</strong> (per FR57, D3, Risk #13), re-runs are idempotent for incremental waves, and the workflow doesn't depend on an admin UI (which is now post-MVP).</p>
 <p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> the engineer initialises the
-<code>nji-admin-ui</code> repo from the same Vite React+TypeScript
-template as <code>nji-ui</code>, <strong>When</strong> scaffolding
-completes, <strong>Then</strong> the repo has the same baseline as Story
-0.1.4 (React + TypeScript + Vite + Vitest + Playwright; GOV.UK Design
-System base; TanStack Query; OpenAPI client generation tooling per
-AR43), <strong>And</strong> the repo is private under HMCTS org with
-branch protection on <code>main</code>, <strong>And</strong>
-<code>CODEOWNERS</code> defines a distinct admin-focused review team
-(per AR42 rationale 3).</p>
-<p><strong>Given</strong> the engineer applies the visual
-differentiation, <strong>When</strong> the foundation renders<br/>
-<strong>Then</strong> the header and primary navigation use a distinct
-accent colour (configurable token; recommendation: HMCTS amber or
-charcoal) so the admin surface is visually unambiguous (per AR42)<br/>
-<strong>And</strong> a header banner reads <em>"NJI Administration"</em>
-with the user's email and sign-out, <strong>And</strong> the
-<code>&lt;PageLayout&gt;</code> is duplicated (not shared) with
-<code>nji-ui</code> per the polyrepo discipline (per AR44).</p>
-<p><strong>Given</strong> the engineer implements the auth wrapper<br/>
-<strong>When</strong> wrapper is complete, <strong>Then</strong>
-<code>HmctsIdpProvider</code>, <code>ProtectedRoute</code>,
-<code>useAuth</code>, HTTP client with RFC 9457 handling are duplicated
-from <code>nji-ui</code> (not imported as a shared package — per AR44)<br/>
-<strong>And</strong> <code>ProtectedRoute</code> checks the
-authenticated principal's roles via <code>useAuth().user.roles</code>
-and rejects non-admin users with a <code>403</code> view (per AR44).</p>
-<p><strong>Given</strong> the engineer configures independent
-deployment, <strong>When</strong> the PR merges to <code>main</code><br/>
-<strong>Then</strong> the bundle deploys to a separate Azure Static Web
-App from <code>nji-ui</code> (per AR45b), <strong>And</strong> the dev
-environment uses a distinct hostname (configurable in production to
-<code>admin.nji.hmcts.gov.uk</code>), <strong>And</strong> the deploy
-pipeline can release <code>nji-admin-ui</code> without touching
-<code>nji-ui</code> (verified by deploying a no-op change to
-<code>nji-admin-ui</code> while watching the <code>nji-ui</code>
-deployment timestamp remain unchanged).</p>
-<p><strong>Given</strong> accessibility CI is configured<br/>
-<strong>When</strong> axe-core checks run in <code>ci.yml</code><br/>
-<strong>Then</strong> the build fails on any new WCAG 2.2 AA violation<br/>
-<strong>And</strong> keyboard navigation through the admin chrome is
-verified by a Playwright smoke test.</p>
-<p><strong>Given</strong> the first Admin UI E2E suite is written<br/>
-<strong>When</strong> <code>tests/e2e/admin-foundation.spec.ts</code>
-runs in CI, <strong>Then</strong> it covers: unauthenticated redirect →
-sign-in → non-admin user blocked with <code>403</code> view → admin user
-lands on admin Home → sign-out flow.</p>
-<p><strong>References:</strong> FR4 (admin foundation), FR56 (admin
-stack); NFR17, NFR18, NFR19, NFR31, NFR40; AR42–AR45b.</p>
-<hr />
-</div></details><details class="section" id="story-024-admin-ui-reference-data-maintenance-module--list-view-edit-create-sign-off"><summary><span class="section-title">Story
-0.2.4: Admin UI Reference Data maintenance module — list, view, edit,
-create, sign-off</span></summary><div class="section-body">
-<p>As a <strong>named Reference Data owner</strong> (RSU lead or
-judicial-vocabulary owner), I want to list, view, edit, and create
-Reference Data entries through <code>nji-admin-ui</code>, with a
-named-owner sign-off workflow for changes, So that <strong>Reference
-Data evolves under explicit owner accountability</strong> (per FR6) —
-critical for Risk #13 (Reference Data + Users/Roles migration
-correctness).</p>
-<p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> an admin signs into <code>nji-admin-ui</code>
-(Story 0.2.3), <strong>When</strong> they open
-<code>/reference-data</code>, <strong>Then</strong> they see a list of
-Reference Data categories: Regions, Offices, Calendar Periods, and 12
-judicial vocabularies, <strong>And</strong> selecting a category renders
-a paginated list with search and filter inputs, <strong>And</strong> the
-auto-generated TypeScript client from <code>nji-reference-data</code>
-OpenAPI handles the HTTP calls (per AR43).</p>
-<p><strong>Given</strong> the admin opens an entry<br/>
-<strong>When</strong> they edit a field and submit<br/>
-<strong>Then</strong> the change enters a "pending sign-off" state (per
-FR6 workflow + Story 0.2.2 backend), <strong>And</strong> the UI shows a
-notification <em>"Change submitted — awaiting named-owner
-sign-off"</em>, <strong>And</strong> the entry appears in the admin's
-"Pending Changes" view.</p>
-<p><strong>Given</strong> a named owner views the "Pending Changes"
-queue, <strong>When</strong> they review a pending change and click
-"Approve", <strong>Then</strong> the API marks the change as approved,
-the audit log records who/when/why, <strong>And</strong> the change
-becomes live in Reference Data, <strong>And</strong> the admin who
-submitted the change receives a UI confirmation, <strong>And</strong> a
-named owner can also "Reject" with a mandatory reason field.</p>
-<p><strong>Given</strong> validation errors come back from the API<br/>
-<strong>When</strong> the form receives an RFC 9457 problem-details
-response with field-level errors, <strong>Then</strong> the UI renders
-the field-level error messages inline, <strong>And</strong> the
-title/detail render in a page-level alert, <strong>And</strong> the user
-can fix and resubmit.</p>
-<p><strong>Given</strong> accessibility checks run on every page in the
-module, <strong>When</strong> axe-core scans the list, edit, and
-pending-changes views, <strong>Then</strong> no new WCAG 2.2 AA
-violations, <strong>And</strong> keyboard navigation works through the
-table, form, and modal interactions, <strong>And</strong> ARIA labels
-are correct on tabbed content (per NFR18).</p>
-<p><strong>Given</strong> Playwright E2E coverage for the module<br/>
-<strong>When</strong> <code>tests/e2e/reference-data.spec.ts</code>
-runs, <strong>Then</strong> it covers: list → search → edit → submit →
-pending state → named-owner approve → live state, <strong>And</strong>
-also covers rejection path with mandatory reason, <strong>And</strong>
-also covers validation-error path.</p>
-<p><strong>References:</strong> FR4 (admin role enforcement), FR6
-(maintenance + sign-off), FR56 (admin stack); NFR12, NFR13, NFR14,
-NFR17, NFR18, NFR19; AR42–AR45.</p>
-<hr />
-</div></details><details class="section" id="story-025-phase-0-reference-data-etl--apex-dumps-to-nji-via-api--reconciliation-report--owner-sign-off"><summary><span class="section-title">Story
-0.2.5: Phase 0 Reference Data ETL — APEX dumps to NJI via API +
-reconciliation report + owner sign-off</span></summary><div class="section-body">
-<p>As a <strong>Reference Data named owner</strong>, I want the Phase 0
-ETL to load Reference Data from APEX into NJI via the Reference Data API
-(not direct DB writes) and produce a per-run reconciliation report for
-me to sign off on, So that <strong>the migration's correctness is
-auditably gated by domain owners</strong> (per FR57, D3, Risk #13) and
-re-runs are idempotent for incremental waves.</p>
-<p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> the engineer creates the ETL at
-<code>nji-architecture/migration/reference-data/</code><br/>
-<strong>When</strong> the ETL is implemented, <strong>Then</strong> it
-reads APEX dumps (CSV files extracted from APEX, format defined per the
-migration spec at
-<code>nji-architecture/migration/reference-data/spec.md</code>)<br/>
-<strong>And</strong> it transforms rows into NJI shapes per the mapping
-tables defined in <code>architecture/data-tables.md</code><br/>
-<strong>And</strong> it loads data via
-<code>POST /v1/reference-data/...</code> admin endpoints with a
-service-token (per AR46, AR36), <strong>And</strong> it is NOT a Flyway
-migration (NJI Flyway owns NJI DDL only; APEX-to-NJI data transform is a
-separate programme-level activity per FR57 framing).</p>
-<p><strong>Given</strong> the ETL completes a run, <strong>When</strong>
-the reconciliation report is generated, <strong>Then</strong> the report
-at
-<code>nji-architecture/migration/reports/reference-data/{run-date}.md</code>
-shows: • source-row counts per APEX dump • target-row counts per NJI
-table • per-table diff (added / updated / unchanged / skipped) •
-anomalies (e.g. unmapped values, validation failures, character-encoding
-issues) • a "named owner sign-off required" footer, <strong>And</strong>
-the report is also exposed via the Admin UI Migration Reports module
-(placeholder per AR42 — promoted to real implementation in Story 0.3.4
-alongside the Users/Roles equivalent).</p>
-<p><strong>Given</strong> the ETL is re-run on the same APEX dump<br/>
-<strong>When</strong> the second run completes, <strong>Then</strong> it
-is idempotent — no duplicate rows, no spurious updates (per AR49)<br/>
-<strong>And</strong> the reconciliation report shows zero new
-changes.</p>
-<p><strong>Given</strong> the ETL is re-run after an APEX-side update is
-dumped, <strong>When</strong> the second run completes<br/>
-<strong>Then</strong> only the changed rows are updated<br/>
-<strong>And</strong> the reconciliation report shows the per-table
-diff.</p>
-<p><strong>Given</strong> a named owner reviews the reconciliation
-report, <strong>When</strong> they sign off via a versioned commit to
-<code>nji-architecture/migration/reports/reference-data/signoffs/{run-date}-{owner-handle}.md</code>
-(containing owner identity, timestamp, the specific report version
-signed off, and a short approval note), <strong>Then</strong> the
-sign-off is recorded in git history (immutable audit trail)<br/>
-<strong>And</strong> the commit is co-signed by a second reviewer per
-the <code>CODEOWNERS</code> policy on <code>migration/reports/</code><br/>
-<strong>And</strong> unsigned reports block downstream Phase 1+
-consumption of Reference Data (enforced operationally at this stage by
-the Phase 1 first-consumer story; the same artefact also feeds the UI
-sign-off surface that Story 0.3.4 later adds — but Story 0.2.5 does
-<strong>not</strong> depend on Story 0.3.4 being delivered first).</p>
-<p><strong>Given</strong> the ETL encounters an anomaly it cannot
-resolve (e.g. an APEX value not in the NJI controlled list)<br/>
-<strong>When</strong> the run halts on the anomaly<br/>
-<strong>Then</strong> the row is logged with detail to a
-<code>migration/reports/reference-data/anomalies/{run-date}.md</code>
-file, <strong>And</strong> the run continues with the remaining rows<br/>
-<strong>And</strong> the reconciliation report includes the anomaly
-count and a link to the anomalies file, <strong>And</strong> the named
-owner can decide handling (correct in NJI controlled list / correct in
-APEX dump / drop) before re-run.</p>
-<p><strong>References:</strong> FR6 (load via API per FR6 write
-surface), FR7 (no direct DB writes), FR57 (ETL framing); NFR15 (audit),
-NFR40 (ETL independent of services); AR21, AR36, AR46, AR47, AR48,
-AR49.</p>
+<p><strong>Given</strong> the engineer creates the ETL at <code>nji-architecture/migration/reference-data/</code><br/><strong>When</strong> the ETL is implemented<br/><strong>Then</strong> it reads APEX dumps (CSV files extracted from APEX, format defined per the migration spec at <code>nji-architecture/migration/reference-data/spec.md</code>)<br/><strong>And</strong> it transforms rows into NJI shapes per the mapping tables defined in <code>architecture/data-tables.md</code><br/><strong>And</strong> it <strong>loads data via direct SQL INSERT statements</strong> using the <code>nji_reference_data</code> DB role (the ETL runner is granted appropriate write access through a one-time DBA-issued credential held in Azure Key Vault)<br/><strong>And</strong> it is NOT a Flyway migration (NJI Flyway owns NJI DDL only; APEX-to-NJI data transform is a separate programme-level activity per FR57 framing)<br/><strong>And</strong> it does NOT call the Reference Data API (which is read-only per Story 0.2.2).</p>
+<p><strong>Given</strong> the ETL completes a run<br/><strong>When</strong> the reconciliation report is generated<br/><strong>Then</strong> the report at <code>nji-architecture/migration/reports/reference-data/{run-date}.md</code> shows: • source-row counts per APEX dump • target-row counts per NJI table • per-table diff (added / updated / unchanged / skipped) • anomalies (e.g. unmapped values, validation failures, character-encoding issues) • a "named owner sign-off required" footer with instructions to commit a signoff file.</p>
+<p><strong>Given</strong> the ETL is re-run on the same APEX dump<br/><strong>When</strong> the second run completes<br/><strong>Then</strong> it is idempotent — no duplicate rows, no spurious updates (per AR49). Idempotency is enforced via natural-key uniqueness checks before each INSERT (<code>INSERT ... ON CONFLICT DO NOTHING</code> for PostgreSQL)<br/><strong>And</strong> the reconciliation report shows zero new changes.</p>
+<p><strong>Given</strong> the ETL is re-run after an APEX-side update is dumped<br/><strong>When</strong> the second run completes<br/><strong>Then</strong> only the changed rows are inserted or updated<br/><strong>And</strong> the reconciliation report shows the per-table diff<br/><strong>And</strong> updates are applied via <code>INSERT ... ON CONFLICT (natural_key) DO UPDATE SET ...</code> so deletions in APEX do NOT result in deletions in NJI (NJI is the system of record post-migration).</p>
+<p><strong>Given</strong> a named owner reviews the reconciliation report<br/><strong>When</strong> they sign off via a versioned commit to <code>nji-architecture/migration/reports/reference-data/signoffs/{run-date}-{owner-handle}.md</code> (containing owner identity, timestamp, the specific report version signed off, and a short approval note)<br/><strong>Then</strong> the sign-off is recorded in git history (immutable audit trail)<br/><strong>And</strong> the commit is co-signed by a second reviewer per the <code>CODEOWNERS</code> policy on <code>migration/reports/</code><br/><strong>And</strong> the absence of a signoff file for the latest report blocks downstream Phase 1+ first-consumer stories from advancing (enforced operationally; the Phase 1 Judge story checks for the signoff before pulling Reference Data).</p>
+<p><strong>Given</strong> the ETL encounters an anomaly it cannot resolve (e.g. an APEX value not in the NJI controlled list)<br/><strong>When</strong> the run halts on the anomaly<br/><strong>Then</strong> the row is logged with detail to <code>migration/reports/reference-data/anomalies/{run-date}.md</code><br/><strong>And</strong> the run continues with the remaining rows<br/><strong>And</strong> the reconciliation report includes the anomaly count and a link to the anomalies file<br/><strong>And</strong> the named owner can decide handling (correct in NJI controlled list / correct in APEX dump / drop) before re-run.</p>
+<p><strong>References:</strong> FR7 (writes via direct SQL not via API), FR57 (ETL framing per D3); NFR15 (audit via git), NFR40 (ETL independent of services); AR21, AR46, AR47, AR48, AR49.</p>
+<p><strong>Explicitly NOT in scope (deferred post-MVP):</strong></p>
+<ul>
+<li>Admin UI surface for reviewing reconciliation reports (was Story 0.3.4 in the prior plan)</li>
+<li>Web-based sign-off workflow (sign-off in MVP is via git commits only)</li>
+</ul>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/phase-0/epic-0.2-admin-manages-ref-data.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#story-021-scaffold-nji-reference-data-service--15-reference-data-tables-via-flyway">Story
-0.2.1: Scaffold nji-reference-data service + 15 Reference
-Data tables via Flyway</a></li><li><a href="#story-022-reference-data-api-exposes-admin-gated-crud-with-versioning-openapi-rfc-9457-errors-deprecation-signalling">Story
-0.2.2: Reference Data API exposes admin-gated CRUD with versioning,
-OpenAPI, RFC 9457 errors, deprecation signalling</a></li><li><a href="#story-023-scaffold-nji-admin-ui-repo-with-admin-distinct-accent-and-independent-deployment">Story
-0.2.3: Scaffold nji-admin-ui repo with admin-distinct
-accent and independent deployment</a></li><li><a href="#story-024-admin-ui-reference-data-maintenance-module--list-view-edit-create-sign-off">Story
-0.2.4: Admin UI Reference Data maintenance module — list, view, edit,
-create, sign-off</a></li><li><a href="#story-025-phase-0-reference-data-etl--apex-dumps-to-nji-via-api--reconciliation-report--owner-sign-off">Story
-0.2.5: Phase 0 Reference Data ETL — APEX dumps to NJI via API +
-reconciliation report + owner sign-off</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#story-021-scaffold-nji-reference-data-service--15-reference-data-tables-via-flyway">Story 0.2.1: Scaffold nji-reference-data service + 15 Reference Data tables via Flyway</a></li><li><a href="#story-022-reference-data-read-only-rest-api-with-versioning-openapi-rfc-9457-errors">Story 0.2.2: Reference Data read-only REST API with versioning, OpenAPI, RFC 9457 errors</a></li><li><a href="#story-023-phase-0-reference-data-etl--apex-dumps-via-direct-sql--reconciliation-report--owner-sign-off">Story 0.2.3: Phase 0 Reference Data ETL — APEX dumps via direct SQL + reconciliation report + owner sign-off</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

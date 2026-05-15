@@ -179,7 +179,7 @@ sourceDocuments:
 
 ### Starter template (Story 1 of every service epic)
 
-- AR2 — Each NJI backend service is scaffolded from the **HMCTS Crime SpringBoot template** (`https://github.com/hmcts/spring-boot-template`) cloned via the `nji-scaffold.sh` script in `nji-architecture/scaffolding/`. The scaffolding script applies NJI conventions on top of the starter and is used at service-creation time only.
+- AR2 *(revised 2026-05-15 per D10)* — Each NJI backend service is scaffolded from the **HMCTS Crime SpringBoot template** (`https://github.com/hmcts/spring-boot-template`) cloned via the `nji-scaffold.sh` script in `nji-architecture/scaffolding/`. The scaffolding script applies NJI conventions on top of the starter and is used at service-creation time only. **The `gh` CLI is NOT available in the engineering environment** — `nji-scaffold.sh` handles only local scaffolding + `git push` to a pre-created remote; all GitHub admin operations (repo creation, branch protection, team access) are performed manually via the GitHub web UI by the engineer **before** running `nji-scaffold.sh`. See AR51 + the runbook at `nji-architecture/runbooks/github-setup.md`.
 - AR3 — Group ID `uk.gov.hmcts.nji`; artefact `nji-{service-name}`; package `uk.gov.hmcts.nji.{service-name}`. Default port 8082.
 - AR4 — Initial commit for every new service is *"Scaffold NJI {service-name} from HMCTS starter"* — this is the first implementation story per service.
 
@@ -265,6 +265,10 @@ sourceDocuments:
 ### Manual UAT (FR61 / NFR41 revised 2026-05-06)
 
 - AR50 — Per-service manual UAT scripts live under `docs/uat/` in each domain service repo (markdown walkthroughs for APEX-experienced users to follow side-by-side against APEX). Not part of automated CI. Sign-off (per role per region) is the wave-cutover gate.
+
+### Manual GitHub setup (new 2026-05-15 per D10)
+
+- AR51 *(new 2026-05-15)* — The `gh` CLI is **not** available in the engineering environment. All GitHub admin operations (repo creation, branch protection, team / `CODEOWNERS` access, PR merges) happen **manually via the GitHub web UI** per the runbook at `nji-architecture/runbooks/github-setup.md`. The runbook is the canonical "before you scaffold a new NJI repo" checklist. The `nji-scaffold.sh` script (AR2) operates only locally and via plain `git` push to a remote the engineer has already created in the web UI. PRs are opened, reviewed, and merged via the web UI. This is a non-negotiable constraint of the engineering environment.
 
 ## UX Design Requirements
 

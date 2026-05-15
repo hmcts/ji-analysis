@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="./implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="./sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="./implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,47 +178,30 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="./epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="./epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="./epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="./epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="./epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="./epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="./epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="./epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="./epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="./epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="./epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 
-<h1 id="ji-analysis-nji--epic-breakdown">ji-analysis (NJI) — Epic
-Breakdown</h1>
+<h1 id="ji-analysis-nji--epic-breakdown">ji-analysis (NJI) — Epic Breakdown</h1>
 <blockquote>
-<p>This document has been <strong>sharded for maintainability</strong>.
-The canonical content lives under <a
-href="epics/index.html"><code>epics/</code></a>.</p>
-<p>The original monolithic <code>epics.md</code> reached ~1,500 lines
-covering Phase 0 alone and would have passed 4,000 lines once Phases
-1–9+ were storied. Sharding by phase keeps each file small, makes
-per-phase reviews easier, and matches BMad's sharded-document convention
-(the readiness check skill discovers either <code>*epic*.md</code> whole
-OR <code>*epic*/index.md</code> sharded).</p>
+<p>This document has been <strong>sharded for maintainability</strong>. The canonical content lives under <a href="epics/index.html"><code>epics/</code></a>.</p>
+<p>The original monolithic <code>epics.md</code> reached ~1,500 lines covering Phase 0 alone and would have passed 4,000 lines once Phases 1–9+ were storied. Sharding by phase keeps each file small, makes per-phase reviews easier, and matches BMad's sharded-document convention (the readiness check skill discovers either <code>*epic*.md</code> whole OR <code>*epic*/index.md</code> sharded).</p>
 </blockquote>
 <h2 id="entry-points">Entry points</h2>
 <ul>
-<li><strong><a href="epics/index.html">epics/index.md</a></strong> —
-canonical entry point with full navigation</li>
-<li><strong><a
-href="epics/requirements-inventory.html">epics/requirements-inventory.md</a></strong>
-— FRs, NFRs, ARs, UX-DRs</li>
-<li><strong><a
-href="epics/framework.html">epics/framework.md</a></strong> — Phase ×
-Area architectural framework</li>
-<li><strong><a
-href="epics/fr-coverage-map.html">epics/fr-coverage-map.md</a></strong>
-— single-source FR → Epic mapping</li>
+<li><strong><a href="epics/index.html">epics/index.md</a></strong> — canonical entry point with full navigation</li>
+<li><strong><a href="epics/requirements-inventory.html">epics/requirements-inventory.md</a></strong> — FRs, NFRs, ARs, UX-DRs</li>
+<li><strong><a href="epics/framework.html">epics/framework.md</a></strong> — Phase × Area architectural framework</li>
+<li><strong><a href="epics/fr-coverage-map.html">epics/fr-coverage-map.md</a></strong> — single-source FR → Epic mapping</li>
 </ul>
 <h2 id="phase-level-breakdowns">Phase-level breakdowns</h2>
 <ul>
-<li><strong><a
-href="epics/phase-0/index.html">epics/phase-0/</a></strong> —
-Foundations (Epics 0.1–0.4, 18 stories, validated 2026-05-15) 🟢</li>
+<li><strong><a href="epics/phase-0/index.html">epics/phase-0/</a></strong> — Foundations (Epics 0.1–0.4, 18 stories, validated 2026-05-15) 🟢</li>
 <li><code>epics/phase-1/</code> — Judge — pending</li>
 <li><code>epics/phase-2/</code> — Absence — pending</li>
 <li><code>epics/phase-3/</code> — Vacancy — pending</li>

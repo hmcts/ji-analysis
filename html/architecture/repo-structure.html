@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,27 +178,20 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1
-id="repository-directory-structures-file-organisation-local-development-workflow">Repository
-Directory Structures, File Organisation, Local Development Workflow</h1>
+<h1 id="repository-directory-structures-file-organisation-local-development-workflow">Repository Directory Structures, File Organisation, Local Development Workflow</h1>
 <blockquote>
-<p>Sibling of <a
-href="../architecture.html"><code>../architecture.md</code></a>. The
-parent's <em>Project Structure &amp; Boundaries</em> holds the
-architectural decisions. This file holds the per-repo directory
-inventory and the developer-facing build/run/deploy commands.</p>
+<p>Sibling of <a href="../architecture.html"><code>../architecture.md</code></a>. The parent's <em>Project Structure &amp; Boundaries</em> holds the architectural decisions. This file holds the per-repo directory inventory and the developer-facing build/run/deploy commands.</p>
 </blockquote>
-<details class="section" id="complete-project-directory-structure--per-backend-service"><summary><span class="section-title">Complete
-Project Directory Structure — per backend service</span></summary><div class="section-body">
+<details class="section" id="complete-project-directory-structure--per-backend-service"><summary><span class="section-title">Complete Project Directory Structure — per backend service</span></summary><div class="section-body">
 <pre><code>nji-{service}/
 ├── README.md                                    (service-specific overview, runbook, contacts)
 ├── settings.gradle
@@ -284,16 +279,8 @@ Project Directory Structure — per backend service</span></summary><div class="
 │   └── uat/                                     (manual UAT scripts: APEX-vs-NJI behavioural-parity walkthroughs per FR61 / NFR41 revised; domain services only)
 ├── .gitignore
 └── .editorconfig</code></pre>
-</div></details><details class="section" id="complete-project-directory-structure--ui-repos"><summary><span class="section-title">Complete Project
-Directory Structure — UI repos</span></summary><div class="section-body">
-<p>There are <strong>two UI repos</strong> with the same stack and
-conventions: <code>nji-ui</code> (business-user-facing) and
-<code>nji-admin-ui</code> (admin-facing). The split exists so admin
-workflows (Reference Data maintenance, User &amp; Role admin) cannot
-leak into business users' nav, and so each has its own CI/CD,
-CODEOWNERS, and rollout cadence. <code>nji-admin-ui</code> mirrors the
-structure below, with admin modules replacing the per-domain operational
-modules.</p>
+</div></details><details class="section" id="complete-project-directory-structure--ui-repos"><summary><span class="section-title">Complete Project Directory Structure — UI repos</span></summary><div class="section-body">
+<p>There are <strong>two UI repos</strong> with the same stack and conventions: <code>nji-ui</code> (business-user-facing) and <code>nji-admin-ui</code> (admin-facing). The split exists so admin workflows (Reference Data maintenance, User &amp; Role admin) cannot leak into business users' nav, and so each has its own CI/CD, CODEOWNERS, and rollout cadence. <code>nji-admin-ui</code> mirrors the structure below, with admin modules replacing the per-domain operational modules.</p>
 <h3 id="nji-ui-business"><code>nji-ui</code> (business)</h3>
 <pre><code>nji-ui/
 ├── README.md
@@ -372,10 +359,7 @@ modules.</p>
     ├── README.md
     └── decisions/                               (UI-specific ADRs)</code></pre>
 <h3 id="nji-admin-ui-admin"><code>nji-admin-ui</code> (admin)</h3>
-<p>Same scaffolding as <code>nji-ui</code> above — React + TypeScript +
-Vite + Vitest + Playwright, GOV.UK Design System, OIDC client, RFC 9457
-error handling, axe-core in CI — but with admin modules instead of
-per-domain operational modules.</p>
+<p>Same scaffolding as <code>nji-ui</code> above — React + TypeScript + Vite + Vitest + Playwright, GOV.UK Design System, OIDC client, RFC 9457 error handling, axe-core in CI — but with admin modules instead of per-domain operational modules.</p>
 <pre><code>nji-admin-ui/
 ├── (same top-level scaffolding as nji-ui: package.json, vite.config.ts, etc.)
 ├── src/
@@ -428,22 +412,14 @@ per-domain operational modules.</p>
 └── docs/
     ├── README.md
     └── decisions/                                (admin-UI-specific ADRs)</code></pre>
-<p><strong>Future admin surfaces reserved</strong> (not built at MVP —
-placeholders only):</p>
+<p><strong>Future admin surfaces reserved</strong> (not built at MVP — placeholders only):</p>
 <ul>
-<li><code>modules/activation/</code> — per-region activation flag
-dashboard (FR58 admin side)</li>
-<li><code>modules/migration-reports/</code> — Phase 0 reconciliation
-report viewer (FR57)</li>
-<li><code>modules/audit/</code> — post-MVP user-action audit viewer (D7
-roadmap)</li>
+<li><code>modules/activation/</code> — per-region activation flag dashboard (FR58 admin side)</li>
+<li><code>modules/migration-reports/</code> — Phase 0 reconciliation report viewer (FR57)</li>
+<li><code>modules/audit/</code> — post-MVP user-action audit viewer (D7 roadmap)</li>
 </ul>
-<p><strong>Deployment:</strong> independent of <code>nji-ui</code>. Same
-Azure Static Web Apps pattern, separate hostname (e.g.
-<code>admin.nji.hmcts.gov.uk</code> vs <code>nji.hmcts.gov.uk</code>),
-separate Helm release, separate per-environment rollout.</p>
-</div></details><details class="section" id="complete-project-directory-structure--nji-architecture-repo"><summary><span class="section-title">Complete
-Project Directory Structure — <code>nji-architecture</code> repo</span></summary><div class="section-body">
+<p><strong>Deployment:</strong> independent of <code>nji-ui</code>. Same Azure Static Web Apps pattern, separate hostname (e.g. <code>admin.nji.hmcts.gov.uk</code> vs <code>nji.hmcts.gov.uk</code>), separate Helm release, separate per-environment rollout.</p>
+</div></details><details class="section" id="complete-project-directory-structure--nji-architecture-repo"><summary><span class="section-title">Complete Project Directory Structure — <code>nji-architecture</code> repo</span></summary><div class="section-body">
 <pre><code>nji-architecture/
 ├── README.md
 ├── architecture.md                              (the index document — see ../architecture.md)
@@ -487,61 +463,35 @@ Project Directory Structure — <code>nji-architecture</code> repo</span></summa
 └── runbooks/
     ├── incident-response.md
     └── per-region-rollout-playbook.md</code></pre>
-<p><strong>Why <code>migration/</code> lives here, not as a separate
-service or as Flyway files:</strong></p>
+<p><strong>Why <code>migration/</code> lives here, not as a separate service or as Flyway files:</strong></p>
 <ul>
-<li>The migration is a <strong>one-shot programme deliverable</strong>
-(Phase 0; re-run per wave for incremental user activation). It is not a
-runtime service, so it has no <code>controller/</code> /
-<code>service/</code> / <code>repository/</code> shape.</li>
-<li>It is <strong>owned by the architecture team</strong> (and the named
-Phase 0 owners per Risk #13), not by any single domain service. Living
-under <code>nji-architecture/</code> keeps that ownership visible.</li>
-<li>It <strong>calls NJI APIs</strong> (Reference Data API,
-Authorisation API) — it does not write directly to NJI tables. Per the
-v1.6 decision, writes go via the API so validation, idempotency, and any
-audit-logging hooks fire.</li>
-<li>It is <strong>separate from Flyway</strong>. Flyway in NJI is for
-NJI's DDL (creating tables, adding columns, granting permissions). The
-ETL is for moving APEX data into NJI tables that Flyway has already
-created.</li>
+<li>The migration is a <strong>one-shot programme deliverable</strong> (Phase 0; re-run per wave for incremental user activation). It is not a runtime service, so it has no <code>controller/</code> / <code>service/</code> / <code>repository/</code> shape.</li>
+<li>It is <strong>owned by the architecture team</strong> (and the named Phase 0 owners per Risk #13), not by any single domain service. Living under <code>nji-architecture/</code> keeps that ownership visible.</li>
+<li>It <strong>calls NJI APIs</strong> (Reference Data API, Authorisation API) — it does not write directly to NJI tables. Per the v1.6 decision, writes go via the API so validation, idempotency, and any audit-logging hooks fire.</li>
+<li>It is <strong>separate from Flyway</strong>. Flyway in NJI is for NJI's DDL (creating tables, adding columns, granting permissions). The ETL is for moving APEX data into NJI tables that Flyway has already created.</li>
 </ul>
 </div></details><details class="section" id="file-organisation-patterns"><summary><span class="section-title">File Organisation Patterns</span></summary><div class="section-body">
 <p><strong>Configuration files:</strong></p>
 <ul>
-<li>Per-service: <code>application.yml</code> defaults + per-profile
-overrides + Logback config.</li>
-<li>Per-environment: Helm <code>values-{env}.yaml</code> files; secrets
-externalised to Azure Key Vault.</li>
-<li>No environment-specific code branches; everything controlled by
-Spring profiles.</li>
+<li>Per-service: <code>application.yml</code> defaults + per-profile overrides + Logback config.</li>
+<li>Per-environment: Helm <code>values-{env}.yaml</code> files; secrets externalised to Azure Key Vault.</li>
+<li>No environment-specific code branches; everything controlled by Spring profiles.</li>
 </ul>
 <p><strong>Test organisation:</strong></p>
 <ul>
-<li>Unit tests: <code>src/test/java/.../{layer}/...</code> mirroring
-main package layout.</li>
-<li>Integration tests: same location, <code>*IT.java</code> suffix,
-Testcontainers PostgreSQL.</li>
-<li>Contract tests (Pact or equivalent):
-<code>src/test/java/.../contract/</code>.</li>
-<li>Manual UAT scripts (FR61 / NFR41 revised 2026-05-06):
-<code>docs/uat/</code> per domain service — markdown walkthroughs for
-APEX-experienced users to follow side-by-side against APEX. Not part of
-automated CI.</li>
-<li>E2E tests: separate <code>tests/e2e/</code> directory in
-<code>nji-ui</code> repo, Playwright per phase.</li>
+<li>Unit tests: <code>src/test/java/.../{layer}/...</code> mirroring main package layout.</li>
+<li>Integration tests: same location, <code>*IT.java</code> suffix, Testcontainers PostgreSQL.</li>
+<li>Contract tests (Pact or equivalent): <code>src/test/java/.../contract/</code>.</li>
+<li>Manual UAT scripts (FR61 / NFR41 revised 2026-05-06): <code>docs/uat/</code> per domain service — markdown walkthroughs for APEX-experienced users to follow side-by-side against APEX. Not part of automated CI.</li>
+<li>E2E tests: separate <code>tests/e2e/</code> directory in <code>nji-ui</code> repo, Playwright per phase.</li>
 </ul>
 <p><strong>Asset organisation (UI):</strong></p>
 <ul>
-<li><code>public/</code> for static assets shipped as-is (favicon,
-robots.txt).</li>
-<li><code>src/styles/</code> for SCSS sources; Vite compiles to bundled
-CSS.</li>
-<li>Per-module assets stay within the module
-(<code>modules/judge/assets/</code>).</li>
+<li><code>public/</code> for static assets shipped as-is (favicon, robots.txt).</li>
+<li><code>src/styles/</code> for SCSS sources; Vite compiles to bundled CSS.</li>
+<li>Per-module assets stay within the module (<code>modules/judge/assets/</code>).</li>
 </ul>
-</div></details><details class="section" id="development-workflow-integration"><summary><span class="section-title">Development Workflow
-Integration</span></summary><div class="section-body">
+</div></details><details class="section" id="development-workflow-integration"><summary><span class="section-title">Development Workflow Integration</span></summary><div class="section-body">
 <p><strong>Local development per service:</strong></p>
 <pre class="bash"><code># Clone the service repo
 git clone https://github.com/hmcts/nji-{service}.git
@@ -602,20 +552,12 @@ Manual approval (per region/wave)
 [Deploy to production-uk-south] (or per-region)
    └─ Manual UAT sign-off by APEX-experienced users runs as gate (FR61 / NFR41 revised)</code></pre>
 <blockquote>
-<p>The architectural rules for the per-region production gate (manual
-UAT, automated tests, migration sign-off, programme sign-off) and the
-rollback path live in <a
-href="../architecture.html"><code>../architecture.md</code></a> under
-<em>Region rollout flow (Phase 9+)</em>.</p>
+<p>The architectural rules for the per-region production gate (manual UAT, automated tests, migration sign-off, programme sign-off) and the rollback path live in <a href="../architecture.html"><code>../architecture.md</code></a> under <em>Region rollout flow (Phase 9+)</em>.</p>
 </blockquote>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/repo-structure.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#complete-project-directory-structure--per-backend-service">Complete
-Project Directory Structure — per backend service</a></li><li><a href="#complete-project-directory-structure--ui-repos">Complete Project
-Directory Structure — UI repos</a></li><li class="h3"><a href="#nji-ui-business">nji-ui (business)</a></li><li class="h3"><a href="#nji-admin-ui-admin">nji-admin-ui (admin)</a></li><li><a href="#complete-project-directory-structure--nji-architecture-repo">Complete
-Project Directory Structure — nji-architecture repo</a></li><li><a href="#file-organisation-patterns">File Organisation Patterns</a></li><li><a href="#development-workflow-integration">Development Workflow
-Integration</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#complete-project-directory-structure--per-backend-service">Complete Project Directory Structure — per backend service</a></li><li><a href="#complete-project-directory-structure--ui-repos">Complete Project Directory Structure — UI repos</a></li><li class="h3"><a href="#nji-ui-business">nji-ui (business)</a></li><li class="h3"><a href="#nji-admin-ui-admin">nji-admin-ui (admin)</a></li><li><a href="#complete-project-directory-structure--nji-architecture-repo">Complete Project Directory Structure — nji-architecture repo</a></li><li><a href="#file-organisation-patterns">File Organisation Patterns</a></li><li><a href="#development-workflow-integration">Development Workflow Integration</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

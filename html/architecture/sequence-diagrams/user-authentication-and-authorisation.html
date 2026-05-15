@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,77 +178,33 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="user-authentication--per-request-authorisation">User
-authentication + per-request authorisation</h1>
-<p>Sequence diagram of the cross-cutting authentication and per-request
-authorisation flow that underpins every user-initiated interaction in
-NJI. A user authenticates once at the HMCTS IdP (or
-<code>nji-mock-auth</code> in non-prod); the issued JWT is then
-forwarded by the UI on every subsequent API call. Each backend service's
-custom <code>JWTFilter</code> validates the token against the issuer's
-JWKS endpoint and asks <code>nji-authorisation</code> to resolve the
-principal's roles, Region/Area scope, and per-region activation flag
-before the controller is allowed to run.</p>
-<p>This is the cross-cutting flow that the other sequence diagrams (<a
-href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>,
-<a
-href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>,
-<a
-href="./judge-onboarding-and-sitting-generation.html"><code>./judge-onboarding-and-sitting-generation.md</code></a>,
-<a
-href="./salaried-sitting-confirmation.html"><code>./salaried-sitting-confirmation.md</code></a>,
-<a
-href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>,
-<a
-href="./mi-feed-and-reports-consumption.html"><code>./mi-feed-and-reports-consumption.md</code></a>,
-<a
-href="./admin-maintenance-flows.html"><code>./admin-maintenance-flows.md</code></a>)
-explicitly omit for clarity. Read this diagram once; treat it as
-implicit on every API call shown in the others.</p>
-<p>Three phases: (1) login + JWT issuance; (2) per-service JWT
-validation against JWKS; (3) per-request <code>authz/check</code>
-resolving roles + scope + activation flag.</p>
+<h1 id="user-authentication--per-request-authorisation">User authentication + per-request authorisation</h1>
+<p>Sequence diagram of the cross-cutting authentication and per-request authorisation flow that underpins every user-initiated interaction in NJI. A user authenticates once at the HMCTS IdP (or <code>nji-mock-auth</code> in non-prod); the issued JWT is then forwarded by the UI on every subsequent API call. Each backend service's custom <code>JWTFilter</code> validates the token against the issuer's JWKS endpoint and asks <code>nji-authorisation</code> to resolve the principal's roles, Region/Area scope, and per-region activation flag before the controller is allowed to run.</p>
+<p>This is the cross-cutting flow that the other sequence diagrams (<a href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>, <a href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>, <a href="./judge-onboarding-and-sitting-generation.html"><code>./judge-onboarding-and-sitting-generation.md</code></a>, <a href="./salaried-sitting-confirmation.html"><code>./salaried-sitting-confirmation.md</code></a>, <a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>, <a href="./mi-feed-and-reports-consumption.html"><code>./mi-feed-and-reports-consumption.md</code></a>, <a href="./admin-maintenance-flows.html"><code>./admin-maintenance-flows.md</code></a>) explicitly omit for clarity. Read this diagram once; treat it as implicit on every API call shown in the others.</p>
+<p>Three phases: (1) login + JWT issuance; (2) per-service JWT validation against JWKS; (3) per-request <code>authz/check</code> resolving roles + scope + activation flag.</p>
 <details class="section" id="not-in-this-diagram"><summary><span class="section-title">Not in this diagram</span></summary><div class="section-body">
 <ul>
-<li><strong>Service-principal authentication</strong> for batch
-components — <code>nji-payment-batch</code> uses OAuth
-<code>client_credentials</code> rather than the human SSO flow. See <a
-href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>
-Phase 1.</li>
-<li><strong>Mock-auth internal mechanics</strong> (signing keys, token
-issuance, JWKS publication) — implementation detail. The mock-auth
-surface is OIDC-conformant; how it produces tokens is out of scope
-here.</li>
-<li><strong>Token refresh / expiry handling</strong> in the UI —
-standard OIDC behaviour; not NJI-specific.</li>
-<li><strong>Sign-out</strong> — clears the local session; not a
-server-side flow worth diagramming.</li>
+<li><strong>Service-principal authentication</strong> for batch components — <code>nji-payment-batch</code> uses OAuth <code>client_credentials</code> rather than the human SSO flow. See <a href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a> Phase 1.</li>
+<li><strong>Mock-auth internal mechanics</strong> (signing keys, token issuance, JWKS publication) — implementation detail. The mock-auth surface is OIDC-conformant; how it produces tokens is out of scope here.</li>
+<li><strong>Token refresh / expiry handling</strong> in the UI — standard OIDC behaviour; not NJI-specific.</li>
+<li><strong>Sign-out</strong> — clears the local session; not a server-side flow worth diagramming.</li>
 </ul>
-</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps
-omitted for clarity</span></summary><div class="section-body">
+</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps omitted for clarity</span></summary><div class="section-body">
 <ul>
-<li>All UI → service calls flow through Azure API Management. APIM is
-omitted from the arrows below; assume every UI → service arrow passes
-through it (rate-limit policies, header injection,
-<code>/actuator/*</code> restriction).</li>
-<li>The two UIs (<code>nji-ui</code> and <code>nji-admin-ui</code>)
-follow the same auth pattern. The diagram uses "UI" generically.</li>
+<li>All UI → service calls flow through Azure API Management. APIM is omitted from the arrows below; assume every UI → service arrow passes through it (rate-limit policies, header injection, <code>/actuator/*</code> restriction).</li>
+<li>The two UIs (<code>nji-ui</code> and <code>nji-admin-ui</code>) follow the same auth pattern. The diagram uses "UI" generically.</li>
 </ul>
-<p><img src="./user-authentication-and-authorisation.png"
-alt="User authentication + per-request authorisation sequence" /></p>
-<p><em>Source: <a
-href="./user-authentication-and-authorisation.mmd"><code>./user-authentication-and-authorisation.mmd</code></a>
-(Mermaid). Regenerate with
-<code>mmdc -i user-authentication-and-authorisation.mmd -o user-authentication-and-authorisation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<p><img src="./user-authentication-and-authorisation.png" alt="User authentication + per-request authorisation sequence" /></p>
+<p><em>Source: <a href="./user-authentication-and-authorisation.mmd"><code>./user-authentication-and-authorisation.mmd</code></a> (Mermaid). Regenerate with <code>mmdc -i user-authentication-and-authorisation.mmd -o user-authentication-and-authorisation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
 </div></details><details class="section" id="phase-summary"><summary><span class="section-title">Phase summary</span></summary><div class="section-body">
 <table>
 <thead>
@@ -261,27 +219,20 @@ href="./user-authentication-and-authorisation.mmd"><code>./user-authentication-a
 <tr>
 <td>1 — Login + JWT issuance</td>
 <td>User</td>
-<td>OIDC <code>authorization_code</code> against HMCTS IdP (mock-auth in
-non-prod)</td>
+<td>OIDC <code>authorization_code</code> against HMCTS IdP (mock-auth in non-prod)</td>
 <td>UI holds a short-lived JWT for the session</td>
 </tr>
 <tr>
 <td>2 — Per-service JWT validation</td>
 <td>Any backend service</td>
-<td>Custom <code>JWTFilter</code> validates JWT signature against
-issuer's JWKS endpoint (cached per service)</td>
-<td>Token integrity + expiry verified before any controller logic
-runs</td>
+<td>Custom <code>JWTFilter</code> validates JWT signature against issuer's JWKS endpoint (cached per service)</td>
+<td>Token integrity + expiry verified before any controller logic runs</td>
 </tr>
 <tr>
 <td>3 — Per-request authz check</td>
 <td>Any backend service</td>
-<td><code>JWTFilter</code> calls <code>nji-authorisation</code>
-<code>POST /authz/check</code>; resolves principal → roles + Region/Area
-scope + <code>auth_user_activation_flags</code> (FR58); populates
-request-scoped <code>AuthDetails</code> bean</td>
-<td>Controller method invoked with authorised principal in scope; or 403
-if not active for the region</td>
+<td><code>JWTFilter</code> calls <code>nji-authorisation</code> <code>POST /authz/check</code>; resolves principal → roles + Region/Area scope + <code>auth_user_activation_flags</code> (FR58); populates request-scoped <code>AuthDetails</code> bean</td>
+<td>Controller method invoked with authorised principal in scope; or 403 if not active for the region</td>
 </tr>
 </tbody>
 </table>
@@ -295,60 +246,39 @@ if not active for the region</td>
 </thead>
 <tbody>
 <tr>
-<td>Authentication &amp; Security model (JWT propagation pattern, JWKS
-validation, mock-auth in non-prod, HMCTS IdP in production)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 4 <em>Authentication &amp; Security</em></a></td>
+<td>Authentication &amp; Security model (JWT propagation pattern, JWKS validation, mock-auth in non-prod, HMCTS IdP in production)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Authentication &amp; Security</em></a></td>
 </tr>
 <tr>
-<td><code>JWTFilter</code> per-service implementation pattern and
-<code>AuthDetails</code> request-scoped bean</td>
-<td><a
-href="../starter-template.html"><code>../starter-template.md</code> →
-Per-service NJI Conventions</a>; <a
-href="../repo-structure.html"><code>../repo-structure.md</code>
-per-service <code>config/JWTFilter.java</code>,
-<code>config/AuthDetails.java</code></a></td>
+<td><code>JWTFilter</code> per-service implementation pattern and <code>AuthDetails</code> request-scoped bean</td>
+<td><a href="../starter-template.html"><code>../starter-template.md</code> → Per-service NJI Conventions</a>; <a href="../repo-structure.html"><code>../repo-structure.md</code> per-service <code>config/JWTFilter.java</code>, <code>config/AuthDetails.java</code></a></td>
 </tr>
 <tr>
-<td>Authorisation tables (<code>auth_users</code>,
-<code>auth_roles</code>, <code>auth_user_roles</code>,
-<code>auth_user_region_scopes</code>,
-<code>auth_user_activation_flags</code>)</td>
-<td><a
-href="../data-tables.html"><code>../data-tables.md</code></a></td>
+<td>Authorisation tables (<code>auth_users</code>, <code>auth_roles</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, <code>auth_user_activation_flags</code>)</td>
+<td><a href="../data-tables.html"><code>../data-tables.md</code></a></td>
 </tr>
 <tr>
-<td>FR1, FR2, FR3 (Identity &amp; Authorisation) and NFR12 <em>(revised
-v2.6)</em>, NFR13</td>
-<td>PRD <code>FR1</code>–<code>FR3</code>, <code>NFR12</code>,
-<code>NFR13</code></td>
+<td>FR1, FR2, FR3 (Identity &amp; Authorisation) and NFR12 <em>(revised v2.6)</em>, NFR13</td>
+<td>PRD <code>FR1</code>–<code>FR3</code>, <code>NFR12</code>, <code>NFR13</code></td>
 </tr>
 <tr>
-<td>Per-region phased activation (FR58) and the wave-cutover semantics
-it enforces</td>
-<td>PRD <code>FR58</code>; <a
-href="../../architecture.html"><code>../../architecture.md</code> → Step
-4 <em>Deployment topology</em></a></td>
+<td>Per-region phased activation (FR58) and the wave-cutover semantics it enforces</td>
+<td>PRD <code>FR58</code>; <a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Deployment topology</em></a></td>
 </tr>
 <tr>
 <td>Mock-auth scope and production-issuer open question</td>
-<td><a href="../gaps.html"><code>../gaps.md</code> G1.1, G1.2,
-G7.1</a></td>
+<td><a href="../gaps.html"><code>../gaps.md</code> G1.1, G1.2, G7.1</a></td>
 </tr>
 <tr>
-<td>Two-UI repo split (both <code>nji-ui</code> and
-<code>nji-admin-ui</code> follow the same pattern)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 4 <em>Frontend Architecture</em></a> — v2.10</td>
+<td>Two-UI repo split (both <code>nji-ui</code> and <code>nji-admin-ui</code> follow the same pattern)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Frontend Architecture</em></a> — v2.10</td>
 </tr>
 </tbody>
 </table>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/user-authentication-and-authorisation.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
-omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

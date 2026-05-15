@@ -78,7 +78,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 }
 </style>
 </head>
-<body class="">
+<body class="has-toc has-sections">
 <aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,27 +178,24 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
-
+<div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="fr-coverage-map">FR Coverage Map</h1>
-<p>This is the canonical FR-to-Epic mapping. It is updated each time a
-phase advances from framework to concrete epics + stories. The Phase ×
-Area framework in <a href="framework.html">framework.md</a> is the
-architectural spine; this map is the implementation index.</p>
-<h2 id="phase-0-concrete-epics-0104--complete">Phase 0 (concrete epics
-0.1–0.4 — complete)</h2>
+<p>This is the canonical FR-to-Epic mapping. It is updated each time a phase advances from framework to concrete epics + stories. The Phase × Area framework in <a href="framework.html">framework.md</a> is the architectural spine; this map is the implementation index.</p>
+<details class="section" id="phase-0-concrete-epics-0104--complete-revised-2026-05-15"><summary><span class="section-title">Phase 0 (concrete epics 0.1–0.4 — complete, revised 2026-05-15)</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
 <th>FR</th>
-<th>Epic</th>
+<th>Phase 0 epic / coverage</th>
+<th>Post-MVP residual?</th>
 <th>Notes</th>
 </tr>
 </thead>
@@ -204,104 +203,129 @@ architectural spine; this map is the implementation index.</p>
 <tr>
 <td>FR1</td>
 <td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a></td>
+<td>—</td>
 <td>SSO via <code>nji-mock-auth</code> in non-prod</td>
 </tr>
 <tr>
 <td>FR2</td>
 <td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a></td>
-<td>Authorisation principal → roles + scope mapping</td>
+<td>—</td>
+<td>Authorisation principal → roles + scope (read-only API)</td>
 </tr>
 <tr>
 <td>FR3</td>
 <td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a></td>
-<td><code>GET /users/{id}/effective-permissions</code></td>
+<td>—</td>
+<td><code>GET /v1/users/{id}/effective-permissions</code></td>
 </tr>
 <tr>
-<td>FR4</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a>
-(foundation) + <a
-href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3</a>
-(full edits)</td>
-<td>Admin role/scope edits</td>
+<td><strong>FR4</strong></td>
+<td><strong>Data layer only</strong> in <a href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3</a> (auth tables populated by SQL ETL; editable by DBAs via SQL)</td>
+<td><strong>YES — UI surface</strong> for sysadmins to update assignments <strong>is post-MVP</strong></td>
+<td>Was previously planned in Epic 0.2/0.3 admin UI stories — those stories were removed in the 2026-05-15 scope revision</td>
 </tr>
 <tr>
 <td>FR5</td>
 <td>—</td>
-<td>Post-MVP per PRD v2.5 (intentional deferral)</td>
+<td>—</td>
+<td>Post-MVP per PRD v2.5 (intentional deferral; pre-existing)</td>
 </tr>
 <tr>
-<td>FR6</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic
-0.2</a></td>
-<td>Ref Data maintenance with named-owner sign-off</td>
+<td><strong>FR6</strong></td>
+<td><strong>Data layer + read API only</strong> in <a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a> (read-only <code>GET</code> endpoints; data loaded by SQL ETL)</td>
+<td><strong>YES — RSU UI for maintenance</strong> is post-MVP</td>
+<td>Read API works in Phase 0; the named-owner sign-off workflow for ongoing changes moves to the post-MVP admin UI roadmap</td>
 </tr>
 <tr>
 <td>FR7</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic
-0.2</a></td>
+<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a></td>
+<td>—</td>
 <td>Direct SQL via SELECT grants — pattern established</td>
 </tr>
 <tr>
 <td>FR8</td>
-<td>distributed (lands in <a
-href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a> first)</td>
+<td>distributed (lands in <a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a> first)</td>
+<td>—</td>
 <td>Shared <code>configuration_values</code> Flyway baseline</td>
 </tr>
 <tr>
 <td>FR9</td>
-<td><a href="phase-0/epic-0.4-system-dispatches-emails.html">Epic
-0.4</a></td>
-<td>Notification dispatch + delivery log</td>
+<td><a href="phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4</a></td>
+<td>—</td>
+<td>Notification dispatch + delivery log. User-JWT propagation only at Phase 0; <code>client_credentials</code> flow moved to Phase 6</td>
 </tr>
 <tr>
 <td>FR55</td>
 <td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a></td>
+<td>—</td>
 <td>Home shell with role-scoped navigation</td>
 </tr>
 <tr>
 <td>FR56</td>
-<td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a>
-(business stack) + <a
-href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a>/<a
-href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3</a>
-(admin stack)</td>
-<td>Modern UI stack</td>
+<td><a href="phase-0/epic-0.1-user-authenticates.html">Epic 0.1</a> (business stack)</td>
+<td><strong>Partial — admin stack</strong> is post-MVP</td>
+<td>The <code>nji-ui</code> business-user stack is delivered in Phase 0; the <code>nji-admin-ui</code> admin stack is post-MVP</td>
 </tr>
 <tr>
 <td>FR57</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a>
-(Ref Data ETL) + <a
-href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3</a>
-(Users/Roles ETL)</td>
-<td>Phase 0 migration with named-owner sign-off</td>
+<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a> (Ref Data ETL via SQL) + <a href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3</a> (Users/Roles ETL via SQL)</td>
+<td>—</td>
+<td>Both ETL streams now load via direct SQL rather than via API; named-owner sign-off via versioned git commits</td>
 </tr>
 <tr>
 <td>FR58</td>
-<td><a href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic
-0.3</a> (flag wire-up) — orchestration in Phase 9+</td>
-<td>Per-user activation flags</td>
+<td><a href="phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3</a> (initial flag state via ETL — all FALSE) — orchestration in Phase 9+ (per-region flip via direct SQL by DBA)</td>
+<td><strong>Partial — activation toggle UI</strong> is post-MVP</td>
+<td>MVP cutover happens by DBA running <code>UPDATE auth_user_activation_flags SET activated = TRUE WHERE region = …</code> per the rollout runbook</td>
 </tr>
 <tr>
 <td>FR59</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic
-0.2</a></td>
-<td>API-as-Product first exercise (Reference Data API)</td>
+<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a></td>
+<td>—</td>
+<td>API-as-Product first exercise on Reference Data read API</td>
 </tr>
 <tr>
 <td>FR60</td>
-<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic
-0.2</a></td>
+<td><a href="phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2</a></td>
+<td>—</td>
 <td>Structured logs first exercise</td>
 </tr>
 </tbody>
 </table>
-<h2 id="phases-19-fr10fr54-fr61--pending">Phases 1–9+ (FR10–FR54, FR61)
-— pending</h2>
-<p>To be populated by subsequent runs of
-<code>bmad-create-epics-and-stories</code> step 2 against the
-corresponding Phase × Area entries in <a
-href="framework.html">framework.md</a>. Phase 0 sets the pattern; later
-phases follow the same vertical-slice user-value framing.</p>
+<h3 id="phase-0--post-mvp-deferral-summary-2026-05-15-revision">Phase 0 → post-MVP deferral summary (2026-05-15 revision)</h3>
+<table>
+<thead>
+<tr>
+<th>FR</th>
+<th>What's in Phase 0 (MVP)</th>
+<th>What's deferred to post-MVP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR4</td>
+<td>Auth tables loaded via SQL ETL; data editable by DBAs via direct SQL</td>
+<td>Admin UI surface for system administrators to update role + Region/Area scope assignments</td>
+</tr>
+<tr>
+<td>FR6</td>
+<td>Read API + SQL-loaded data with git-based owner sign-off</td>
+<td>RSU UI for view/edit/create on controlled lists; pending-change workflow with named-owner sign-off via UI</td>
+</tr>
+<tr>
+<td>FR56</td>
+<td>Business-user <code>nji-ui</code> (modern stack, WCAG 2.2 AA)</td>
+<td>Admin-user <code>nji-admin-ui</code> (same stack, distinct hostname) — was already partially admin-only; now fully post-MVP</td>
+</tr>
+<tr>
+<td>FR58</td>
+<td>Activation flag table populated by ETL; cutover flips via DBA SQL</td>
+<td>Activation toggle UI for system administrators</td>
+</tr>
+</tbody>
+</table>
+</div></details><details class="section" id="phases-19-fr10fr54-fr61--pending"><summary><span class="section-title">Phases 1–9+ (FR10–FR54, FR61) — pending</span></summary><div class="section-body">
+<p>To be populated by subsequent runs of <code>bmad-create-epics-and-stories</code> step 2 against the corresponding Phase × Area entries in <a href="framework.html">framework.md</a>. Phase 0 sets the pattern; later phases follow the same vertical-slice user-value framing.</p>
 <table>
 <thead>
 <tr>
@@ -321,7 +345,7 @@ phases follow the same vertical-slice user-value framing.</p>
 <tr>
 <td>FR19–FR22</td>
 <td>2</td>
-<td>Absence Workflow</td>
+<td>Absence Workflow (first user-initiated Notification consumer via FR20 ack email)</td>
 <td>⚪</td>
 </tr>
 <tr>
@@ -333,7 +357,7 @@ phases follow the same vertical-slice user-value framing.</p>
 <tr>
 <td>FR29–FR34</td>
 <td>4</td>
-<td>Booking Management</td>
+<td>Booking Management (second user-initiated Notification consumer via FR32 ack email)</td>
 <td>⚪</td>
 </tr>
 <tr>
@@ -351,7 +375,7 @@ phases follow the same vertical-slice user-value framing.</p>
 <tr>
 <td>FR42, FR43, FR45</td>
 <td>6</td>
-<td>Payment Batch</td>
+<td>Payment Batch (<strong>first non-user-initiated Notification consumer</strong> — <code>client_credentials</code> flow established here, was previously planned in Phase 0)</td>
 <td>⚪</td>
 </tr>
 <tr>
@@ -380,10 +404,68 @@ phases follow the same vertical-slice user-value framing.</p>
 </tr>
 </tbody>
 </table>
-
+</div></details><details class="section" id="post-mvp-roadmap-consolidated-2026-05-15"><summary><span class="section-title">Post-MVP roadmap (consolidated, 2026-05-15)</span></summary><div class="section-body">
+<p>Items removed from MVP per the 2026-05-15 admin-UI-out-of-scope decision:</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Original Phase 0 owner (now removed)</th>
+<th>Post-MVP owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nji-admin-ui</code> repo scaffold + auth wrapper</td>
+<td>was Story 0.2.3</td>
+<td>Post-MVP UI programme</td>
+</tr>
+<tr>
+<td>Reference Data admin module (list/edit/create + sign-off workflow)</td>
+<td>was Story 0.2.4</td>
+<td>Post-MVP UI programme</td>
+</tr>
+<tr>
+<td>Reference Data API write endpoints (<code>POST/PUT/PATCH/DELETE</code>)</td>
+<td>was part of Story 0.2.2</td>
+<td>Post-MVP — paired with the admin UI</td>
+</tr>
+<tr>
+<td><code>nji-authorisation</code> admin write endpoints (<code>PUT /admin/users/{id}/...</code>)</td>
+<td>was Story 0.3.1</td>
+<td>Post-MVP — paired with the admin UI</td>
+</tr>
+<tr>
+<td>Users &amp; Roles admin module</td>
+<td>was Story 0.3.2</td>
+<td>Post-MVP UI programme</td>
+</tr>
+<tr>
+<td>Migration Reports admin module</td>
+<td>was Story 0.3.4</td>
+<td>Post-MVP UI programme</td>
+</tr>
+<tr>
+<td>Admin "Send Test Email" UI</td>
+<td>was Story 0.4.4</td>
+<td>Post-MVP UI programme</td>
+</tr>
+<tr>
+<td>Delivery-log viewer UI</td>
+<td>(no prior story; Postman covered)</td>
+<td>Post-MVP UI programme</td>
+</tr>
+<tr>
+<td>Activation-flag toggle UI</td>
+<td>(no prior story; Phase 9+ direct SQL covers MVP)</td>
+<td>Post-MVP UI programme</td>
+</tr>
+</tbody>
+</table>
+</div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/fr-coverage-map.md</code></p>
 </main>
-
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#phase-0-concrete-epics-0104--complete-revised-2026-05-15">Phase 0 (concrete epics 0.1–0.4 — complete, revised 2026-05-15)</a></li><li class="h3"><a href="#phase-0--post-mvp-deferral-summary-2026-05-15-revision">Phase 0 → post-MVP deferral summary (2026-05-15 revision)</a></li><li><a href="#phases-19-fr10fr54-fr61--pending">Phases 1–9+ (FR10–FR54, FR61) — pending</a></li><li><a href="#post-mvp-roadmap-consolidated-2026-05-15">Post-MVP roadmap (consolidated, 2026-05-15)</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

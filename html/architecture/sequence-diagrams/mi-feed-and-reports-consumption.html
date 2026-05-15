@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,91 +178,39 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="mi-feed--reports-consumption">MI Feed / Reports consumption</h1>
-<p>Sequence diagram of how aggregate management-information is consumed
-from <code>nji-mi-feed</code>, by two distinct actors:</p>
+<p>Sequence diagram of how aggregate management-information is consumed from <code>nji-mi-feed</code>, by two distinct actors:</p>
 <ol type="1">
-<li><strong>Internal MI / Reporting users</strong> — at MVP, open the
-Reports module in <code>nji-ui</code>, pick a standard report
-(utilisation, sitting analysis, jurisdictional split, etc.), apply
-parameter filters, render results, and export to Excel or PDF.</li>
-<li><strong>External DA&amp;I consumer</strong> — post-MVP, calls the MI
-Feed REST API directly as a service principal to ingest aggregate data
-into their own pipelines, replacing today's manual export-and-transform
-chain.</li>
+<li><strong>Internal MI / Reporting users</strong> — at MVP, open the Reports module in <code>nji-ui</code>, pick a standard report (utilisation, sitting analysis, jurisdictional split, etc.), apply parameter filters, render results, and export to Excel or PDF.</li>
+<li><strong>External DA&amp;I consumer</strong> — post-MVP, calls the MI Feed REST API directly as a service principal to ingest aggregate data into their own pipelines, replacing today's manual export-and-transform chain.</li>
 </ol>
-<p>Both paths hit the same backend (<code>nji-mi-feed</code>) and are
-bound by the <strong>same aggregate-only contract</strong>: no
-case-level data anywhere in the response, ever (REP-BR-NFR-03 / FR54 /
-NFR23). This contract is the most important architectural invariant in
-the read-model layer — it bounds FOI scope (NFR33), protects against the
-data-scope concerns flagged in the PRD, and is enforced both at the
-schema level (no case-level columns exist in any NJI table that MI Feed
-reads from) and at the API-contract level (no case-level field in any
-response shape).</p>
-<p><code>nji-mi-feed</code> holds <strong>no own tables</strong> — it
-SQL-JOINs aggregates from the shared schema, the same Strategy A pattern
-as <code>nji-itinerary</code> (<a
-href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>),
-but with aggregation projections rather than per-record cells.</p>
-<p>The as-is equivalents are Module 12 <em>Reports</em> in <a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a>
-and Integration Flow 7 <em>Management Information &amp; Reporting (JI →
-DA&amp;I)</em> in <a
-href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>.
-The as-is flow is export-and-transform (Excel/PDF copied out of JI,
-transformed in DA&amp;I); the NJI MI Feed API is the post-MVP
-replacement.</p>
-<p>Three phases: (1) internal MI user runs a report; (2) post-MVP
-external DA&amp;I consumer calls the same API; (3) shared aggregation +
-contract enforcement.</p>
+<p>Both paths hit the same backend (<code>nji-mi-feed</code>) and are bound by the <strong>same aggregate-only contract</strong>: no case-level data anywhere in the response, ever (REP-BR-NFR-03 / FR54 / NFR23). This contract is the most important architectural invariant in the read-model layer — it bounds FOI scope (NFR33), protects against the data-scope concerns flagged in the PRD, and is enforced both at the schema level (no case-level columns exist in any NJI table that MI Feed reads from) and at the API-contract level (no case-level field in any response shape).</p>
+<p><code>nji-mi-feed</code> holds <strong>no own tables</strong> — it SQL-JOINs aggregates from the shared schema, the same Strategy A pattern as <code>nji-itinerary</code> (<a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>), but with aggregation projections rather than per-record cells.</p>
+<p>The as-is equivalents are Module 12 <em>Reports</em> in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a> and Integration Flow 7 <em>Management Information &amp; Reporting (JI → DA&amp;I)</em> in <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>. The as-is flow is export-and-transform (Excel/PDF copied out of JI, transformed in DA&amp;I); the NJI MI Feed API is the post-MVP replacement.</p>
+<p>Three phases: (1) internal MI user runs a report; (2) post-MVP external DA&amp;I consumer calls the same API; (3) shared aggregation + contract enforcement.</p>
 <details class="section" id="not-in-this-diagram"><summary><span class="section-title">Not in this diagram</span></summary><div class="section-body">
 <ul>
-<li><strong>External consumer onboarding</strong> (service-principal
-credential issuance, OAuth scopes, rate-limit policy assignment) —
-programme-management activity, not a runtime flow.</li>
-<li><strong>MI Feed cache</strong> — none at MVP per architecture
-Principle 2. Considered if NFR8-like measurement shows reports breaching
-≤ 30 s.</li>
-<li><strong>Tribunals data extension</strong> — flagged as a strategic
-gap in <a
-href="../../../../docs/architecture/asis/data-dependencies.html"><code>../../../docs/architecture/asis/data-dependencies.md</code></a>
-and the as-is Reports module; out of scope for NJI MVP.</li>
-<li><strong>Per-report parameter validation detail</strong> — varies per
-report; handled by the controller as standard request validation. Not
-drawn.</li>
+<li><strong>External consumer onboarding</strong> (service-principal credential issuance, OAuth scopes, rate-limit policy assignment) — programme-management activity, not a runtime flow.</li>
+<li><strong>MI Feed cache</strong> — none at MVP per architecture Principle 2. Considered if NFR8-like measurement shows reports breaching ≤ 30 s.</li>
+<li><strong>Tribunals data extension</strong> — flagged as a strategic gap in <a href="../../../../docs/architecture/asis/data-dependencies.html"><code>../../../docs/architecture/asis/data-dependencies.md</code></a> and the as-is Reports module; out of scope for NJI MVP.</li>
+<li><strong>Per-report parameter validation detail</strong> — varies per report; handled by the controller as standard request validation. Not drawn.</li>
 </ul>
-</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps
-omitted for clarity</span></summary><div class="section-body">
+</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps omitted for clarity</span></summary><div class="section-body">
 <ul>
-<li><strong>Authentication + per-request authorisation</strong> — both
-flows. Internal MI users go through HMCTS IdP OIDC; external DA&amp;I
-consumers use a service principal (currently a post-MVP open question
-per <a href="../gaps.html"><code>../gaps.md</code> G7.1</a> — default
-recommendation Azure Workload Identity, or
-<code>client_credentials</code> against the IdP if it supports non-human
-principals). The diagram shows the auth boundary only. Full mechanics:
-<a
-href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
-<li>All UI → service and external → APIM calls flow through Azure API
-Management; APIM is where rate-limit and
-<code>Deprecation</code>/<code>Sunset</code> policies apply.</li>
+<li><strong>Authentication + per-request authorisation</strong> — both flows. Internal MI users go through HMCTS IdP OIDC; external DA&amp;I consumers use a service principal (currently a post-MVP open question per <a href="../gaps.html"><code>../gaps.md</code> G7.1</a> — default recommendation Azure Workload Identity, or <code>client_credentials</code> against the IdP if it supports non-human principals). The diagram shows the auth boundary only. Full mechanics: <a href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
+<li>All UI → service and external → APIM calls flow through Azure API Management; APIM is where rate-limit and <code>Deprecation</code>/<code>Sunset</code> policies apply.</li>
 </ul>
-<p><img src="./mi-feed-and-reports-consumption.png"
-alt="MI Feed / Reports consumption sequence" /></p>
-<p><em>Source: <a
-href="./mi-feed-and-reports-consumption.mmd"><code>./mi-feed-and-reports-consumption.mmd</code></a>
-(Mermaid). Regenerate with
-<code>mmdc -i mi-feed-and-reports-consumption.mmd -o mi-feed-and-reports-consumption.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<p><img src="./mi-feed-and-reports-consumption.png" alt="MI Feed / Reports consumption sequence" /></p>
+<p><em>Source: <a href="./mi-feed-and-reports-consumption.mmd"><code>./mi-feed-and-reports-consumption.mmd</code></a> (Mermaid). Regenerate with <code>mmdc -i mi-feed-and-reports-consumption.mmd -o mi-feed-and-reports-consumption.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
 </div></details><details class="section" id="phase-summary"><summary><span class="section-title">Phase summary</span></summary><div class="section-body">
 <table>
 <thead>
@@ -275,30 +225,20 @@ href="./mi-feed-and-reports-consumption.mmd"><code>./mi-feed-and-reports-consump
 <tr>
 <td>1 — Internal MI user runs a report</td>
 <td>MI / Reporting User</td>
-<td>FR53 — fixed catalogue of standard reports with parameter filters
-per report. Region/Office/judge-type/date-range scoped per FR49 /
-R2.</td>
-<td>Tabular report rendered in <code>nji-ui</code>; copy/export to Excel
-or PDF via FR52</td>
+<td>FR53 — fixed catalogue of standard reports with parameter filters per report. Region/Office/judge-type/date-range scoped per FR49 / R2.</td>
+<td>Tabular report rendered in <code>nji-ui</code>; copy/export to Excel or PDF via FR52</td>
 </tr>
 <tr>
 <td>2 — External DA&amp;I consumer calls MI Feed API (post-MVP)</td>
 <td>DA&amp;I analyst script / system</td>
-<td>FR54 — aggregate-only REST contract; service-principal auth;
-standard parameter filters; same data shape as internal reports</td>
-<td>Aggregate JSON returned to consumer; replaces today's
-export-and-transform chain</td>
+<td>FR54 — aggregate-only REST contract; service-principal auth; standard parameter filters; same data shape as internal reports</td>
+<td>Aggregate JSON returned to consumer; replaces today's export-and-transform chain</td>
 </tr>
 <tr>
 <td>3 — Shared aggregation + contract enforcement</td>
 <td><code>nji-mi-feed</code> (no own tables)</td>
-<td>Principle 1 + 2 — SQL JOIN over the shared schema with aggregation
-projections; <strong>no case-level data in any response shape</strong>
-(REP-BR-NFR-03 / FR54 / NFR23); contract enforced at schema (no
-case-level columns) and at API shape (no case-level fields)</td>
-<td>Aggregated result with no case-level identifiers; serialised per
-content-type negotiation (JSON for API; Excel/PDF for internal
-export)</td>
+<td>Principle 1 + 2 — SQL JOIN over the shared schema with aggregation projections; <strong>no case-level data in any response shape</strong> (REP-BR-NFR-03 / FR54 / NFR23); contract enforced at schema (no case-level columns) and at API shape (no case-level fields)</td>
+<td>Aggregated result with no case-level identifiers; serialised per content-type negotiation (JSON for API; Excel/PDF for internal export)</td>
 </tr>
 </tbody>
 </table>
@@ -312,59 +252,39 @@ export)</td>
 </thead>
 <tbody>
 <tr>
-<td><code>nji-mi-feed</code> repo purpose and key functions (no own
-tables — SQL JOINs)</td>
-<td><a
-href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
-Phase 8 row</td>
+<td><code>nji-mi-feed</code> repo purpose and key functions (no own tables — SQL JOINs)</td>
+<td><a href="../repository-strategy.html"><code>../repository-strategy.md</code></a> Phase 8 row</td>
 </tr>
 <tr>
-<td>Aggregate-only contract enforcement (REP-BR-NFR-03 + FR54 +
-NFR23)</td>
-<td>PRD <code>FR54</code>, <code>NFR23</code>; <a
-href="../../architecture.html"><code>../../architecture.md</code> → Step
-2 <em>Cross-Cutting Concerns</em> (Forbidden data)</a></td>
+<td>Aggregate-only contract enforcement (REP-BR-NFR-03 + FR54 + NFR23)</td>
+<td>PRD <code>FR54</code>, <code>NFR23</code>; <a href="../../architecture.html"><code>../../architecture.md</code> → Step 2 <em>Cross-Cutting Concerns</em> (Forbidden data)</a></td>
 </tr>
 <tr>
-<td>Reports catalogue (utilisation, sitting analysis, jurisdictional
-split, summary by court / work type, …)</td>
-<td>PRD <code>FR53</code>; Module 12 in <a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a></td>
+<td>Reports catalogue (utilisation, sitting analysis, jurisdictional split, summary by court / work type, …)</td>
+<td>PRD <code>FR53</code>; Module 12 in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a></td>
 </tr>
 <tr>
 <td>Reports UI module structure</td>
-<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
-<code>nji-ui/src/modules/reports/</code></a></td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> → <code>nji-ui/src/modules/reports/</code></a></td>
 </tr>
 <tr>
-<td>Service-principal auth for external consumers (open question;
-pre-Phase-9 decision)</td>
-<td><a href="../gaps.html"><code>../gaps.md</code> G7.1</a>; <a
-href="../assumptions.html"><code>../assumptions.md</code> A35</a></td>
+<td>Service-principal auth for external consumers (open question; pre-Phase-9 decision)</td>
+<td><a href="../gaps.html"><code>../gaps.md</code> G7.1</a>; <a href="../assumptions.html"><code>../assumptions.md</code> A35</a></td>
 </tr>
 <tr>
-<td>Related read flow — Itinerary federated read (same
-SQL-JOIN-on-shared-schema pattern, per-record cells rather than
-aggregates)</td>
-<td><a
-href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a></td>
+<td>Related read flow — Itinerary federated read (same SQL-JOIN-on-shared-schema pattern, per-record cells rather than aggregates)</td>
+<td><a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a></td>
 </tr>
 <tr>
-<td>As-is equivalents (Module 12 Reports; Integration Flow 7 MI &amp;
-Reporting → DA&amp;I)</td>
-<td><a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code>
-→ Module 12</a>; <a
-href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code>
-→ Flow 7</a></td>
+<td>As-is equivalents (Module 12 Reports; Integration Flow 7 MI &amp; Reporting → DA&amp;I)</td>
+<td><a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code> → Module 12</a>; <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code> → Flow 7</a></td>
 </tr>
 </tbody>
 </table>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/mi-feed-and-reports-consumption.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
-omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

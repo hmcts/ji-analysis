@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness" data-current="true" open>
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="./implementation-readiness-report-2026-05-15.html" class="current">Report — 2026-05-15 (current)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="./sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="./implementation-readiness-report-2026-05-15.html" class="current">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,560 +178,277 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="./epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="./epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="./epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="./epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="./epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="./epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="./epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="./epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="./epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="./epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="./epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="implementation-readiness-assessment-report">Implementation
-Readiness Assessment Report</h1>
-<p><strong>Date:</strong> 2026-05-15 <strong>Project:</strong>
-ji-analysis</p>
+<h1 id="implementation-readiness-assessment-report">Implementation Readiness Assessment Report</h1>
+<p><strong>Date:</strong> 2026-05-15 <strong>Project:</strong> ji-analysis</p>
 <details class="section" id="1-document-inventory"><summary><span class="section-title">1. Document Inventory</span></summary><div class="section-body">
 <h3 id="prd">PRD</h3>
 <ul>
-<li><code>prd.md</code> (72 KB, 2026-05-11 15:44) — <strong>source of
-truth</strong></li>
+<li><code>prd.md</code> (72 KB, 2026-05-11 15:44) — <strong>source of truth</strong></li>
 <li><code>prd.pdf</code> — rendered output, not used for analysis</li>
 </ul>
 <h3 id="architecture">Architecture</h3>
 <ul>
-<li><code>architecture.md</code> (71 KB, 2026-05-11 15:00) —
-<strong>source of truth (aggregates the folder)</strong></li>
-<li><code>architecture-summary.md</code> (16 KB) — companion
-summary</li>
-<li><code>architecture/</code> folder — supporting detail files, all
-included as part of the architecture source of truth:
+<li><code>architecture.md</code> (71 KB, 2026-05-11 15:00) — <strong>source of truth (aggregates the folder)</strong></li>
+<li><code>architecture-summary.md</code> (16 KB) — companion summary</li>
+<li><code>architecture/</code> folder — supporting detail files, all included as part of the architecture source of truth:
 <ul>
-<li><code>assumptions.md</code>, <code>changelog.md</code>,
-<code>conventions.md</code>, <code>data-tables.md</code></li>
-<li><code>functional-requirements-coverage.md</code>,
-<code>non-functional-requirements-coverage.md</code></li>
-<li><code>gaps.md</code>, <code>repo-structure.md</code>,
-<code>repository-strategy.md</code>, <code>starter-template.md</code>,
-<code>user-types.md</code></li>
-<li><code>diagrams/</code>, <code>sequence-diagrams/</code> (referenced
-but not directly assessed)</li>
+<li><code>assumptions.md</code>, <code>changelog.md</code>, <code>conventions.md</code>, <code>data-tables.md</code></li>
+<li><code>functional-requirements-coverage.md</code>, <code>non-functional-requirements-coverage.md</code></li>
+<li><code>gaps.md</code>, <code>repo-structure.md</code>, <code>repository-strategy.md</code>, <code>starter-template.md</code>, <code>user-types.md</code></li>
+<li><code>diagrams/</code>, <code>sequence-diagrams/</code> (referenced but not directly assessed)</li>
 </ul></li>
 </ul>
 <h3 id="epics--stories">Epics &amp; Stories</h3>
 <ul>
-<li><code>epics.md</code> (53 KB, 2026-05-11 15:44) — <strong>source of
-truth</strong></li>
+<li><code>epics.md</code> (53 KB, 2026-05-11 15:44) — <strong>source of truth</strong></li>
 </ul>
 <h3 id="ux-design">UX Design</h3>
 <ul>
-<li><strong>Not included.</strong> Project scope is currently domains
-and APIs only; UI work is deferred.</li>
+<li><strong>Not included.</strong> Project scope is currently domains and APIs only; UI work is deferred.</li>
 </ul>
-<h3 id="prior-readiness-reports-context">Prior Readiness Reports
-(context)</h3>
+<h3 id="prior-readiness-reports-context">Prior Readiness Reports (context)</h3>
 <ul>
 <li><code>implementation-readiness-report-2026-05-05.md</code></li>
 <li><code>implementation-readiness-report-2026-05-06.md</code></li>
 </ul>
 </div></details><details class="section" id="2-prd-analysis"><summary><span class="section-title">2. PRD Analysis</span></summary><div class="section-body">
-<p>PRD: <code>prd.md</code>, 728 lines, completed 2026-05-05
-(<code>workflowCompleted: true</code>), with revisions on 2026-05-06,
-2026-05-07, and 2026-05-11 marked inline. Project codename
-<strong>NJI</strong>, release mode <code>phased</code>, project type
-<code>api_backend</code> with UX override per D4.</p>
-<h3 id="functional-requirements-fr1fr61-total-61">Functional
-Requirements (FR1–FR61, total: 61)</h3>
+<p>PRD: <code>prd.md</code>, 728 lines, completed 2026-05-05 (<code>workflowCompleted: true</code>), with revisions on 2026-05-06, 2026-05-07, and 2026-05-11 marked inline. Project codename <strong>NJI</strong>, release mode <code>phased</code>, project type <code>api_backend</code> with UX override per D4.</p>
+<h3 id="functional-requirements-fr1fr61-total-61">Functional Requirements (FR1–FR61, total: 61)</h3>
 <p><strong>Identity &amp; Authorisation</strong></p>
 <ul>
-<li><strong>FR1</strong> — Authenticated users access NJI via HMCTS IdP
-single sign-on; password, session, and account lifecycle owned by the
-IdP, not duplicated in NJI.</li>
-<li><strong>FR2</strong> — NJI's Authorisation service maps each
-authenticated principal to one or more roles and a Region/Area scope,
-and authorises every system call against that mapping.</li>
-<li><strong>FR3</strong> — Authorised users can retrieve their effective
-permissions for their authenticated session.</li>
-<li><strong>FR4</strong> — System administrators can update role and
-Region/Area assignments for migrated and new users.</li>
-<li><strong>FR5</strong> <em>(reframed v2.5, 2026-05-07 as
-post-MVP)</em> — External machine-to-machine consumer authentication
-mechanism. <strong>At MVP, no M2M consumers in scope</strong> — every
-NJI runtime request is user-initiated. Genuine service-principal auth is
-a post-MVP open question (architecture gap G7); options to evaluate
-later: NJI-internal service-auth issuer, Azure Workload Identity, mTLS,
-HMCTS IdP <code>client_credentials</code>.</li>
+<li><strong>FR1</strong> — Authenticated users access NJI via HMCTS IdP single sign-on; password, session, and account lifecycle owned by the IdP, not duplicated in NJI.</li>
+<li><strong>FR2</strong> — NJI's Authorisation service maps each authenticated principal to one or more roles and a Region/Area scope, and authorises every system call against that mapping.</li>
+<li><strong>FR3</strong> — Authorised users can retrieve their effective permissions for their authenticated session.</li>
+<li><strong>FR4</strong> — System administrators can update role and Region/Area assignments for migrated and new users.</li>
+<li><strong>FR5</strong> <em>(reframed v2.5, 2026-05-07 as post-MVP)</em> — External machine-to-machine consumer authentication mechanism. <strong>At MVP, no M2M consumers in scope</strong> — every NJI runtime request is user-initiated. Genuine service-principal auth is a post-MVP open question (architecture gap G7); options to evaluate later: NJI-internal service-auth issuer, Azure Workload Identity, mTLS, HMCTS IdP <code>client_credentials</code>.</li>
 </ul>
 <p><strong>Foundational Data Management</strong></p>
 <ul>
-<li><strong>FR6</strong> — RSU users can view and maintain Reference
-Data lists (Regions, Offices, judicial vocabularies, calendar /
-financial-year boundaries) with named-owner sign-off on changes.</li>
-<li><strong>FR7</strong> <em>(revised 2026-05-11)</em> — Every NJI
-service reads Reference Data via <strong>direct SQL</strong> on the
-shared schema's Reference Data tables (15 tables, SELECT-granted to each
-service's DB role) — no client class, no API fan-out, no cache.
-Reference Data is the single writer; writes (Phase 0 ETL load + ongoing
-RSU maintenance) go through the versioned Reference Data API. No service
-holds duplicate or cached copies.</li>
-<li><strong>FR8</strong> <em>(revised v2.2, 2026-05-07)</em> —
-Cross-service runtime policy values stored in a shared
-<code>configuration_values</code> infrastructure table managed by
-<code>nji-architecture</code>'s Flyway baseline; SELECT-granted to every
-NJI service DB role. Updates via Flyway migrations or direct admin SQL —
-no API service. Per-service config uses Spring profiles +
-<code>application.yml</code> + Azure Key Vault.</li>
-<li><strong>FR9</strong> — NJI dispatches transactional emails (booking
-acks, absence acks, payment schedules) via HMCTS email infrastructure
-with a delivery log retained.</li>
+<li><strong>FR6</strong> — RSU users can view and maintain Reference Data lists (Regions, Offices, judicial vocabularies, calendar / financial-year boundaries) with named-owner sign-off on changes.</li>
+<li><strong>FR7</strong> <em>(revised 2026-05-11)</em> — Every NJI service reads Reference Data via <strong>direct SQL</strong> on the shared schema's Reference Data tables (15 tables, SELECT-granted to each service's DB role) — no client class, no API fan-out, no cache. Reference Data is the single writer; writes (Phase 0 ETL load + ongoing RSU maintenance) go through the versioned Reference Data API. No service holds duplicate or cached copies.</li>
+<li><strong>FR8</strong> <em>(revised v2.2, 2026-05-07)</em> — Cross-service runtime policy values stored in a shared <code>configuration_values</code> infrastructure table managed by <code>nji-architecture</code>'s Flyway baseline; SELECT-granted to every NJI service DB role. Updates via Flyway migrations or direct admin SQL — no API service. Per-service config uses Spring profiles + <code>application.yml</code> + Azure Key Vault.</li>
+<li><strong>FR9</strong> — NJI dispatches transactional emails (booking acks, absence acks, payment schedules) via HMCTS email infrastructure with a delivery log retained.</li>
 </ul>
 <p><strong>Judge Records &amp; Working Patterns</strong></p>
 <ul>
-<li><strong>FR10</strong> — RSU users can search and filter judges by
-name, base location, location type, and judge type.</li>
-<li><strong>FR11</strong> — RSU users can maintain judge profiles
-(personal details, judge type, base office, active/inactive, payroll
-number, retirement date, fee entitlement, London weighting,
-name-for-itinerary, heading).</li>
-<li><strong>FR12</strong> — Authorised users can define and update
-Working Patterns (None / Daily / Weekly) with target sit %,
-jurisdictional split, and per-day work-type pattern.</li>
-<li><strong>FR13</strong> — NJI auto-populates judge itineraries up to
-the next 31st March from the working pattern, preserving prior
-absences.</li>
-<li><strong>FR14</strong> — RSU users can convert salaried judges
-between full-time and part-time, adjusting mandatory sitting days.</li>
-<li><strong>FR15</strong> — RSU users can maintain ticket information
-per judge role, requiring start date and ticket type.</li>
-<li><strong>FR16</strong> — NJI validates jurisdictional split
-percentages total 100% before saving.</li>
-<li><strong>FR17</strong> — RSU users can switch a judge's base location
-to another office within the same Region; cross-Region changes require
-OPT Advice Point and are out-of-system.</li>
-<li><strong>FR18</strong> — Authorised users can link to judges managed
-by other offices (off-circuit / cross-Region) for booking purposes.</li>
+<li><strong>FR10</strong> — RSU users can search and filter judges by name, base location, location type, and judge type.</li>
+<li><strong>FR11</strong> — RSU users can maintain judge profiles (personal details, judge type, base office, active/inactive, payroll number, retirement date, fee entitlement, London weighting, name-for-itinerary, heading).</li>
+<li><strong>FR12</strong> — Authorised users can define and update Working Patterns (None / Daily / Weekly) with target sit %, jurisdictional split, and per-day work-type pattern.</li>
+<li><strong>FR13</strong> — NJI auto-populates judge itineraries up to the next 31st March from the working pattern, preserving prior absences.</li>
+<li><strong>FR14</strong> — RSU users can convert salaried judges between full-time and part-time, adjusting mandatory sitting days.</li>
+<li><strong>FR15</strong> — RSU users can maintain ticket information per judge role, requiring start date and ticket type.</li>
+<li><strong>FR16</strong> — NJI validates jurisdictional split percentages total 100% before saving.</li>
+<li><strong>FR17</strong> — RSU users can switch a judge's base location to another office within the same Region; cross-Region changes require OPT Advice Point and are out-of-system.</li>
+<li><strong>FR18</strong> — Authorised users can link to judges managed by other offices (off-circuit / cross-Region) for booking purposes.</li>
 </ul>
 <p><strong>Absence Workflow</strong></p>
 <ul>
-<li><strong>FR19</strong> — Authorised users (RSU, Court, Judges where
-permitted) can record absence requests with start/end date, partial-day
-option (full / AM / PM), type from a controlled list, and an NTBF
-flag.</li>
-<li><strong>FR20</strong> — NJI distinguishes auto-confirmed absences
-from those requiring confirmation; confirmation can trigger an
-acknowledgement email.</li>
-<li><strong>FR21</strong> — Sickness absences can be extended without
-creating a new record; non-sickness extensions require a new absence
-record.</li>
-<li><strong>FR22</strong> — Authorised users can mark absences as
-<em>Not To Be Filled</em> (NTBF) or as <em>needs fee-paid
-cover</em>.</li>
+<li><strong>FR19</strong> — Authorised users (RSU, Court, Judges where permitted) can record absence requests with start/end date, partial-day option (full / AM / PM), type from a controlled list, and an NTBF flag.</li>
+<li><strong>FR20</strong> — NJI distinguishes auto-confirmed absences from those requiring confirmation; confirmation can trigger an acknowledgement email.</li>
+<li><strong>FR21</strong> — Sickness absences can be extended without creating a new record; non-sickness extensions require a new absence record.</li>
+<li><strong>FR22</strong> — Authorised users can mark absences as <em>Not To Be Filled</em> (NTBF) or as <em>needs fee-paid cover</em>.</li>
 </ul>
 <p><strong>Vacancy &amp; Cover</strong></p>
 <ul>
-<li><strong>FR23</strong> — NJI auto-creates a vacancy when an approved
-absence requires fee-paid cover, pre-populated with judge type, work
-type, ticket, and dates.</li>
-<li><strong>FR24</strong> — Authorised users can create standalone
-vacancies independent of any absence.</li>
-<li><strong>FR25</strong> — Authorised users can edit a vacancy's daily
-breakdown (cancel days with reason; extend/shorten the period).</li>
-<li><strong>FR26</strong> — NJI marks a vacancy as filled when a booking
-is created against it; vacancy days cannot be cancelled once a booking
-is recorded.</li>
-<li><strong>FR27</strong> — NJI surfaces fee-paid judges matching a
-vacancy's filter as a hint for advertising; advertising itself is
-out-of-system.</li>
-<li><strong>FR28</strong> — Authorised users can cancel or close
-vacancies (e.g. when parent absence becomes NTBF).</li>
+<li><strong>FR23</strong> — NJI auto-creates a vacancy when an approved absence requires fee-paid cover, pre-populated with judge type, work type, ticket, and dates.</li>
+<li><strong>FR24</strong> — Authorised users can create standalone vacancies independent of any absence.</li>
+<li><strong>FR25</strong> — Authorised users can edit a vacancy's daily breakdown (cancel days with reason; extend/shorten the period).</li>
+<li><strong>FR26</strong> — NJI marks a vacancy as filled when a booking is created against it; vacancy days cannot be cancelled once a booking is recorded.</li>
+<li><strong>FR27</strong> — NJI surfaces fee-paid judges matching a vacancy's filter as a hint for advertising; advertising itself is out-of-system.</li>
+<li><strong>FR28</strong> — Authorised users can cancel or close vacancies (e.g. when parent absence becomes NTBF).</li>
 </ul>
 <p><strong>Booking Management</strong></p>
 <ul>
-<li><strong>FR29</strong> — Authorised users can create fee-paid
-bookings (linked to vacancy or standalone), capturing judge, court,
-date, session type, booking type, work type.</li>
-<li><strong>FR30</strong> — Booking creation marks the linked vacancy as
-filled within the same transaction when <code>vacancyId</code> is
-supplied. <em>(Implementation: in-process direct DB update via
-per-service DB role grant — architecture Principle 1.)</em></li>
-<li><strong>FR31</strong> — NJI tracks booking status (planned,
-provisional, confirmed, cancelled, rejected) with reason capture for
-cancellation.</li>
-<li><strong>FR32</strong> — NJI sends booking acknowledgement emails to
-fee-paid judges (batched overnight or <em>Create and Email
-Now</em>).</li>
-<li><strong>FR33</strong> — NJI requires a Y/N answer at booking time
-when a judge's fee entitlement is <em>Ask when booking</em>.</li>
-<li><strong>FR34</strong> — NJI prevents double-booking of fee-paid
-judges for overlapping sessions.</li>
+<li><strong>FR29</strong> — Authorised users can create fee-paid bookings (linked to vacancy or standalone), capturing judge, court, date, session type, booking type, work type.</li>
+<li><strong>FR30</strong> — Booking creation marks the linked vacancy as filled within the same transaction when <code>vacancyId</code> is supplied. <em>(Implementation: in-process direct DB update via per-service DB role grant — architecture Principle 1.)</em></li>
+<li><strong>FR31</strong> — NJI tracks booking status (planned, provisional, confirmed, cancelled, rejected) with reason capture for cancellation.</li>
+<li><strong>FR32</strong> — NJI sends booking acknowledgement emails to fee-paid judges (batched overnight or <em>Create and Email Now</em>).</li>
+<li><strong>FR33</strong> — NJI requires a Y/N answer at booking time when a judge's fee entitlement is <em>Ask when booking</em>.</li>
+<li><strong>FR34</strong> — NJI prevents double-booking of fee-paid judges for overlapping sessions.</li>
 </ul>
 <p><strong>Sitting Management</strong></p>
 <ul>
-<li><strong>FR35</strong> — NJI generates planned sittings for salaried
-judges from their working patterns, court, date, and work type.</li>
-<li><strong>FR36</strong> — Authorised users can filter sitting records
-by Region/Office, judge type, judge, and date range.</li>
-<li><strong>FR37</strong> — Authorised users can confirm that a sitting
-took place, updating outcome (confirmed, cancelled, rejected) and actual
-work type.</li>
-<li><strong>FR38</strong> — Authorised users can split a sitting into
-AM/PM with different work types within a single day.</li>
-<li><strong>FR39</strong> — Authorised users can create ad-hoc sittings
-for salaried judges, including DJ(MC)s and Legal Advisers in County
-Courts.</li>
-<li><strong>FR40</strong> <em>(revised 2026-05-11)</em> — Verifiers can
-verify confirmed sittings; once verified, data is read-only. Amendments
-require <strong>re-opening</strong> via a UI action gated by a distinct
-authorised role (re-opener ≠ original confirmer ≠ standard Verifier;
-MVP: RSU Admin only). Captures mandatory justification, fully audited.
-No external RFC ticketing.</li>
+<li><strong>FR35</strong> — NJI generates planned sittings for salaried judges from their working patterns, court, date, and work type.</li>
+<li><strong>FR36</strong> — Authorised users can filter sitting records by Region/Office, judge type, judge, and date range.</li>
+<li><strong>FR37</strong> — Authorised users can confirm that a sitting took place, updating outcome (confirmed, cancelled, rejected) and actual work type.</li>
+<li><strong>FR38</strong> — Authorised users can split a sitting into AM/PM with different work types within a single day.</li>
+<li><strong>FR39</strong> — Authorised users can create ad-hoc sittings for salaried judges, including DJ(MC)s and Legal Advisers in County Courts.</li>
+<li><strong>FR40</strong> <em>(revised 2026-05-11)</em> — Verifiers can verify confirmed sittings; once verified, data is read-only. Amendments require <strong>re-opening</strong> via a UI action gated by a distinct authorised role (re-opener ≠ original confirmer ≠ standard Verifier; MVP: RSU Admin only). Captures mandatory justification, fully audited. No external RFC ticketing.</li>
 </ul>
 <p><strong>Payment &amp; Reconciliation</strong></p>
 <ul>
-<li><strong>FR41</strong> <em>(revised v2.6, 2026-05-07)</em> —
-Authorised users can list confirmed bookings and salaried sittings,
-filterable by Region/Office, judge, date range, and payment lifecycle
-status. Payment-eligible subset = read-only union of confirmed bookings
-+ sittings without an existing payment record.</li>
-<li><strong>FR42</strong> <em>(revised v2.6)</em> — NJI's
-<strong>payment-processing batch</strong>
-(<code>nji-payment-batch</code>, scheduled cron, typically end-of-week)
-automatically marks eligible bookings as <em>payment requested</em> and
-creates <code>payments</code> + <code>payment_schedules</code> records.
-<strong>No user click required.</strong></li>
-<li><strong>FR43</strong> <em>(revised v2.6)</em> — The <strong>payment
-batch</strong> generates JFEPS-compatible payment schedules and
-dispatches as Excel attachments to a configured Payment Authoriser via
-email (Notification API, batch service-principal); Authoriser forwards
-to Liberata out-of-system.</li>
-<li><strong>FR44</strong> — NJI exposes the payment schedule via API
-with content-type negotiation
-(<code>application/vnd.hmcts.jfeps+json</code> or
-<code>+xlsx</code>).</li>
-<li><strong>FR45</strong> — NJI prevents double submission of the same
-booking for payment via natural-key unique constraint on
-<code>(payment_cycle_id, booking_id)</code>; re-runs of the same cycle
-are idempotent.</li>
-<li><strong>FR46</strong> — Authorised users (Finance, RSU) can flag
-payments as reconciled with notes for mismatches; fully reconciled
-payments cannot be re-requested.</li>
-<li><strong>FR47</strong> — NJI does not store or expose bank details
-for any judge.</li>
+<li><strong>FR41</strong> <em>(revised v2.6, 2026-05-07)</em> — Authorised users can list confirmed bookings and salaried sittings, filterable by Region/Office, judge, date range, and payment lifecycle status. Payment-eligible subset = read-only union of confirmed bookings + sittings without an existing payment record.</li>
+<li><strong>FR42</strong> <em>(revised v2.6)</em> — NJI's <strong>payment-processing batch</strong> (<code>nji-payment-batch</code>, scheduled cron, typically end-of-week) automatically marks eligible bookings as <em>payment requested</em> and creates <code>payments</code> + <code>payment_schedules</code> records. <strong>No user click required.</strong></li>
+<li><strong>FR43</strong> <em>(revised v2.6)</em> — The <strong>payment batch</strong> generates JFEPS-compatible payment schedules and dispatches as Excel attachments to a configured Payment Authoriser via email (Notification API, batch service-principal); Authoriser forwards to Liberata out-of-system.</li>
+<li><strong>FR44</strong> — NJI exposes the payment schedule via API with content-type negotiation (<code>application/vnd.hmcts.jfeps+json</code> or <code>+xlsx</code>).</li>
+<li><strong>FR45</strong> — NJI prevents double submission of the same booking for payment via natural-key unique constraint on <code>(payment_cycle_id, booking_id)</code>; re-runs of the same cycle are idempotent.</li>
+<li><strong>FR46</strong> — Authorised users (Finance, RSU) can flag payments as reconciled with notes for mismatches; fully reconciled payments cannot be re-requested.</li>
+<li><strong>FR47</strong> — NJI does not store or expose bank details for any judge.</li>
 </ul>
 <p><strong>Itineraries &amp; Reporting (Read Models)</strong></p>
 <ul>
-<li><strong>FR48</strong> — Authorised users can render the Court
-Itinerary (monthly or annual) for a given Office, Financial Year, and
-Month.</li>
-<li><strong>FR49</strong> — Authorised users can render the Judge
-Itinerary for one or more judges over a date range, scoped by
-Authorisation.</li>
-<li><strong>FR50</strong> — Authorised users can use the Forward Look
-view across a Region with paged or filtered access for performance.</li>
-<li><strong>FR51</strong> — Itinerary cells are clickable and drill into
-the underlying record.</li>
-<li><strong>FR52</strong> — Authorised users can copy/export Itinerary
-and Report contents to Excel and PDF.</li>
-<li><strong>FR53</strong> — NJI provides a fixed catalogue of standard
-Reports (weekly sitting projections, weekly vacancies, absence analysis,
-vacancy by court, confirmed sittings/bookings by judge or judge type,
-judge utilisation, jurisdictional split, summary by court / work
-type).</li>
-<li><strong>FR54</strong> — NJI exposes aggregated MI Feed APIs for
-external consumers (DA&amp;I, future programmes); aggregate-only by
-contract, no case-level data.</li>
+<li><strong>FR48</strong> — Authorised users can render the Court Itinerary (monthly or annual) for a given Office, Financial Year, and Month.</li>
+<li><strong>FR49</strong> — Authorised users can render the Judge Itinerary for one or more judges over a date range, scoped by Authorisation.</li>
+<li><strong>FR50</strong> — Authorised users can use the Forward Look view across a Region with paged or filtered access for performance.</li>
+<li><strong>FR51</strong> — Itinerary cells are clickable and drill into the underlying record.</li>
+<li><strong>FR52</strong> — Authorised users can copy/export Itinerary and Report contents to Excel and PDF.</li>
+<li><strong>FR53</strong> — NJI provides a fixed catalogue of standard Reports (weekly sitting projections, weekly vacancies, absence analysis, vacancy by court, confirmed sittings/bookings by judge or judge type, judge utilisation, jurisdictional split, summary by court / work type).</li>
+<li><strong>FR54</strong> — NJI exposes aggregated MI Feed APIs for external consumers (DA&amp;I, future programmes); aggregate-only by contract, no case-level data.</li>
 </ul>
 <p><strong>Platform Operations &amp; Migration</strong></p>
 <ul>
-<li><strong>FR55</strong> — Authenticated users land on a Home page with
-role-scoped navigation, Region/Area selector, summary tiles, and
-contextual help.</li>
-<li><strong>FR56</strong> — NJI's UI replicates the functional surface
-of the as-is APEX UI on a modern UI stack and meets WCAG 2.2 Level
-AA.</li>
-<li><strong>FR57</strong> — Phase 0 Data Migration ETL takes Reference
-Data and active user records from APEX, transforms to NJI shape, and
-loads via the NJI Reference Data API and Authorisation API. Keyed to
-HMCTS IdP principals (email primary, employee number fallback). Lives at
-<code>nji-architecture/migration/</code>, separate from Flyway DDL.</li>
-<li><strong>FR58</strong> — NJI supports per-region phased activation —
-region's user accounts activated when feature-parity gate passed;
-activation is a flag flip on <code>auth_user_activation_flags</code>,
-not a data migration.</li>
-<li><strong>FR59</strong> — Every NJI service exposes a versioned API
-contract, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC
-9457</a> problem-details, published OpenAPI spec, and
-<code>Deprecation</code> (<a
-href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a>) +
-<code>Sunset</code> (<a
-href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a>)
-headers.</li>
-<li><strong>FR60</strong> — Every NJI service emits structured logs with
-correlation IDs and consistent error categorisation, retained for pilot
-incident triage.</li>
-<li><strong>FR61</strong> <em>(revised 2026-05-06)</em> — Every domain
-service has a <strong>manual UAT script</strong> capturing workflows and
-edge cases for APEX-experienced users to verify against APEX. UAT
-performed by RSU, Court, Judge, Judges' Clerks, Finance/Payment
-Authoriser, MI users; recorded with explicit per-role sign-off. No
-automated APEX-comparison harness.</li>
+<li><strong>FR55</strong> — Authenticated users land on a Home page with role-scoped navigation, Region/Area selector, summary tiles, and contextual help.</li>
+<li><strong>FR56</strong> — NJI's UI replicates the functional surface of the as-is APEX UI on a modern UI stack and meets WCAG 2.2 Level AA.</li>
+<li><strong>FR57</strong> — Phase 0 Data Migration ETL takes Reference Data and active user records from APEX, transforms to NJI shape, and loads via the NJI Reference Data API and Authorisation API. Keyed to HMCTS IdP principals (email primary, employee number fallback). Lives at <code>nji-architecture/migration/</code>, separate from Flyway DDL.</li>
+<li><strong>FR58</strong> — NJI supports per-region phased activation — region's user accounts activated when feature-parity gate passed; activation is a flag flip on <code>auth_user_activation_flags</code>, not a data migration.</li>
+<li><strong>FR59</strong> — Every NJI service exposes a versioned API contract, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details, published OpenAPI spec, and <code>Deprecation</code> (<a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a>) + <code>Sunset</code> (<a href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a>) headers.</li>
+<li><strong>FR60</strong> — Every NJI service emits structured logs with correlation IDs and consistent error categorisation, retained for pilot incident triage.</li>
+<li><strong>FR61</strong> <em>(revised 2026-05-06)</em> — Every domain service has a <strong>manual UAT script</strong> capturing workflows and edge cases for APEX-experienced users to verify against APEX. UAT performed by RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, MI users; recorded with explicit per-role sign-off. No automated APEX-comparison harness.</li>
 </ul>
-<h3 id="non-functional-requirements-nfr1nfr42-total-42">Non-Functional
-Requirements (NFR1–NFR42, total: 42)</h3>
+<h3 id="non-functional-requirements-nfr1nfr42-total-42">Non-Functional Requirements (NFR1–NFR42, total: 42)</h3>
 <p><strong>Performance (NFR1–NFR9)</strong></p>
 <ul>
 <li><strong>NFR1</strong> — Static page load ≤ 3 s.</li>
-<li><strong>NFR2</strong> — Dashboard refresh ≤ 5 s on Region/Area
-selection change.</li>
-<li><strong>NFR3</strong> — List / filter operations ≤ 10 s for typical
-operational lists at Region scope.</li>
-<li><strong>NFR4</strong> — Batch / annual operations ≤ 15 s (annual
-itinerary render, batch payment-request processing).</li>
-<li><strong>NFR5</strong> — Reports / Forward Look ≤ 30 s for standard
-parameters at Region scope.</li>
+<li><strong>NFR2</strong> — Dashboard refresh ≤ 5 s on Region/Area selection change.</li>
+<li><strong>NFR3</strong> — List / filter operations ≤ 10 s for typical operational lists at Region scope.</li>
+<li><strong>NFR4</strong> — Batch / annual operations ≤ 15 s (annual itinerary render, batch payment-request processing).</li>
+<li><strong>NFR5</strong> — Reports / Forward Look ≤ 30 s for standard parameters at Region scope.</li>
 <li><strong>NFR6</strong> — Single-resource API read ≤ 500 ms p95.</li>
-<li><strong>NFR7</strong> — Domain write API ≤ 1 s p95 (excluding
-orchestrated cross-service calls).</li>
-<li><strong>NFR8</strong> — Federated read (Itinerary, Forward Look) ≤
-30 s p95 under Strategy A; Strategy C cache fallback pre-designed.</li>
-<li><strong>NFR9</strong> — Capacity: ~50–100 concurrent users per
-region; ~200–500 nationally once all regions migrated.</li>
+<li><strong>NFR7</strong> — Domain write API ≤ 1 s p95 (excluding orchestrated cross-service calls).</li>
+<li><strong>NFR8</strong> — Federated read (Itinerary, Forward Look) ≤ 30 s p95 under Strategy A; Strategy C cache fallback pre-designed.</li>
+<li><strong>NFR9</strong> — Capacity: ~50–100 concurrent users per region; ~200–500 nationally once all regions migrated.</li>
 </ul>
 <p><strong>Security (NFR10–NFR16)</strong></p>
 <ul>
-<li><strong>NFR10</strong> — Latest TLS only on every endpoint;
-HTTP-only rejected.</li>
+<li><strong>NFR10</strong> — Latest TLS only on every endpoint; HTTP-only rejected.</li>
 <li><strong>NFR11</strong> — All personal data encrypted at rest.</li>
-<li><strong>NFR12</strong> <em>(revised v2.6, 2026-05-07)</em> — Human
-users authenticated via HMCTS IdP SSO. <strong>Inter-service auth for
-user-initiated calls is JWT propagation</strong> validated against IdP's
-JWKS endpoint. <strong>Inter-service auth for batch / scheduled
-components is OAuth 2.0 <code>client_credentials</code></strong> against
-<code>nji-mock-auth</code> non-prod; production issuer deferred per gap
-G7.1 (recommendation: Azure Workload Identity).</li>
-<li><strong>NFR13</strong> — Every API call resolves principal's roles +
-Region/Area scope through Authorisation; no operation bypasses.</li>
-<li><strong>NFR14</strong> — No bank details stored or exposed; no
-case-level data in any read model or report.</li>
-<li><strong>NFR15</strong> — Aligns with HMCTS / MoJ Government
-Functional Standard 7 — Security.</li>
-<li><strong>NFR16</strong> — Service credentials, signing keys, and
-integration secrets in managed secret store (Azure Key Vault); never in
-source control or images.</li>
+<li><strong>NFR12</strong> <em>(revised v2.6, 2026-05-07)</em> — Human users authenticated via HMCTS IdP SSO. <strong>Inter-service auth for user-initiated calls is JWT propagation</strong> validated against IdP's JWKS endpoint. <strong>Inter-service auth for batch / scheduled components is OAuth 2.0 <code>client_credentials</code></strong> against <code>nji-mock-auth</code> non-prod; production issuer deferred per gap G7.1 (recommendation: Azure Workload Identity).</li>
+<li><strong>NFR13</strong> — Every API call resolves principal's roles + Region/Area scope through Authorisation; no operation bypasses.</li>
+<li><strong>NFR14</strong> — No bank details stored or exposed; no case-level data in any read model or report.</li>
+<li><strong>NFR15</strong> — Aligns with HMCTS / MoJ Government Functional Standard 7 — Security.</li>
+<li><strong>NFR16</strong> — Service credentials, signing keys, and integration secrets in managed secret store (Azure Key Vault); never in source control or images.</li>
 </ul>
 <p><strong>Accessibility (NFR17–NFR19)</strong></p>
 <ul>
-<li><strong>NFR17</strong> — Every UI page meets WCAG 2.2 Level AA;
-tested per UI page in each domain phase.</li>
-<li><strong>NFR18</strong> — Keyboard navigation, ARIA labels for
-tabbed/dynamic content, screen-reader compatibility per HMCTS
-standards.</li>
-<li><strong>NFR19</strong> — Complies with Public Sector Bodies
-Accessibility Regulations 2018 including published accessibility
-statement.</li>
+<li><strong>NFR17</strong> — Every UI page meets WCAG 2.2 Level AA; tested per UI page in each domain phase.</li>
+<li><strong>NFR18</strong> — Keyboard navigation, ARIA labels for tabbed/dynamic content, screen-reader compatibility per HMCTS standards.</li>
+<li><strong>NFR19</strong> — Complies with Public Sector Bodies Accessibility Regulations 2018 including published accessibility statement.</li>
 </ul>
 <p><strong>Integration (NFR20–NFR24)</strong></p>
 <ul>
-<li><strong>NFR20</strong> — HMCTS IdP integration is Phase 0 hard
-dependency (OIDC or SAML).</li>
-<li><strong>NFR21</strong> — JFEPS / Liberata integration unchanged from
-APEX (format, delivery, authoriser-forwards workflow).</li>
-<li><strong>NFR22</strong> — HMCTS email infrastructure for outbound
-transactional emails; reliable but not low-latency-critical.</li>
-<li><strong>NFR23</strong> — DA&amp;I MI Feed is aggregate-only REST API
-contract.</li>
-<li><strong>NFR24</strong> — No automated eLinks/HR integration in MVP;
-manual data entry continues.</li>
+<li><strong>NFR20</strong> — HMCTS IdP integration is Phase 0 hard dependency (OIDC or SAML).</li>
+<li><strong>NFR21</strong> — JFEPS / Liberata integration unchanged from APEX (format, delivery, authoriser-forwards workflow).</li>
+<li><strong>NFR22</strong> — HMCTS email infrastructure for outbound transactional emails; reliable but not low-latency-critical.</li>
+<li><strong>NFR23</strong> — DA&amp;I MI Feed is aggregate-only REST API contract.</li>
+<li><strong>NFR24</strong> — No automated eLinks/HR integration in MVP; manual data entry continues.</li>
 </ul>
 <p><strong>Observability (NFR25–NFR29) — MVP minimum per D7</strong></p>
 <ul>
-<li><strong>NFR25</strong> — Structured logs with consistent fields,
-correlation IDs across service-to-service calls, defined
-error-categorisation taxonomy. Logging schema is Phase 0
-deliverable.</li>
-<li><strong>NFR26</strong> — Log retention sufficient for pilot incident
-triage; specific period in Phase 0 within HMCTS retention policy.</li>
-<li><strong>NFR27</strong> — Logs ingested into Azure-native logging
-(App Insights / Log Analytics).</li>
-<li><strong>NFR28</strong> — Every service exposes Kubernetes-compatible
-liveness/readiness endpoints (Spring Actuator).</li>
-<li><strong>NFR29</strong> — Post-MVP: structured user-action auditing
-and metrics/trace observability beyond logs.</li>
+<li><strong>NFR25</strong> — Structured logs with consistent fields, correlation IDs across service-to-service calls, defined error-categorisation taxonomy. Logging schema is Phase 0 deliverable.</li>
+<li><strong>NFR26</strong> — Log retention sufficient for pilot incident triage; specific period in Phase 0 within HMCTS retention policy.</li>
+<li><strong>NFR27</strong> — Logs ingested into Azure-native logging (App Insights / Log Analytics).</li>
+<li><strong>NFR28</strong> — Every service exposes Kubernetes-compatible liveness/readiness endpoints (Spring Actuator).</li>
+<li><strong>NFR29</strong> — Post-MVP: structured user-action auditing and metrics/trace observability beyond logs.</li>
 </ul>
 <p><strong>Data Privacy &amp; Sovereignty (NFR30–NFR33)</strong></p>
 <ul>
-<li><strong>NFR30</strong> — UK GDPR / DPA 2018 compliance; personal
-data scope limited; no case-level data.</li>
-<li><strong>NFR31</strong> — All NJI services and data hosted in Azure
-UK regions only.</li>
-<li><strong>NFR32</strong> — Retention per HMCTS schedules; migrated
-transactional history stays in APEX (D3).</li>
-<li><strong>NFR33</strong> — Aggregate data FOI-exposable; case-level
-forbidden by contract (REP-BR-NFR-03).</li>
+<li><strong>NFR30</strong> — UK GDPR / DPA 2018 compliance; personal data scope limited; no case-level data.</li>
+<li><strong>NFR31</strong> — All NJI services and data hosted in Azure UK regions only.</li>
+<li><strong>NFR32</strong> — Retention per HMCTS schedules; migrated transactional history stays in APEX (D3).</li>
+<li><strong>NFR33</strong> — Aggregate data FOI-exposable; case-level forbidden by contract (REP-BR-NFR-03).</li>
 </ul>
 <p><strong>Reliability &amp; Availability (NFR34–NFR38)</strong></p>
 <ul>
-<li><strong>NFR34</strong> — Available during HMCTS operational hours
-(~07:00–19:00 UK weekdays); out-of-hours best-effort.</li>
-<li><strong>NFR35</strong> — Zero failed JFEPS payment cycles
-attributable to NJI. Manual fallback within a cycle is contingency, not
-normal mode.</li>
-<li><strong>NFR36</strong> — Each rollout wave has documented rollback
-path within one operational cycle.</li>
-<li><strong>NFR37</strong> — Strategy A degraded-mode falls back to
-Strategy C cached projection rather than failing; cache freshness in
-OpenAPI spec metadata + response headers.</li>
-<li><strong>NFR38</strong> <em>(disambiguated 2026-05-06)</em> —
-HMCTS-judicial-region rollout isolation: wave activation in one region
-does not affect users in others. Enforced at application tier via
-<code>auth_user_activation_flags</code> (FR58), <strong>not</strong> at
-infrastructure tier. Production runs in single Azure region (UK South)
-with multi-AZ HA. DR scope is an open gap (G3.6).</li>
+<li><strong>NFR34</strong> — Available during HMCTS operational hours (~07:00–19:00 UK weekdays); out-of-hours best-effort.</li>
+<li><strong>NFR35</strong> — Zero failed JFEPS payment cycles attributable to NJI. Manual fallback within a cycle is contingency, not normal mode.</li>
+<li><strong>NFR36</strong> — Each rollout wave has documented rollback path within one operational cycle.</li>
+<li><strong>NFR37</strong> — Strategy A degraded-mode falls back to Strategy C cached projection rather than failing; cache freshness in OpenAPI spec metadata + response headers.</li>
+<li><strong>NFR38</strong> <em>(disambiguated 2026-05-06)</em> — HMCTS-judicial-region rollout isolation: wave activation in one region does not affect users in others. Enforced at application tier via <code>auth_user_activation_flags</code> (FR58), <strong>not</strong> at infrastructure tier. Production runs in single Azure region (UK South) with multi-AZ HA. DR scope is an open gap (G3.6).</li>
 </ul>
 <p><strong>Maintainability (NFR39–NFR42)</strong></p>
 <ul>
-<li><strong>NFR39</strong> — API-as-Product standards per FR59
-(versioned contracts, RFC 9457 errors, OpenAPI, RFC 9745 + RFC 8594
-deprecation signalling).</li>
-<li><strong>NFR40</strong> — Each of the 11 services is independently
-deployable on Kubernetes; rolling updates per service per region.</li>
-<li><strong>NFR41</strong> — Every domain service has a <strong>manual
-UAT script</strong> (per FR61); sign-off per role per region is the wave
-gate. No automated parity test suite; CI is unit + integration
-(Testcontainers) + contract tests only.</li>
-<li><strong>NFR42</strong> — Each phase produces a Postman collection
-exercising the phase's endpoints; versioned alongside services.</li>
+<li><strong>NFR39</strong> — API-as-Product standards per FR59 (versioned contracts, RFC 9457 errors, OpenAPI, RFC 9745 + RFC 8594 deprecation signalling).</li>
+<li><strong>NFR40</strong> — Each of the 11 services is independently deployable on Kubernetes; rolling updates per service per region.</li>
+<li><strong>NFR41</strong> — Every domain service has a <strong>manual UAT script</strong> (per FR61); sign-off per role per region is the wave gate. No automated parity test suite; CI is unit + integration (Testcontainers) + contract tests only.</li>
+<li><strong>NFR42</strong> — Each phase produces a Postman collection exercising the phase's endpoints; versioned alongside services.</li>
 </ul>
-<h3 id="additional-requirements--constraints">Additional Requirements
-&amp; Constraints</h3>
-<p><strong>Decisions Log (D1–D9) — locked programme-level
-decisions</strong></p>
+<h3 id="additional-requirements--constraints">Additional Requirements &amp; Constraints</h3>
+<p><strong>Decisions Log (D1–D9) — locked programme-level decisions</strong></p>
 <ul>
-<li><strong>D1</strong> — Phase 0 scope locked: Reference Data,
-Authorisation+SSO, Notification, API contracts, deployment platform,
-structured logging, shared <code>configuration_values</code> table (no
-configuration service per v2.2). Audit/metrics/trace observability
-post-MVP.</li>
-<li><strong>D2</strong> — Phased rollout; migrated users don't use APEX;
-non-migrated users don't use NJI. No dual-write coexistence.</li>
-<li><strong>D3</strong> — Migration scope: Reference Data only (extended
-by D9). No transactional data migration. Phase 0 ETL: APEX dumps →
-transform → load via NJI Reference Data API. Lives in
-<code>nji-architecture/migration/</code>, separate from Flyway DDL.</li>
-<li><strong>D4</strong> — Feature-parity gate is functional +
-UI-replicates-APEX (modern UI stack, no redesign).
-UX/visual_design/user_journeys in scope (override on
-<code>api_backend</code>).</li>
-<li><strong>D5</strong> <em>(revised 2026-05-06)</em> — APEX is
-behavioural reference verified by <strong>manual UAT performed by
-APEX-experienced users</strong>; not a migration host. Earlier
-"automated comparison reference" framing retracted.</li>
-<li><strong>D6</strong> — APEX maintenance out of project scope (not
-co-managed).</li>
-<li><strong>D7</strong> — Audit/observability MVP minimum: log-based.
-User-action audit post-MVP.</li>
-<li><strong>D8</strong> — Rollout boundary: by region, all applicable
-user roles. Region migrates only when every in-region role's
-functionality is complete.</li>
-<li><strong>D9</strong> — Active users + role/scope mappings extracted
-from APEX, transformed, loaded into NJI Authorisation tables via NJI
-Authorisation API in Phase 0. Each user keyed to HMCTS IdP principal
-(email primary, employee number fallback).</li>
+<li><strong>D1</strong> — Phase 0 scope locked: Reference Data, Authorisation+SSO, Notification, API contracts, deployment platform, structured logging, shared <code>configuration_values</code> table (no configuration service per v2.2). Audit/metrics/trace observability post-MVP.</li>
+<li><strong>D2</strong> — Phased rollout; migrated users don't use APEX; non-migrated users don't use NJI. No dual-write coexistence.</li>
+<li><strong>D3</strong> — Migration scope: Reference Data only (extended by D9). No transactional data migration. Phase 0 ETL: APEX dumps → transform → load via NJI Reference Data API. Lives in <code>nji-architecture/migration/</code>, separate from Flyway DDL.</li>
+<li><strong>D4</strong> — Feature-parity gate is functional + UI-replicates-APEX (modern UI stack, no redesign). UX/visual_design/user_journeys in scope (override on <code>api_backend</code>).</li>
+<li><strong>D5</strong> <em>(revised 2026-05-06)</em> — APEX is behavioural reference verified by <strong>manual UAT performed by APEX-experienced users</strong>; not a migration host. Earlier "automated comparison reference" framing retracted.</li>
+<li><strong>D6</strong> — APEX maintenance out of project scope (not co-managed).</li>
+<li><strong>D7</strong> — Audit/observability MVP minimum: log-based. User-action audit post-MVP.</li>
+<li><strong>D8</strong> — Rollout boundary: by region, all applicable user roles. Region migrates only when every in-region role's functionality is complete.</li>
+<li><strong>D9</strong> — Active users + role/scope mappings extracted from APEX, transformed, loaded into NJI Authorisation tables via NJI Authorisation API in Phase 0. Each user keyed to HMCTS IdP principal (email primary, employee number fallback).</li>
 </ul>
-<p><strong>Service decomposition (11 services in 3
-clusters):</strong></p>
+<p><strong>Service decomposition (11 services in 3 clusters):</strong></p>
 <ul>
-<li><strong>Domain (6):</strong> Judge, Absence, Vacancy, Booking,
-Sitting, Payment</li>
-<li><strong>Cross-cutting (3):</strong> Reference Data, Authorisation,
-Notification</li>
+<li><strong>Domain (6):</strong> Judge, Absence, Vacancy, Booking, Sitting, Payment</li>
+<li><strong>Cross-cutting (3):</strong> Reference Data, Authorisation, Notification</li>
 <li><strong>Read-model federated (2):</strong> Itinerary, MI Feed</li>
-<li>Configuration is <strong>not</strong> a service — per-service Spring
-profiles + Key Vault; shared <code>configuration_values</code> table for
-cross-service policy values.</li>
+<li>Configuration is <strong>not</strong> a service — per-service Spring profiles + Key Vault; shared <code>configuration_values</code> table for cross-service policy values.</li>
 </ul>
 <p><strong>Build phases (per MVP strategy):</strong></p>
 <ul>
-<li>Phase 0: Foundations (Reference Data, Authorisation+SSO,
-Notification, contracts, platform, logging conventions, stub Home)</li>
-<li>Phases 1–6: Judge → Absence → Vacancy → Booking → Sitting →
-Payment</li>
+<li>Phase 0: Foundations (Reference Data, Authorisation+SSO, Notification, contracts, platform, logging conventions, stub Home)</li>
+<li>Phases 1–6: Judge → Absence → Vacancy → Booking → Sitting → Payment</li>
 <li>Phases 7–8: Itinerary, MI Feed (federated read models)</li>
 <li>Phase 9: Pilot rollout (wave 1) — one region migrates</li>
 <li>Phases 10..N: Wave-by-wave per-region rollout</li>
 </ul>
 <p><strong>Forbidden by contract:</strong></p>
 <ul>
-<li>Bank details (PAY-NFR-05) — never in any Payment resource
-shape.</li>
-<li>Case-level identifiers (REP-BR-NFR-03) — never in Reports or MI Feed
-shapes.</li>
+<li>Bank details (PAY-NFR-05) — never in any Payment resource shape.</li>
+<li>Case-level identifiers (REP-BR-NFR-03) — never in Reports or MI Feed shapes.</li>
 </ul>
 <p><strong>Integrations (binding):</strong></p>
 <ul>
 <li>HMCTS IdP (SSO) — inbound AuthN, Phase 0 hard dependency.</li>
-<li>JFEPS / Liberata — outbound payment via Excel email, unchanged from
-APEX, Phase 6.</li>
+<li>JFEPS / Liberata — outbound payment via Excel email, unchanged from APEX, Phase 6.</li>
 <li>HMCTS email — outbound transactional emails, Phase 0+.</li>
 <li>DA&amp;I (MI Feed) — outbound aggregate-only REST, Phase 8.</li>
 <li>eLinks / HR — out of MVP scope; manual entry continues.</li>
 </ul>
-<h3 id="prd-completeness-assessment-initial">PRD Completeness Assessment
-(initial)</h3>
+<h3 id="prd-completeness-assessment-initial">PRD Completeness Assessment (initial)</h3>
 <ul>
-<li>✅ <strong>Scope clarity</strong> — MVP, Growth, Vision distinctly
-delineated with explicit exclusions list.</li>
-<li>✅ <strong>Traceability anchors</strong> — FR/NFR numbered IDs,
-D1–D9 decision IDs, RFC citations, cross-references to source
-documents.</li>
-<li>✅ <strong>User journeys</strong> — 5 journeys cover the main
-operational cycle, daily confirmation, judge self-service, external API
-consumer, and a known cross-region edge case during partial
-rollout.</li>
-<li>✅ <strong>Compliance &amp; constraints</strong> — UK govtech
-specifics (WCAG 2.2 AA, UK GDPR, FOI, GovS 7) addressed; data-residency
-NFR31 binding.</li>
-<li>✅ <strong>Recent revisions logged inline</strong> — multiple
-<code>(revised YYYY-MM-DD)</code> markers indicate the doc has been
-actively maintained.</li>
-<li>⚠️ <strong>Several deferred/TBD items remain</strong> to be
-cross-checked against architecture:
+<li>✅ <strong>Scope clarity</strong> — MVP, Growth, Vision distinctly delineated with explicit exclusions list.</li>
+<li>✅ <strong>Traceability anchors</strong> — FR/NFR numbered IDs, D1–D9 decision IDs, RFC citations, cross-references to source documents.</li>
+<li>✅ <strong>User journeys</strong> — 5 journeys cover the main operational cycle, daily confirmation, judge self-service, external API consumer, and a known cross-region edge case during partial rollout.</li>
+<li>✅ <strong>Compliance &amp; constraints</strong> — UK govtech specifics (WCAG 2.2 AA, UK GDPR, FOI, GovS 7) addressed; data-residency NFR31 binding.</li>
+<li>✅ <strong>Recent revisions logged inline</strong> — multiple <code>(revised YYYY-MM-DD)</code> markers indicate the doc has been actively maintained.</li>
+<li>⚠️ <strong>Several deferred/TBD items remain</strong> to be cross-checked against architecture:
 <ul>
 <li>FR5 — M2M auth deferred to post-MVP (gap G7).</li>
-<li>NFR12 — production issuer for batch service-auth deferred (gap
-G7.1).</li>
+<li>NFR12 — production issuer for batch service-auth deferred (gap G7.1).</li>
 <li>NFR38 — DR scope an open gap (G3.6).</li>
 <li>Rate limits — architecture-phase decision.</li>
-<li>API versioning policy details — Phase 0 deliverable, working
-assumption is path-prefix.</li>
+<li>API versioning policy details — Phase 0 deliverable, working assumption is path-prefix.</li>
 </ul></li>
-<li>⚠️ <strong>Risk #1 and Risk #9 fallbacks</strong> (cross-region
-manual coordination; Strategy C cache fallback) reference items that
-must appear in architecture risk-mitigations and observability/rollout
-plans.</li>
+<li>⚠️ <strong>Risk #1 and Risk #9 fallbacks</strong> (cross-region manual coordination; Strategy C cache fallback) reference items that must appear in architecture risk-mitigations and observability/rollout plans.</li>
 </ul>
-<p>PRD is <strong>well-formed and traceable</strong>. Coverage
-validation in Step 3 will check whether epics map every FR/NFR.</p>
+<p>PRD is <strong>well-formed and traceable</strong>. Coverage validation in Step 3 will check whether epics map every FR/NFR.</p>
 </div></details><details class="section" id="3-epic-coverage-validation"><summary><span class="section-title">3. Epic Coverage Validation</span></summary><div class="section-body">
-<p>Loaded <code>epics.md</code> (523 lines). Frontmatter shows
-<code>stepsCompleted: ['step-01-validate-prerequisites']</code> only —
-confirming the document is at the framework stage of its own multi-step
-workflow.</p>
-<h3 id="warning-critical-structural-finding">⚠️ Critical structural
-finding</h3>
-<p>The epics document is currently a <strong>Phase × Area
-framework</strong>, not a stories-with-acceptance-criteria deliverable.
-Line 523 explicitly states: <em>"Next step (Step 2 of this workflow):
-For each Phase × Area row above, design one or more concrete epics with
-an explicit goal, story breakdown, and Gherkin-style acceptance
-criteria."</em></p>
+<p>Loaded <code>epics.md</code> (523 lines). Frontmatter shows <code>stepsCompleted: ['step-01-validate-prerequisites']</code> only — confirming the document is at the framework stage of its own multi-step workflow.</p>
+<h3 id="warning-critical-structural-finding">⚠️ Critical structural finding</h3>
+<p>The epics document is currently a <strong>Phase × Area framework</strong>, not a stories-with-acceptance-criteria deliverable. Line 523 explicitly states: <em>"Next step (Step 2 of this workflow): For each Phase × Area row above, design one or more concrete epics with an explicit goal, story breakdown, and Gherkin-style acceptance criteria."</em></p>
 <p>What exists:</p>
 <ul>
-<li>✅ Phase × Area summary table with FR/NFR coverage at the Area
-level</li>
+<li>✅ Phase × Area summary table with FR/NFR coverage at the Area level</li>
 <li>✅ Scope description per Area</li>
-<li>✅ Component identification (<code>nji-judge</code>,
-<code>nji-payment-batch</code>, etc.)</li>
+<li>✅ Component identification (<code>nji-judge</code>, <code>nji-payment-batch</code>, etc.)</li>
 <li>✅ Demo gate identification per phase</li>
 <li>✅ Architecture-derived additional requirements (AR1–AR50)</li>
 </ul>
@@ -739,12 +458,9 @@ level</li>
 <li>❌ User stories (<code>As a... I want... So that...</code>)</li>
 <li>❌ Gherkin-style acceptance criteria</li>
 <li>❌ Story-level dependencies and sequencing within an Area</li>
-<li>❌ Populated <strong>FR Coverage Map</strong> — the doc has a
-placeholder: <em>"Placeholder — populated in Step 3 once epics and
-stories are designed."</em></li>
+<li>❌ Populated <strong>FR Coverage Map</strong> — the doc has a placeholder: <em>"Placeholder — populated in Step 3 once epics and stories are designed."</em></li>
 </ul>
-<h3 id="fr-coverage-matrix-area-level--pre-story">FR Coverage Matrix
-(Area-level — pre-story)</h3>
+<h3 id="fr-coverage-matrix-area-level--pre-story">FR Coverage Matrix (Area-level — pre-story)</h3>
 <table>
 <thead>
 <tr>
@@ -975,10 +691,8 @@ stories are designed."</em></li>
 </tr>
 </tbody>
 </table>
-<p><strong>Total FRs: 61. Covered: 60 (98%). Deferred (intentional): 1
-(FR5).</strong></p>
-<h3 id="nfr-coverage-matrix-area-level--pre-story">NFR Coverage Matrix
-(Area-level — pre-story)</h3>
+<p><strong>Total FRs: 61. Covered: 60 (98%). Deferred (intentional): 1 (FR5).</strong></p>
+<h3 id="nfr-coverage-matrix-area-level--pre-story">NFR Coverage Matrix (Area-level — pre-story)</h3>
 <table>
 <thead>
 <tr>
@@ -993,8 +707,7 @@ stories are designed."</em></li>
 <td>NFR1–NFR7</td>
 <td>Implicit cross-cutting</td>
 <td>All phases</td>
-<td>Performance NFRs claimed as inherited; <strong>no explicit per-phase
-acceptance criteria</strong></td>
+<td>Performance NFRs claimed as inherited; <strong>no explicit per-phase acceptance criteria</strong></td>
 </tr>
 <tr>
 <td>NFR8</td>
@@ -1054,8 +767,7 @@ acceptance criteria</strong></td>
 <td>NFR20</td>
 <td>Implicit</td>
 <td>0 — Identity</td>
-<td>HMCTS IdP integration (scope text mentions; coverage line
-doesn't)</td>
+<td>HMCTS IdP integration (scope text mentions; coverage line doesn't)</td>
 </tr>
 <tr>
 <td>NFR21</td>
@@ -1132,8 +844,7 @@ doesn't)</td>
 <tr>
 <td>NFR39</td>
 <td>Implicit</td>
-<td>0 — Platform &amp; DevEx (foundations); every phase exercises
-it</td>
+<td>0 — Platform &amp; DevEx (foundations); every phase exercises it</td>
 <td>API-as-Product standards</td>
 </tr>
 <tr>
@@ -1156,78 +867,40 @@ it</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Total NFRs: 42. Explicitly mapped to a phase: 22. Implicit
-cross-cutting: 19. Intentionally deferred: 1 (NFR29).</strong></p>
+<p><strong>Total NFRs: 42. Explicitly mapped to a phase: 22. Implicit cross-cutting: 19. Intentionally deferred: 1 (NFR29).</strong></p>
 <h3 id="missing-coverage">Missing Coverage</h3>
-<h4 id="critical-missing-blocks-implementation-start">Critical Missing
-(blocks implementation start)</h4>
-<p>None — every MVP-scoped FR has an Area mapping. <strong>The blocker
-is structural</strong>, not coverage:</p>
+<h4 id="critical-missing-blocks-implementation-start">Critical Missing (blocks implementation start)</h4>
+<p>None — every MVP-scoped FR has an Area mapping. <strong>The blocker is structural</strong>, not coverage:</p>
 <ul>
-<li><strong>No epics with stories or acceptance criteria yet.</strong> A
-developer agent (<code>bmad-dev-story</code>) cannot pick up a story to
-implement because no stories have been written. Phase × Area framework
-is necessary but not sufficient.</li>
-<li><strong>FR Coverage Map placeholder unfilled.</strong> The doc
-commits to populating this once stories exist; currently it's a
-sentinel.</li>
+<li><strong>No epics with stories or acceptance criteria yet.</strong> A developer agent (<code>bmad-dev-story</code>) cannot pick up a story to implement because no stories have been written. Phase × Area framework is necessary but not sufficient.</li>
+<li><strong>FR Coverage Map placeholder unfilled.</strong> The doc commits to populating this once stories exist; currently it's a sentinel.</li>
 </ul>
-<h4
-id="implicit-cross-cutting-nfrs-medium-priority-gap">Implicit-cross-cutting
-NFRs (medium-priority gap)</h4>
-<p>Performance, broad security, data-privacy and reliability NFRs are
-tagged "inherited by every phase" but lack <strong>explicit per-phase
-acceptance criteria</strong>. Risk: when Step 2 of the epics workflow
-generates stories, these may quietly fall off the AC list.
-Recommend:</p>
+<h4 id="implicit-cross-cutting-nfrs-medium-priority-gap">Implicit-cross-cutting NFRs (medium-priority gap)</h4>
+<p>Performance, broad security, data-privacy and reliability NFRs are tagged "inherited by every phase" but lack <strong>explicit per-phase acceptance criteria</strong>. Risk: when Step 2 of the epics workflow generates stories, these may quietly fall off the AC list. Recommend:</p>
 <ul>
-<li>Each Phase 1–8 epic must include explicit NFR-anchored acceptance
-criteria for the NFRs that apply at that phase (e.g. Phase 5 Sitting
-stories must call out NFR3 ≤ 10 s list/filter explicitly in the AC, not
-as a generic cross-cutting note).</li>
+<li>Each Phase 1–8 epic must include explicit NFR-anchored acceptance criteria for the NFRs that apply at that phase (e.g. Phase 5 Sitting stories must call out NFR3 ≤ 10 s list/filter explicitly in the AC, not as a generic cross-cutting note).</li>
 </ul>
-<h4 id="architecture-derived-requirements-ar1ar50">Architecture-derived
-requirements (AR1–AR50)</h4>
-<p>Epics document lists 50 architecture-derived additional requirements
-(AR1–AR50) but only AR1 (polyrepo strategy) and AR42–AR45b (UI split)
-are clearly mapped to specific Phase 0 work. The other 45+ ARs need
-story-level surfaces — particularly the per-service scaffolding
-(AR2–AR4), build/supply-chain tooling (AR9–AR13), and security
-implementation (AR34–AR37). These are likely "Story 1 of every service
-epic" type stories but aren't yet stories.</p>
+<h4 id="architecture-derived-requirements-ar1ar50">Architecture-derived requirements (AR1–AR50)</h4>
+<p>Epics document lists 50 architecture-derived additional requirements (AR1–AR50) but only AR1 (polyrepo strategy) and AR42–AR45b (UI split) are clearly mapped to specific Phase 0 work. The other 45+ ARs need story-level surfaces — particularly the per-service scaffolding (AR2–AR4), build/supply-chain tooling (AR9–AR13), and security implementation (AR34–AR37). These are likely "Story 1 of every service epic" type stories but aren't yet stories.</p>
 <h3 id="coverage-statistics">Coverage Statistics</h3>
 <ul>
 <li><strong>Total PRD FRs:</strong> 61</li>
-<li><strong>FRs covered (mapped to a Phase × Area):</strong> 60
-(98%)</li>
+<li><strong>FRs covered (mapped to a Phase × Area):</strong> 60 (98%)</li>
 <li><strong>FRs intentionally deferred:</strong> 1 (FR5 — post-MVP)</li>
 <li><strong>FRs missing without justification:</strong> 0</li>
 <li><strong>Total PRD NFRs:</strong> 42</li>
 <li><strong>NFRs explicitly mapped:</strong> 22 (52%)</li>
 <li><strong>NFRs implicit cross-cutting:</strong> 19 (45%)</li>
-<li><strong>NFRs intentionally deferred:</strong> 1 (NFR29 —
-post-MVP)</li>
-<li><strong>Architecture-derived requirements (AR1–AR50):</strong> 50 —
-most not yet story-mapped</li>
+<li><strong>NFRs intentionally deferred:</strong> 1 (NFR29 — post-MVP)</li>
+<li><strong>Architecture-derived requirements (AR1–AR50):</strong> 50 — most not yet story-mapped</li>
 </ul>
-<h3 id="headline-verdict-for-this-step">Headline verdict for this
-step</h3>
-<p><strong>Coverage at the Phase × Area level is comprehensive</strong>
-— the framework demonstrates that every FR has a home. But the epics
-document is at <strong>~30% maturity</strong> for implementation
-kick-off: framework done, stories not yet drafted. This is the single
-biggest readiness gap and will dominate the final assessment in Step
-6.</p>
+<h3 id="headline-verdict-for-this-step">Headline verdict for this step</h3>
+<p><strong>Coverage at the Phase × Area level is comprehensive</strong> — the framework demonstrates that every FR has a home. But the epics document is at <strong>~30% maturity</strong> for implementation kick-off: framework done, stories not yet drafted. This is the single biggest readiness gap and will dominate the final assessment in Step 6.</p>
 </div></details><details class="section" id="4-ux-alignment-assessment"><summary><span class="section-title">4. UX Alignment Assessment</span></summary><div class="section-body">
 <h3 id="ux-document-status">UX Document Status</h3>
-<p><strong>Not Found.</strong> No <code>*ux*.md</code> whole document or
-<code>*ux*/index.md</code> sharded folder under
-<code>_bmad-output/planning-artifacts/</code>.</p>
-<h3 id="is-ux-implied-by-the-other-artefacts">Is UX implied by the other
-artefacts?</h3>
-<p><strong>Yes — strongly implied.</strong> Despite the explicit
-decision to defer UX work, UI surface is unambiguously part of MVP
-scope:</p>
+<p><strong>Not Found.</strong> No <code>*ux*.md</code> whole document or <code>*ux*/index.md</code> sharded folder under <code>_bmad-output/planning-artifacts/</code>.</p>
+<h3 id="is-ux-implied-by-the-other-artefacts">Is UX implied by the other artefacts?</h3>
+<p><strong>Yes — strongly implied.</strong> Despite the explicit decision to defer UX work, UI surface is unambiguously part of MVP scope:</p>
 <table>
 <thead>
 <tr>
@@ -1238,62 +911,43 @@ scope:</p>
 <tbody>
 <tr>
 <td>PRD Classification</td>
-<td><code>projectType=api_backend</code> with explicit overrides
-<code>ux_ui in scope per D4</code>,
-<code>visual_design in scope per D4</code>,
-<code>user_journeys in scope per D4</code></td>
+<td><code>projectType=api_backend</code> with explicit overrides <code>ux_ui in scope per D4</code>, <code>visual_design in scope per D4</code>, <code>user_journeys in scope per D4</code></td>
 </tr>
 <tr>
 <td>PRD D4 (locked decision)</td>
-<td>"Feature-parity gate is functional + UI-replicates-APEX (modern UI
-stack, no redesign)"</td>
+<td>"Feature-parity gate is functional + UI-replicates-APEX (modern UI stack, no redesign)"</td>
 </tr>
 <tr>
 <td>PRD FR55</td>
-<td>Authenticated users land on a Home page with role-scoped navigation,
-Region/Area selector, summary tiles, contextual help</td>
+<td>Authenticated users land on a Home page with role-scoped navigation, Region/Area selector, summary tiles, contextual help</td>
 </tr>
 <tr>
 <td>PRD FR56</td>
-<td>NJI's UI replicates the functional surface of as-is APEX UI on a
-modern UI stack and meets WCAG 2.2 AA</td>
+<td>NJI's UI replicates the functional surface of as-is APEX UI on a modern UI stack and meets WCAG 2.2 AA</td>
 </tr>
 <tr>
 <td>PRD NFR17–NFR19</td>
-<td>WCAG 2.2 AA accessibility per page, assistive tech compatibility,
-Public Sector Bodies Accessibility Regs 2018 compliance</td>
+<td>WCAG 2.2 AA accessibility per page, assistive tech compatibility, Public Sector Bodies Accessibility Regs 2018 compliance</td>
 </tr>
 <tr>
 <td>PRD User Journeys 1–4</td>
-<td>Operational UI flows (RSU cover cycle, Court daily confirmation,
-Judge tablet itinerary, DA&amp;I API consumer)</td>
+<td>Operational UI flows (RSU cover cycle, Court daily confirmation, Judge tablet itinerary, DA&amp;I API consumer)</td>
 </tr>
 <tr>
 <td>Epics doc AR42</td>
-<td>Two UI repos (<code>nji-ui</code> + <code>nji-admin-ui</code>),
-React + TypeScript + Vite + Vitest + Playwright stack</td>
+<td>Two UI repos (<code>nji-ui</code> + <code>nji-admin-ui</code>), React + TypeScript + Vite + Vitest + Playwright stack</td>
 </tr>
 <tr>
 <td>Epics doc AR43–AR45b</td>
-<td>Auto-generated TS clients, OIDC client wrapper, per-phase E2E
-suites, axe-core CI, independent deployment with distinct hostnames,
-GOV.UK Design System base</td>
+<td>Auto-generated TS clients, OIDC client wrapper, per-phase E2E suites, axe-core CI, independent deployment with distinct hostnames, GOV.UK Design System base</td>
 </tr>
 </tbody>
 </table>
-<p>Both Phase 0 Business UI Foundation and Phase 0 Admin UI Foundation
-areas are present in the epic framework and gate Phase 1+ progress (the
-per-domain UI modules are part of each domain phase's scope).</p>
+<p>Both Phase 0 Business UI Foundation and Phase 0 Admin UI Foundation areas are present in the epic framework and gate Phase 1+ progress (the per-domain UI modules are part of each domain phase's scope).</p>
 <h3 id="user-direction-recorded">User direction (recorded)</h3>
-<p>User confirmed on <strong>2026-05-15</strong>: project is currently
-focused on <strong>domains and APIs only</strong>; UI is
-<strong>deferred to a later stage</strong>. This is an explicit scoping
-decision for the current planning cycle.</p>
-<h3
-id="alignment-issues-between-prd--architecture--epics-on-ux-matters">Alignment
-Issues (between PRD ↔︎ Architecture ↔︎ Epics on UX matters)</h3>
-<p>Despite the missing standalone UX doc, the three artefacts internally
-align on UI matters:</p>
+<p>User confirmed on <strong>2026-05-15</strong>: project is currently focused on <strong>domains and APIs only</strong>; UI is <strong>deferred to a later stage</strong>. This is an explicit scoping decision for the current planning cycle.</p>
+<h3 id="alignment-issues-between-prd--architecture--epics-on-ux-matters">Alignment Issues (between PRD ↔︎ Architecture ↔︎ Epics on UX matters)</h3>
+<p>Despite the missing standalone UX doc, the three artefacts internally align on UI matters:</p>
 <table>
 <thead>
 <tr>
@@ -1307,15 +961,13 @@ align on UI matters:</p>
 <tr>
 <td>UI stack</td>
 <td>"modern UI stack" (PRD §Technology Stack)</td>
-<td>React + TypeScript + Vite + Vitest + Playwright
-(architecture/conventions, repository-strategy)</td>
+<td>React + TypeScript + Vite + Vitest + Playwright (architecture/conventions, repository-strategy)</td>
 <td>AR42 explicit</td>
 </tr>
 <tr>
 <td>UI repo strategy</td>
 <td>Not specified</td>
-<td>Two UI repos: <code>nji-ui</code> + <code>nji-admin-ui</code>
-(architecture/repository-strategy v2.2+)</td>
+<td>Two UI repos: <code>nji-ui</code> + <code>nji-admin-ui</code> (architecture/repository-strategy v2.2+)</td>
 <td>AR42–AR45b explicit</td>
 </tr>
 <tr>
@@ -1332,8 +984,7 @@ align on UI matters:</p>
 </tr>
 <tr>
 <td>Admin separation</td>
-<td>"Admin module's password-change capability disappears" (PRD
-§Compliance)</td>
+<td>"Admin module's password-change capability disappears" (PRD §Compliance)</td>
 <td>Two UI repos with admin separation</td>
 <td>Phase 0 Admin UI Foundation</td>
 </tr>
@@ -1345,92 +996,34 @@ align on UI matters:</p>
 </tr>
 </tbody>
 </table>
-<p>→ <strong>No alignment conflicts found.</strong> PRD, architecture,
-and epics tell a consistent story about UI even without a standalone UX
-doc.</p>
+<p>→ <strong>No alignment conflicts found.</strong> PRD, architecture, and epics tell a consistent story about UI even without a standalone UX doc.</p>
 <h3 id="warnings">Warnings</h3>
-<h4
-id="warning-warning-1--ux-deferral-creates-a-hidden-dependency-at-phase-0">⚠️
-WARNING 1 — UX deferral creates a hidden dependency at Phase 0</h4>
-<p>The epic framework lists <strong>Phase 0 Business UI
-Foundation</strong> and <strong>Phase 0 Admin UI Foundation</strong> as
-foundational areas that gate Phase 1+ (per-domain UI modules sit inside
-each domain phase). If UX work is genuinely deferred, then either:</p>
+<h4 id="warning-warning-1--ux-deferral-creates-a-hidden-dependency-at-phase-0">⚠️ WARNING 1 — UX deferral creates a hidden dependency at Phase 0</h4>
+<p>The epic framework lists <strong>Phase 0 Business UI Foundation</strong> and <strong>Phase 0 Admin UI Foundation</strong> as foundational areas that gate Phase 1+ (per-domain UI modules sit inside each domain phase). If UX work is genuinely deferred, then either:</p>
 <ul>
-<li><strong>(a)</strong> Phase 0 ships <strong>without</strong> UI
-foundations — in which case Phase 1+ per-domain UI modules cannot start
-either, since they depend on the shared UI shell, auth wrapper, design
-system, accessibility CI, and Playwright scaffolding. This would push UI
-to a separate parallel programme post-Phase-8 and contradicts the
-per-phase demo gates (Journey 2 demoable end-of-Phase-5, Journey 1
-demoable end-of-Phase-6, etc.).</li>
-<li><strong>(b)</strong> UI foundations ship in Phase 0 <strong>without
-explicit UX design</strong> — relying on PRD's "replicate APEX" framing
-(D4) plus GOV.UK Design System + HMCTS extensions for visual treatment.
-This is feasible because the brief is "no redesign", but accessibility
-(NFR17) and information architecture for non-trivial flows (e.g. judge
-profile editing, vacancy day-breakdown editing, sitting re-open with
-justification) carry risk without UX validation.</li>
+<li><strong>(a)</strong> Phase 0 ships <strong>without</strong> UI foundations — in which case Phase 1+ per-domain UI modules cannot start either, since they depend on the shared UI shell, auth wrapper, design system, accessibility CI, and Playwright scaffolding. This would push UI to a separate parallel programme post-Phase-8 and contradicts the per-phase demo gates (Journey 2 demoable end-of-Phase-5, Journey 1 demoable end-of-Phase-6, etc.).</li>
+<li><strong>(b)</strong> UI foundations ship in Phase 0 <strong>without explicit UX design</strong> — relying on PRD's "replicate APEX" framing (D4) plus GOV.UK Design System + HMCTS extensions for visual treatment. This is feasible because the brief is "no redesign", but accessibility (NFR17) and information architecture for non-trivial flows (e.g. judge profile editing, vacancy day-breakdown editing, sitting re-open with justification) carry risk without UX validation.</li>
 </ul>
-<p><strong>Recommendation:</strong> make the deferral explicit in the
-epic narrative — pick one of:</p>
+<p><strong>Recommendation:</strong> make the deferral explicit in the epic narrative — pick one of:</p>
 <ul>
-<li>"UX design deferred; Phase 0 UI Foundation ships with GOV.UK DS +
-APEX-replica behaviour as the design baseline; per-phase UX walkthroughs
-gate domain phases."</li>
-<li>"UX design and Phase 0 UI Foundations both deferred to a follow-on
-UI programme; MVP delivery is API-first; Journey demos become API-only
-until UI programme ships."</li>
+<li>"UX design deferred; Phase 0 UI Foundation ships with GOV.UK DS + APEX-replica behaviour as the design baseline; per-phase UX walkthroughs gate domain phases."</li>
+<li>"UX design and Phase 0 UI Foundations both deferred to a follow-on UI programme; MVP delivery is API-first; Journey demos become API-only until UI programme ships."</li>
 </ul>
-<p>The current epic doc reads as if both apply simultaneously, which is
-ambiguous.</p>
-<h4
-id="warning-warning-2--accessibility-regulatory-exposure-carries-hard-deadlines">⚠️
-WARNING 2 — Accessibility regulatory exposure carries hard
-deadlines</h4>
-<p>UK Public Sector Bodies Accessibility Regulations 2018 (NFR19)
-require a published accessibility statement and ongoing compliance for
-any UI shipped to users. Deferring UX without deferring UI delivery
-raises regulatory risk. If UI is also being deferred, this is moot
-during the deferral window but becomes hard the moment Phase 9 user
-activation begins.</p>
-<h4
-id="warning-warning-3--apex-replica-behavioural-spec-is-non-trivial">⚠️
-WARNING 3 — APEX-replica behavioural spec is non-trivial</h4>
-<p>The "replicate APEX" framing (D4) treats APEX as the implicit UX
-spec, but the as-is APEX has known issues (NFR-baseline-only
-accessibility, dated patterns, dated information architecture). The PRD
-targets <em>modern UI</em> + <em>measurable accessibility
-improvement</em>. Without a UX document specifying <em>which</em> APEX
-patterns to preserve and <em>which</em> to modernise, this judgment
-lands on implementers per phase. Recommend lightweight UX guidance per
-domain phase even if a full UX doc is deferred — e.g. a per-phase "UI
-parity &amp; uplift notes" appendix.</p>
+<p>The current epic doc reads as if both apply simultaneously, which is ambiguous.</p>
+<h4 id="warning-warning-2--accessibility-regulatory-exposure-carries-hard-deadlines">⚠️ WARNING 2 — Accessibility regulatory exposure carries hard deadlines</h4>
+<p>UK Public Sector Bodies Accessibility Regulations 2018 (NFR19) require a published accessibility statement and ongoing compliance for any UI shipped to users. Deferring UX without deferring UI delivery raises regulatory risk. If UI is also being deferred, this is moot during the deferral window but becomes hard the moment Phase 9 user activation begins.</p>
+<h4 id="warning-warning-3--apex-replica-behavioural-spec-is-non-trivial">⚠️ WARNING 3 — APEX-replica behavioural spec is non-trivial</h4>
+<p>The "replicate APEX" framing (D4) treats APEX as the implicit UX spec, but the as-is APEX has known issues (NFR-baseline-only accessibility, dated patterns, dated information architecture). The PRD targets <em>modern UI</em> + <em>measurable accessibility improvement</em>. Without a UX document specifying <em>which</em> APEX patterns to preserve and <em>which</em> to modernise, this judgment lands on implementers per phase. Recommend lightweight UX guidance per domain phase even if a full UX doc is deferred — e.g. a per-phase "UI parity &amp; uplift notes" appendix.</p>
 <h3 id="verdict-for-this-step">Verdict for this step</h3>
 <ul>
-<li><strong>No UX doc + UX explicitly deferred</strong> is a
-<strong>documented and accepted gap</strong> for the current planning
-cycle.</li>
-<li><strong>PRD ↔︎ Architecture ↔︎ Epics are internally
-consistent</strong> on UI matters — no alignment conflicts.</li>
-<li>The deferral is <strong>not safely silent</strong> — Phase 0 UI
-Foundations + Phase 1+ per-domain UI modules sit in the epic framework
-and are coupled to demo gates. The epic doc must declare which model
-applies (full deferral vs UI-without-UX) before stories are
-written.</li>
+<li><strong>No UX doc + UX explicitly deferred</strong> is a <strong>documented and accepted gap</strong> for the current planning cycle.</li>
+<li><strong>PRD ↔︎ Architecture ↔︎ Epics are internally consistent</strong> on UI matters — no alignment conflicts.</li>
+<li>The deferral is <strong>not safely silent</strong> — Phase 0 UI Foundations + Phase 1+ per-domain UI modules sit in the epic framework and are coupled to demo gates. The epic doc must declare which model applies (full deferral vs UI-without-UX) before stories are written.</li>
 </ul>
 </div></details><details class="section" id="5-epic-quality-review"><summary><span class="section-title">5. Epic Quality Review</span></summary><div class="section-body">
-<p><strong>Caveat:</strong> standard quality enforcement targets epics
-with concrete stories and Gherkin acceptance criteria — neither exists
-yet (per Step 3 finding). What follows applies create-epics-and-stories
-standards to the <strong>Phase × Area framework as proto-epics</strong>,
-distinguishes violations that exist <em>now</em> from those that
-<em>will arise</em> when stories appear, and provides remediation
-guidance.</p>
-<h3 id="a-user-value-vs-technical-milestone-check">A. User-Value vs
-Technical-Milestone Check</h3>
-<p>Each Phase × Area is treated as a proto-epic. Verdict: ✅ user-value
-| ⚠️ borderline | ❌ technical-only.</p>
+<p><strong>Caveat:</strong> standard quality enforcement targets epics with concrete stories and Gherkin acceptance criteria — neither exists yet (per Step 3 finding). What follows applies create-epics-and-stories standards to the <strong>Phase × Area framework as proto-epics</strong>, distinguishes violations that exist <em>now</em> from those that <em>will arise</em> when stories appear, and provides remediation guidance.</p>
+<h3 id="a-user-value-vs-technical-milestone-check">A. User-Value vs Technical-Milestone Check</h3>
+<p>Each Phase × Area is treated as a proto-epic. Verdict: ✅ user-value | ⚠️ borderline | ❌ technical-only.</p>
 <table>
 <thead>
 <tr>
@@ -1443,48 +1036,37 @@ Technical-Milestone Check</h3>
 <tr>
 <td>Phase 0 Platform &amp; DevEx</td>
 <td>❌ Technical</td>
-<td>No direct user value — pure infra/tooling. Will need to be re-framed
-when storied, or split such that user-facing stories live in domain
-phases and only the genuinely cross-cutting infra survives.</td>
+<td>No direct user value — pure infra/tooling. Will need to be re-framed when storied, or split such that user-facing stories live in domain phases and only the genuinely cross-cutting infra survives.</td>
 </tr>
 <tr>
 <td>Phase 0 Identity &amp; Authorisation</td>
 <td>✅ User value</td>
-<td>"User signs in via SSO and gets the right access" is a real user
-outcome (FR1–FR4 enable Journey 1–4).</td>
+<td>"User signs in via SSO and gets the right access" is a real user outcome (FR1–FR4 enable Journey 1–4).</td>
 </tr>
 <tr>
 <td>Phase 0 Reference Data</td>
 <td>⚠️ Borderline</td>
-<td>"RSU users maintain reference lists" is user value (FR6);
-reference-data-as-foundation is technical. The Admin UI surface restores
-the user value.</td>
+<td>"RSU users maintain reference lists" is user value (FR6); reference-data-as-foundation is technical. The Admin UI surface restores the user value.</td>
 </tr>
 <tr>
 <td>Phase 0 Notification</td>
 <td>❌ Technical</td>
-<td>No user value as a standalone — but consumed by FR20, FR32, FR43 in
-later phases. Acceptable as a thin technical foundation
-<strong>if</strong> every user-visible email is owned by the consuming
-domain phase's stories with the Notification call as a step.</td>
+<td>No user value as a standalone — but consumed by FR20, FR32, FR43 in later phases. Acceptable as a thin technical foundation <strong>if</strong> every user-visible email is owned by the consuming domain phase's stories with the Notification call as a step.</td>
 </tr>
 <tr>
 <td>Phase 0 Data Migration ETL</td>
 <td>❌ Technical</td>
-<td>Programme-level deliverable, not a user-facing capability.
-Named-owner sign-off (FR57) is the actual user touch-point.</td>
+<td>Programme-level deliverable, not a user-facing capability. Named-owner sign-off (FR57) is the actual user touch-point.</td>
 </tr>
 <tr>
 <td>Phase 0 Business UI Foundation</td>
 <td>⚠️ Borderline</td>
-<td>"User lands on Home" (FR55) is real value; the rest is shared
-infra.</td>
+<td>"User lands on Home" (FR55) is real value; the rest is shared infra.</td>
 </tr>
 <tr>
 <td>Phase 0 Admin UI Foundation</td>
 <td>✅ User value</td>
-<td>Reference Data maintenance + User &amp; Role admin are
-user-facing.</td>
+<td>Reference Data maintenance + User &amp; Role admin are user-facing.</td>
 </tr>
 <tr>
 <td>Phase 1 Judge</td>
@@ -1519,10 +1101,7 @@ user-facing.</td>
 <tr>
 <td>Phase 6 Payment Batch</td>
 <td>⚠️ Borderline</td>
-<td>Scheduled component with no user click; the <strong>payment
-outcome</strong> is the user value, but the batch itself is invisible.
-Could be merged into Phase 6 Payment Processing or kept separate;
-reasonable either way.</td>
+<td>Scheduled component with no user click; the <strong>payment outcome</strong> is the user value, but the batch itself is invisible. Could be merged into Phase 6 Payment Processing or kept separate; reasonable either way.</td>
 </tr>
 <tr>
 <td>Phase 7 Itineraries</td>
@@ -1543,21 +1122,12 @@ reasonable either way.</td>
 </table>
 <p><strong>Findings:</strong></p>
 <ul>
-<li><strong>3 explicit technical proto-epics</strong> (Platform &amp;
-DevEx, Notification, Data Migration ETL) need user-value reframing or
-splitting at story-design time. For Platform &amp; DevEx specifically,
-the standard pattern is to spread infra stories across early phases such
-that each delivers a vertical slice ending in something demoable, rather
-than running an "infrastructure epic" that delays first user value.</li>
-<li><strong>2 borderline cases</strong> (Reference Data, Business UI
-Foundation) work fine if the foundational stories are kept narrow and
-the user-facing work happens in domain phases / Admin UI.</li>
+<li><strong>3 explicit technical proto-epics</strong> (Platform &amp; DevEx, Notification, Data Migration ETL) need user-value reframing or splitting at story-design time. For Platform &amp; DevEx specifically, the standard pattern is to spread infra stories across early phases such that each delivers a vertical slice ending in something demoable, rather than running an "infrastructure epic" that delays first user value.</li>
+<li><strong>2 borderline cases</strong> (Reference Data, Business UI Foundation) work fine if the foundational stories are kept narrow and the user-facing work happens in domain phases / Admin UI.</li>
 </ul>
 <h3 id="b-epic-independence-test">B. Epic Independence Test</h3>
-<p>Per create-epics-and-stories: Epic N cannot require Epic N+1 to
-work.</p>
-<p>NJI's phase structure has <strong>deliberate, architecture-driven
-forward references</strong> that need scrutiny:</p>
+<p>Per create-epics-and-stories: Epic N cannot require Epic N+1 to work.</p>
+<p>NJI's phase structure has <strong>deliberate, architecture-driven forward references</strong> that need scrutiny:</p>
 <table>
 <thead>
 <tr>
@@ -1571,73 +1141,50 @@ forward references</strong> that need scrutiny:</p>
 <tr>
 <td>Phase 2 Absence → Phase 3 Vacancy</td>
 <td>2 → 3</td>
-<td>"Hook to Vacancy auto-creation (Vacancy itself lives in Phase 3 —
-Phase 2 stubs the call; Phase 3 wires it)"</td>
-<td>✅ <strong>Acceptable</strong> — Phase 2 ships standalone with a
-stubbed integration point; Phase 3 wires the real impl. This is the
-correct pattern (per create-epics-and-stories: stubs over forward
-dependencies).</td>
+<td>"Hook to Vacancy auto-creation (Vacancy itself lives in Phase 3 — Phase 2 stubs the call; Phase 3 wires it)"</td>
+<td>✅ <strong>Acceptable</strong> — Phase 2 ships standalone with a stubbed integration point; Phase 3 wires the real impl. This is the correct pattern (per create-epics-and-stories: stubs over forward dependencies).</td>
 </tr>
 <tr>
 <td>Phase 3 Vacancy → Phase 4 Booking</td>
 <td>3 → 4</td>
 <td><code>markFilled</code> endpoint "called by Booking (Phase 4)"</td>
-<td>✅ <strong>Acceptable</strong> — <code>markFilled</code> is exposed
-in Phase 3, consumed in Phase 4. Phase 3 doesn't depend on Phase 4.</td>
+<td>✅ <strong>Acceptable</strong> — <code>markFilled</code> is exposed in Phase 3, consumed in Phase 4. Phase 3 doesn't depend on Phase 4.</td>
 </tr>
 <tr>
 <td>Phase 0 Identity → Phase 9+ Rollout</td>
 <td>0 → 9+</td>
-<td>"Per-user activation flags (FR58) wired to enable per-region phased
-cutover"</td>
-<td>✅ <strong>Acceptable</strong> — flags wired in Phase 0;
-<em>orchestrated</em> in Phase 9+. Two distinct user stories, properly
-split.</td>
+<td>"Per-user activation flags (FR58) wired to enable per-region phased cutover"</td>
+<td>✅ <strong>Acceptable</strong> — flags wired in Phase 0; <em>orchestrated</em> in Phase 9+. Two distinct user stories, properly split.</td>
 </tr>
 <tr>
 <td>Phase 7 Itinerary federation</td>
 <td>7</td>
-<td>"SQL JOINs across <code>judges</code>, <code>absences</code>,
-<code>vacancies</code>, <code>bookings</code>,
-<code>sittings</code>"</td>
-<td>✅ <strong>Acceptable</strong> — Phase 7 depends on Phase 1–5
-schemas existing (backward dependency, not forward). Strategy C cache is
-a designed fallback that ships only if NFR8 measurement fails.</td>
+<td>"SQL JOINs across <code>judges</code>, <code>absences</code>, <code>vacancies</code>, <code>bookings</code>, <code>sittings</code>"</td>
+<td>✅ <strong>Acceptable</strong> — Phase 7 depends on Phase 1–5 schemas existing (backward dependency, not forward). Strategy C cache is a designed fallback that ships only if NFR8 measurement fails.</td>
 </tr>
 <tr>
 <td>Phase 8 MI Feed federation</td>
 <td>8</td>
 <td>"SQL JOINs over the shared schema"</td>
-<td>✅ <strong>Acceptable</strong> — same as Phase 7, backward
-dependency only.</td>
+<td>✅ <strong>Acceptable</strong> — same as Phase 7, backward dependency only.</td>
 </tr>
 <tr>
 <td>Phase 6 Payment Processing → Phase 6 Payment Batch</td>
 <td>6</td>
 <td>Two areas in the same phase</td>
-<td>⚠️ <strong>Watch</strong> — these will need clear story boundaries;
-the natural-key unique constraint owner (AR21) and the batch's
-idempotency must be aligned.</td>
+<td>⚠️ <strong>Watch</strong> — these will need clear story boundaries; the natural-key unique constraint owner (AR21) and the batch's idempotency must be aligned.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Verdict:</strong> Epic independence is
-<strong>architecturally well-managed</strong> through the stub-then-wire
-pattern. No true forward dependencies in the framework.</p>
+<p><strong>Verdict:</strong> Epic independence is <strong>architecturally well-managed</strong> through the stub-then-wire pattern. No true forward dependencies in the framework.</p>
 <h3 id="c-story-level-validation">C. Story-Level Validation</h3>
 <p><strong>❌ Cannot be performed — no stories exist.</strong></p>
-<p>When Step 2 of <code>bmad-create-epics-and-stories</code> runs to
-produce stories, every story must be checked against:</p>
+<p>When Step 2 of <code>bmad-create-epics-and-stories</code> runs to produce stories, every story must be checked against:</p>
 <ul>
-<li>Independent user value (does the story deliver something a user can
-do?)</li>
-<li>Independently completable (no dependency on a future story in the
-same epic or a later phase)</li>
-<li>Acceptance criteria in Given/When/Then form, testable, complete
-(happy + error paths), specific</li>
-<li>Story-scoped DB table creation (each service's Flyway migrations
-live in that service's story stream, not upfront — already mandated by
-AR18–AR19)</li>
+<li>Independent user value (does the story deliver something a user can do?)</li>
+<li>Independently completable (no dependency on a future story in the same epic or a later phase)</li>
+<li>Acceptance criteria in Given/When/Then form, testable, complete (happy + error paths), specific</li>
+<li>Story-scoped DB table creation (each service's Flyway migrations live in that service's story stream, not upfront — already mandated by AR18–AR19)</li>
 </ul>
 <p><strong>Pre-defined risks for the story-writing pass:</strong></p>
 <table>
@@ -1651,178 +1198,93 @@ AR18–AR19)</li>
 <tbody>
 <tr>
 <td>Phase 0 Platform &amp; DevEx</td>
-<td>Tendency to write "Set up GitHub Actions", "Set up APIM", "Set up
-Helm conventions" — all technical with no user value</td>
-<td>Use AR2–AR4 to write <em>one</em> "Scaffold first service from HMCTS
-starter" story that establishes patterns; everything else lives inside
-per-service epic stories.</td>
+<td>Tendency to write "Set up GitHub Actions", "Set up APIM", "Set up Helm conventions" — all technical with no user value</td>
+<td>Use AR2–AR4 to write <em>one</em> "Scaffold first service from HMCTS starter" story that establishes patterns; everything else lives inside per-service epic stories.</td>
 </tr>
 <tr>
 <td>Phase 0 Identity</td>
 <td>"Set up <code>nji-mock-auth</code>" tempting</td>
-<td>Write as "User authenticates against <code>nji-mock-auth</code> and
-reaches stub Home page" — vertical slice.</td>
+<td>Write as "User authenticates against <code>nji-mock-auth</code> and reaches stub Home page" — vertical slice.</td>
 </tr>
 <tr>
 <td>Phase 0 Data Migration ETL</td>
 <td>"Load APEX dumps into NJI tables" sounds technical</td>
-<td>Write as "RSU sign-off on Reference Data migration (Risk #13)" —
-named-owner sign-off is the user outcome.</td>
+<td>Write as "RSU sign-off on Reference Data migration (Risk #13)" — named-owner sign-off is the user outcome.</td>
 </tr>
 <tr>
 <td>Phase 1+ domain phases</td>
 <td>Database-tables-upfront temptation per service</td>
-<td>Architecture already mandates per-service Flyway with table-creation
-in story stream (AR19); story templates should enforce.</td>
+<td>Architecture already mandates per-service Flyway with table-creation in story stream (AR19); story templates should enforce.</td>
 </tr>
 <tr>
 <td>Cross-area FR6</td>
 <td>Maintenance UI is in Admin UI but API is in Reference Data</td>
-<td>Define an Admin-UI story that consumes the API and a Reference-Data
-story that exposes it — coordinate vertical slice or sequence
-carefully.</td>
+<td>Define an Admin-UI story that consumes the API and a Reference-Data story that exposes it — coordinate vertical slice or sequence carefully.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="d-database--entity-creation-timing">D. Database / Entity
-Creation Timing</h3>
-<p>Architecture mandates per-service Flyway migrations owning that
-service's tables (AR18, AR19, AR20). 39 NJI tables total, grouped by
-owning service. <strong>This is the right pattern</strong> and aligns
-with create-epics-and-stories best practice of creating tables when
-first needed.</p>
-<p>⚠️ <strong>Watch when storied:</strong> the shared
-<code>configuration_values</code> baseline (AR19, FR8) is owned by
-<code>nji-architecture</code>'s Flyway, not by any specific service. The
-story for "establish shared <code>configuration_values</code> baseline"
-should live in <strong>Phase 0 Platform &amp; DevEx as a single
-story</strong> and not be repeated. Its rows are added by per-service
-stories as policy values are introduced.</p>
-<h3 id="e-starter-template-requirement">E. Starter Template
-Requirement</h3>
-<p>Architecture <strong>explicitly mandates</strong> the HMCTS Crime
-SpringBoot template (AR2, AR3, AR4):</p>
+<h3 id="d-database--entity-creation-timing">D. Database / Entity Creation Timing</h3>
+<p>Architecture mandates per-service Flyway migrations owning that service's tables (AR18, AR19, AR20). 39 NJI tables total, grouped by owning service. <strong>This is the right pattern</strong> and aligns with create-epics-and-stories best practice of creating tables when first needed.</p>
+<p>⚠️ <strong>Watch when storied:</strong> the shared <code>configuration_values</code> baseline (AR19, FR8) is owned by <code>nji-architecture</code>'s Flyway, not by any specific service. The story for "establish shared <code>configuration_values</code> baseline" should live in <strong>Phase 0 Platform &amp; DevEx as a single story</strong> and not be repeated. Its rows are added by per-service stories as policy values are introduced.</p>
+<h3 id="e-starter-template-requirement">E. Starter Template Requirement</h3>
+<p>Architecture <strong>explicitly mandates</strong> the HMCTS Crime SpringBoot template (AR2, AR3, AR4):</p>
 <blockquote>
-<p>"Initial commit for every new service is <em>'Scaffold NJI
-{service-name} from HMCTS starter'</em> — this is the first
-implementation story per service."</p>
+<p>"Initial commit for every new service is <em>'Scaffold NJI {service-name} from HMCTS starter'</em> — this is the first implementation story per service."</p>
 </blockquote>
-<p>✅ <strong>Compliant</strong> — the standard create-epics-and-stories
-requirement is met by AR4. Every backend service epic will have Story 1
-= scaffold from template.</p>
-<p>⚠️ <strong>However</strong>, the Helm chart is <strong>not</strong>
-in the HMCTS template baseline (per AR24 — added by
-<code>nji-scaffold.sh</code>). The scaffold story per service must
-therefore include both:</p>
+<p>✅ <strong>Compliant</strong> — the standard create-epics-and-stories requirement is met by AR4. Every backend service epic will have Story 1 = scaffold from template.</p>
+<p>⚠️ <strong>However</strong>, the Helm chart is <strong>not</strong> in the HMCTS template baseline (per AR24 — added by <code>nji-scaffold.sh</code>). The scaffold story per service must therefore include both:</p>
 <ul>
 <li>Clone from HMCTS template</li>
-<li>Run <code>nji-scaffold.sh</code> to apply NJI conventions (Helm
-chart, Spectral, ArchUnit, Spotless+Checkstyle, Pact, etc.)</li>
+<li>Run <code>nji-scaffold.sh</code> to apply NJI conventions (Helm chart, Spectral, ArchUnit, Spotless+Checkstyle, Pact, etc.)</li>
 </ul>
 <p>Stories should call out both steps explicitly.</p>
 <h3 id="f-greenfield-indicators">F. Greenfield Indicators</h3>
-<p>✅ Initial project setup stories — covered by AR2–AR4 (per-service
-scaffolding) and <code>nji-architecture</code> (programme-level setup).
-✅ Development environment configuration — covered by AR13
-(docker-compose) + AR25 (Key Vault) + AR26 (Spring profiles). ✅ CI/CD
-pipeline setup early — covered by AR28 (per-service GitHub Actions;
-<code>ci.yml</code> + per-env deploy workflows). ✅ Migration /
-compatibility stories — Phase 0 Data Migration ETL + FR57 + FR58 —
-APEX-side coexistence is operational (per D2/D6), not
-application-level.</p>
+<p>✅ Initial project setup stories — covered by AR2–AR4 (per-service scaffolding) and <code>nji-architecture</code> (programme-level setup). ✅ Development environment configuration — covered by AR13 (docker-compose) + AR25 (Key Vault) + AR26 (Spring profiles). ✅ CI/CD pipeline setup early — covered by AR28 (per-service GitHub Actions; <code>ci.yml</code> + per-env deploy workflows). ✅ Migration / compatibility stories — Phase 0 Data Migration ETL + FR57 + FR58 — APEX-side coexistence is operational (per D2/D6), not application-level.</p>
 <p>All greenfield indicators present in the framework.</p>
-<h3 id="g-best-practices-compliance-checklist-framework-level">G. Best
-Practices Compliance Checklist (Framework-level)</h3>
+<h3 id="g-best-practices-compliance-checklist-framework-level">G. Best Practices Compliance Checklist (Framework-level)</h3>
 <p>For the Phase × Area framework as proto-epics:</p>
 <ul class="task-list">
-<li><label><input type="checkbox" checked="" />Every FR has Area mapping
-(60/61, 1 deferred)</label></li>
-<li><label><input type="checkbox" checked="" />Phase ordering matches
-dependency chain</label></li>
-<li><label><input type="checkbox" checked="" />Stub-then-wire pattern
-used for cross-phase integration points (Phase 2 → Phase 3, Phase 3 →
-Phase 4)</label></li>
-<li><label><input type="checkbox" checked="" />Starter template
-requirement met (AR4)</label></li>
-<li><label><input type="checkbox" checked="" />Database creation timing
-aligns with story-driven Flyway (AR19)</label></li>
-<li><label><input type="checkbox" checked="" />Demo gates declared per
-phase (Journey 2 end-of-5, Journey 1 end-of-6, etc.)</label></li>
-<li><label><input type="checkbox" /><strong>Story breakdown</strong> —
-not yet done</label></li>
-<li><label><input type="checkbox" /><strong>Acceptance criteria</strong>
-— not yet written</label></li>
-<li><label><input type="checkbox" /><strong>FR Coverage Map
-populated</strong> — explicit placeholder</label></li>
-<li><label><input type="checkbox" /><strong>Per-phase NFR acceptance
-criteria</strong> — cross-cutting NFRs need pinning to specific phase
-stories</label></li>
-<li><label><input type="checkbox" /><strong>UX deferral framing</strong>
-— must declare in epics doc which deferral model applies (per Step
-4)</label></li>
+<li><label><input type="checkbox" checked="" />Every FR has Area mapping (60/61, 1 deferred)</label></li>
+<li><label><input type="checkbox" checked="" />Phase ordering matches dependency chain</label></li>
+<li><label><input type="checkbox" checked="" />Stub-then-wire pattern used for cross-phase integration points (Phase 2 → Phase 3, Phase 3 → Phase 4)</label></li>
+<li><label><input type="checkbox" checked="" />Starter template requirement met (AR4)</label></li>
+<li><label><input type="checkbox" checked="" />Database creation timing aligns with story-driven Flyway (AR19)</label></li>
+<li><label><input type="checkbox" checked="" />Demo gates declared per phase (Journey 2 end-of-5, Journey 1 end-of-6, etc.)</label></li>
+<li><label><input type="checkbox" /><strong>Story breakdown</strong> — not yet done</label></li>
+<li><label><input type="checkbox" /><strong>Acceptance criteria</strong> — not yet written</label></li>
+<li><label><input type="checkbox" /><strong>FR Coverage Map populated</strong> — explicit placeholder</label></li>
+<li><label><input type="checkbox" /><strong>Per-phase NFR acceptance criteria</strong> — cross-cutting NFRs need pinning to specific phase stories</label></li>
+<li><label><input type="checkbox" /><strong>UX deferral framing</strong> — must declare in epics doc which deferral model applies (per Step 4)</label></li>
 </ul>
 <h3 id="findings-by-severity">Findings by Severity</h3>
 <h4 id="red_circle-critical-violations">🔴 Critical Violations</h4>
-<p>None at the framework level — all are at the story tier and cannot be
-assessed yet.</p>
-<h4 id="orange_circle-major-issues-existing-today">🟠 Major Issues
-(existing today)</h4>
+<p>None at the framework level — all are at the story tier and cannot be assessed yet.</p>
+<h4 id="orange_circle-major-issues-existing-today">🟠 Major Issues (existing today)</h4>
 <ol type="1">
-<li><strong>No stories or acceptance criteria</strong> — implementation
-cannot start. (Same finding as Step 3.)</li>
-<li><strong>3 technical proto-epics</strong> (Platform &amp; DevEx,
-Notification, Data Migration ETL) need user-value reframing or split at
-story-design time, <strong>before</strong> story-writing.</li>
-<li><strong>Cross-cutting NFRs (NFR1–NFR9, NFR10–NFR11, NFR14–NFR16,
-NFR30–NFR33, NFR34, NFR39) lack explicit per-phase ACs</strong> — risk
-they fall off the AC list at story-writing.</li>
-<li><strong>Cross-Area FR6 coordination</strong> — Reference Data
-backend + Admin UI maintenance need vertical-slice story
-coordination.</li>
+<li><strong>No stories or acceptance criteria</strong> — implementation cannot start. (Same finding as Step 3.)</li>
+<li><strong>3 technical proto-epics</strong> (Platform &amp; DevEx, Notification, Data Migration ETL) need user-value reframing or split at story-design time, <strong>before</strong> story-writing.</li>
+<li><strong>Cross-cutting NFRs (NFR1–NFR9, NFR10–NFR11, NFR14–NFR16, NFR30–NFR33, NFR34, NFR39) lack explicit per-phase ACs</strong> — risk they fall off the AC list at story-writing.</li>
+<li><strong>Cross-Area FR6 coordination</strong> — Reference Data backend + Admin UI maintenance need vertical-slice story coordination.</li>
 </ol>
 <h4 id="yellow_circle-minor-concerns">🟡 Minor Concerns</h4>
 <ol type="1">
-<li>Phase 0 has 7 proto-epics — may be more than ideal granularity; some
-natural merges may emerge at story-design time.</li>
-<li>Phase 6 has 2 proto-epics (Payment Processing + Payment Batch) —
-boundary needs clean story split, especially around
-<code>(payment_cycle_id, booking_id)</code> constraint ownership.</li>
-<li>Strategy C cache fallback (NFR8/NFR37) is "designed but not built" —
-must be a triggered story, not a forgotten contingency.</li>
+<li>Phase 0 has 7 proto-epics — may be more than ideal granularity; some natural merges may emerge at story-design time.</li>
+<li>Phase 6 has 2 proto-epics (Payment Processing + Payment Batch) — boundary needs clean story split, especially around <code>(payment_cycle_id, booking_id)</code> constraint ownership.</li>
+<li>Strategy C cache fallback (NFR8/NFR37) is "designed but not built" — must be a triggered story, not a forgotten contingency.</li>
 </ol>
-<h3
-id="remediation-guidance-for-the-next-planning-iteration">Remediation
-Guidance (for the next planning iteration)</h3>
+<h3 id="remediation-guidance-for-the-next-planning-iteration">Remediation Guidance (for the next planning iteration)</h3>
 <ol type="1">
-<li><strong>Resolve the UX deferral framing</strong> in
-<code>epics.md</code> (per Step 4) — choose a model and document
-it.</li>
-<li><strong>Re-frame the 3 technical proto-epics</strong> at
-story-design time: prefer vertical-slice stories that each end in a
-demoable user outcome, even in Phase 0.</li>
-<li><strong>Make cross-cutting NFRs explicit in each phase</strong> when
-writing ACs — e.g. Phase 5 Sitting list operations call out NFR3 (≤ 10
-s) directly in their AC; do not rely on a generic cross-cutting
-note.</li>
-<li><strong>Use the stub-then-wire pattern</strong> consistently when
-writing stories that cross phase boundaries (Phase 2 → 3, Phase 3 → 4
-already do this in the framework).</li>
-<li><strong>Run <code>bmad-create-epics-and-stories</code> step
-2+</strong> to produce concrete epics with story breakdowns and Gherkin
-ACs. Then re-run this readiness check.</li>
+<li><strong>Resolve the UX deferral framing</strong> in <code>epics.md</code> (per Step 4) — choose a model and document it.</li>
+<li><strong>Re-frame the 3 technical proto-epics</strong> at story-design time: prefer vertical-slice stories that each end in a demoable user outcome, even in Phase 0.</li>
+<li><strong>Make cross-cutting NFRs explicit in each phase</strong> when writing ACs — e.g. Phase 5 Sitting list operations call out NFR3 (≤ 10 s) directly in their AC; do not rely on a generic cross-cutting note.</li>
+<li><strong>Use the stub-then-wire pattern</strong> consistently when writing stories that cross phase boundaries (Phase 2 → 3, Phase 3 → 4 already do this in the framework).</li>
+<li><strong>Run <code>bmad-create-epics-and-stories</code> step 2+</strong> to produce concrete epics with story breakdowns and Gherkin ACs. Then re-run this readiness check.</li>
 </ol>
-</div></details><details class="section" id="6-summary-and-recommendations"><summary><span class="section-title">6. Summary and
-Recommendations</span></summary><div class="section-body">
+</div></details><details class="section" id="6-summary-and-recommendations"><summary><span class="section-title">6. Summary and Recommendations</span></summary><div class="section-body">
 <h3 id="overall-readiness-status">Overall Readiness Status</h3>
 <h1 id="orange_circle-needs-work">🟠 NEEDS WORK</h1>
-<p>NJI's planning artefacts are <strong>mature on PRD and
-architecture</strong> but <strong>structurally incomplete on
-epics</strong>. The epics document is at framework stage (Phase × Area
-mapping), not implementation-ready (no stories, no acceptance criteria).
-A developer agent cannot begin implementation today because there is
-nothing for them to pick up.</p>
-<p>This is one specific gap with a known path to closure. Once that gap
-is closed, NJI moves to <strong>READY</strong> status.</p>
+<p>NJI's planning artefacts are <strong>mature on PRD and architecture</strong> but <strong>structurally incomplete on epics</strong>. The epics document is at framework stage (Phase × Area mapping), not implementation-ready (no stories, no acceptance criteria). A developer agent cannot begin implementation today because there is nothing for them to pick up.</p>
+<p>This is one specific gap with a known path to closure. Once that gap is closed, NJI moves to <strong>READY</strong> status.</p>
 <h3 id="status-by-artefact">Status by Artefact</h3>
 <table>
 <thead>
@@ -1836,120 +1298,52 @@ is closed, NJI moves to <strong>READY</strong> status.</p>
 <tr>
 <td>PRD (<code>prd.md</code>)</td>
 <td>🟢 READY</td>
-<td>61 FRs + 42 NFRs + 9 decisions, fully traceable, recently maintained
-(last revision 2026-05-11)</td>
+<td>61 FRs + 42 NFRs + 9 decisions, fully traceable, recently maintained (last revision 2026-05-11)</td>
 </tr>
 <tr>
 <td>Architecture (<code>architecture.md</code> + folder)</td>
 <td>🟢 READY</td>
-<td>Comprehensive — coverage matrices, conventions, repo strategy, data
-tables, sequence diagrams, gaps document</td>
+<td>Comprehensive — coverage matrices, conventions, repo strategy, data tables, sequence diagrams, gaps document</td>
 </tr>
 <tr>
 <td>Epics (<code>epics.md</code>)</td>
 <td>🟠 FRAMEWORK ONLY</td>
-<td>Phase × Area mapping complete (60/61 FRs covered + 1 deferred);
-<strong>no stories, no ACs, FR Coverage Map is a
-placeholder</strong></td>
+<td>Phase × Area mapping complete (60/61 FRs covered + 1 deferred); <strong>no stories, no ACs, FR Coverage Map is a placeholder</strong></td>
 </tr>
 <tr>
 <td>UX Design</td>
 <td>🟠 ACCEPTED GAP</td>
-<td>Not present; explicitly deferred by user; PRD/architecture/epics
-internally consistent on UI matters; deferral framing needs to be
-declared in <code>epics.md</code></td>
+<td>Not present; explicitly deferred by user; PRD/architecture/epics internally consistent on UI matters; deferral framing needs to be declared in <code>epics.md</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="critical-issues-requiring-immediate-action">Critical Issues
-Requiring Immediate Action</h3>
-<h4
-id="orange_circle-blocker--epics-document-is-a-framework-not-stories">🟠
-BLOCKER — Epics document is a framework, not stories</h4>
-<p><code>epics.md</code> line 523 says it itself: <em>"Next step (Step 2
-of this workflow): For each Phase × Area row above, design one or more
-concrete epics with an explicit goal, story breakdown, and Gherkin-style
-acceptance criteria."</em> That step has not run. The
-<code>stepsCompleted: ['step-01-validate-prerequisites']</code>
-frontmatter confirms.</p>
-<p><strong>Impact:</strong> Sprint Planning cannot meaningfully run
-because there are no stories to plan. <code>bmad-create-story</code>
-cannot produce a story from scratch — it expects an existing epic with
-story candidates.</p>
-<p><strong>Resolution:</strong> Run
-<code>bmad-create-epics-and-stories</code> step 2 (and onward) to
-produce concrete epics with stories and Gherkin acceptance criteria.</p>
-<h4
-id="orange_circle-major--ux-deferral-model-not-declared-in-epicsmd">🟠
-MAJOR — UX deferral model not declared in <code>epics.md</code></h4>
-<p>Per Step 4: UX is explicitly deferred by user, but the epic framework
-still includes Phase 0 Business UI Foundation + Phase 0 Admin UI
-Foundation + per-domain UI modules in every Phase 1–8. Either Phase 0
-ships those UI foundations without a UX doc (relying on D4 "replicate
-APEX" + GOV.UK Design System) or those areas need explicit deferral
-markers.</p>
-<p><strong>Resolution:</strong> decide the model and document it in
-<code>epics.md</code>. Recommended wording in the Overview section:</p>
+<h3 id="critical-issues-requiring-immediate-action">Critical Issues Requiring Immediate Action</h3>
+<h4 id="orange_circle-blocker--epics-document-is-a-framework-not-stories">🟠 BLOCKER — Epics document is a framework, not stories</h4>
+<p><code>epics.md</code> line 523 says it itself: <em>"Next step (Step 2 of this workflow): For each Phase × Area row above, design one or more concrete epics with an explicit goal, story breakdown, and Gherkin-style acceptance criteria."</em> That step has not run. The <code>stepsCompleted: ['step-01-validate-prerequisites']</code> frontmatter confirms.</p>
+<p><strong>Impact:</strong> Sprint Planning cannot meaningfully run because there are no stories to plan. <code>bmad-create-story</code> cannot produce a story from scratch — it expects an existing epic with story candidates.</p>
+<p><strong>Resolution:</strong> Run <code>bmad-create-epics-and-stories</code> step 2 (and onward) to produce concrete epics with stories and Gherkin acceptance criteria.</p>
+<h4 id="orange_circle-major--ux-deferral-model-not-declared-in-epicsmd">🟠 MAJOR — UX deferral model not declared in <code>epics.md</code></h4>
+<p>Per Step 4: UX is explicitly deferred by user, but the epic framework still includes Phase 0 Business UI Foundation + Phase 0 Admin UI Foundation + per-domain UI modules in every Phase 1–8. Either Phase 0 ships those UI foundations without a UX doc (relying on D4 "replicate APEX" + GOV.UK Design System) or those areas need explicit deferral markers.</p>
+<p><strong>Resolution:</strong> decide the model and document it in <code>epics.md</code>. Recommended wording in the Overview section:</p>
 <blockquote>
-<p><em>"UX design is deferred to a later programme stage. Phase 0
-Business UI Foundation and Admin UI Foundation will ship per AR42–AR45b
-using GOV.UK Design System base + HMCTS extensions + APEX-replica
-behaviour (per D4) as the implicit UX spec. Per-phase domain UI modules
-carry the same baseline. A per-phase 'UI parity &amp; uplift notes'
-appendix will be written per service epic at story-design
-time."</em></p>
+<p><em>"UX design is deferred to a later programme stage. Phase 0 Business UI Foundation and Admin UI Foundation will ship per AR42–AR45b using GOV.UK Design System base + HMCTS extensions + APEX-replica behaviour (per D4) as the implicit UX spec. Per-phase domain UI modules carry the same baseline. A per-phase 'UI parity &amp; uplift notes' appendix will be written per service epic at story-design time."</em></p>
 </blockquote>
-<h4
-id="orange_circle-major--3-technical-proto-epics-need-re-framing-at-story-design-time">🟠
-MAJOR — 3 technical proto-epics need re-framing at story-design
-time</h4>
-<p>Platform &amp; DevEx, Notification, and Data Migration ETL are
-technical milestones, not user-value epics. At story-design time, prefer
-vertical-slice stories that each end in a demoable user outcome rather
-than running an "infrastructure epic" that defers first user value.</p>
-<p><strong>Resolution:</strong> when running
-<code>bmad-create-epics-and-stories</code>, explicitly call out these
-three areas for re-framing — push their work into the first vertical
-slice that consumes them (e.g. Notification consumed by Phase 2
-Absence's first acknowledgement-email story).</p>
-<h4
-id="yellow_circle-medium--cross-cutting-nfrs-lack-explicit-per-phase-acs">🟡
-MEDIUM — Cross-cutting NFRs lack explicit per-phase ACs</h4>
-<p>NFR1–NFR9, NFR10–NFR11, NFR14–NFR16, NFR30–NFR33, NFR34, NFR39 are
-tagged "inherited by every phase" but not assigned to specific stories.
-Risk: they fall off ACs when stories are written.</p>
-<p><strong>Resolution:</strong> at story-design time, each phase's
-user-facing stories must explicitly call out the NFRs that apply at that
-phase. E.g. Phase 5 Sitting list-operation story AC includes "list
-returns ≤ 10 s p95 at Region scope (NFR3)".</p>
+<h4 id="orange_circle-major--3-technical-proto-epics-need-re-framing-at-story-design-time">🟠 MAJOR — 3 technical proto-epics need re-framing at story-design time</h4>
+<p>Platform &amp; DevEx, Notification, and Data Migration ETL are technical milestones, not user-value epics. At story-design time, prefer vertical-slice stories that each end in a demoable user outcome rather than running an "infrastructure epic" that defers first user value.</p>
+<p><strong>Resolution:</strong> when running <code>bmad-create-epics-and-stories</code>, explicitly call out these three areas for re-framing — push their work into the first vertical slice that consumes them (e.g. Notification consumed by Phase 2 Absence's first acknowledgement-email story).</p>
+<h4 id="yellow_circle-medium--cross-cutting-nfrs-lack-explicit-per-phase-acs">🟡 MEDIUM — Cross-cutting NFRs lack explicit per-phase ACs</h4>
+<p>NFR1–NFR9, NFR10–NFR11, NFR14–NFR16, NFR30–NFR33, NFR34, NFR39 are tagged "inherited by every phase" but not assigned to specific stories. Risk: they fall off ACs when stories are written.</p>
+<p><strong>Resolution:</strong> at story-design time, each phase's user-facing stories must explicitly call out the NFRs that apply at that phase. E.g. Phase 5 Sitting list-operation story AC includes "list returns ≤ 10 s p95 at Region scope (NFR3)".</p>
 <h3 id="recommended-next-steps">Recommended Next Steps</h3>
 <ol type="1">
-<li><p><strong>(Highest priority)</strong> Run
-<code>bmad-create-epics-and-stories</code> to advance
-<code>epics.md</code> from framework to stories-with-ACs. Apply the
-remediation guidance from Step 5 (vertical-slice stories for technical
-areas; explicit per-phase NFR ACs; stub-then-wire pattern for
-cross-phase integration points; AR2–AR4 scaffold story as Story 1 of
-every service epic).</p></li>
-<li><p><strong>Declare the UX deferral model</strong> in
-<code>epics.md</code> Overview section using the wording suggested
-above.</p></li>
-<li><p><strong>Re-run this readiness check</strong>
-(<code>bmad-check-implementation-readiness</code>) after stories are
-written, to validate story-level quality: independent value, no forward
-dependencies, Gherkin AC quality, FR Coverage Map populated,
-NFR-per-story AC traceability.</p></li>
-<li><p><strong>Run <code>bmad-sprint-planning</code></strong> only after
-readiness check 2 reports 🟢 READY. Don't try to sprint-plan against a
-framework.</p></li>
-<li><p><strong>Optional but recommended</strong> before sprint
-planning:</p>
+<li><p><strong>(Highest priority)</strong> Run <code>bmad-create-epics-and-stories</code> to advance <code>epics.md</code> from framework to stories-with-ACs. Apply the remediation guidance from Step 5 (vertical-slice stories for technical areas; explicit per-phase NFR ACs; stub-then-wire pattern for cross-phase integration points; AR2–AR4 scaffold story as Story 1 of every service epic).</p></li>
+<li><p><strong>Declare the UX deferral model</strong> in <code>epics.md</code> Overview section using the wording suggested above.</p></li>
+<li><p><strong>Re-run this readiness check</strong> (<code>bmad-check-implementation-readiness</code>) after stories are written, to validate story-level quality: independent value, no forward dependencies, Gherkin AC quality, FR Coverage Map populated, NFR-per-story AC traceability.</p></li>
+<li><p><strong>Run <code>bmad-sprint-planning</code></strong> only after readiness check 2 reports 🟢 READY. Don't try to sprint-plan against a framework.</p></li>
+<li><p><strong>Optional but recommended</strong> before sprint planning:</p>
 <ul>
-<li>Run <code>bmad-validate-prd</code> to confirm the PRD hasn't drifted
-since 2026-05-11.</li>
-<li>Run <code>bmad-review-edge-case-hunter</code> on
-<code>epics.md</code> after stories are written, to catch missing edge
-cases.</li>
+<li>Run <code>bmad-validate-prd</code> to confirm the PRD hasn't drifted since 2026-05-11.</li>
+<li>Run <code>bmad-review-edge-case-hunter</code> on <code>epics.md</code> after stories are written, to catch missing edge cases.</li>
 </ul></li>
 </ol>
 <h3 id="path-to-ready">Path to READY</h3>
@@ -1961,47 +1355,15 @@ cases.</li>
    ↓
 [Then] bmad-sprint-planning → kicks off implementation</code></pre>
 <h3 id="final-note">Final Note</h3>
-<p>This assessment identified <strong>1 blocker, 2 major issues, 1
-medium issue</strong>, and a series of pre-emptive remediations for
-story-design time. The blocker has a clear, single-skill remediation
-(<code>bmad-create-epics-and-stories</code>).</p>
-<p><strong>The good news:</strong> PRD and architecture are in strong
-shape. NJI's planning is roughly 70% to implementation-ready. The
-remaining 30% is one focused workstream — turning the Phase × Area
-framework into stories with acceptance criteria.</p>
-<p>These findings can be used to advance the artefacts; you may also
-choose to proceed as-is, with the understanding that sprint planning and
-story creation cannot be meaningfully run until the epics gap is
-closed.</p>
+<p>This assessment identified <strong>1 blocker, 2 major issues, 1 medium issue</strong>, and a series of pre-emptive remediations for story-design time. The blocker has a clear, single-skill remediation (<code>bmad-create-epics-and-stories</code>).</p>
+<p><strong>The good news:</strong> PRD and architecture are in strong shape. NJI's planning is roughly 70% to implementation-ready. The remaining 30% is one focused workstream — turning the Phase × Area framework into stories with acceptance criteria.</p>
+<p>These findings can be used to advance the artefacts; you may also choose to proceed as-is, with the understanding that sprint planning and story creation cannot be meaningfully run until the epics gap is closed.</p>
 <hr />
-<p><strong>Report generated:</strong> 2026-05-15
-<strong>Assessor:</strong> Claude (bmad-check-implementation-readiness)
-<strong>Output file:</strong>
-<code>_bmad-output/planning-artifacts/implementation-readiness-report-2026-05-15.md</code>
-<strong>Previous reports for comparison:</strong>
-<code>2026-05-05</code>, <code>2026-05-06</code></p>
+<p><strong>Report generated:</strong> 2026-05-15 <strong>Assessor:</strong> Claude (bmad-check-implementation-readiness) <strong>Output file:</strong> <code>_bmad-output/planning-artifacts/implementation-readiness-report-2026-05-15.md</code> <strong>Previous reports for comparison:</strong> <code>2026-05-05</code>, <code>2026-05-06</code></p>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/implementation-readiness-report-2026-05-15.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#1-document-inventory">1. Document Inventory</a></li><li class="h3"><a href="#prd">PRD</a></li><li class="h3"><a href="#architecture">Architecture</a></li><li class="h3"><a href="#epics--stories">Epics &amp; Stories</a></li><li class="h3"><a href="#ux-design">UX Design</a></li><li class="h3"><a href="#prior-readiness-reports-context">Prior Readiness Reports
-(context)</a></li><li><a href="#2-prd-analysis">2. PRD Analysis</a></li><li class="h3"><a href="#functional-requirements-fr1fr61-total-61">Functional
-Requirements (FR1–FR61, total: 61)</a></li><li class="h3"><a href="#non-functional-requirements-nfr1nfr42-total-42">Non-Functional
-Requirements (NFR1–NFR42, total: 42)</a></li><li class="h3"><a href="#additional-requirements--constraints">Additional Requirements
-&amp; Constraints</a></li><li class="h3"><a href="#prd-completeness-assessment-initial">PRD Completeness Assessment
-(initial)</a></li><li><a href="#3-epic-coverage-validation">3. Epic Coverage Validation</a></li><li class="h3"><a href="#warning-critical-structural-finding">⚠️ Critical structural
-finding</a></li><li class="h3"><a href="#fr-coverage-matrix-area-level--pre-story">FR Coverage Matrix
-(Area-level — pre-story)</a></li><li class="h3"><a href="#nfr-coverage-matrix-area-level--pre-story">NFR Coverage Matrix
-(Area-level — pre-story)</a></li><li class="h3"><a href="#missing-coverage">Missing Coverage</a></li><li class="h3"><a href="#coverage-statistics">Coverage Statistics</a></li><li class="h3"><a href="#headline-verdict-for-this-step">Headline verdict for this
-step</a></li><li><a href="#4-ux-alignment-assessment">4. UX Alignment Assessment</a></li><li class="h3"><a href="#ux-document-status">UX Document Status</a></li><li class="h3"><a href="#is-ux-implied-by-the-other-artefacts">Is UX implied by the other
-artefacts?</a></li><li class="h3"><a href="#user-direction-recorded">User direction (recorded)</a></li><li class="h3"><a href="#alignment-issues-between-prd--architecture--epics-on-ux-matters">Alignment
-Issues (between PRD ↔︎ Architecture ↔︎ Epics on UX matters)</a></li><li class="h3"><a href="#warnings">Warnings</a></li><li class="h3"><a href="#verdict-for-this-step">Verdict for this step</a></li><li><a href="#5-epic-quality-review">5. Epic Quality Review</a></li><li class="h3"><a href="#a-user-value-vs-technical-milestone-check">A. User-Value vs
-Technical-Milestone Check</a></li><li class="h3"><a href="#b-epic-independence-test">B. Epic Independence Test</a></li><li class="h3"><a href="#c-story-level-validation">C. Story-Level Validation</a></li><li class="h3"><a href="#d-database--entity-creation-timing">D. Database / Entity
-Creation Timing</a></li><li class="h3"><a href="#e-starter-template-requirement">E. Starter Template
-Requirement</a></li><li class="h3"><a href="#f-greenfield-indicators">F. Greenfield Indicators</a></li><li class="h3"><a href="#g-best-practices-compliance-checklist-framework-level">G. Best
-Practices Compliance Checklist (Framework-level)</a></li><li class="h3"><a href="#findings-by-severity">Findings by Severity</a></li><li class="h3"><a href="#remediation-guidance-for-the-next-planning-iteration">Remediation
-Guidance (for the next planning iteration)</a></li><li><a href="#6-summary-and-recommendations">6. Summary and
-Recommendations</a></li><li class="h3"><a href="#overall-readiness-status">Overall Readiness Status</a></li><li class="h3"><a href="#status-by-artefact">Status by Artefact</a></li><li class="h3"><a href="#critical-issues-requiring-immediate-action">Critical Issues
-Requiring Immediate Action</a></li><li class="h3"><a href="#recommended-next-steps">Recommended Next Steps</a></li><li class="h3"><a href="#path-to-ready">Path to READY</a></li><li class="h3"><a href="#final-note">Final Note</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#1-document-inventory">1. Document Inventory</a></li><li class="h3"><a href="#prd">PRD</a></li><li class="h3"><a href="#architecture">Architecture</a></li><li class="h3"><a href="#epics--stories">Epics &amp; Stories</a></li><li class="h3"><a href="#ux-design">UX Design</a></li><li class="h3"><a href="#prior-readiness-reports-context">Prior Readiness Reports (context)</a></li><li><a href="#2-prd-analysis">2. PRD Analysis</a></li><li class="h3"><a href="#functional-requirements-fr1fr61-total-61">Functional Requirements (FR1–FR61, total: 61)</a></li><li class="h3"><a href="#non-functional-requirements-nfr1nfr42-total-42">Non-Functional Requirements (NFR1–NFR42, total: 42)</a></li><li class="h3"><a href="#additional-requirements--constraints">Additional Requirements &amp; Constraints</a></li><li class="h3"><a href="#prd-completeness-assessment-initial">PRD Completeness Assessment (initial)</a></li><li><a href="#3-epic-coverage-validation">3. Epic Coverage Validation</a></li><li class="h3"><a href="#warning-critical-structural-finding">⚠️ Critical structural finding</a></li><li class="h3"><a href="#fr-coverage-matrix-area-level--pre-story">FR Coverage Matrix (Area-level — pre-story)</a></li><li class="h3"><a href="#nfr-coverage-matrix-area-level--pre-story">NFR Coverage Matrix (Area-level — pre-story)</a></li><li class="h3"><a href="#missing-coverage">Missing Coverage</a></li><li class="h3"><a href="#coverage-statistics">Coverage Statistics</a></li><li class="h3"><a href="#headline-verdict-for-this-step">Headline verdict for this step</a></li><li><a href="#4-ux-alignment-assessment">4. UX Alignment Assessment</a></li><li class="h3"><a href="#ux-document-status">UX Document Status</a></li><li class="h3"><a href="#is-ux-implied-by-the-other-artefacts">Is UX implied by the other artefacts?</a></li><li class="h3"><a href="#user-direction-recorded">User direction (recorded)</a></li><li class="h3"><a href="#alignment-issues-between-prd--architecture--epics-on-ux-matters">Alignment Issues (between PRD ↔︎ Architecture ↔︎ Epics on UX matters)</a></li><li class="h3"><a href="#warnings">Warnings</a></li><li class="h3"><a href="#verdict-for-this-step">Verdict for this step</a></li><li><a href="#5-epic-quality-review">5. Epic Quality Review</a></li><li class="h3"><a href="#a-user-value-vs-technical-milestone-check">A. User-Value vs Technical-Milestone Check</a></li><li class="h3"><a href="#b-epic-independence-test">B. Epic Independence Test</a></li><li class="h3"><a href="#c-story-level-validation">C. Story-Level Validation</a></li><li class="h3"><a href="#d-database--entity-creation-timing">D. Database / Entity Creation Timing</a></li><li class="h3"><a href="#e-starter-template-requirement">E. Starter Template Requirement</a></li><li class="h3"><a href="#f-greenfield-indicators">F. Greenfield Indicators</a></li><li class="h3"><a href="#g-best-practices-compliance-checklist-framework-level">G. Best Practices Compliance Checklist (Framework-level)</a></li><li class="h3"><a href="#findings-by-severity">Findings by Severity</a></li><li class="h3"><a href="#remediation-guidance-for-the-next-planning-iteration">Remediation Guidance (for the next planning iteration)</a></li><li><a href="#6-summary-and-recommendations">6. Summary and Recommendations</a></li><li class="h3"><a href="#overall-readiness-status">Overall Readiness Status</a></li><li class="h3"><a href="#status-by-artefact">Status by Artefact</a></li><li class="h3"><a href="#critical-issues-requiring-immediate-action">Critical Issues Requiring Immediate Action</a></li><li class="h3"><a href="#recommended-next-steps">Recommended Next Steps</a></li><li class="h3"><a href="#path-to-ready">Path to READY</a></li><li class="h3"><a href="#final-note">Final Note</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

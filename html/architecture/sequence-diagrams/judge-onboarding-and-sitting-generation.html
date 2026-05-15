@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,73 +178,35 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1
-id="judge-onboarding--working-pattern-driven-sitting-generation">Judge
-onboarding + working-pattern-driven sitting generation</h1>
-<p>Sequence diagram of how a new judge is onboarded into NJI and how
-that judge's working pattern automatically populates planned sittings up
-to the next 31 March. This is the upstream of every downstream
-operational flow — absences, vacancies, bookings, sittings, payments,
-itineraries all depend on the judge records and planned sittings
-produced here.</p>
-<p>The as-is equivalent is Module 2 <em>Manage Judges</em> in <a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a>
-and Integration Flow 1 <em>Judge Master Data (eLinks / HR → JI)</em> in
-<a
-href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>.
-In the as-is system the data is copied in manually from eLinks and HR
-records and JI auto-overwrites future sittings on pattern save. NJI
-keeps the same business behaviour but with explicit API contracts and
-DB-level constraints.</p>
-<p>Three phases: (1) judge profile create; (2) working pattern +
-jurisdictional split; (3) forward-sitting generation up to next 31
-March.</p>
+<h1 id="judge-onboarding--working-pattern-driven-sitting-generation">Judge onboarding + working-pattern-driven sitting generation</h1>
+<p>Sequence diagram of how a new judge is onboarded into NJI and how that judge's working pattern automatically populates planned sittings up to the next 31 March. This is the upstream of every downstream operational flow — absences, vacancies, bookings, sittings, payments, itineraries all depend on the judge records and planned sittings produced here.</p>
+<p>The as-is equivalent is Module 2 <em>Manage Judges</em> in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a> and Integration Flow 1 <em>Judge Master Data (eLinks / HR → JI)</em> in <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>. In the as-is system the data is copied in manually from eLinks and HR records and JI auto-overwrites future sittings on pattern save. NJI keeps the same business behaviour but with explicit API contracts and DB-level constraints.</p>
+<p>Three phases: (1) judge profile create; (2) working pattern + jurisdictional split; (3) forward-sitting generation up to next 31 March.</p>
 <details class="section" id="not-in-this-diagram"><summary><span class="section-title">Not in this diagram</span></summary><div class="section-body">
 <ul>
-<li><strong>eLinks / HR system integration</strong> — neither in as-is
-nor in NJI MVP (NFR24 / Risk #1 in PRD). Judge data continues to be
-entered manually by RSU.</li>
-<li><strong>Cross-Region base-location change</strong> (FR17) —
-out-of-system; requires OPT Advice Point in the as-is and a programme
-decision in NJI.</li>
-<li><strong>Off-circuit / cross-Region judge linking for
-bookings</strong> (FR18) — handled as a read-only link in <a
-href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>,
-not in this flow.</li>
-<li><strong>Editing an existing working pattern</strong> — same shape as
-Phase 2 + Phase 3 but with prior-absence preservation logic; not drawn
-separately to keep the diagram lean. The architectural rule (preserve
-prior absences when regenerating sittings, FR13) is the same.</li>
-<li><strong>Ticket maintenance</strong> (FR15) — a small follow-up CRUD
-operation; same shape as Phase 1.</li>
+<li><strong>eLinks / HR system integration</strong> — neither in as-is nor in NJI MVP (NFR24 / Risk #1 in PRD). Judge data continues to be entered manually by RSU.</li>
+<li><strong>Cross-Region base-location change</strong> (FR17) — out-of-system; requires OPT Advice Point in the as-is and a programme decision in NJI.</li>
+<li><strong>Off-circuit / cross-Region judge linking for bookings</strong> (FR18) — handled as a read-only link in <a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>, not in this flow.</li>
+<li><strong>Editing an existing working pattern</strong> — same shape as Phase 2 + Phase 3 but with prior-absence preservation logic; not drawn separately to keep the diagram lean. The architectural rule (preserve prior absences when regenerating sittings, FR13) is the same.</li>
+<li><strong>Ticket maintenance</strong> (FR15) — a small follow-up CRUD operation; same shape as Phase 1.</li>
 </ul>
-</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps
-omitted for clarity</span></summary><div class="section-body">
+</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps omitted for clarity</span></summary><div class="section-body">
 <ul>
-<li><strong>Authentication + per-request authorisation</strong> — Sys
-Admin / RSU's JWT is validated by each service's <code>JWTFilter</code>
-and resolved against <code>nji-authorisation</code> on every call. See
-<a
-href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
+<li><strong>Authentication + per-request authorisation</strong> — Sys Admin / RSU's JWT is validated by each service's <code>JWTFilter</code> and resolved against <code>nji-authorisation</code> on every call. See <a href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
 <li>All UI → service calls flow through Azure API Management.</li>
-<li>Validation errors at any step return RFC 9457 problem-details and
-the user retries; not drawn explicitly.</li>
+<li>Validation errors at any step return RFC 9457 problem-details and the user retries; not drawn explicitly.</li>
 </ul>
-<p><img src="./judge-onboarding-and-sitting-generation.png"
-alt="Judge onboarding + working-pattern-driven sitting generation sequence" /></p>
-<p><em>Source: <a
-href="./judge-onboarding-and-sitting-generation.mmd"><code>./judge-onboarding-and-sitting-generation.mmd</code></a>
-(Mermaid). Regenerate with
-<code>mmdc -i judge-onboarding-and-sitting-generation.mmd -o judge-onboarding-and-sitting-generation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<p><img src="./judge-onboarding-and-sitting-generation.png" alt="Judge onboarding + working-pattern-driven sitting generation sequence" /></p>
+<p><em>Source: <a href="./judge-onboarding-and-sitting-generation.mmd"><code>./judge-onboarding-and-sitting-generation.mmd</code></a> (Mermaid). Regenerate with <code>mmdc -i judge-onboarding-and-sitting-generation.mmd -o judge-onboarding-and-sitting-generation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
 </div></details><details class="section" id="phase-summary"><summary><span class="section-title">Phase summary</span></summary><div class="section-body">
 <table>
 <thead>
@@ -257,30 +221,20 @@ href="./judge-onboarding-and-sitting-generation.mmd"><code>./judge-onboarding-an
 <tr>
 <td>1 — Judge profile create</td>
 <td>RSU (Full Access)</td>
-<td>FR11 — judge profile fields validated; role-specific data
-captured</td>
-<td>Judge persisted in <code>judges</code> table; active/inactive status
-set</td>
+<td>FR11 — judge profile fields validated; role-specific data captured</td>
+<td>Judge persisted in <code>judges</code> table; active/inactive status set</td>
 </tr>
 <tr>
 <td>2 — Working pattern + jurisdictional split</td>
 <td>RSU</td>
-<td>FR12 + FR16 — pattern type (None / Daily / Weekly), target sit %,
-per-day work types; jurisdictional split percentages must total exactly
-100%</td>
-<td>Working pattern persisted in <code>working_patterns</code> table
-linked to the judge</td>
+<td>FR12 + FR16 — pattern type (None / Daily / Weekly), target sit %, per-day work types; jurisdictional split percentages must total exactly 100%</td>
+<td>Working pattern persisted in <code>working_patterns</code> table linked to the judge</td>
 </tr>
 <tr>
 <td>3 — Forward-sitting generation</td>
-<td><code>nji-judge</code> (server-side, in-transaction with pattern
-save)</td>
-<td>FR13 — auto-populate planned sittings up to the next 31 March,
-preserving any prior absences on the affected dates</td>
-<td><code>sittings</code> rows in <code>planned</code> status for the
-judge over the generation horizon; visible to <code>nji-sitting</code>
-for confirmation flows and to <code>nji-itinerary</code> for read
-federation</td>
+<td><code>nji-judge</code> (server-side, in-transaction with pattern save)</td>
+<td>FR13 — auto-populate planned sittings up to the next 31 March, preserving any prior absences on the affected dates</td>
+<td><code>sittings</code> rows in <code>planned</code> status for the judge over the generation horizon; visible to <code>nji-sitting</code> for confirmation flows and to <code>nji-itinerary</code> for read federation</td>
 </tr>
 </tbody>
 </table>
@@ -295,60 +249,42 @@ federation</td>
 <tbody>
 <tr>
 <td><code>nji-judge</code> repo purpose and key functions</td>
-<td><a
-href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
-Phase 1 row</td>
+<td><a href="../repository-strategy.html"><code>../repository-strategy.md</code></a> Phase 1 row</td>
 </tr>
 <tr>
-<td>Working-pattern semantics (None / Daily / Weekly; target sit %;
-jurisdictional split)</td>
-<td>PRD <code>FR12</code>, <code>FR13</code>, <code>FR16</code>; Module
-2 in <a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a></td>
+<td>Working-pattern semantics (None / Daily / Weekly; target sit %; jurisdictional split)</td>
+<td>PRD <code>FR12</code>, <code>FR13</code>, <code>FR16</code>; Module 2 in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a></td>
 </tr>
 <tr>
-<td><code>judges</code>, <code>working_patterns</code>,
-<code>sittings</code> tables (column-level detail)</td>
-<td><a
-href="../data-tables.html"><code>../data-tables.md</code></a></td>
+<td><code>judges</code>, <code>working_patterns</code>, <code>sittings</code> tables (column-level detail)</td>
+<td><a href="../data-tables.html"><code>../data-tables.md</code></a></td>
 </tr>
 <tr>
 <td>Judge UI module structure</td>
-<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
-<code>nji-ui/src/modules/judge/</code></a></td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> → <code>nji-ui/src/modules/judge/</code></a></td>
 </tr>
 <tr>
-<td>Why this flow is in <code>nji-ui</code> and not
-<code>nji-admin-ui</code> (RSU operational vs admin)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 4 <em>Frontend Architecture</em></a> — v2.10</td>
+<td>Why this flow is in <code>nji-ui</code> and not <code>nji-admin-ui</code> (RSU operational vs admin)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Frontend Architecture</em></a> — v2.10</td>
 </tr>
 <tr>
 <td>Downstream consumers — Itinerary read federation</td>
-<td><a
-href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a></td>
+<td><a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a></td>
 </tr>
 <tr>
 <td>Downstream consumers — Sitting confirmation flow</td>
-<td><a
-href="./salaried-sitting-confirmation.html"><code>./salaried-sitting-confirmation.md</code></a></td>
+<td><a href="./salaried-sitting-confirmation.html"><code>./salaried-sitting-confirmation.md</code></a></td>
 </tr>
 <tr>
-<td>As-is equivalent (Module 2 Manage Judges; manual eLinks/HR
-entry)</td>
-<td><a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code>
-→ Module 2</a>; <a
-href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code>
-→ Flow 1</a></td>
+<td>As-is equivalent (Module 2 Manage Judges; manual eLinks/HR entry)</td>
+<td><a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code> → Module 2</a>; <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code> → Flow 1</a></td>
 </tr>
 </tbody>
 </table>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
-omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

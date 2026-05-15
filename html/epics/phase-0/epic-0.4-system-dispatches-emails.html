@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Epic 0.4: System dispatches transactional emails and admin can verify delivery — NJI Documentation</title>
+<title>Epic 0.4: Notification service is scaffolded and contractually ready — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -78,7 +78,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 }
 </style>
 </head>
-<body class="has-toc has-sections">
+<body class="">
 <aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,300 +178,69 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html" class="current">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html" class="current">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
-<div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1
-id="epic-04-system-dispatches-transactional-emails-and-admin-can-verify-delivery">Epic
-0.4: System dispatches transactional emails and admin can verify
-delivery</h1>
-<p><strong>User outcome:</strong> An admin can trigger a test email
-through a system-admin utility in <code>nji-admin-ui</code>; NJI
-dispatches via HMCTS email infrastructure; the delivery log records
-attempt and outcome. This establishes the pattern that downstream domain
-phases (Phase 2 Absence acknowledgement, Phase 4 Booking
-acknowledgement, Phase 6 Payment Batch dispatch) consume.</p>
+
+<h1 id="epic-04-notification-service-is-scaffolded-and-contractually-ready">Epic 0.4: Notification service is scaffolded and contractually ready</h1>
+<p><strong>User outcome:</strong> The <code>nji-notification</code> service is deployed with its API contract published, delivery-log table created, SMTP integration to HMCTS email infrastructure configured, and <code>POST /v1/notifications/send</code> endpoint operational. The contract is consumable from Phase 2+ (Absence acknowledgement, Booking acknowledgement) via JWT propagation — the user-initiated flow. Service-token (<code>client_credentials</code>) auth for non-user-initiated callers is <strong>deferred to Phase 6</strong> when <code>nji-payment-batch</code> arrives as the first consumer. <strong>No admin UI in MVP</strong> — the test-send / verification flow happens via Postman during Phase 0 integration testing, not via a deployed UI.</p>
 <p><strong>Vertical slice:</strong></p>
 <ul>
-<li><code>nji-notification</code> backend service scaffolded (per
-AR2–AR4)</li>
-<li>Delivery log table with service-owned Flyway migration (per
-AR18)</li>
-<li>SMTP integration with HMCTS email infrastructure</li>
-<li>Retry-on-transient-failure pattern (DB row locking / optimistic
-locking per AR21 — no custom idempotency tables)</li>
-<li>API endpoint: <code>POST /notifications/send</code> with structured
-request (template + recipient + payload)</li>
-<li>Admin UI "Send Test Email" utility under a system-admin route in
-<code>nji-admin-ui</code> (guarded by Authorisation as system-admin
-role)</li>
-<li>First-exercise of OAuth <code>client_credentials</code> pattern for
-batch service-to-service auth (per NFR12 revised v2.6 + AR36) — even
-though <code>nji-payment-batch</code> is Phase 6, the
-<code>client_credentials</code> flow is established here for the Admin
-test send and re-used later</li>
-<li>Postman tests appended to the Phase 0 collection</li>
+<li><code>nji-notification</code> backend service scaffolded (per AR2–AR4)</li>
+<li><code>notification_delivery_log</code> table with service-owned Flyway migration (per AR18)</li>
+<li>SMTP integration with HMCTS email infrastructure (Mailpit in non-prod)</li>
+<li>Retry-on-transient-failure pattern (DB row locking / optimistic locking per AR21 — no custom idempotency tables)</li>
+<li><code>POST /v1/notifications/send</code> endpoint accepting structured request (<code>{templateId, recipient, payload}</code>)</li>
+<li>JWT propagation for user-initiated calls (per NFR12 — Phase 2+ Absence and Phase 4 Booking acknowledgement flows are user-initiated)</li>
+<li>Delivery-log read endpoint (<code>GET /v1/notifications/delivery-log</code>, <code>system-admin</code> role required — accessed via Postman in MVP, no UI)</li>
+<li>OpenAPI spec published as Maven artefact + Postman collection</li>
+<li>Phase 0 integration testing via Postman: send → queued → sent → verify in Mailpit</li>
 </ul>
-<p><strong>FRs covered:</strong> FR9</p>
-<p><strong>Key NFRs:</strong> NFR22 (HMCTS email infrastructure)</p>
-<p><strong>Why Phase 0 rather than deferring to Phase 2 as a
-consumer:</strong> Three downstream phases depend on Notification's API
-contract, retry semantics, and delivery-log schema (FR20 ack, FR32 ack,
-FR43 schedule dispatch). Locking those in Phase 0 with an
-admin-triggered demoable path avoids re-work and unblocks parallel
-development of the downstream consumers. The Admin test-send utility
-gives Phase 0 a thin but real user outcome (the admin can verify the
-integration works) rather than shipping a service nobody can demo.</p>
+<p><strong>FRs covered:</strong> FR9 (notification dispatch + delivery log)</p>
+<p><strong>Key NFRs:</strong> NFR12 (JWT propagation for user-initiated), NFR15 (delivery log = audit), NFR22 (HMCTS email infrastructure), NFR25–NFR28 (observability), NFR39 (API-as-Product), NFR42 (Postman)</p>
+<p><strong>Out of scope for Phase 0 (deferred to other phases):</strong></p>
+<ul>
+<li>OAuth <code>client_credentials</code> flow for batch / scheduled callers — <strong>deferred to Phase 6</strong> (the flow is established alongside <code>nji-payment-batch</code>, the first non-user-initiated consumer; was Story 0.4.3 in the prior plan, now moved out of Phase 0)</li>
+<li>Admin "Send Test Email" UI utility — <strong>deferred post-MVP</strong> (no admin UI in MVP per the 2026-05-15 scope decision; was Story 0.4.4 in the prior plan, removed)</li>
+<li>Delivery-log viewer UI — <strong>deferred post-MVP</strong> (Postman queries cover the gap during integration testing in MVP)</li>
+</ul>
 <hr />
-<details class="section" id="story-041-scaffold-nji-notification-service--delivery-log-table--smtp-integration"><summary><span class="section-title">Story
-0.4.1: Scaffold <code>nji-notification</code> service + delivery log
-table + SMTP integration</span></summary><div class="section-body">
-<p>As a <strong>platform engineer</strong>, I want to scaffold
-<code>nji-notification</code> following the established pattern, create
-the delivery log table via Flyway, and configure SMTP integration with
-HMCTS email infrastructure, So that <strong>downstream phases</strong>
-(Phase 2 absence ack, Phase 4 booking ack, Phase 6 payment schedule)
-<strong>can dispatch transactional emails</strong> via a consistent
-contract from day one of consuming them.</p>
+<h2 id="story-041-scaffold-nji-notification-service--delivery-log-table--smtp-integration">Story 0.4.1: Scaffold <code>nji-notification</code> service + delivery log table + SMTP integration</h2>
+<p>As a <strong>platform engineer</strong>, I want to scaffold <code>nji-notification</code> following the established pattern, create the delivery log table via Flyway, and configure SMTP integration with HMCTS email infrastructure, So that <strong>downstream phases</strong> (Phase 2 absence ack, Phase 4 booking ack, Phase 6 payment schedule) <strong>can dispatch transactional emails</strong> via a consistent contract from day one of consuming them.</p>
 <p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> the engineer runs
-<code>nji-scaffold.sh nji-notification</code>, <strong>When</strong> the
-scaffold completes, <strong>Then</strong> the new repo has the same
-baseline as Stories 0.1.1 / 0.2.1 (Spring Boot 4, Helm chart, GitHub
-Actions, Actuator, structured logs, OpenAPI tooling, Spectral, ArchUnit,
-Spotless, Checkstyle, Pact, Postman), <strong>And</strong> Group ID is
-<code>uk.gov.hmcts.nji</code>, artefact is
-<code>nji-notification</code>, package is
-<code>uk.gov.hmcts.nji.notification</code>, default port is 8082<br/>
-<strong>And</strong> initial commit is <em>"Scaffold NJI notification
-from HMCTS starter"</em> (per AR4).</p>
-<p><strong>Given</strong> the engineer adds Flyway migration
-<code>V1__init_notification_schema.sql</code>, <strong>When</strong> the
-migration runs, <strong>Then</strong> a
-<code>notification_delivery_log</code> table exists with columns:
-<code>id</code> (UUID PK), <code>template_id</code>,
-<code>recipient</code>, <code>payload</code> (JSONB),
-<code>status</code> (queued / sending / sent / failed / dead-lettered),
-<code>attempt_count</code>, <code>last_attempt_at</code>,
-<code>last_error</code>, <code>created_at</code>, <code>sent_at</code>,
-<code>version</code> (for <code>@Version</code> optimistic locking per
-AR21), <strong>And</strong> <code>nji_notification</code> DB role owns
-the table, <strong>And</strong> the schema is documented in
-<code>architecture/data-tables.md</code>.</p>
-<p><strong>Given</strong> the engineer configures SMTP<br/>
-<strong>When</strong> the service starts in dev profile<br/>
-<strong>Then</strong> SMTP settings are loaded from Spring profiles +
-Azure Key Vault (per AR25, NFR16), <strong>And</strong> in non-prod
-environments a SMTP mock (e.g. Mailpit container in docker-compose)
-intercepts outbound mail, <strong>And</strong> in production the
-configuration points to HMCTS email infrastructure (per NFR22).</p>
-<p><strong>Given</strong> the service is deployed to dev AKS<br/>
-<strong>When</strong> <code>/actuator/health</code> is queried<br/>
-<strong>Then</strong> the response is <code>200 OK</code> with SMTP
-health-check status, <strong>And</strong> the response includes a
-degraded status if SMTP is unreachable.</p>
-<p><strong>References:</strong> FR9, FR8 (consumes
-<code>configuration_values</code> for rate-limit policy), FR59, FR60;
-NFR16, NFR22, NFR25–NFR28, NFR40; AR2–AR22.</p>
+<p><strong>Given</strong> the engineer has manually pre-created the private GitHub repo <code>nji-notification</code> with branch protection on <code>main</code> via the GitHub web UI (per <code>nji-architecture/runbooks/github-setup.md</code>; the <code>gh</code> CLI is <strong>not</strong> available — see Story 0.1.1 for the canonical manual-setup pattern)<br/><strong>And</strong> runs <code>nji-scaffold.sh nji-notification</code><br/><strong>When</strong> the scaffold completes<br/><strong>Then</strong> the new repo has the same baseline as Stories 0.1.1 / 0.2.1 (Spring Boot 4, Helm chart, GitHub Actions, Actuator, structured logs, OpenAPI tooling, Spectral, ArchUnit, Spotless, Checkstyle, Pact, Postman)<br/><strong>And</strong> Group ID is <code>uk.gov.hmcts.nji</code>, artefact is <code>nji-notification</code>, package is <code>uk.gov.hmcts.nji.notification</code>, default port is 8082<br/><strong>And</strong> initial commit is <em>"Scaffold NJI notification from HMCTS starter"</em> (per AR4).</p>
+<p><strong>Given</strong> the engineer adds Flyway migration <code>V1__init_notification_schema.sql</code><br/><strong>When</strong> the migration runs<br/><strong>Then</strong> a <code>notification_delivery_log</code> table exists with columns: <code>id</code> (UUID PK), <code>template_id</code>, <code>recipient</code>, <code>payload</code> (JSONB), <code>status</code> (queued / sending / sent / failed / dead-lettered), <code>attempt_count</code>, <code>last_attempt_at</code>, <code>last_error</code>, <code>created_at</code>, <code>sent_at</code>, <code>created_by_principal</code> (the IdP principal that initiated the send — for audit), <code>version</code> (for <code>@Version</code> optimistic locking per AR21)<br/><strong>And</strong> <code>nji_notification</code> DB role owns the table<br/><strong>And</strong> the schema is documented in <code>architecture/data-tables.md</code>.</p>
+<p><strong>Given</strong> the engineer configures SMTP<br/><strong>When</strong> the service starts in dev profile<br/><strong>Then</strong> SMTP settings are loaded from Spring profiles + Azure Key Vault (per AR25, NFR16)<br/><strong>And</strong> in non-prod environments a SMTP mock (Mailpit container in docker-compose) intercepts outbound mail<br/><strong>And</strong> in production the configuration points to HMCTS email infrastructure (per NFR22).</p>
+<p><strong>Given</strong> the service is deployed to dev AKS<br/><strong>When</strong> <code>/actuator/health</code> is queried<br/><strong>Then</strong> the response is <code>200 OK</code> with SMTP health-check status<br/><strong>And</strong> the response includes a degraded status if SMTP is unreachable.</p>
+<p><strong>References:</strong> FR9, FR8 (consumes <code>configuration_values</code> for rate-limit policy), FR59, FR60; NFR16, NFR22, NFR25–NFR28, NFR40; AR2–AR22.</p>
 <hr />
-</div></details><details class="section" id="story-042-post-v1notificationssend-endpoint-with-retry-semantics-delivery-logging-and-rfc-9457-errors"><summary><span class="section-title">Story
-0.4.2: <code>POST /v1/notifications/send</code> endpoint with retry
-semantics, delivery logging, and RFC 9457 errors</span></summary><div class="section-body">
-<p>As a <strong>calling service</strong> (Admin UI test send now;
-Absence/Booking/Payment Batch later), I want a
-<code>POST /v1/notifications/send</code> endpoint that accepts a
-template + recipient + payload, persists a delivery log entry,
-dispatches via SMTP with retry on transient failure, and returns RFC
-9457 errors on validation failure, So that <strong>transactional email
-dispatch is a single, observable, retry-safe contract</strong> (per FR9,
-NFR22) that the rest of NJI consumes consistently.</p>
+<h2 id="story-042-post-v1notificationssend-endpoint-with-jwt-propagation-retry-semantics-delivery-logging-rfc-9457-errors">Story 0.4.2: <code>POST /v1/notifications/send</code> endpoint with JWT propagation, retry semantics, delivery logging, RFC 9457 errors</h2>
+<p>As a <strong>calling service</strong> (Phase 2 Absence flow, Phase 4 Booking flow — both user-initiated), I want a <code>POST /v1/notifications/send</code> endpoint that accepts a template + recipient + payload, validates the caller's user JWT, persists a delivery log entry, dispatches via SMTP with retry on transient failure, and returns RFC 9457 errors on validation failure, So that <strong>transactional email dispatch is a single, observable, retry-safe contract</strong> (per FR9, NFR22) that the user-initiated downstream phases consume consistently. The OAuth <code>client_credentials</code> flow for non-user-initiated callers (batch / scheduled) is <strong>out of scope for Phase 0</strong> — it will be added in Phase 6 when <code>nji-payment-batch</code> arrives.</p>
 <p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> <code>nji-notification</code> is deployed per
-Story 0.4.1, <strong>When</strong> the engineer implements the send
-endpoint, <strong>Then</strong> <code>POST /v1/notifications/send</code>
-accepts a body with <code>{templateId, recipient, payload}</code> where
-<code>payload</code> is a JSON object, <strong>And</strong> the endpoint
-is protected by <code>JWTFilter</code> (any authenticated principal with
-the <code>notification-sender</code> role can call; service principals
-from <code>client_credentials</code> flow are accepted per NFR12 +
-AR36), <strong>And</strong> on a valid request, the endpoint inserts a
-row in <code>notification_delivery_log</code> with status
-<code>queued</code> and returns <code>202 Accepted</code> with
-<code>{deliveryId, status}</code>.</p>
-<p><strong>Given</strong> a worker (in-process scheduled task or message
-queue consumer — engineer to choose; recommendation at this scale:
-in-process Spring <code>@Scheduled</code> task picking
-<code>queued</code> rows with <code>FOR UPDATE SKIP LOCKED</code> per
-AR21 to avoid worker contention) processes queued rows<br/>
-<strong>When</strong> the worker picks a row, <strong>Then</strong> it
-transitions to <code>sending</code>, <strong>And</strong> invokes SMTP
-send, <strong>And</strong> on success transitions to <code>sent</code>
-with <code>sent_at</code> populated, <strong>And</strong> on transient
-failure increments <code>attempt_count</code>, populates
-<code>last_error</code>, and resets status to <code>queued</code> (retry
-budget: 5 attempts at exponential backoff), <strong>And</strong> on
-exhausted retry budget transitions to <code>dead-lettered</code> with
-<code>last_error</code> retained for inspection.</p>
-<p><strong>Given</strong> an invalid request body reaches the send
-endpoint, <strong>When</strong> validation fails (missing template,
-invalid recipient, payload schema mismatch), <strong>Then</strong> the
-response is <code>400 Bad Request</code> with RFC 9457 problem-details
-including field-level errors (per AR37), <strong>And</strong> no
-delivery log row is created.</p>
-<p><strong>Given</strong> an unauthenticated request reaches the send
-endpoint, <strong>When</strong> the JWT is missing or invalid<br/>
-<strong>Then</strong> the response is <code>401 Unauthorized</code> with
-RFC 9457 problem-details, <strong>And</strong> no delivery log row is
-created.</p>
-<p><strong>Given</strong> a
-<code>GET /v1/notifications/delivery-log</code> endpoint is added<br/>
-<strong>When</strong> the caller is authenticated with a
-<code>system-admin</code> role, <strong>Then</strong> the response
-returns paginated delivery log entries with filters (recipient, status,
-date range), <strong>And</strong> non-admin callers get
-<code>403 Forbidden</code> with RFC 9457.</p>
-<p><strong>Given</strong> the OpenAPI spec is regenerated<br/>
-<strong>When</strong>
-<code>uk.gov.hmcts.nji:api-nji-notification:1.0.0</code> is published<br/>
-<strong>Then</strong> Spectral lint passes, <strong>And</strong> the
-spec documents the send + delivery-log endpoints.</p>
-<p><strong>Given</strong> a Postman collection is published<br/>
-<strong>When</strong>
-<code>postman/nji-notification-phase0.postman_collection.json</code>
-runs, <strong>Then</strong> it covers happy path + 400 + 401 + 403 +
-retry behaviour (via a fault-injection test endpoint, removable
-post-Phase-0).</p>
-<p><strong>References:</strong> FR9, FR59, FR60; NFR12, NFR13, NFR15,
-NFR22, NFR25, NFR28, NFR39, NFR42; AR17, AR21, AR34, AR36, AR37, AR38,
-AR41.</p>
-<hr />
-</div></details><details class="section" id="story-043-establish-oauth-client_credentials-flow-against-nji-mock-auth-for-batchscheduled-callers"><summary><span class="section-title">Story
-0.4.3: Establish OAuth <code>client_credentials</code> flow against
-<code>nji-mock-auth</code> for batch/scheduled callers</span></summary><div class="section-body">
-<p>As a <strong>scheduled or batch component</strong> (the Admin UI
-test-send utility now; <code>nji-payment-batch</code> in Phase 6), I
-want a documented and tested OAuth 2.0 <code>client_credentials</code>
-flow against <code>nji-mock-auth</code> issuing service-principal JWTs
-that NJI services accept, So that <strong>inter-service authentication
-for non-user-initiated calls</strong> (per NFR12 revised v2.6, AR36) is
-in place from Phase 0 — locking in the pattern before downstream
-consumers depend on it.</p>
-<p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> <code>nji-mock-auth</code> was scaffolded per
-Story 0.1.2 with <code>client_credentials</code> flow supported<br/>
-<strong>When</strong> the engineer adds a
-<code>service-client-config</code> seed under
-<code>nji-mock-auth</code>, <strong>Then</strong> a service-token client
-<code>nji-notification-test-sender-client</code> is configured with
-client ID, client secret (in Key Vault per NFR16), and allowed scopes
-(e.g. <code>notification:send</code>), <strong>And</strong> the client
-config is repeatable for future batch components by adding new entries
-(engineer documents the pattern in
-<code>nji-architecture/ADR-XXXX-service-token-flow.md</code>).</p>
-<p><strong>Given</strong> a batch caller (or test harness) requests a
-token, <strong>When</strong> it calls <code>nji-mock-auth</code>'s token
-endpoint with
-<code>grant_type=client_credentials&amp;client_id=...&amp;client_secret=...&amp;scope=notification:send</code><br/>
-<strong>Then</strong> the response is <code>200 OK</code> with
-<code>{access_token, token_type: "Bearer", expires_in, scope}</code><br/>
-<strong>And</strong> the JWT validates against
-<code>nji-mock-auth</code>'s JWKS endpoint, <strong>And</strong> the JWT
-subject identifies the client.</p>
-<p><strong>Given</strong> the service-principal JWT is presented to
-<code>nji-notification</code>'s
-<code>POST /v1/notifications/send</code>, <strong>When</strong> the
-JWTFilter validates the token, <strong>Then</strong> the request is
-accepted, <strong>And</strong> <code>nji-authorisation</code>'s
-<code>POST /authz/check</code> returns the service principal's allowed
-scopes, <strong>And</strong> the send proceeds if the scope includes
-<code>notification:send</code>.</p>
-<p><strong>Given</strong> the production issuer for service tokens is
-documented as deferred per gaps.md G7.1 (default recommendation: Azure
-Workload Identity given AKS deployment per AR36), <strong>When</strong>
-the engineer writes the ADR, <strong>Then</strong> the ADR clearly
-states: (a) Phase 0 establishes <code>client_credentials</code> against
-<code>nji-mock-auth</code> for non-prod use only, (b) production issuer
-is a deferred decision, (c) default recommendation is Azure Workload
-Identity, (d) the JWT validation pattern in NJI services is
-issuer-agnostic so swap-in is mechanical at production cutover.</p>
-<p><strong>References:</strong> FR1 (service-principal authentication),
-FR59; NFR12, NFR16; AR35, AR36, gaps.md G7.1.</p>
-<hr />
-</div></details><details class="section" id="story-044-admin-can-trigger-a-test-email-through-nji-admin-ui-and-verify-delivery-in-the-log"><summary><span class="section-title">Story
-0.4.4: Admin can trigger a test email through <code>nji-admin-ui</code>
-and verify delivery in the log</span></summary><div class="section-body">
-<p>As a <strong>system administrator</strong>, I want a "Send Test
-Email" utility in <code>nji-admin-ui</code> that calls
-<code>nji-notification</code>'s send endpoint and shows the resulting
-delivery log entry, So that <strong>the Notification integration is
-end-to-end demoable at Phase 0</strong> (the demoable user outcome for
-Epic 0.4) — and so admins have a sanity-check tool when downstream
-phases start consuming Notification.</p>
-<p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> an admin signs into <code>nji-admin-ui</code>
-(Story 0.2.3) with a <code>system-admin</code> role<br/>
-<strong>When</strong> they open <code>/system/notification-test</code><br/>
-<strong>Then</strong> they see a form with template-id selector (seeded
-templates: "test-email", "absence-ack", "booking-ack",
-"payment-schedule"), recipient email input, and payload JSON input (with
-sensible defaults per template), <strong>And</strong> the form validates
-inputs client-side (valid email; JSON parseable), <strong>And</strong>
-the auto-generated TypeScript client from <code>nji-notification</code>
-OpenAPI is used for the API call.</p>
-<p><strong>Given</strong> the admin submits the form<br/>
-<strong>When</strong> the UI calls
-<code>POST /v1/notifications/send</code>, <strong>Then</strong> the
-response <code>202 Accepted</code> returns a <code>deliveryId</code><br/>
-<strong>And</strong> the UI displays the delivery in a sidebar panel
-showing <code>queued</code> status, <strong>And</strong> the panel polls
-(or subscribes to a WebSocket if added later — TanStack Query refetch
-interval is sufficient at Phase 0) for status changes<br/>
-<strong>And</strong> within ~30 seconds the panel shows
-<code>sent</code> or <code>failed</code> based on SMTP outcome.</p>
-<p><strong>Given</strong> the test recipient receives the email in
-non-prod (Mailpit catches outbound), <strong>When</strong> the admin
-opens the Mailpit UI in dev, <strong>Then</strong> the email is visible
-with rendered template + payload substitutions, <strong>And</strong> the
-admin can verify the rendering matches expectation before downstream
-phases consume the template.</p>
-<p><strong>Given</strong> the send fails (e.g. SMTP rejected the
-recipient), <strong>When</strong> the delivery log entry transitions to
-<code>dead-lettered</code>, <strong>Then</strong> the UI panel shows the
-failure with the last error, <strong>And</strong> the admin can drill
-into the delivery log via a link to
-<code>/system/notification-log</code>.</p>
-<p><strong>Given</strong> a <code>/system/notification-log</code> view
-exists, <strong>When</strong> the admin opens it, <strong>Then</strong>
-they see a paginated table of recent delivery log entries (fetched via
-<code>GET /v1/notifications/delivery-log</code>) with filters<br/>
-<strong>And</strong> axe-core scans the table view without WCAG 2.2 AA
-violations.</p>
-<p><strong>Given</strong> Playwright E2E coverage, <strong>When</strong>
-<code>tests/e2e/notification-test.spec.ts</code> runs against dev<br/>
-<strong>Then</strong> it covers: open test-send page → fill form →
-submit → see <code>queued</code> → wait for <code>sent</code> → verify
-Mailpit captured the message, <strong>And</strong> also covers the
-failure path (using an intentionally rejected recipient).</p>
-<p><strong>References:</strong> FR4 (admin gating), FR9, FR56 (admin
-stack); NFR12, NFR13, NFR17, NFR18, NFR19, NFR22; AR42–AR45.</p>
-</div></details>
+<p><strong>Given</strong> <code>nji-notification</code> is deployed per Story 0.4.1<br/><strong>When</strong> the engineer implements the send endpoint<br/><strong>Then</strong> <code>POST /v1/notifications/send</code> accepts a body with <code>{templateId, recipient, payload}</code> where <code>payload</code> is a JSON object<br/><strong>And</strong> the endpoint is protected by <code>JWTFilter</code> and accepts user JWTs from the SSO/IdP (per NFR12 — JWT propagation for user-initiated calls; the caller is a downstream NJI service that has propagated the user's token)<br/><strong>And</strong> the caller's role is checked against the template's permitted-callers list (e.g. only <code>RSU</code> and <code>system-admin</code> may send <code>absence-ack</code> template in MVP)<br/><strong>And</strong> on a valid request, the endpoint inserts a row in <code>notification_delivery_log</code> with status <code>queued</code> and the user's principal in <code>created_by_principal</code>, then returns <code>202 Accepted</code> with <code>{deliveryId, status}</code>.</p>
+<p><strong>Given</strong> a worker (in-process Spring <code>@Scheduled</code> task picking <code>queued</code> rows with <code>FOR UPDATE SKIP LOCKED</code> per AR21) processes queued rows<br/><strong>When</strong> the worker picks a row<br/><strong>Then</strong> it transitions to <code>sending</code><br/><strong>And</strong> invokes SMTP send<br/><strong>And</strong> on success transitions to <code>sent</code> with <code>sent_at</code> populated<br/><strong>And</strong> on transient failure increments <code>attempt_count</code>, populates <code>last_error</code>, and resets status to <code>queued</code> (retry budget: 5 attempts at exponential backoff)<br/><strong>And</strong> on exhausted retry budget transitions to <code>dead-lettered</code> with <code>last_error</code> retained for inspection.</p>
+<p><strong>Given</strong> an invalid request body reaches the send endpoint<br/><strong>When</strong> validation fails (missing template, invalid recipient, payload schema mismatch)<br/><strong>Then</strong> the response is <code>400 Bad Request</code> with RFC 9457 problem-details including field-level errors (per AR37)<br/><strong>And</strong> no delivery log row is created.</p>
+<p><strong>Given</strong> an unauthenticated request reaches the send endpoint<br/><strong>When</strong> the JWT is missing or invalid<br/><strong>Then</strong> the response is <code>401 Unauthorized</code> with RFC 9457 problem-details<br/><strong>And</strong> no delivery log row is created.</p>
+<p><strong>Given</strong> a request arrives with a service-principal JWT (from <code>client_credentials</code> flow)<br/><strong>When</strong> the JWTFilter validates the token<br/><strong>Then</strong> the request is <strong>rejected</strong> at Phase 0 with <code>403 Forbidden</code> and an RFC 9457 body explaining "service-principal callers are not in scope until Phase 6 (<code>nji-payment-batch</code> arrives). Use user JWT propagation for Phase 2+ user-initiated flows."<br/><strong>And</strong> the rejection is logged with the client identifier for visibility.</p>
+<p><strong>Given</strong> a <code>GET /v1/notifications/delivery-log</code> endpoint is added<br/><strong>When</strong> the caller is authenticated with a <code>system-admin</code> role<br/><strong>Then</strong> the response returns paginated delivery log entries with filters (recipient, status, date range, principal)<br/><strong>And</strong> non-admin callers get <code>403 Forbidden</code> with RFC 9457.</p>
+<p><strong>Given</strong> the OpenAPI spec is regenerated<br/><strong>When</strong> <code>uk.gov.hmcts.nji:api-nji-notification:1.0.0</code> is published<br/><strong>Then</strong> Spectral lint passes<br/><strong>And</strong> the spec documents the send + delivery-log endpoints<br/><strong>And</strong> the spec explicitly annotates "service-principal auth deferred to v2 (Phase 6) — Phase 0 / 1 only accept user-JWT".</p>
+<p><strong>Given</strong> a Postman collection is published<br/><strong>When</strong> <code>postman/nji-notification-phase0.postman_collection.json</code> runs in CI<br/><strong>Then</strong> it covers happy path + 400 + 401 + 403 (admin-only) + 403 (service-principal rejected pre-Phase-6) + retry behaviour (via a fault-injection test endpoint, removable post-Phase-0)<br/><strong>And</strong> Phase 0 manual integration test consists of: open Postman → authenticate as test user → POST send → poll delivery-log until <code>sent</code> → open Mailpit → verify rendered email. (No admin UI for this flow in MVP per the 2026-05-15 scope decision.)</p>
+<p><strong>References:</strong> FR9, FR59, FR60; NFR12, NFR13, NFR15, NFR22, NFR25, NFR28, NFR39, NFR42; AR17, AR21, AR34, AR37, AR38, AR41.</p>
+<p><strong>Explicitly NOT in scope (deferred to other phases):</strong></p>
+<ul>
+<li>OAuth <code>client_credentials</code> flow for batch / scheduled callers — <strong>moved to Phase 6</strong> alongside <code>nji-payment-batch</code> (was Story 0.4.3 in the prior plan)</li>
+<li>Admin "Send Test Email" UI — <strong>deferred post-MVP</strong> (was Story 0.4.4)</li>
+<li>Delivery-log viewer UI — <strong>deferred post-MVP</strong> (Postman covers the gap)</li>
+</ul>
+
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/phase-0/epic-0.4-system-dispatches-emails.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#story-041-scaffold-nji-notification-service--delivery-log-table--smtp-integration">Story
-0.4.1: Scaffold nji-notification service + delivery log
-table + SMTP integration</a></li><li><a href="#story-042-post-v1notificationssend-endpoint-with-retry-semantics-delivery-logging-and-rfc-9457-errors">Story
-0.4.2: POST /v1/notifications/send endpoint with retry
-semantics, delivery logging, and RFC 9457 errors</a></li><li><a href="#story-043-establish-oauth-client_credentials-flow-against-nji-mock-auth-for-batchscheduled-callers">Story
-0.4.3: Establish OAuth client_credentials flow against
-nji-mock-auth for batch/scheduled callers</a></li><li><a href="#story-044-admin-can-trigger-a-test-email-through-nji-admin-ui-and-verify-delivery-in-the-log">Story
-0.4.4: Admin can trigger a test email through nji-admin-ui
-and verify delivery in the log</a></li></ul></aside>
+
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

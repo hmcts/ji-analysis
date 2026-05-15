@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,28 +178,23 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="documented-gaps-g1g7">Documented Gaps (G1–G7)</h1>
 <blockquote>
-<p>Sibling of <a
-href="../architecture.html"><code>../architecture.md</code></a>. Linked
-from <em>Architecture Validation Results</em>.</p>
+<p>Sibling of <a href="../architecture.html"><code>../architecture.md</code></a>. Linked from <em>Architecture Validation Results</em>.</p>
 </blockquote>
-<p>Every gap is named, categorised, owned, and has a mitigation or
-fallback. Implementation can begin while these are tracked and resolved
-in parallel.</p>
+<p>Every gap is named, categorised, owned, and has a mitigation or fallback. Implementation can begin while these are tracked and resolved in parallel.</p>
 <details class="section" id="critical-gaps"><summary><span class="section-title">Critical Gaps</span></summary><div class="section-body">
 <p>None. No gap blocks implementation.</p>
-</div></details><details class="section" id="g1--external-verification-dependencies-hmcts-infrastructure"><summary><span class="section-title">G1
-— External Verification Dependencies (HMCTS infrastructure)</span></summary><div class="section-body">
+</div></details><details class="section" id="g1--external-verification-dependencies-hmcts-infrastructure"><summary><span class="section-title">G1 — External Verification Dependencies (HMCTS infrastructure)</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -210,93 +207,56 @@ in parallel.</p>
 <tbody>
 <tr>
 <td><strong>G1.1</strong></td>
-<td>HMCTS IdP support for OIDC human-user authentication is assumed but
-not verified.</td>
-<td><strong>No longer Phase 0 blocking</strong> — mock auth covers Phase
-0–8. Verification needed before pre-Phase-9 cutover. If SAML-only: swap
-protocol library at the integration boundary; pattern unchanged.</td>
+<td>HMCTS IdP support for OIDC human-user authentication is assumed but not verified.</td>
+<td><strong>No longer Phase 0 blocking</strong> — mock auth covers Phase 0–8. Verification needed before pre-Phase-9 cutover. If SAML-only: swap protocol library at the integration boundary; pattern unchanged.</td>
 <td>Pre-Phase-9 prerequisite — IdP team confirmation</td>
 </tr>
 <tr>
 <td><strong>G1.2</strong> <em>(reopened v2.6, 2026-05-07)</em></td>
-<td>HMCTS IdP support for OAuth 2.0 <code>client_credentials</code>
-grant — needed in production for the payment-batch service principal
-(<code>nji-payment-batch</code>). <code>nji-mock-auth</code> covers
-dev/CI/integration. Production options in G7.1: NJI-internal issuer,
-Azure Workload Identity, mTLS, or HMCTS IdP
-<code>client_credentials</code>.</td>
-<td>Pre-Phase-9 — IdP team confirmation, or adopt an alternative from
-G7.1</td>
+<td>HMCTS IdP support for OAuth 2.0 <code>client_credentials</code> grant — needed in production for the payment-batch service principal (<code>nji-payment-batch</code>). <code>nji-mock-auth</code> covers dev/CI/integration. Production options in G7.1: NJI-internal issuer, Azure Workload Identity, mTLS, or HMCTS IdP <code>client_credentials</code>.</td>
+<td>Pre-Phase-9 — IdP team confirmation, or adopt an alternative from G7.1</td>
 <td></td>
 </tr>
 <tr>
 <td><strong>G1.3</strong></td>
-<td>HMCTS IdP principal export or query API for migration reconciliation
-is assumed.</td>
-<td><strong>No longer Phase 0 blocking</strong> — mock auth users mirror
-migrated APEX records in Phase 0; real reconciliation deferred to
-pre-Phase-9 cutover. If unsupported: fallback to manual reconciliation
-report compiled by IdP team out of band.</td>
+<td>HMCTS IdP principal export or query API for migration reconciliation is assumed.</td>
+<td><strong>No longer Phase 0 blocking</strong> — mock auth users mirror migrated APEX records in Phase 0; real reconciliation deferred to pre-Phase-9 cutover. If unsupported: fallback to manual reconciliation report compiled by IdP team out of band.</td>
 <td>Pre-Phase-9 prerequisite — IdP team confirmation</td>
 </tr>
 <tr>
 <td><strong>G1.4</strong></td>
-<td>HMCTS Crime SpringBoot template
-(<code>hmcts/service-hmcts-crime-springboot-template</code>) is assumed
-to be the appropriate starter for NJI. <strong>Confirmed via template
-review (2026-05-06):</strong> Java 25, Spring Boot 4.0.6, Gradle Groovy
-DSL, Flyway, PostgreSQL, Logstash JSON logging, OpenTelemetry,
-Testcontainers, Lombok, MapStruct, OWASP encoder, JaCoCo, CycloneDX,
-Swagger Core, JWTFilter pattern.</td>
-<td>Confirmed. Residual risk: NJI may want to fork or use a closer-fit
-HMCTS judicial-services template if one exists.</td>
+<td>HMCTS Crime SpringBoot template (<code>hmcts/service-hmcts-crime-springboot-template</code>) is assumed to be the appropriate starter for NJI. <strong>Confirmed via template review (2026-05-06):</strong> Java 25, Spring Boot 4.0.6, Gradle Groovy DSL, Flyway, PostgreSQL, Logstash JSON logging, OpenTelemetry, Testcontainers, Lombok, MapStruct, OWASP encoder, JaCoCo, CycloneDX, Swagger Core, JWTFilter pattern.</td>
+<td>Confirmed. Residual risk: NJI may want to fork or use a closer-fit HMCTS judicial-services template if one exists.</td>
 <td>NJI architecture team</td>
 </tr>
 <tr>
 <td><strong>G1.4a</strong> <em>(new)</em></td>
-<td><strong>Helm chart for AKS deployment is not included in the HMCTS
-Crime template.</strong> The architecture assumes per-service Helm
-charts.</td>
-<td>NJI scaffolding script must include Helm chart templates; verify
-whether HMCTS provides Helm charts via a separate mechanism (shared
-chart library, Bicep templates) or whether each team provides its
-own.</td>
+<td><strong>Helm chart for AKS deployment is not included in the HMCTS Crime template.</strong> The architecture assumes per-service Helm charts.</td>
+<td>NJI scaffolding script must include Helm chart templates; verify whether HMCTS provides Helm charts via a separate mechanism (shared chart library, Bicep templates) or whether each team provides its own.</td>
 <td>Phase 0 deliverable — NJI architecture team</td>
 </tr>
 <tr>
 <td><strong>G1.4b</strong> <em>(new)</em></td>
-<td><strong>Spring Cloud Azure Key Vault integration is not in the
-template baseline.</strong></td>
-<td>Add per service via
-<code>com.azure.spring:spring-cloud-azure-starter-keyvault-secrets</code>.
-Phase 0 scaffolding includes this.</td>
+<td><strong>Spring Cloud Azure Key Vault integration is not in the template baseline.</strong></td>
+<td>Add per service via <code>com.azure.spring:spring-cloud-azure-starter-keyvault-secrets</code>. Phase 0 scaffolding includes this.</td>
 <td>Phase 0 deliverable — NJI architecture team</td>
 </tr>
 <tr>
 <td><strong>G1.5</strong></td>
-<td>HMCTS Email infrastructure (SMTP / Microsoft Graph) availability and
-authentication mechanism for AKS-hosted services is assumed.</td>
-<td>If unavailable in expected form: alternate transport (Azure
-Communication Services Email) is a documented fallback; Notification
-service contract unchanged.</td>
+<td>HMCTS Email infrastructure (SMTP / Microsoft Graph) availability and authentication mechanism for AKS-hosted services is assumed.</td>
+<td>If unavailable in expected form: alternate transport (Azure Communication Services Email) is a documented fallback; Notification service contract unchanged.</td>
 <td>Phase 0 prerequisite — HMCTS infrastructure team</td>
 </tr>
 <tr>
 <td><strong>G1.6</strong></td>
-<td>Mock-to-real-IdP cutover plan must be operationally rehearsed before
-pre-Phase-9.</td>
-<td>Cutover is a Spring profile change (no code change); rehearse on
-staging environment with real IdP credentials before scheduling pilot
-wave 1.</td>
+<td>Mock-to-real-IdP cutover plan must be operationally rehearsed before pre-Phase-9.</td>
+<td>Cutover is a Spring profile change (no code change); rehearse on staging environment with real IdP credentials before scheduling pilot wave 1.</td>
 <td>Pre-Phase-9 deliverable — NJI team</td>
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="g2--programme-management-dependencies-out-of-architecture-scope-but-block-implementation"><summary><span class="section-title">G2
-— Programme-Management Dependencies (out of architecture scope but block
-implementation)</span></summary><div class="section-body">
-<p>Tracked in the PRD's open-items list. Restated here because they
-affect when the architecture can proceed.</p>
+</div></details><details class="section" id="g2--programme-management-dependencies-out-of-architecture-scope-but-block-implementation"><summary><span class="section-title">G2 — Programme-Management Dependencies (out of architecture scope but block implementation)</span></summary><div class="section-body">
+<p>Tracked in the PRD's open-items list. Restated here because they affect when the architecture can proceed.</p>
 <table>
 <thead>
 <tr>
@@ -309,44 +269,36 @@ affect when the architecture can proceed.</p>
 <tr>
 <td><strong>G2.1</strong></td>
 <td>Pilot region selection for Phase 9 wave 1</td>
-<td>Affects capacity sizing for first deployment; programme
-decision</td>
+<td>Affects capacity sizing for first deployment; programme decision</td>
 </tr>
 <tr>
 <td><strong>G2.2</strong></td>
 <td>Cross-region workflow handling per wave</td>
-<td>Per-wave decision; programme template needed (Risk #1 from
-brainstorming)</td>
+<td>Per-wave decision; programme template needed (Risk #1 from brainstorming)</td>
 </tr>
 <tr>
 <td><strong>G2.3</strong></td>
-<td>Operational availability hours (assumed 07:00–19:00 UK
-weekdays)</td>
+<td>Operational availability hours (assumed 07:00–19:00 UK weekdays)</td>
 <td>Programme to confirm; affects on-call expectations</td>
 </tr>
 <tr>
 <td><strong>G2.4</strong></td>
-<td>Capacity numbers (~50–100 per region, ~200–500 national
-assumed)</td>
+<td>Capacity numbers (~50–100 per region, ~200–500 national assumed)</td>
 <td>Programme to confirm; affects HPA tuning and PostgreSQL sizing</td>
 </tr>
 <tr>
 <td><strong>G2.5</strong></td>
-<td>Phase 0 migration owners (Reference Data sign-off, Users/Roles
-sign-off)</td>
-<td>Programme to name owners; affects Phase 0 deliverable
-acceptance</td>
+<td>Phase 0 migration owners (Reference Data sign-off, Users/Roles sign-off)</td>
+<td>Programme to name owners; affects Phase 0 deliverable acceptance</td>
 </tr>
 <tr>
 <td><strong>G2.6</strong></td>
 <td>Historical-data 12-month window length</td>
-<td>Programme to confirm; recommended in Step 4 (TBD #6 partial
-resolution)</td>
+<td>Programme to confirm; recommended in Step 4 (TBD #6 partial resolution)</td>
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="g3--hmcts-technology-approval"><summary><span class="section-title">G3 — HMCTS Technology
-Approval</span></summary><div class="section-body">
+</div></details><details class="section" id="g3--hmcts-technology-approval"><summary><span class="section-title">G3 — HMCTS Technology Approval</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -358,29 +310,23 @@ Approval</span></summary><div class="section-body">
 <tbody>
 <tr>
 <td><strong>G3.1</strong></td>
-<td>Azure as cloud platform (UK regions) — assumed approved per
-programme guidance</td>
+<td>Azure as cloud platform (UK regions) — assumed approved per programme guidance</td>
 <td>Confirm with HMCTS architecture/security review</td>
 </tr>
 <tr>
 <td><strong>G3.2</strong></td>
-<td>Azure Database for PostgreSQL Flexible Server — recommended; HMCTS
-may prefer Azure SQL</td>
-<td>Confirm with HMCTS data team; switch is reversible at Phase 0
-cost</td>
+<td>Azure Database for PostgreSQL Flexible Server — recommended; HMCTS may prefer Azure SQL</td>
+<td>Confirm with HMCTS data team; switch is reversible at Phase 0 cost</td>
 </tr>
 <tr>
 <td><strong>G3.3</strong></td>
 <td>Azure API Management for ingress and rate limiting</td>
-<td>Confirm with HMCTS infrastructure; Spring Cloud Gateway is named
-alternative</td>
+<td>Confirm with HMCTS infrastructure; Spring Cloud Gateway is named alternative</td>
 </tr>
 <tr>
 <td><strong>G3.4</strong></td>
-<td>GOV.UK Design System for React (<code>govuk-react</code> or
-HMCTS-internal equivalent)</td>
-<td>Verify HMCTS-internal version exists and is preferred; otherwise use
-community <code>govuk-react</code></td>
+<td>GOV.UK Design System for React (<code>govuk-react</code> or HMCTS-internal equivalent)</td>
+<td>Verify HMCTS-internal version exists and is preferred; otherwise use community <code>govuk-react</code></td>
 </tr>
 <tr>
 <td><strong>G3.5</strong></td>
@@ -388,33 +334,13 @@ community <code>govuk-react</code></td>
 <td>Alternative: Azure Blob Storage + CDN; both viable</td>
 </tr>
 <tr>
-<td><strong>G3.6</strong> <em>(open; consolidated v2.8,
-2026-05-08)</em></td>
-<td><strong>Disaster recovery (DR) — open gap.</strong> MVP runs in a
-single Azure region (UK South) with multi-AZ HA. All DR design and scope
-is held here; no DR detail is asserted elsewhere. Decision points: (a)
-<strong>DR in MVP scope?</strong> Programme decision; default post-MVP
-(programme accepts full-region-UK-South-unavailability risk for MVP and
-pilot waves). (b) <strong>Target region</strong> — UK West is the
-natural candidate (data-residency-compliant per NFR31); not committed.
-(c) <strong>Posture</strong> — cold-standby (manual failover) vs
-warm-standby vs active/active. Working assumption: cold-standby.
-Active/active is incompatible with the shared global PostgreSQL without
-multi-master replication (premature per Principle 2). (d)
-<strong>PostgreSQL geo-redundant backup</strong> with the chosen DR
-region as restore target. (e) <strong>AKS Helm definitions</strong> for
-the DR region held in source control; cluster not pre-provisioned until
-activation. (f) <strong>DNS failover</strong> (Azure Front Door /
-Traffic Manager) and runbook. (g) <strong>RTO/RPO targets</strong>
-agreed with HMCTS.</td>
-<td>Programme (in/out of MVP) + NJI architecture team (design once in
-scope). Pre-broad-GA at the latest.</td>
+<td><strong>G3.6</strong> <em>(open; consolidated v2.8, 2026-05-08)</em></td>
+<td><strong>Disaster recovery (DR) — open gap.</strong> MVP runs in a single Azure region (UK South) with multi-AZ HA. All DR design and scope is held here; no DR detail is asserted elsewhere. Decision points: (a) <strong>DR in MVP scope?</strong> Programme decision; default post-MVP (programme accepts full-region-UK-South-unavailability risk for MVP and pilot waves). (b) <strong>Target region</strong> — UK West is the natural candidate (data-residency-compliant per NFR31); not committed. (c) <strong>Posture</strong> — cold-standby (manual failover) vs warm-standby vs active/active. Working assumption: cold-standby. Active/active is incompatible with the shared global PostgreSQL without multi-master replication (premature per Principle 2). (d) <strong>PostgreSQL geo-redundant backup</strong> with the chosen DR region as restore target. (e) <strong>AKS Helm definitions</strong> for the DR region held in source control; cluster not pre-provisioned until activation. (f) <strong>DNS failover</strong> (Azure Front Door / Traffic Manager) and runbook. (g) <strong>RTO/RPO targets</strong> agreed with HMCTS.</td>
+<td>Programme (in/out of MVP) + NJI architecture team (design once in scope). Pre-broad-GA at the latest.</td>
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="g4--post-completion-refinement-tasks-not-blocking-scheduled-after-step-8"><summary><span class="section-title">G4
-— Post-Completion Refinement Tasks (not blocking, scheduled after Step
-8)</span></summary><div class="section-body">
+</div></details><details class="section" id="g4--post-completion-refinement-tasks-not-blocking-scheduled-after-step-8"><summary><span class="section-title">G4 — Post-Completion Refinement Tasks (not blocking, scheduled after Step 8)</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -426,75 +352,42 @@ scope). Pre-broad-GA at the latest.</td>
 <tbody>
 <tr>
 <td><strong>G4.1</strong></td>
-<td>Mermaid / C4 diagrams in <code>nji-architecture/diagrams/</code> to
-replace ASCII-art representations of internal communication, data flow,
-and deployment topology</td>
+<td>Mermaid / C4 diagrams in <code>nji-architecture/diagrams/</code> to replace ASCII-art representations of internal communication, data flow, and deployment topology</td>
 <td>NJI architecture team post-completion</td>
 </tr>
 <tr>
 <td><strong>G4.2</strong></td>
-<td>Sample ADRs (<code>ADR-001-greenfield-not-strangler.md</code>,
-<code>ADR-002-no-shared-library.md</code>,
-<code>ADR-003-rest-first-no-event-bus.md</code>, etc.) capturing locked
-decisions in formal ADR shape</td>
+<td>Sample ADRs (<code>ADR-001-greenfield-not-strangler.md</code>, <code>ADR-002-no-shared-library.md</code>, <code>ADR-003-rest-first-no-event-bus.md</code>, etc.) capturing locked decisions in formal ADR shape</td>
 <td>NJI architecture team post-completion</td>
 </tr>
 <tr>
 <td><strong>G4.3</strong></td>
-<td>Per-service OpenAPI snippets seeded as Phase 0 paper contracts (per
-D1) for Itinerary and MI Feed at minimum, plus skeleton specs for the 6
-domain services</td>
+<td>Per-service OpenAPI snippets seeded as Phase 0 paper contracts (per D1) for Itinerary and MI Feed at minimum, plus skeleton specs for the 6 domain services</td>
 <td>Phase 0 deliverable</td>
 </tr>
 <tr>
 <td><strong>G4.4</strong></td>
-<td>ArchUnit fitness function ruleset codified for the per-service
-convention checks</td>
+<td>ArchUnit fitness function ruleset codified for the per-service convention checks</td>
 <td>Phase 0 deliverable as part of scaffolding</td>
 </tr>
 <tr>
 <td><strong>G4.5</strong></td>
-<td>Spectral OpenAPI lint ruleset codified for the API-as-Product
-standards (consistent error envelope, <a
-href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a>
-problem-details references, versioning prefix, deprecation headers per
-<a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a> +
-<a href="https://datatracker.ietf.org/doc/html/rfc8594">RFC
-8594</a>)</td>
+<td>Spectral OpenAPI lint ruleset codified for the API-as-Product standards (consistent error envelope, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details references, versioning prefix, deprecation headers per <a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a> + <a href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a>)</td>
 <td>Phase 0 deliverable as part of scaffolding</td>
 </tr>
 <tr>
 <td><strong>G4.6</strong> <em>(revised 2026-05-06)</em></td>
-<td><strong>Phase 0 ETL — APEX-side input mapping needs validation
-against the APEX SQL dump.</strong> NJI's 39 tables in <a
-href="./data-tables.html"><code>./data-tables.md</code></a> are NJI's
-design, not under revalidation. The migration tool's APEX → NJI mapping
-is. When the dump arrives, verify: (a) every APEX field the tool expects
-is present; (b) every APEX value lands in an existing NJI vocabulary
-row, or triggers a new row via the Reference Data API; (c) no APEX
-structure lacks a transform path. New vocabulary values are inserted as
-rows; an unmapped APEX structure raises an architectural PR.</td>
-<td>Phase 0 deliverable — NJI architecture team + Reference Data
-sign-off owner (G2.5). Closes when the ETL runs end-to-end against the
-real APEX dump and named owners sign off.</td>
+<td><strong>Phase 0 ETL — APEX-side input mapping needs validation against the APEX SQL dump.</strong> NJI's 39 tables in <a href="./data-tables.html"><code>./data-tables.md</code></a> are NJI's design, not under revalidation. The migration tool's APEX → NJI mapping is. When the dump arrives, verify: (a) every APEX field the tool expects is present; (b) every APEX value lands in an existing NJI vocabulary row, or triggers a new row via the Reference Data API; (c) no APEX structure lacks a transform path. New vocabulary values are inserted as rows; an unmapped APEX structure raises an architectural PR.</td>
+<td>Phase 0 deliverable — NJI architecture team + Reference Data sign-off owner (G2.5). Closes when the ETL runs end-to-end against the real APEX dump and named owners sign off.</td>
 </tr>
 <tr>
 <td><strong>G4.7</strong> <em>(v2.5, 2026-05-07)</em></td>
-<td><strong>Operator-initiated ETL — post-MVP refinement.</strong> At
-MVP, the production / pilot-region migration runs operator-initiated: a
-named programme operator authenticates at HMCTS IdP and runs the ETL
-with their JWT. Acceptable at MVP: one-off per region; preserves "all
-calls user-initiated"; clean audit trail (operator identity). To refine
-post-MVP: better automation; explicit audit-trail capture; possible
-service-identity for the ETL tool (would reopen G7 service-auth);
-resolve the dev/CI-script vs production-API divergence.</td>
-<td>Post-MVP refinement — NJI architecture team. Not blocking; revisit
-before broad GA.</td>
+<td><strong>Operator-initiated ETL — post-MVP refinement.</strong> At MVP, the production / pilot-region migration runs operator-initiated: a named programme operator authenticates at HMCTS IdP and runs the ETL with their JWT. Acceptable at MVP: one-off per region; preserves "all calls user-initiated"; clean audit trail (operator identity). To refine post-MVP: better automation; explicit audit-trail capture; possible service-identity for the ETL tool (would reopen G7 service-auth); resolve the dev/CI-script vs production-API divergence.</td>
+<td>Post-MVP refinement — NJI architecture team. Not blocking; revisit before broad GA.</td>
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="g5--mock-first-authentication-scope"><summary><span class="section-title">G5 — Mock-First
-Authentication Scope</span></summary><div class="section-body">
+</div></details><details class="section" id="g5--mock-first-authentication-scope"><summary><span class="section-title">G5 — Mock-First Authentication Scope</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -506,35 +399,22 @@ Authentication Scope</span></summary><div class="section-body">
 <tbody>
 <tr>
 <td><strong>G5.1</strong></td>
-<td>Mock auth must implement enough of the OIDC contract to be
-issuer-substitutable for HMCTS IdP.</td>
-<td>Implement using Spring Authorization Server (provides full OIDC
-support out of the box). OIDC-contract parity is covered by automated
-integration / contract tests at the IdP-client level (per A26 in <a
-href="./assumptions.html"><code>./assumptions.md</code></a>), not by
-APEX-comparison UAT.</td>
+<td>Mock auth must implement enough of the OIDC contract to be issuer-substitutable for HMCTS IdP.</td>
+<td>Implement using Spring Authorization Server (provides full OIDC support out of the box). OIDC-contract parity is covered by automated integration / contract tests at the IdP-client level (per A26 in <a href="./assumptions.html"><code>./assumptions.md</code></a>), not by APEX-comparison UAT.</td>
 </tr>
 <tr>
 <td><strong>G5.2</strong></td>
-<td>Mock auth user roster must remain in sync with migrated APEX
-user/role data so that Phase 0–8 testing exercises realistic flows.</td>
-<td>Mock auth seed-data generated from the same Phase 0 migration
-reconciliation report (or a sanitised subset). Refreshed when migration
-data changes.</td>
+<td>Mock auth user roster must remain in sync with migrated APEX user/role data so that Phase 0–8 testing exercises realistic flows.</td>
+<td>Mock auth seed-data generated from the same Phase 0 migration reconciliation report (or a sanitised subset). Refreshed when migration data changes.</td>
 </tr>
 <tr>
 <td><strong>G5.3</strong></td>
-<td>Production safeguard: mock auth must never run in production;
-production deployment manifests must never reference mock-auth issuer
-URLs.</td>
-<td>Spring profile validation at mock-auth startup (refuses to start
-with <code>production</code> profile); CI lint enforces production Helm
-values reference real-IdP issuer.</td>
+<td>Production safeguard: mock auth must never run in production; production deployment manifests must never reference mock-auth issuer URLs.</td>
+<td>Spring profile validation at mock-auth startup (refuses to start with <code>production</code> profile); CI lint enforces production Helm values reference real-IdP issuer.</td>
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="g6--shared-database-topology-risks"><summary><span class="section-title">G6 — Shared Database
-Topology Risks</span></summary><div class="section-body">
+</div></details><details class="section" id="g6--shared-database-topology-risks"><summary><span class="section-title">G6 — Shared Database Topology Risks</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -546,81 +426,37 @@ Topology Risks</span></summary><div class="section-body">
 <tbody>
 <tr>
 <td><strong>G6.1</strong></td>
-<td><strong>Schema-evolution coordination across whitelisted
-tables.</strong> When Service A reads or writes Service B's whitelisted
-tables, schema changes to those columns affect A. The owning service (B)
-must maintain a deprecation policy on whitelisted columns parallel to
-API versioning.</td>
-<td>Mitigation: schema changes to whitelisted columns follow the same
-deprecation cadence as API versioning (deprecate, sunset header on the
-published data contract, remove no sooner than 6 months for internal
-consumers). Whitelist documentation lives in the owning service's repo
-alongside its API contract.</td>
+<td><strong>Schema-evolution coordination across whitelisted tables.</strong> When Service A reads or writes Service B's whitelisted tables, schema changes to those columns affect A. The owning service (B) must maintain a deprecation policy on whitelisted columns parallel to API versioning.</td>
+<td>Mitigation: schema changes to whitelisted columns follow the same deprecation cadence as API versioning (deprecate, sunset header on the published data contract, remove no sooner than 6 months for internal consumers). Whitelist documentation lives in the owning service's repo alongside its API contract.</td>
 </tr>
 <tr>
 <td><strong>G6.2</strong> <em>(refined 2026-05-06; 2026-05-08)</em></td>
-<td><strong>Single-DB blast radius.</strong> A PostgreSQL outage affects
-every NJI service simultaneously (vs per-service DBs where one DB outage
-affects only one service).</td>
-<td>Mitigation: PostgreSQL Flexible Server <strong>zone-redundant
-HA</strong> within UK South — primary + standby in different AZs,
-synchronous replication, automatic failover (&lt;60 s typical).
-Single-AZ failure inside UK South is tolerated transparently.
-Point-in-time restore retained. <strong>Full-region UK South loss is the
-residual risk</strong> — addressed by DR (see G3.6) if/when approved;
-without DR, the residual risk is accepted for MVP and pilot waves.
-Acceptable trade for the operational simplicity of one DB at NJI's
-bounded scale.</td>
+<td><strong>Single-DB blast radius.</strong> A PostgreSQL outage affects every NJI service simultaneously (vs per-service DBs where one DB outage affects only one service).</td>
+<td>Mitigation: PostgreSQL Flexible Server <strong>zone-redundant HA</strong> within UK South — primary + standby in different AZs, synchronous replication, automatic failover (&lt;60 s typical). Single-AZ failure inside UK South is tolerated transparently. Point-in-time restore retained. <strong>Full-region UK South loss is the residual risk</strong> — addressed by DR (see G3.6) if/when approved; without DR, the residual risk is accepted for MVP and pilot waves. Acceptable trade for the operational simplicity of one DB at NJI's bounded scale.</td>
 </tr>
 <tr>
 <td><strong>G6.3</strong></td>
-<td><strong>Cross-region rollout with global DB.</strong> All regions
-share one DB instance, so Region B's data is visible to Region A
-immediately on cutover (no APEX-bridge needed for cross-region NJI
-data). However, during phased rollout, non-migrated regions still have
-data only in APEX, not in the shared DB.</td>
-<td>Mitigation: per-region DB writes only happen for migrated regions;
-cross-region workflows during partial rollout still rely on the APEX
-read-only bridge for non-migrated regions' data (Risk #1
-unchanged).</td>
+<td><strong>Cross-region rollout with global DB.</strong> All regions share one DB instance, so Region B's data is visible to Region A immediately on cutover (no APEX-bridge needed for cross-region NJI data). However, during phased rollout, non-migrated regions still have data only in APEX, not in the shared DB.</td>
+<td>Mitigation: per-region DB writes only happen for migrated regions; cross-region workflows during partial rollout still rely on the APEX read-only bridge for non-migrated regions' data (Risk #1 unchanged).</td>
 </tr>
 <tr>
 <td><strong>G6.4</strong></td>
-<td><strong>DB role grant maintenance.</strong> Each cross-service grant
-is a piece of operational state
-(<code>GRANT SELECT ON vacancies TO nji_booking;</code>) that must be
-applied via Flyway migrations owned by the granting service.
-Adding/removing grants requires PR coordination between services.</td>
-<td>Mitigation: grants codified in the table-owning service's Flyway
-migrations; PR template includes "grants checklist"; ArchUnit-style
-fitness function in CI verifies declared grants match actual code-level
-cross-service table access.</td>
+<td><strong>DB role grant maintenance.</strong> Each cross-service grant is a piece of operational state (<code>GRANT SELECT ON vacancies TO nji_booking;</code>) that must be applied via Flyway migrations owned by the granting service. Adding/removing grants requires PR coordination between services.</td>
+<td>Mitigation: grants codified in the table-owning service's Flyway migrations; PR template includes "grants checklist"; ArchUnit-style fitness function in CI verifies declared grants match actual code-level cross-service table access.</td>
 </tr>
 <tr>
 <td><strong>G6.5</strong></td>
-<td><strong>Flyway migration versioning across services.</strong> When
-Service A's table has consumers, A's migration that drops or renames a
-column must coordinate with consumer updates.</td>
-<td>Mitigation: deprecation-then-remove pattern — A first adds the new
-column in <code>V*__add_*.sql</code>, both A and consumers transition,
-then A removes the old column in a later <code>V*__remove_*.sql</code>.
-Same pattern as API versioning.</td>
+<td><strong>Flyway migration versioning across services.</strong> When Service A's table has consumers, A's migration that drops or renames a column must coordinate with consumer updates.</td>
+<td>Mitigation: deprecation-then-remove pattern — A first adds the new column in <code>V*__add_*.sql</code>, both A and consumers transition, then A removes the old column in a later <code>V*__remove_*.sql</code>. Same pattern as API versioning.</td>
 </tr>
 <tr>
 <td><strong>G6.6</strong> <em>(new)</em></td>
-<td><strong>Table-name collision risk.</strong> Without schema
-isolation, two services could create tables with the same name in the
-shared schema.</td>
-<td>Mitigation: ArchUnit-style fitness function in CI verifies no two
-services' Flyway migrations create overlapping table names.
-Authoritative table-ownership mapping documented in <a
-href="./data-tables.html"><code>./data-tables.md</code></a>. Code review
-backs the fitness function.</td>
+<td><strong>Table-name collision risk.</strong> Without schema isolation, two services could create tables with the same name in the shared schema.</td>
+<td>Mitigation: ArchUnit-style fitness function in CI verifies no two services' Flyway migrations create overlapping table names. Authoritative table-ownership mapping documented in <a href="./data-tables.html"><code>./data-tables.md</code></a>. Code review backs the fitness function.</td>
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="g7--service-identity-question-post-mvp-open-item"><summary><span class="section-title">G7 —
-Service-identity question (post-MVP open item)</span></summary><div class="section-body">
+</div></details><details class="section" id="g7--service-identity-question-post-mvp-open-item"><summary><span class="section-title">G7 — Service-identity question (post-MVP open item)</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -631,61 +467,21 @@ Service-identity question (post-MVP open item)</span></summary><div class="secti
 </thead>
 <tbody>
 <tr>
-<td><strong>G7.1</strong> <em>(revised v2.6, 2026-05-07 — now
-MVP-relevant for the payment batch)</em></td>
-<td><strong>Service-identity mechanism for non-user-initiated
-flows.</strong> v2.6 introduces the <strong>payment-processing
-batch</strong> (<code>nji-payment-batch</code>) as a scheduled service
-principal — the first MVP non-user-initiated runtime flow. <strong>At
-MVP</strong> the batch authenticates against <code>nji-mock-auth</code>
-via OAuth <code>client_credentials</code> (mock issues both human and
-service-principal tokens). <strong>For production</strong>, the issuer
-choice is still deferred. Other future triggers that would also need a
-service identity: (a) DA&amp;I post-MVP integration; (b) async messaging
-/ event-bus patterns; (c) other scheduled background jobs (MI Feed
-pre-aggregation, reconciliation feed); (d) Phase 0 ETL evolving from
-operator-initiated to automated (per G4.7).</td>
-<td><strong>Pre-Phase-9 decision needed</strong> for production
-service-auth issuer. Options: <br/>(A) <strong>NJI-internal service-auth
-issuer</strong> — production-harden the mock-auth Spring Authorization
-Server; runs as a real (non-mock) service. JWTFilter configured for
-multi-issuer (HMCTS IdP for humans + nji-service-auth for services).
-<br/>(B) <strong>Azure Workload Identity / Managed Identity</strong> —
-cloud-native; no shared secrets; tokens issued by Entra ID and validated
-via its JWKS. <strong>Likely the default given NJI is on AKS.</strong>
-<br/>(C) <strong>mTLS</strong> — per-service certs at TLS layer;
-operationally heavy. <br/>(D) <strong>HMCTS IdP
-<code>client_credentials</code></strong> — only if HMCTS IdP supports it
-(G1.2). <br/>Default recommendation: <strong>(B) Azure Workload
-Identity</strong> for the AKS pod that runs the batch — zero shared
-secrets, cloud-managed, fits the existing Azure stack.</td>
+<td><strong>G7.1</strong> <em>(revised v2.6, 2026-05-07 — now MVP-relevant for the payment batch)</em></td>
+<td><strong>Service-identity mechanism for non-user-initiated flows.</strong> v2.6 introduces the <strong>payment-processing batch</strong> (<code>nji-payment-batch</code>) as a scheduled service principal — the first MVP non-user-initiated runtime flow. <strong>At MVP</strong> the batch authenticates against <code>nji-mock-auth</code> via OAuth <code>client_credentials</code> (mock issues both human and service-principal tokens). <strong>For production</strong>, the issuer choice is still deferred. Other future triggers that would also need a service identity: (a) DA&amp;I post-MVP integration; (b) async messaging / event-bus patterns; (c) other scheduled background jobs (MI Feed pre-aggregation, reconciliation feed); (d) Phase 0 ETL evolving from operator-initiated to automated (per G4.7).</td>
+<td><strong>Pre-Phase-9 decision needed</strong> for production service-auth issuer. Options: <br/>(A) <strong>NJI-internal service-auth issuer</strong> — production-harden the mock-auth Spring Authorization Server; runs as a real (non-mock) service. JWTFilter configured for multi-issuer (HMCTS IdP for humans + nji-service-auth for services). <br/>(B) <strong>Azure Workload Identity / Managed Identity</strong> — cloud-native; no shared secrets; tokens issued by Entra ID and validated via its JWKS. <strong>Likely the default given NJI is on AKS.</strong> <br/>(C) <strong>mTLS</strong> — per-service certs at TLS layer; operationally heavy. <br/>(D) <strong>HMCTS IdP <code>client_credentials</code></strong> — only if HMCTS IdP supports it (G1.2). <br/>Default recommendation: <strong>(B) Azure Workload Identity</strong> for the AKS pod that runs the batch — zero shared secrets, cloud-managed, fits the existing Azure stack.</td>
 </tr>
 <tr>
 <td><strong>G7.2</strong> <em>(new v2.5, 2026-05-07)</em></td>
-<td><strong>DA&amp;I post-MVP integration auth model is
-undecided.</strong> When DA&amp;I starts consuming NJI's MI Feed API
-post-MVP, it needs an authentication mechanism. If DA&amp;I has a
-human-user identity at HMCTS IdP it can use the same OIDC flow as other
-users; if DA&amp;I is a service consumer it needs a service-identity
-mechanism (see G7.1).</td>
-<td><strong>Open question for post-MVP.</strong> Resolve as part of
-DA&amp;I onboarding work, alongside G7.1.</td>
+<td><strong>DA&amp;I post-MVP integration auth model is undecided.</strong> When DA&amp;I starts consuming NJI's MI Feed API post-MVP, it needs an authentication mechanism. If DA&amp;I has a human-user identity at HMCTS IdP it can use the same OIDC flow as other users; if DA&amp;I is a service consumer it needs a service-identity mechanism (see G7.1).</td>
+<td><strong>Open question for post-MVP.</strong> Resolve as part of DA&amp;I onboarding work, alongside G7.1.</td>
 </tr>
 </tbody>
 </table>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/gaps.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#critical-gaps">Critical Gaps</a></li><li><a href="#g1--external-verification-dependencies-hmcts-infrastructure">G1
-— External Verification Dependencies (HMCTS infrastructure)</a></li><li><a href="#g2--programme-management-dependencies-out-of-architecture-scope-but-block-implementation">G2
-— Programme-Management Dependencies (out of architecture scope but block
-implementation)</a></li><li><a href="#g3--hmcts-technology-approval">G3 — HMCTS Technology
-Approval</a></li><li><a href="#g4--post-completion-refinement-tasks-not-blocking-scheduled-after-step-8">G4
-— Post-Completion Refinement Tasks (not blocking, scheduled after Step
-8)</a></li><li><a href="#g5--mock-first-authentication-scope">G5 — Mock-First
-Authentication Scope</a></li><li><a href="#g6--shared-database-topology-risks">G6 — Shared Database
-Topology Risks</a></li><li><a href="#g7--service-identity-question-post-mvp-open-item">G7 —
-Service-identity question (post-MVP open item)</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#critical-gaps">Critical Gaps</a></li><li><a href="#g1--external-verification-dependencies-hmcts-infrastructure">G1 — External Verification Dependencies (HMCTS infrastructure)</a></li><li><a href="#g2--programme-management-dependencies-out-of-architecture-scope-but-block-implementation">G2 — Programme-Management Dependencies (out of architecture scope but block implementation)</a></li><li><a href="#g3--hmcts-technology-approval">G3 — HMCTS Technology Approval</a></li><li><a href="#g4--post-completion-refinement-tasks-not-blocking-scheduled-after-step-8">G4 — Post-Completion Refinement Tasks (not blocking, scheduled after Step 8)</a></li><li><a href="#g5--mock-first-authentication-scope">G5 — Mock-First Authentication Scope</a></li><li><a href="#g6--shared-database-topology-risks">G6 — Shared Database Topology Risks</a></li><li><a href="#g7--service-identity-question-post-mvp-open-item">G7 — Service-identity question (post-MVP open item)</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

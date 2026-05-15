@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,80 +178,35 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="salaried-sitting-confirmation--verifier-sign-off">Salaried
-sitting confirmation + verifier sign-off</h1>
-<p>Sequence diagram of the daily salaried-sitting confirmation flow: a
-Court User confirms that yesterday's planned sittings actually took
-place, recording actual work type and splitting AM/PM where relevant; a
-Verifier later signs off the period, which makes the data read-only.
-Post-verification amendments are handled inside the UI by a
-<strong>re-open action gated by RBAC</strong> — not by an out-of-system
-RFC ticketing process (revised 2026-05-11). This is distinct from the
-booking-confirmation step shown in <a
-href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>
-Phase 4 — that diagram covers <em>fee-paid bookings</em>; this one
-covers <em>salaried sittings</em>.</p>
-<p>Confirmed-and-verified salaried sittings feed <a
-href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>
-Phase 2 (alongside confirmed fee-paid bookings) for fee-paid recorder
-cases, and feed <a
-href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>
-and <a
-href="./mi-feed-and-reports-consumption.html"><code>./mi-feed-and-reports-consumption.md</code></a>
-as utilisation data.</p>
-<p>The as-is equivalent is Module 10 <em>Sittings</em> in <a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a>
-and Integration Flow 3 <em>Sitting &amp; Booking Confirmation</em> in <a
-href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>.</p>
-<p>Four phases: (1) list daily sittings awaiting confirmation; (2)
-confirm with actual work type + AM/PM split; (3) Verifier sign-off; (4)
-post-verification re-open via RBAC-gated UI action.</p>
+<h1 id="salaried-sitting-confirmation--verifier-sign-off">Salaried sitting confirmation + verifier sign-off</h1>
+<p>Sequence diagram of the daily salaried-sitting confirmation flow: a Court User confirms that yesterday's planned sittings actually took place, recording actual work type and splitting AM/PM where relevant; a Verifier later signs off the period, which makes the data read-only. Post-verification amendments are handled inside the UI by a <strong>re-open action gated by RBAC</strong> — not by an out-of-system RFC ticketing process (revised 2026-05-11). This is distinct from the booking-confirmation step shown in <a href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a> Phase 4 — that diagram covers <em>fee-paid bookings</em>; this one covers <em>salaried sittings</em>.</p>
+<p>Confirmed-and-verified salaried sittings feed <a href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a> Phase 2 (alongside confirmed fee-paid bookings) for fee-paid recorder cases, and feed <a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a> and <a href="./mi-feed-and-reports-consumption.html"><code>./mi-feed-and-reports-consumption.md</code></a> as utilisation data.</p>
+<p>The as-is equivalent is Module 10 <em>Sittings</em> in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a> and Integration Flow 3 <em>Sitting &amp; Booking Confirmation</em> in <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>.</p>
+<p>Four phases: (1) list daily sittings awaiting confirmation; (2) confirm with actual work type + AM/PM split; (3) Verifier sign-off; (4) post-verification re-open via RBAC-gated UI action.</p>
 <details class="section" id="not-in-this-diagram"><summary><span class="section-title">Not in this diagram</span></summary><div class="section-body">
 <ul>
-<li><strong>Fee-paid booking confirmation</strong> — distinct flow in <a
-href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>
-Phase 4 (<code>POST /v1/bookings/{id}/confirm</code>).</li>
-<li><strong>Ad-hoc sitting creation</strong> (FR39) — a small follow-up
-CRUD; same shape as Phase 2 with a different starting point.</li>
-<li><strong>Sittings → Payments handoff</strong> — Phase 2 of <a
-href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>
-shows the batch reading confirmed bookings + sittings; not duplicated
-here.</li>
-<li><strong>Working-pattern generation of the planned sittings being
-confirmed</strong> — see <a
-href="./judge-onboarding-and-sitting-generation.html"><code>./judge-onboarding-and-sitting-generation.md</code></a>
-Phase 3.</li>
-<li><strong>External Request-for-Change ticketing</strong> — does not
-exist in NJI (revised 2026-05-11). Post-verification amendment is a UI
-action gated by RBAC, with mandatory justification captured in-form and
-full audit. The legacy APEX "RFC" external workflow is retired.</li>
+<li><strong>Fee-paid booking confirmation</strong> — distinct flow in <a href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a> Phase 4 (<code>POST /v1/bookings/{id}/confirm</code>).</li>
+<li><strong>Ad-hoc sitting creation</strong> (FR39) — a small follow-up CRUD; same shape as Phase 2 with a different starting point.</li>
+<li><strong>Sittings → Payments handoff</strong> — Phase 2 of <a href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a> shows the batch reading confirmed bookings + sittings; not duplicated here.</li>
+<li><strong>Working-pattern generation of the planned sittings being confirmed</strong> — see <a href="./judge-onboarding-and-sitting-generation.html"><code>./judge-onboarding-and-sitting-generation.md</code></a> Phase 3.</li>
+<li><strong>External Request-for-Change ticketing</strong> — does not exist in NJI (revised 2026-05-11). Post-verification amendment is a UI action gated by RBAC, with mandatory justification captured in-form and full audit. The legacy APEX "RFC" external workflow is retired.</li>
 </ul>
-</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps
-omitted for clarity</span></summary><div class="section-body">
+</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps omitted for clarity</span></summary><div class="section-body">
 <ul>
-<li><strong>Authentication + per-request authorisation</strong> — Court
-User's and Verifier's JWTs are validated by <code>nji-sitting</code>'s
-<code>JWTFilter</code> on every call; role gating (only authorised roles
-can confirm; only Verifiers can verify; a Verifier cannot also be the
-original confirmer per SIT-NFR-02). See <a
-href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
+<li><strong>Authentication + per-request authorisation</strong> — Court User's and Verifier's JWTs are validated by <code>nji-sitting</code>'s <code>JWTFilter</code> on every call; role gating (only authorised roles can confirm; only Verifiers can verify; a Verifier cannot also be the original confirmer per SIT-NFR-02). See <a href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
 <li>All UI → service calls flow through Azure API Management.</li>
 </ul>
-<p><img src="./salaried-sitting-confirmation.png"
-alt="Salaried sitting confirmation + verifier sign-off sequence" /></p>
-<p><em>Source: <a
-href="./salaried-sitting-confirmation.mmd"><code>./salaried-sitting-confirmation.mmd</code></a>
-(Mermaid). Regenerate with
-<code>mmdc -i salaried-sitting-confirmation.mmd -o salaried-sitting-confirmation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<p><img src="./salaried-sitting-confirmation.png" alt="Salaried sitting confirmation + verifier sign-off sequence" /></p>
+<p><em>Source: <a href="./salaried-sitting-confirmation.mmd"><code>./salaried-sitting-confirmation.mmd</code></a> (Mermaid). Regenerate with <code>mmdc -i salaried-sitting-confirmation.mmd -o salaried-sitting-confirmation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
 </div></details><details class="section" id="phase-summary"><summary><span class="section-title">Phase summary</span></summary><div class="section-body">
 <table>
 <thead>
@@ -264,40 +221,26 @@ href="./salaried-sitting-confirmation.mmd"><code>./salaried-sitting-confirmation
 <tr>
 <td>1 — List daily sittings awaiting confirmation</td>
 <td>Court User</td>
-<td>FR36 — filter by Region/Office/judge/date range; auth scope-gated by
-<code>nji-authorisation</code></td>
-<td>UI shows the list of <code>planned</code> sittings for the user's
-scope</td>
+<td>FR36 — filter by Region/Office/judge/date range; auth scope-gated by <code>nji-authorisation</code></td>
+<td>UI shows the list of <code>planned</code> sittings for the user's scope</td>
 </tr>
 <tr>
 <td>2 — Confirm with actual work type + AM/PM split</td>
 <td>Court User</td>
-<td>FR37 + FR38 — set outcome (confirmed / cancelled / rejected), update
-actual work type, split into AM/PM rows where applicable;
-once-per-sitting natural-key idempotency</td>
-<td>Sitting status = <code>confirmed</code> (or cancelled/rejected);
-actual work type recorded; split rows persisted if applicable</td>
+<td>FR37 + FR38 — set outcome (confirmed / cancelled / rejected), update actual work type, split into AM/PM rows where applicable; once-per-sitting natural-key idempotency</td>
+<td>Sitting status = <code>confirmed</code> (or cancelled/rejected); actual work type recorded; split rows persisted if applicable</td>
 </tr>
 <tr>
 <td>3 — Verifier sign-off</td>
 <td>Verifier (Read-only / Verifier role)</td>
-<td>FR40 — verifier different from confirmer (SIT-NFR-02); marks the
-period as verified</td>
-<td>Sitting becomes read-only; visible to payment-batch eligibility
-(Recorder fee-payment cases) and to MI Feed as verified utilisation
-data</td>
+<td>FR40 — verifier different from confirmer (SIT-NFR-02); marks the period as verified</td>
+<td>Sitting becomes read-only; visible to payment-batch eligibility (Recorder fee-payment cases) and to MI Feed as verified utilisation data</td>
 </tr>
 <tr>
 <td>4 — Post-verification re-open (RBAC-gated)</td>
-<td>RSU Admin (the <code>sitting:re-open</code> permission is granted to
-RSU Admin only at MVP; distinct from the original confirmer per
-SIT-NFR-02 and from a standard Verifier)</td>
-<td>FR40 <em>(revised 2026-05-11)</em> — verified data is read-only;
-re-opening is a UI action requiring the <code>sitting:re-open</code>
-permission, captures a mandatory justification, and is fully audited. No
-external RFC ticketing.</td>
-<td>Specified sittings revert from verified to confirmed for amendment;
-justification recorded; audit entry written</td>
+<td>RSU Admin (the <code>sitting:re-open</code> permission is granted to RSU Admin only at MVP; distinct from the original confirmer per SIT-NFR-02 and from a standard Verifier)</td>
+<td>FR40 <em>(revised 2026-05-11)</em> — verified data is read-only; re-opening is a UI action requiring the <code>sitting:re-open</code> permission, captures a mandatory justification, and is fully audited. No external RFC ticketing.</td>
+<td>Specified sittings revert from verified to confirmed for amendment; justification recorded; audit entry written</td>
 </tr>
 </tbody>
 </table>
@@ -312,54 +255,38 @@ justification recorded; audit entry written</td>
 <tbody>
 <tr>
 <td><code>nji-sitting</code> repo purpose and key functions</td>
-<td><a
-href="../repository-strategy.html"><code>../repository-strategy.md</code></a>
-Phase 5 row</td>
+<td><a href="../repository-strategy.html"><code>../repository-strategy.md</code></a> Phase 5 row</td>
 </tr>
 <tr>
-<td>Sitting confirmation semantics (planned / confirmed / cancelled /
-rejected / verified; AM/PM split; work-type override)</td>
-<td>PRD <code>FR35</code>–<code>FR40</code>; Module 10 in <a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a></td>
+<td>Sitting confirmation semantics (planned / confirmed / cancelled / rejected / verified; AM/PM split; work-type override)</td>
+<td>PRD <code>FR35</code>–<code>FR40</code>; Module 10 in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a></td>
 </tr>
 <tr>
 <td>Sittings table schema</td>
-<td><a
-href="../data-tables.html"><code>../data-tables.md</code></a></td>
+<td><a href="../data-tables.html"><code>../data-tables.md</code></a></td>
 </tr>
 <tr>
 <td>Sitting UI module structure</td>
-<td><a href="../repo-structure.html"><code>../repo-structure.md</code> →
-<code>nji-ui/src/modules/sitting/</code></a></td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> → <code>nji-ui/src/modules/sitting/</code></a></td>
 </tr>
 <tr>
-<td>Payment-batch eligibility (the downstream consumer of confirmed
-sittings)</td>
-<td><a
-href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>
-Phase 2</td>
+<td>Payment-batch eligibility (the downstream consumer of confirmed sittings)</td>
+<td><a href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a> Phase 2</td>
 </tr>
 <tr>
-<td>Itinerary read federation that displays confirmed/verified
-sittings</td>
-<td><a
-href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a></td>
+<td>Itinerary read federation that displays confirmed/verified sittings</td>
+<td><a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a></td>
 </tr>
 <tr>
 <td>As-is equivalent (Module 10 Sittings; Integration Flow 3)</td>
-<td><a
-href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code>
-→ Module 10</a>; <a
-href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code>
-→ Flow 3</a></td>
+<td><a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code> → Module 10</a>; <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code> → Flow 3</a></td>
 </tr>
 </tbody>
 </table>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/salaried-sitting-confirmation.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
-omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#not-in-this-diagram">Not in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

@@ -171,7 +171,9 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
         ("Changelog", "architecture/changelog", False),
     ]),
     ("Implementation Readiness", [
-        ("Report — 2026-05-15 (current)", "implementation-readiness-report-2026-05-15", False),
+        ("Report — 2026-05-15 rev2 (current, post-D10)", "implementation-readiness-report-2026-05-15-rev2", False),
+        ("Sprint Change Proposal — 2026-05-15", "sprint-change-proposal-2026-05-15", False),
+        ("Report — 2026-05-15 rev1 (superseded by rev2)", "implementation-readiness-report-2026-05-15", False),
         ("Report — 2026-05-06 (historical)", "implementation-readiness-report-2026-05-06", False),
         ("Report — 2026-05-05 (historical)", "implementation-readiness-report-2026-05-05", False),
     ]),
@@ -183,11 +185,11 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
     ]),
     ("Implementation — Phase 0 ✓", [
         ("Phase 0 overview", "epics/phase-0/index", False),
-        ("Epic 0.1 — User authenticates", "epics/phase-0/epic-0.1-user-authenticates", False),
-        ("Epic 0.2 — Reference Data", "epics/phase-0/epic-0.2-admin-manages-ref-data", False),
-        ("Epic 0.3 — Users, Roles, Activation", "epics/phase-0/epic-0.3-admin-manages-users-roles", False),
-        ("Epic 0.4 — Transactional Emails", "epics/phase-0/epic-0.4-system-dispatches-emails", False),
-        ("Phase 0 Validation Report", "epics/phase-0/validation-report-2026-05-15", False),
+        ("Epic 0.1 — User authenticates (5 stories)", "epics/phase-0/epic-0.1-user-authenticates", False),
+        ("Epic 0.2 — Ref Data SQL-loaded (3 stories)", "epics/phase-0/epic-0.2-admin-manages-ref-data", False),
+        ("Epic 0.3 — Users/Roles SQL-loaded (1 story)", "epics/phase-0/epic-0.3-admin-manages-users-roles", False),
+        ("Epic 0.4 — Notification scaffolded (2 stories)", "epics/phase-0/epic-0.4-system-dispatches-emails", False),
+        ("Phase 0 Validation Report (2026-05-15)", "epics/phase-0/validation-report-2026-05-15", False),
     ]),
 ]
 
@@ -198,11 +200,12 @@ H2_SECTION_RE = re.compile(r'<h2\s+id="([^"]+)">(.*?)</h2>', re.DOTALL)
 TAG_RE = re.compile(r"<[^>]+>")
 
 # Gherkin-AC line break: when pandoc renders a story's Given/When/Then/And as
-# one paragraph, find each keyword that follows an in-paragraph newline (i.e.
-# it's a continuation, not the first AC line) and inject <br/> before it.
-# The trailing comma on the prior line is consumed so the rendered lines read
-# cleanly without dangling punctuation.
-GHERKIN_KW_RE = re.compile(r',?\s*\n<strong>(Given|When|Then|And)</strong>')
+# one paragraph (with --wrap=none everything ends up on one line), find each
+# keyword that's preceded by whitespace (i.e. it's a continuation — the FIRST
+# keyword in a paragraph is preceded by `<p>` with no whitespace, so it won't
+# match). The trailing comma on the prior line is consumed so the rendered
+# lines read cleanly without dangling punctuation.
+GHERKIN_KW_RE = re.compile(r',?\s+<strong>(Given|When|Then|And)</strong>')
 
 # Show in-page TOC and wrap H2 sections in <details> when a page has at least
 # this many H2 headings. Short pages don't benefit from progressive disclosure.
@@ -370,7 +373,7 @@ def md_to_html_body(md_path: Path) -> str:
     html = result.stdout
     # Break up Gherkin-style AC paragraphs so Given/When/Then/And land on
     # separate lines visually. See GHERKIN_KW_RE for details.
-    html = GHERKIN_KW_RE.sub(r'<br/>\n<strong>\1</strong>', html)
+    html = GHERKIN_KW_RE.sub(r'<br/><strong>\1</strong>', html)
     return html
 
 

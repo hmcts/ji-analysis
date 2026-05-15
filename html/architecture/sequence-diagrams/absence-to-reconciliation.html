@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,58 +178,35 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="absence--vacancy--booking--sitting--reconciliation">Absence →
-Vacancy → Booking → Sitting → Reconciliation</h1>
-<p>Sequence diagram of the user-initiated NJI operational cycle: a Court
-User logs an absence for a salaried judge; the absence triggers a
-vacancy; RSU fills the vacancy with a fee-paid booking; the Court User
-confirms the sitting (marking it ready for payment); RSU reconciles the
-payment after the batch and external systems complete.</p>
-<p>Five phases, each driven by a user action. Phases are colour-tinted
-in the diagram.</p>
+<h1 id="absence--vacancy--booking--sitting--reconciliation">Absence → Vacancy → Booking → Sitting → Reconciliation</h1>
+<p>Sequence diagram of the user-initiated NJI operational cycle: a Court User logs an absence for a salaried judge; the absence triggers a vacancy; RSU fills the vacancy with a fee-paid booking; the Court User confirms the sitting (marking it ready for payment); RSU reconciles the payment after the batch and external systems complete.</p>
+<p>Five phases, each driven by a user action. Phases are colour-tinted in the diagram.</p>
 <details class="section" id="not-in-this-diagram"><summary><span class="section-title">Not in this diagram</span></summary><div class="section-body">
-<p>User-initiated activities only. The following sit between Phase 4 and
-Phase 5 but are not drawn because they are not user-initiated:</p>
+<p>User-initiated activities only. The following sit between Phase 4 and Phase 5 but are not drawn because they are not user-initiated:</p>
 <ul>
-<li><strong>Payment-processing batch</strong> — picks up bookings with
-<code>status = ready_for_payment</code>, SQL-JOINs across confirmed
-bookings + sittings, generates the JFEPS Excel, persists
-<code>payments</code> + <code>payment_schedules</code>, dispatches via
-email to the Payment Authoriser. Runs on a schedule (e.g. end-of-week).
-See <a
-href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>.</li>
-<li><strong>Payment Authoriser → JFEPS / Liberata</strong> — authoriser
-reviews the email and uploads to Liberata via the existing JFEPS
-workflow. Out-of-band.</li>
-<li><strong>Liberata processing</strong> — Liberata pays the fee-paid
-judge. External system.</li>
+<li><strong>Payment-processing batch</strong> — picks up bookings with <code>status = ready_for_payment</code>, SQL-JOINs across confirmed bookings + sittings, generates the JFEPS Excel, persists <code>payments</code> + <code>payment_schedules</code>, dispatches via email to the Payment Authoriser. Runs on a schedule (e.g. end-of-week). See <a href="./payment-batch-flow.html"><code>./payment-batch-flow.md</code></a>.</li>
+<li><strong>Payment Authoriser → JFEPS / Liberata</strong> — authoriser reviews the email and uploads to Liberata via the existing JFEPS workflow. Out-of-band.</li>
+<li><strong>Liberata processing</strong> — Liberata pays the fee-paid judge. External system.</li>
 </ul>
 </div></details><details class="section" id="cross-cutting-steps-omitted"><summary><span class="section-title">Cross-cutting steps omitted</span></summary><div class="section-body">
 <p>Apply to every Court / RSU → service call:</p>
 <ul>
 <li>All UI → service calls flow through Azure API Management.</li>
-<li>Each service's <code>JWTFilter</code> validates the JWT signature
-against HMCTS IdP's JWKS before the controller runs.</li>
-<li>The same <code>JWTFilter</code> calls <code>POST /authz/check</code>
-against <code>nji-authorisation</code> for role + Region/Area scope +
-activation flag (FR58).</li>
+<li>Each service's <code>JWTFilter</code> validates the JWT signature against HMCTS IdP's JWKS before the controller runs.</li>
+<li>The same <code>JWTFilter</code> calls <code>POST /authz/check</code> against <code>nji-authorisation</code> for role + Region/Area scope + activation flag (FR58).</li>
 <li>Cross-service calls forward the user's JWT.</li>
 </ul>
-<p><img src="./absence-to-reconciliation.png"
-alt="Absence → Vacancy → Booking → Sitting → Reconciliation sequence" /></p>
-<p><em>Source: <a
-href="./absence-to-reconciliation.mmd"><code>./absence-to-reconciliation.mmd</code></a>
-(Mermaid). Regenerate with
-<code>mmdc -i absence-to-reconciliation.mmd -o absence-to-reconciliation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<p><img src="./absence-to-reconciliation.png" alt="Absence → Vacancy → Booking → Sitting → Reconciliation sequence" /></p>
+<p><em>Source: <a href="./absence-to-reconciliation.mmd"><code>./absence-to-reconciliation.mmd</code></a> (Mermaid). Regenerate with <code>mmdc -i absence-to-reconciliation.mmd -o absence-to-reconciliation.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
 </div></details><details class="section" id="phase-summary"><summary><span class="section-title">Phase summary</span></summary><div class="section-body">
 <table>
 <thead>
@@ -243,8 +222,7 @@ href="./absence-to-reconciliation.mmd"><code>./absence-to-reconciliation.mmd</co
 <td>1 — Absence logged</td>
 <td>Court User</td>
 <td>Validation (FR15-style: ticket-type + start date required)</td>
-<td>Absence record created (status: pending); ack email to salaried
-judge</td>
+<td>Absence record created (status: pending); ack email to salaried judge</td>
 </tr>
 <tr>
 <td>2 — Absence approved</td>
@@ -255,30 +233,25 @@ judge</td>
 <tr>
 <td>3 — Booking created</td>
 <td>RSU</td>
-<td><strong>R5</strong> — booking creation marks the linked vacancy as
-filled in the same transaction (persistence detail in <em>Data
-Architecture</em>)</td>
+<td><strong>R5</strong> — booking creation marks the linked vacancy as filled in the same transaction (persistence detail in <em>Data Architecture</em>)</td>
 <td>Booking persisted; vacancy filled; ack email to fee-paid judge</td>
 </tr>
 <tr>
 <td>4 — Sitting confirmed</td>
 <td>Court User</td>
 <td>State transition; record marked ready for the payment batch</td>
-<td>Booking status = <code>ready_for_payment</code> (the batch picks
-this up later)</td>
+<td>Booking status = <code>ready_for_payment</code> (the batch picks this up later)</td>
 </tr>
 <tr>
 <td><em>(out of scope)</em></td>
 <td><em>(none — batch / external)</em></td>
 <td><em>Routine payment-processing batch + Liberata processing</em></td>
-<td><em>JFEPS Excel generated, dispatched, uploaded; judge
-paid</em></td>
+<td><em>JFEPS Excel generated, dispatched, uploaded; judge paid</em></td>
 </tr>
 <tr>
 <td>5 — Reconciliation</td>
 <td>RSU</td>
-<td>Manual at MVP (automated reconciliation feed from Liberata is
-post-MVP)</td>
+<td>Manual at MVP (automated reconciliation feed from Liberata is post-MVP)</td>
 <td><code>payment_reconciliations.status = matched</code></td>
 </tr>
 </tbody>
@@ -294,61 +267,39 @@ post-MVP)</td>
 <tbody>
 <tr>
 <td>Service responsibilities and key functions</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Repository List</a></td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Repository List</a></td>
 </tr>
 <tr>
-<td>Data Architecture (shared schema, per-service DB roles, R5
-pessimistic-lock pattern)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 4 <em>Data Architecture</em></a></td>
+<td>Data Architecture (shared schema, per-service DB roles, R5 pessimistic-lock pattern)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Data Architecture</em></a></td>
 </tr>
 <tr>
-<td>Integration Points — internal call patterns + external systems
-(HMCTS Email, JFEPS / Liberata)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 6 <em>Integration Points</em></a></td>
+<td>Integration Points — internal call patterns + external systems (HMCTS Email, JFEPS / Liberata)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 6 <em>Integration Points</em></a></td>
 </tr>
 <tr>
-<td>Authentication / authorisation cross-cutting steps (omitted from
-diagram)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 4 <em>Authentication &amp; Security</em></a>, <a
-href="../../architecture-summary.html"><code>../../architecture-summary.md</code>
-→ <em>Authentication &amp; Authorisation</em></a></td>
+<td>Authentication / authorisation cross-cutting steps (omitted from diagram)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Authentication &amp; Security</em></a>, <a href="../../architecture-summary.html"><code>../../architecture-summary.md</code> → <em>Authentication &amp; Authorisation</em></a></td>
 </tr>
 <tr>
-<td>Per-table column-level detail (<code>bookings</code>,
-<code>vacancies</code>, <code>payments</code>,
-<code>payment_schedules</code>, <code>payment_reconciliations</code>,
-<code>notification_dispatches</code>, <code>auth_users</code>)</td>
-<td><a
-href="../data-tables.html"><code>../data-tables.md</code></a></td>
+<td>Per-table column-level detail (<code>bookings</code>, <code>vacancies</code>, <code>payments</code>, <code>payment_schedules</code>, <code>payment_reconciliations</code>, <code>notification_dispatches</code>, <code>auth_users</code>)</td>
+<td><a href="../data-tables.html"><code>../data-tables.md</code></a></td>
 </tr>
 <tr>
 <td>Reconciliation lifecycle (MVP manual; post-MVP roadmap)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 4 <em>Data Flow — Canonical Operational Cycle</em></a>; PRD
-<code>FR46</code></td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Data Flow — Canonical Operational Cycle</em></a>; PRD <code>FR46</code></td>
 </tr>
 <tr>
-<td>Retry-safety conventions (natural-key uniqueness, optimistic
-locking, pessimistic row locking)</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ <em>Data Architecture</em></a> and <a
-href="../data-tables.html"><code>../data-tables.md</code></a></td>
+<td>Retry-safety conventions (natural-key uniqueness, optimistic locking, pessimistic row locking)</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → <em>Data Architecture</em></a> and <a href="../data-tables.html"><code>../data-tables.md</code></a></td>
 </tr>
 <tr>
-<td>JWT propagation pattern (the cross-cutting auth step omitted from
-the diagram)</td>
-<td><a href="../conventions.html"><code>../conventions.md</code> →
-<em>Communication Patterns / JWT propagation</em></a></td>
+<td>JWT propagation pattern (the cross-cutting auth step omitted from the diagram)</td>
+<td><a href="../conventions.html"><code>../conventions.md</code> → <em>Communication Patterns / JWT propagation</em></a></td>
 </tr>
 <tr>
-<td>Service-identity question for non-user-initiated flows (which the
-payment batch is)</td>
-<td><a href="../gaps.html"><code>../gaps.md</code> → G7</a> — explicitly
-post-MVP open item</td>
+<td>Service-identity question for non-user-initiated flows (which the payment batch is)</td>
+<td><a href="../gaps.html"><code>../gaps.md</code> → G7</a> — explicitly post-MVP open item</td>
 </tr>
 </tbody>
 </table>

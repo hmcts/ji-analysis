@@ -5,69 +5,88 @@ phaseName: 'Foundations'
 status: 'epics-and-stories-complete'
 storiedAt: '2026-05-15'
 validatedAt: '2026-05-15'
+revisedAt: '2026-05-15'
+revisionNote: 'Admin UI removed from MVP scope. User/role/scope/reference-data write operations move to direct SQL (DBA-operated). API surfaces are read-only. Phase 0 story count reduces from 18 → 11.'
 ---
 
 # Phase 0 — Foundations
 
-> Phase 0 is the platform smoke-test (per PRD Key Characteristic 4). All API-as-Product standards (versioning, OpenAPI, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457), `Deprecation`/`Sunset`) are exercised on Reference Data writes and Authorisation lookups before any domain service is built.
+> Phase 0 is the platform smoke-test (per PRD Key Characteristic 4). All API-as-Product standards (versioning, OpenAPI, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457), `Deprecation`/`Sunset`) are exercised on Reference Data **reads** and Authorisation lookups before any domain service is built.
+>
+> The seven Phase 0 areas in [../framework.md](../framework.md) are an **architectural map**. The four concrete user-value epics below are the **implementation plan** — each delivers a demoable user outcome and consolidates the supporting technical work as stories within the epic.
 
-The seven Phase 0 areas in [../framework.md](../framework.md) are an **architectural map**. The four concrete user-value epics below are the **implementation plan** — each delivers a demoable user outcome and consolidates the supporting technical work as stories within the epic rather than as separate technical-milestone epics.
+## 2026-05-15 scope revision: admin UI removed from MVP
+
+Per the 2026-05-15 product-direction decision:
+
+- **Admin UI is not in scope for Phase 0 — and not in scope for MVP at all.** It moves to the post-MVP roadmap.
+- **Reference Data and Users/Roles/Activation are managed via direct SQL** during MVP — by DBAs operationally — not via admin-gated API or admin UI.
+- **API write endpoints are removed**: Reference Data API becomes read-only; Authorisation API stays read-only (it always was for runtime callers — the planned admin-write extensions are removed).
+- **Named-owner sign-off** for migration data still happens, but via **versioned git commits** rather than a UI surface.
+
+Phase 0 stories reduce from 18 → 11. Phase 0 epics still number 4.
 
 ## Epics
 
 | Epic | Title | Stories | Status |
 |---|---|---|---|
 | [0.1](epic-0.1-user-authenticates.md) | User authenticates and lands on a role-scoped Home page | 5 | 🟢 |
-| [0.2](epic-0.2-admin-manages-ref-data.md) | Admin manages reference data with named-owner migration sign-off | 5 | 🟢 |
-| [0.3](epic-0.3-admin-manages-users-roles.md) | Admin manages users, roles, and per-region activation with migration sign-off | 4 | 🟢 |
-| [0.4](epic-0.4-system-dispatches-emails.md) | System dispatches transactional emails and admin can verify delivery | 4 | 🟢 |
-| **Total** | | **18 stories** | |
+| [0.2](epic-0.2-admin-manages-ref-data.md) | Reference data is SQL-loaded and served read-only | **3** *(was 5)* | 🟢 |
+| [0.3](epic-0.3-admin-manages-users-roles.md) | Users, roles, and activation flags are SQL-loaded | **1** *(was 4)* | 🟢 |
+| [0.4](epic-0.4-system-dispatches-emails.md) | Notification service is scaffolded and contractually ready | **2** *(was 4)* | 🟢 |
+| **Total** | | **11 stories** *(was 18)* | |
 
 ## Epic summaries
 
-### Epic 0.1: User authenticates and lands on a role-scoped Home page
+### Epic 0.1: User authenticates and lands on a role-scoped Home page (5 stories, unchanged scope)
 
-**User outcome:** A judicial user (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, or MI/Reporting user) opens NJI, signs in via SSO, has their roles and Region/Area scope resolved, and lands on a Home page showing the navigation and tiles they're authorised to see.
+**User outcome:** A judicial user (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, or MI/Reporting user) opens NJI, signs in via SSO, has their roles and Region/Area scope resolved by `nji-authorisation`'s **read-only** API, and lands on a Home page showing the navigation and tiles they're authorised to see.
 
 **FRs covered:** FR1, FR2, FR3, FR55, FR56 (business stack portion)
 
-**Key NFRs first exercised here:** NFR10 (TLS), NFR11 (data-at-rest), NFR12 (JWT propagation), NFR13 (authz enforcement), NFR15 (GovS 7), NFR16 (Key Vault), NFR17–NFR19 (WCAG 2.2 AA + assistive tech + Accessibility Regs 2018), NFR20 (HMCTS IdP integration via mock), NFR25–NFR28 (structured logs + Application Insights ingestion + liveness/readiness probes), NFR31 (Azure UK South data residency), NFR40 (per-service deployable on Kubernetes)
+**Key NFRs first exercised here:** NFR10, NFR11, NFR12, NFR13, NFR15, NFR16, NFR17–NFR19 (business UI WCAG), NFR20, NFR25–NFR28, NFR31, NFR40
 
-**Out of scope (explicitly):** FR5 machine-to-machine consumer auth (post-MVP per PRD v2.5). Real HMCTS IdP integration (mock-only at Phase 0; cuts over pre-Phase-9 per AR34).
+**2026-05-15 change:** Story 0.1.3 reworded slightly to make explicit that `nji-authorisation` is read-only — its planned admin write endpoints (was Story 0.3.1 in the prior plan) are removed from MVP. The auth tables are still created here in Phase 0 — they're populated by Epic 0.3's SQL ETL.
 
 → [Full epic with stories](epic-0.1-user-authenticates.md)
 
-### Epic 0.2: Admin manages reference data with named-owner migration sign-off
+### Epic 0.2: Reference data is SQL-loaded and served read-only (3 stories, was 5)
 
-**User outcome:** An admin user signs into `nji-admin-ui`, opens Reference Data maintenance, can view and edit Regions, Offices, judicial vocabularies (12 controlled lists), and calendar / financial-year boundaries. Phase 0 ETL has loaded initial data from APEX; named owners review the migration reconciliation report and sign off before downstream phases consume the data.
+**User outcome:** Reference Data (Regions, Offices, judicial vocabularies, calendar / financial-year boundaries) is loaded into NJI via a direct-SQL ETL with named-owner sign-off, and is queryable read-only by downstream NJI services via a versioned REST API. Named owners approve via versioned git commits — **no admin UI** in MVP.
 
-**FRs covered:** FR4 (admin-foundation portion), FR6, FR7, FR57 (Reference Data portion), FR59, FR60
+**FRs covered (Phase 0 surface):** FR7, FR57 (Reference Data portion via SQL), FR59, FR60
 
-**Key NFRs:** NFR14 (no forbidden data), NFR17–NFR19 (admin UI WCAG), NFR40 (admin UI independently deployable from business UI), NFR42 (Postman collection)
+**FRs deferred post-MVP (UI surface):** FR6 (RSU UI for ref-data maintenance), FR4 (admin UI is the surface; data still loadable by DBAs via SQL)
+
+**Key NFRs:** NFR14, NFR40, NFR42. *(NFR17–NFR19 do not apply here in Phase 0 — no UI for this domain until post-MVP.)*
+
+**2026-05-15 change:** Stories 0.2.3 (Admin UI scaffolding) and 0.2.4 (Admin UI Reference Data module) removed. API becomes read-only (no admin CRUD writes). ETL loads via direct SQL `INSERT` rather than calling the API. What was Story 0.2.5 is renumbered to Story 0.2.3.
 
 → [Full epic with stories](epic-0.2-admin-manages-ref-data.md)
 
-### Epic 0.3: Admin manages users, roles, and per-region activation with migration sign-off
+### Epic 0.3: Users, roles, and activation flags are SQL-loaded (1 story, was 4)
 
-**User outcome:** An admin user signs into `nji-admin-ui`, opens the User & Role admin module, can search users (migrated from APEX + new), edit role and Region/Area scope assignments, view per-user effective permissions, and flip per-user activation flags. Phase 0 ETL has loaded the active APEX users and produced a reconciliation report keyed to HMCTS IdP principals (email primary, employee number fallback); named owners review and sign off, with explicit handling decisions (drop / hold / manual map) for unmatched records.
+**User outcome:** Active APEX users and their role/Region/Area assignments are loaded into the NJI Authorisation tables via a direct-SQL ETL, with named-owner sign-off and explicit handling of unmatched records via versioned CSV decision files. Per-region activation flags are initialised all-FALSE and flipped per region during Phase 9+ cutover via direct SQL. **No admin UI.**
 
-**FRs covered:** FR4 (full role/scope edits), FR57 (Users/Roles portion), FR58 (flag wire-up surface)
+**FRs covered (Phase 0 surface):** FR57 (Users/Roles portion via SQL), FR58 (initial flag state via ETL)
 
-**Key NFRs:** NFR12–NFR13 (auth enforcement on admin endpoints), NFR17–NFR19 (admin UI WCAG)
+**FRs deferred post-MVP (UI surface):** FR4 (admin UI for role/scope edits — data still editable by DBAs via SQL)
 
-**Why separate from Epic 0.2:** Different ETL stream, different domain owners (judicial-team owners for Reference Data vs identity / IT owners for Users/Roles), different reconciliation methodology (controlled-list vs identity-reconciliation), different risk profile (Risk #13 vs Risk #14). Bundling would dilute the user value and the sign-off accountability.
+**2026-05-15 change:** Stories 0.3.1 (admin API extensions), 0.3.2 (admin UI users/roles), 0.3.4 (admin UI migration reports) all removed. Only what was Story 0.3.3 remains, renumbered to Story 0.3.1. Unmatched-record decisions move from a UI workflow to an **editable CSV** in version control.
+
+**Why one story is OK as an epic:** the user value (users can sign in because their records exist) is distinct from Reference Data, the named-owner is different (identity/IT lead vs RSU/judicial-vocabulary owners), and the risk profile (Risk #14) differs from Reference Data's Risk #13.
 
 → [Full epic with stories](epic-0.3-admin-manages-users-roles.md)
 
-### Epic 0.4: System dispatches transactional emails and admin can verify delivery
+### Epic 0.4: Notification service is scaffolded and contractually ready (2 stories, was 4)
 
-**User outcome:** An admin can trigger a test email through a system-admin utility in `nji-admin-ui`; NJI dispatches via HMCTS email infrastructure; the delivery log records attempt and outcome. This establishes the pattern that downstream domain phases (Phase 2 Absence acknowledgement, Phase 4 Booking acknowledgement, Phase 6 Payment Batch dispatch) consume.
+**User outcome:** `nji-notification` is deployed with its API contract published, delivery log table created, SMTP integration configured, and `POST /v1/notifications/send` working. The contract is consumable from Phase 2+ via **user-JWT propagation**. Integration testing in MVP happens via Postman — **no admin UI**.
 
 **FRs covered:** FR9
 
-**Key NFRs:** NFR22 (HMCTS email infrastructure)
+**Key NFRs:** NFR12 (JWT propagation), NFR15, NFR22, NFR25–NFR28, NFR39, NFR42
 
-**Why Phase 0 rather than deferring to Phase 2 as a consumer:** Three downstream phases depend on Notification's API contract, retry semantics, and delivery-log schema (FR20 ack, FR32 ack, FR43 schedule dispatch). Locking those in Phase 0 with an admin-triggered demoable path avoids re-work and unblocks parallel development of the downstream consumers.
+**2026-05-15 change:** Story 0.4.3 (OAuth `client_credentials` flow) **moved to Phase 6** — that's when `nji-payment-batch` arrives as the first non-user-initiated consumer that needs it. Story 0.4.4 (admin "Send Test Email" UI) **removed**, deferred post-MVP — Postman covers the integration-test gap.
 
 → [Full epic with stories](epic-0.4-system-dispatches-emails.md)
 
@@ -75,13 +94,31 @@ The seven Phase 0 areas in [../framework.md](../framework.md) are an **architect
 
 | Epic | Stories | FRs covered | Phase 0 demo |
 |---|---|---|---|
-| 0.1 | 5 stories (0.1.1–0.1.5) | FR1, FR2, FR3, FR8, FR55, FR56, FR58 (activation surface), FR59, FR60 | User signs in → role-scoped Home renders |
-| 0.2 | 5 stories (0.2.1–0.2.5) | FR4 (foundation), FR6, FR7, FR57 (Ref Data), FR59, FR60 | Admin edits Ref Data with sign-off; ETL produces signed-off reconciliation report |
-| 0.3 | 4 stories (0.3.1–0.3.4) | FR4 (full edits), FR57 (Users/Roles), FR58 (flag wire-up) | Admin manages users/roles + activation; signs off on Users/Roles migration |
-| 0.4 | 4 stories (0.4.1–0.4.4) | FR9 | Admin sends test email; sees `sent` status; downstream phases can consume Notification |
+| 0.1 | 5 stories (0.1.1–0.1.5) | FR1, FR2, FR3, FR8, FR55, FR56, FR58 (activation flag surface), FR59, FR60 | User signs in → role-scoped Home renders |
+| 0.2 | 3 stories (0.2.1–0.2.3) | FR7, FR57 (Ref Data via SQL), FR59, FR60 | Ref Data API serves controlled lists; ETL produces signed-off reconciliation report (via git) |
+| 0.3 | 1 story (0.3.1) | FR57 (Users/Roles via SQL), FR58 (flag bootstrap) | Users + roles + scope live in auth tables; named-owner signoff in git; Epic 0.1 sign-in actually works against migrated users |
+| 0.4 | 2 stories (0.4.1–0.4.2) | FR9 | `POST /v1/notifications/send` works end-to-end via Postman against Mailpit |
+| **Total** | **11 stories** | | All four demos chain together for the Phase 0 stakeholder walkthrough |
 
-**Cross-cutting NFRs verified across Phase 0 stories:** NFR10 (TLS), NFR11 (data-at-rest), NFR12 (JWT propagation + `client_credentials`), NFR13 (authz enforcement), NFR14 (no forbidden data), NFR15 (audit), NFR16 (Key Vault), NFR17–NFR19 (WCAG 2.2 AA), NFR20 (HMCTS IdP integration via mock), NFR22 (HMCTS email), NFR25–NFR28 (observability), NFR31 (Azure UK South), NFR39 (API-as-Product), NFR40 (per-service deployable), NFR42 (Postman collections).
+**Cross-cutting NFRs verified across Phase 0 stories:** NFR10 (TLS), NFR11 (data-at-rest), NFR12 (JWT propagation), NFR13 (authz enforcement on reads), NFR14 (no forbidden data), NFR15 (audit via git commits + delivery log), NFR16 (Key Vault), NFR17–NFR19 (business UI WCAG — admin UI deferred), NFR20 (HMCTS IdP integration via mock), NFR22 (HMCTS email), NFR25–NFR28 (observability), NFR31 (Azure UK South), NFR39 (API-as-Product), NFR40 (per-service deployable), NFR42 (Postman collections).
+
+## Post-MVP roadmap items spun out of Phase 0 (2026-05-15 revision)
+
+The following surfaces were removed from Phase 0 / MVP and now sit on the post-MVP roadmap:
+
+1. **`nji-admin-ui` repo** — scaffolding + auth wrapper + GOV.UK Design System admin theme
+2. **Reference Data admin module** in `nji-admin-ui` — list/edit/create flows with named-owner sign-off workflow
+3. **Users & Roles admin module** in `nji-admin-ui` — search, edit roles, edit Region/Area scope, toggle activation flag
+4. **Migration Reports admin module** in `nji-admin-ui` — view reconciliation reports, apply decisions to unmatched records, sign off via UI
+5. **Reference Data API write endpoints** — `POST/PUT/PATCH/DELETE`, admin-gated
+6. **`nji-authorisation` admin write endpoints** — `PUT /v1/admin/users/{id}/roles`, `PUT /v1/admin/users/{id}/region-scopes`, `PUT /v1/admin/users/{id}/activation`
+7. **Admin "Send Test Email" UI** in `nji-admin-ui`
+8. **Delivery-log viewer UI**
+
+What's NOT in this post-MVP list (because it migrated out of Phase 0 to a different MVP phase rather than post-MVP):
+
+- **OAuth `client_credentials` flow** for batch / scheduled callers — moved to **Phase 6** alongside `nji-payment-batch`. Still MVP, just later.
 
 ## Validation
 
-- [Phase 0 Validation Report (2026-05-15)](validation-report-2026-05-15.md) — full coverage validation, dependency analysis, and gap remediations
+- [Phase 0 Validation Report (2026-05-15, revised)](validation-report-2026-05-15.md) — full coverage validation, dependency analysis, and gap remediations, **updated to reflect the 2026-05-15 admin-UI-removed scope**.

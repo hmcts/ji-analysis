@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,32 +178,24 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="ji-as-is-database--diagram-companion-reference">JI as-is
-database — diagram companion reference</h1>
-<p>This document accompanies the PNG schema diagrams in this folder. It
-contains:</p>
+<h1 id="ji-as-is-database--diagram-companion-reference">JI as-is database — diagram companion reference</h1>
+<p>This document accompanies the PNG schema diagrams in this folder. It contains:</p>
 <ul>
-<li>Trigger reference (every trigger, its table, timing, event, and
-body)</li>
-<li>External-reference inventory (columns pointing to tables NOT in this
-PDF)</li>
+<li>Trigger reference (every trigger, its table, timing, event, and body)</li>
+<li>External-reference inventory (columns pointing to tables NOT in this PDF)</li>
 <li>FK inference confidence notes</li>
 </ul>
 <details class="section" id="trigger-reference"><summary><span class="section-title">Trigger reference</span></summary><div class="section-body">
-<p>All 24 triggers extracted from the source DDL. Triggers are
-predominantly mechanical: <code>BI_*</code> (before-insert) assign the
-PK from a sequence; <code>BU_*</code> (before-update) maintain
-<code>LAST_MODIFIED_BY</code> / <code>LAST_MODIFIED_DATE</code> audit
-columns.</p>
+<p>All 24 triggers extracted from the source DDL. Triggers are predominantly mechanical: <code>BI_*</code> (before-insert) assign the PK from a sequence; <code>BU_*</code> (before-update) maintain <code>LAST_MODIFIED_BY</code> / <code>LAST_MODIFIED_DATE</code> audit columns.</p>
 <table>
 <thead>
 <tr>
@@ -393,8 +387,7 @@ begin
   end if;
 end;</code></pre>
 <h4 id="tbl_ji_abs_ob_detail"><code>TBL_JI_ABS_OB_DETAIL</code></h4>
-<p><strong><code>BI_TBL_JI_ABS_OB_DETAIL</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JI_ABS_OB_DETAIL</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JI_ABS_OB_DETAIL_ID&quot; is null then
@@ -403,8 +396,7 @@ begin
   end if;
 end;</code></pre>
 <h4 id="tbl_ji_abs_ob_vac_opts"><code>TBL_JI_ABS_OB_VAC_OPTS</code></h4>
-<p><strong><code>BI_TBL_JI_ABS_OB_VAC_OPTS</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JI_ABS_OB_VAC_OPTS</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JI_ABS_OB_VAC_OPTS_ID&quot; is null then
@@ -421,8 +413,7 @@ begin
   end if;
 end;</code></pre>
 <h4 id="tbl_ji_fp_bookings"><code>TBL_JI_FP_BOOKINGS</code></h4>
-<p><strong><code>BI_TBL_JI_FP_BOOKINGS</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JI_FP_BOOKINGS</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JI_FP_BOOKING_ID&quot; is null then
@@ -548,10 +539,8 @@ begin
      :NEW.verified_flag := 0;
   END IF;
 end;</code></pre>
-<h4
-id="tbl_ji_fp_booking_detail"><code>TBL_JI_FP_BOOKING_DETAIL</code></h4>
-<p><strong><code>BU_TBL_JI_FP_BOOKING_DETAIL</code></strong> — before
-update</p>
+<h4 id="tbl_ji_fp_booking_detail"><code>TBL_JI_FP_BOOKING_DETAIL</code></h4>
+<p><strong><code>BU_TBL_JI_FP_BOOKING_DETAIL</code></strong> — before update</p>
 <pre class="sql"><code>for each row
 begin
   :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.fp_booking_date, &#39;YYYYMM&#39;));
@@ -561,8 +550,7 @@ begin
      :NEW.verified_flag := 0;
   END IF;
 end;</code></pre>
-<p><strong><code>BI_TBL_JI_FP_BOOKING_DETAIL</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JI_FP_BOOKING_DETAIL</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JI_FP_BOOKING_DETAIL_ID&quot; is null then
@@ -576,10 +564,8 @@ begin
      :NEW.verified_flag := 0;
   END IF;
 end;</code></pre>
-<h4
-id="tbl_ji_planned_sittings"><code>TBL_JI_PLANNED_SITTINGS</code></h4>
-<p><strong><code>BU_TBL_JI_PLANNED_SITTINGS</code></strong> — before
-update</p>
+<h4 id="tbl_ji_planned_sittings"><code>TBL_JI_PLANNED_SITTINGS</code></h4>
+<p><strong><code>BU_TBL_JI_PLANNED_SITTINGS</code></strong> — before update</p>
 <pre class="sql"><code>for each row
 begin
   :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.sitting_date, &#39;YYYYMM&#39;));
@@ -589,8 +575,7 @@ begin
      :NEW.verified_flag := 0;
   END IF;
 end;</code></pre>
-<p><strong><code>BI_TBL_JI_PLANNED_SITTINGS</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JI_PLANNED_SITTINGS</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JI_PLANNED_SITTING_ID&quot; is null then
@@ -620,8 +605,7 @@ begin
   :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.vacancy_date, &#39;YYYYMM&#39;));
 end;</code></pre>
 <h4 id="tbl_ji_vacancy_groups"><code>TBL_JI_VACANCY_GROUPS</code></h4>
-<p><strong><code>BI_TBL_JI_VACANCY_GROUPS</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JI_VACANCY_GROUPS</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JI_VACANCY_GROUP_ID&quot; is null then
@@ -659,8 +643,7 @@ pkg_const.JUDGE_CODE_CHAR_FORMAT)
      || LOWER(:NEW.judge_name), 1, 4000);
 end;</code></pre>
 <h4 id="tbl_judges_juris_split"><code>TBL_JUDGES_JURIS_SPLIT</code></h4>
-<p><strong><code>BI_TBL_JUDGES_JURIS_SPLIT</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JUDGES_JURIS_SPLIT</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JUDGES_JURIS_SPLIT_ID&quot; is null then
@@ -669,8 +652,7 @@ begin
   end if;
 end;</code></pre>
 <h4 id="tbl_judges_master"><code>TBL_JUDGES_MASTER</code></h4>
-<p><strong><code>BU_TBL_JUDGES_MASTER</code></strong> — before
-update</p>
+<p><strong><code>BU_TBL_JUDGES_MASTER</code></strong> — before update</p>
 <pre class="sql"><code>for each row
 begin
   IF :NEW.last_modified_by IS NULL THEN
@@ -695,8 +677,7 @@ pkg_const.JUDGE_CODE_CHAR_FORMAT)
        || LOWER(:NEW.comments)
        , 1, 4000);
 end;</code></pre>
-<p><strong><code>BI_TBL_JUDGES_MASTER</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JUDGES_MASTER</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   IF :NEW.created_by IS NULL THEN
@@ -724,8 +705,7 @@ pkg_const.JUDGE_CODE_CHAR_FORMAT)
      , 1, 4000);
 end;</code></pre>
 <h4 id="tbl_judges_tickets"><code>TBL_JUDGES_TICKETS</code></h4>
-<p><strong><code>BI_TBL_JUDGES_TICKETS</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JUDGES_TICKETS</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JUDGES_TICKET_ID&quot; is null then
@@ -734,15 +714,13 @@ from dual;
   end if;
 end;</code></pre>
 <h4 id="tbl_judges_user_links"><code>TBL_JUDGES_USER_LINKS</code></h4>
-<p><strong><code>BU_TBL_JUDGES_USER_LINKS</code></strong> — before
-update</p>
+<p><strong><code>BU_TBL_JUDGES_USER_LINKS</code></strong> — before update</p>
 <pre class="sql"><code>for each row
 begin
   :new.last_modified_BY := nvl(wwv_flow.g_user,user);
   :new.last_modified_DATE := trunc(sysdate);
 end;</code></pre>
-<p><strong><code>BI_TBL_JUDGES_USER_LINKS</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JUDGES_USER_LINKS</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   select &quot;TBL_JUDGES_USER_LINKS_SEQ&quot;.nextval into
@@ -750,10 +728,8 @@ begin
   :new.CREATED_BY := nvl(wwv_flow.g_user,user);
   :new.CREATED_DATE := trunc(sysdate);
 end;</code></pre>
-<h4
-id="tbl_judges_work_patterns"><code>TBL_JUDGES_WORK_PATTERNS</code></h4>
-<p><strong><code>BI_TBL_JUDGES_WORK_PATTERNS</code></strong> — before
-insert</p>
+<h4 id="tbl_judges_work_patterns"><code>TBL_JUDGES_WORK_PATTERNS</code></h4>
+<p><strong><code>BI_TBL_JUDGES_WORK_PATTERNS</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JUDGES_WORK_PATTERN_ID&quot; is null then
@@ -762,8 +738,7 @@ begin
   end if;
 end;</code></pre>
 <h4 id="tbl_judges_wp_detail"><code>TBL_JUDGES_WP_DETAIL</code></h4>
-<p><strong><code>BI_TBL_JUDGES_WP_DETAIL</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JUDGES_WP_DETAIL</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   if :NEW.&quot;JUDGES_WP_DETAIL_ID&quot; is null then
@@ -772,8 +747,7 @@ begin
   end if;
 end;</code></pre>
 <h4 id="tbl_judge_courts_link"><code>TBL_JUDGE_COURTS_LINK</code></h4>
-<p><strong><code>BI_TBL_JUDGE_COURTS_LINK</code></strong> — before
-insert</p>
+<p><strong><code>BI_TBL_JUDGE_COURTS_LINK</code></strong> — before insert</p>
 <pre class="sql"><code>for each row
 begin
   select &quot;TBL_JUDGE_COURTS_LINK_SEQ&quot;.nextval into
@@ -781,19 +755,14 @@ begin
   :new.CREATED_BY := nvl(wwv_flow.g_user,user);
   :new.CREATED_DATE := trunc(sysdate);
 end;</code></pre>
-<p><strong><code>BU_TBL_JUDGE_COURTS_LINK</code></strong> — before
-update</p>
+<p><strong><code>BU_TBL_JUDGE_COURTS_LINK</code></strong> — before update</p>
 <pre class="sql"><code>for each row
 begin
   :new.last_modified_BY := nvl(wwv_flow.g_user,user);
   :new.last_modified_DATE := trunc(sysdate);
 end;</code></pre>
 </div></details><details class="section" id="external-reference-inventory"><summary><span class="section-title">External-reference inventory</span></summary><div class="section-body">
-<p>These columns reference tables that are <strong>NOT present in the
-source PDF</strong>. Likely live in a separate reference-data dump
-(locations, regions, courtrooms, OPT user accounts, status lookups).
-Confirm with the data-dictionary owner before treating them as
-authoritative.</p>
+<p>These columns reference tables that are <strong>NOT present in the source PDF</strong>. Likely live in a separate reference-data dump (locations, regions, courtrooms, OPT user accounts, status lookups). Confirm with the data-dictionary owner before treating them as authoritative.</p>
 <table>
 <thead>
 <tr>
@@ -811,14 +780,12 @@ authoritative.</p>
 <tr>
 <td><code>BASE_LOC_ID</code></td>
 <td>External: LOCATIONS (not in this PDF)</td>
-<td><code>TBL_JUDGES</code>, <code>TBL_JUDGES_MONTHLY_STATS</code>,
-<code>TBL_JUDGES_WORK_PATTERNS</code></td>
+<td><code>TBL_JUDGES</code>, <code>TBL_JUDGES_MONTHLY_STATS</code>, <code>TBL_JUDGES_WORK_PATTERNS</code></td>
 </tr>
 <tr>
 <td><code>BASE_LOC_TYPE_ID</code></td>
 <td>External: LOCATION TYPES (not in this PDF)</td>
-<td><code>TBL_JUDGES</code>, <code>TBL_JUDGES_MONTHLY_STATS</code>,
-<code>TBL_JUDGES_WORK_PATTERNS</code></td>
+<td><code>TBL_JUDGES</code>, <code>TBL_JUDGES_MONTHLY_STATS</code>, <code>TBL_JUDGES_WORK_PATTERNS</code></td>
 </tr>
 <tr>
 <td><code>COURT_ID</code></td>
@@ -833,12 +800,7 @@ authoritative.</p>
 <tr>
 <td><code>CUT_OWNER_ID</code></td>
 <td>External: COURTROOMS / CUT_* (not in this PDF)</td>
-<td><code>TBL_JI_ABS_OB_DETAIL</code>,
-<code>TBL_JI_ABS_OB_VAC_OPTS</code>, <code>TBL_JI_FP_BOOKINGS</code>,
-<code>TBL_JI_FP_BOOKING_DETAIL</code>,
-<code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>,
-<code>TBL_JI_VACANCY_GROUPS</code>,
-<code>TBL_JUDGES_WP_DETAIL</code></td>
+<td><code>TBL_JI_ABS_OB_DETAIL</code>, <code>TBL_JI_ABS_OB_VAC_OPTS</code>, <code>TBL_JI_FP_BOOKINGS</code>, <code>TBL_JI_FP_BOOKING_DETAIL</code>, <code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>, <code>TBL_JI_VACANCY_GROUPS</code>, <code>TBL_JUDGES_WP_DETAIL</code></td>
 </tr>
 <tr>
 <td><code>FILL_ACTION_ID</code></td>
@@ -853,18 +815,12 @@ authoritative.</p>
 <tr>
 <td><code>HEARING_LOC_ID</code></td>
 <td>External: LOCATIONS (not in this PDF)</td>
-<td><code>TBL_JI_FP_BOOKINGS</code>,
-<code>TBL_JI_FP_BOOKING_DETAIL</code>,
-<code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>,
-<code>TBL_JI_VACANCY_GROUPS</code></td>
+<td><code>TBL_JI_FP_BOOKINGS</code>, <code>TBL_JI_FP_BOOKING_DETAIL</code>, <code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>, <code>TBL_JI_VACANCY_GROUPS</code></td>
 </tr>
 <tr>
 <td><code>HEARING_LOC_TYPE_ID</code></td>
 <td>External: LOCATION TYPES (not in this PDF)</td>
-<td><code>TBL_JI_FP_BOOKINGS</code>,
-<code>TBL_JI_FP_BOOKING_DETAIL</code>,
-<code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>,
-<code>TBL_JI_VACANCY_GROUPS</code></td>
+<td><code>TBL_JI_FP_BOOKINGS</code>, <code>TBL_JI_FP_BOOKING_DETAIL</code>, <code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>, <code>TBL_JI_VACANCY_GROUPS</code></td>
 </tr>
 <tr>
 <td><code>HMCS_LEGAL_TIER_CODE</code></td>
@@ -874,25 +830,12 @@ authoritative.</p>
 <tr>
 <td><code>LOC_ID</code></td>
 <td>External: LOCATIONS / OFFICES (not in this PDF)</td>
-<td><code>TBL_JI_ABS_OB_DETAIL</code>,
-<code>TBL_JI_ABS_OB_VAC_OPTS</code>, <code>TBL_JI_FP_BOOKINGS</code>,
-<code>TBL_JI_FP_BOOKING_DETAIL</code>,
-<code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>,
-<code>TBL_JI_VACANCY_GROUPS</code>,
-<code>TBL_JUDGES_WP_DETAIL</code></td>
+<td><code>TBL_JI_ABS_OB_DETAIL</code>, <code>TBL_JI_ABS_OB_VAC_OPTS</code>, <code>TBL_JI_FP_BOOKINGS</code>, <code>TBL_JI_FP_BOOKING_DETAIL</code>, <code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>, <code>TBL_JI_VACANCY_GROUPS</code>, <code>TBL_JUDGES_WP_DETAIL</code></td>
 </tr>
 <tr>
 <td><code>LOC_TYPE_ID</code></td>
 <td>External: LOCATION TYPES (not in this PDF)</td>
-<td><code>TBL_JI_ABS_OB_DETAIL</code>,
-<code>TBL_JI_ABS_OB_VAC_OPTS</code>, <code>TBL_JI_FP_BOOKINGS</code>,
-<code>TBL_JI_FP_BOOKING_DETAIL</code>,
-<code>TBL_JI_LOC_JT_AWD_LINKS</code>,
-<code>TBL_JI_LOC_JT_PWD_LINKS</code>,
-<code>TBL_JI_LOC_JT_SD_LINKS</code>,
-<code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>,
-<code>TBL_JI_VACANCY_GROUPS</code>,
-<code>TBL_JUDGES_WP_DETAIL</code></td>
+<td><code>TBL_JI_ABS_OB_DETAIL</code>, <code>TBL_JI_ABS_OB_VAC_OPTS</code>, <code>TBL_JI_FP_BOOKINGS</code>, <code>TBL_JI_FP_BOOKING_DETAIL</code>, <code>TBL_JI_LOC_JT_AWD_LINKS</code>, <code>TBL_JI_LOC_JT_PWD_LINKS</code>, <code>TBL_JI_LOC_JT_SD_LINKS</code>, <code>TBL_JI_PLANNED_SITTINGS</code>, <code>TBL_JI_VACANCIES</code>, <code>TBL_JI_VACANCY_GROUPS</code>, <code>TBL_JUDGES_WP_DETAIL</code></td>
 </tr>
 <tr>
 <td><code>LONDON_WT_STATUS_ID</code></td>
@@ -902,8 +845,7 @@ authoritative.</p>
 <tr>
 <td><code>REGION_ID</code></td>
 <td>External: REGIONS (not in this PDF)</td>
-<td><code>TBL_JI_AREAS</code>, <code>TBL_JI_RESTR_ITIN_USERS</code>,
-<code>TBL_JUDGES</code>, <code>TBL_JUDGE_COURTS_LINK</code></td>
+<td><code>TBL_JI_AREAS</code>, <code>TBL_JI_RESTR_ITIN_USERS</code>, <code>TBL_JUDGES</code>, <code>TBL_JUDGE_COURTS_LINK</code></td>
 </tr>
 <tr>
 <td><code>SITTING_TYPE_ID</code></td>
@@ -913,33 +855,18 @@ authoritative.</p>
 <tr>
 <td><code>VACANCY_STATUS_ID</code></td>
 <td>External: Vacancy Status lookup (not in this PDF)</td>
-<td><code>TBL_JI_ABS_OB_VAC_OPTS</code>, <code>TBL_JI_VACANCIES</code>,
-<code>TBL_JI_VACANCY_GROUPS</code></td>
+<td><code>TBL_JI_ABS_OB_VAC_OPTS</code>, <code>TBL_JI_VACANCIES</code>, <code>TBL_JI_VACANCY_GROUPS</code></td>
 </tr>
 </tbody>
 </table>
 </div></details><details class="section" id="fk-inference-notes"><summary><span class="section-title">FK inference notes</span></summary><div class="section-body">
-<p>The source DDL contains <strong>zero explicit
-<code>FOREIGN KEY</code> constraints</strong>. Every relationship in the
-diagrams is inferred from column-naming conventions. Confidence
-buckets:</p>
+<p>The source DDL contains <strong>zero explicit <code>FOREIGN KEY</code> constraints</strong>. Every relationship in the diagrams is inferred from column-naming conventions. Confidence buckets:</p>
 <ul>
-<li><strong>HIGH (solid line, blue)</strong> — column name exactly
-matches another table's primary-key column. Example:
-<code>JI_ABS_OB_ID</code> in <code>TBL_JI_VACANCIES</code> matches
-<code>TBL_JI_ABS_OB.JI_ABS_OB_ID</code>.</li>
-<li><strong>MEDIUM (dashed line, grey)</strong> — column is a
-<em>prefixed</em> version of another table's PK column (≥ 5-char
-suffix). Example: <code>START_SITTING_DUR_ID</code> and
-<code>END_SITTING_DUR_ID</code> both end with
-<code>SITTING_DUR_ID</code>, the PK of
-<code>TBL_JI_SITTING_DURS</code>.</li>
-<li><strong>EXTERNAL (dotted line, light grey)</strong> — column
-references a table outside this PDF.</li>
+<li><strong>HIGH (solid line, blue)</strong> — column name exactly matches another table's primary-key column. Example: <code>JI_ABS_OB_ID</code> in <code>TBL_JI_VACANCIES</code> matches <code>TBL_JI_ABS_OB.JI_ABS_OB_ID</code>.</li>
+<li><strong>MEDIUM (dashed line, grey)</strong> — column is a <em>prefixed</em> version of another table's PK column (≥ 5-char suffix). Example: <code>START_SITTING_DUR_ID</code> and <code>END_SITTING_DUR_ID</code> both end with <code>SITTING_DUR_ID</code>, the PK of <code>TBL_JI_SITTING_DURS</code>.</li>
+<li><strong>EXTERNAL (dotted line, light grey)</strong> — column references a table outside this PDF.</li>
 </ul>
-<p>Columns ending in <code>_ID</code> or <code>_CODE</code> that match
-neither rule are flagged in the diagram body but no edge is drawn. They
-may be valid FK references to tables not yet identified.</p>
+<p>Columns ending in <code>_ID</code> or <code>_CODE</code> that match neither rule are flagged in the diagram body but no edge is drawn. They may be valid FK references to tables not yet identified.</p>
 <h3 id="counts">Counts</h3>
 <ul>
 <li>HIGH confidence FKs: <strong>68</strong></li>

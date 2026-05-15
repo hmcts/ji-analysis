@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Phase 0 Step 4 — Final Validation Report — NJI Documentation</title>
+<title>Phase 0 Step 4 — Final Validation Report (2026-05-15, revised) — NJI Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,106 +178,154 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html" class="current">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html" class="current">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="phase-0-step-4--final-validation-report">Phase 0 Step 4 — Final
-Validation Report</h1>
-<p><strong>Date:</strong> 2026-05-15 <strong>Scope:</strong> Phase 0
-(Epics 0.1–0.4, Stories 0.1.1–0.4.4)</p>
-<details class="section" id="fr-coverage-phase-0-scope"><summary><span class="section-title">FR Coverage (Phase 0 scope)</span></summary><div class="section-body">
-<p>All 14 Phase-0-applicable MVP FRs covered with explicit story
-references:</p>
-<p>FR1 ✅, FR2 ✅, FR3 ✅, FR4 ✅, FR5 (intentionally deferred
-post-MVP), FR6 ✅, FR7 ✅, FR8 ✅, FR9 ✅, FR55 ✅, FR56 ✅, FR57 ✅,
-FR58 ✅ (surface only — orchestration is Phase 9+), FR59 ✅, FR60 ✅</p>
-</div></details><details class="section" id="nfr-coverage-phase-0-scope"><summary><span class="section-title">NFR Coverage (Phase 0 scope)</span></summary><div class="section-body">
+<h1 id="phase-0-step-4--final-validation-report-2026-05-15-revised">Phase 0 Step 4 — Final Validation Report (2026-05-15, revised)</h1>
+<p><strong>Date:</strong> 2026-05-15 <strong>Scope:</strong> Phase 0 (Epics 0.1–0.4, 11 stories — revised down from 18 after the 2026-05-15 admin-UI-removed scope decision)</p>
+<details class="section" id="what-changed-in-this-revision"><summary><span class="section-title">What changed in this revision</span></summary><div class="section-body">
+<p>The 2026-05-15 product-direction decision removes admin UI from MVP scope entirely. Phase 0 simplifies accordingly:</p>
+<ul>
+<li><strong>Story count:</strong> 18 → <strong>11</strong></li>
+<li><strong>Stories removed:</strong>
+<ul>
+<li>Was 0.2.3 (Scaffold <code>nji-admin-ui</code>) — removed</li>
+<li>Was 0.2.4 (Admin UI Reference Data module) — removed</li>
+<li>Was 0.3.1 (<code>nji-authorisation</code> admin API extensions) — removed</li>
+<li>Was 0.3.2 (Admin UI Users &amp; Roles module) — removed</li>
+<li>Was 0.3.4 (Admin UI Migration Reports module) — removed</li>
+<li>Was 0.4.4 (Admin "Send Test Email" UI) — removed</li>
+</ul></li>
+<li><strong>Stories moved:</strong>
+<ul>
+<li>Was 0.4.3 (OAuth <code>client_credentials</code> flow) — <strong>moved to Phase 6</strong> alongside <code>nji-payment-batch</code></li>
+</ul></li>
+<li><strong>Stories renumbered:</strong>
+<ul>
+<li>Was 0.2.5 → now 0.2.3 (Reference Data ETL — and changed to load via direct SQL rather than via the API)</li>
+<li>Was 0.3.3 → now 0.3.1 (Users/Roles ETL — likewise)</li>
+</ul></li>
+<li><strong>Stories with content tweaks (no renumber):</strong>
+<ul>
+<li>0.1.3 — emphasises read-only API; auth tables still created here but populated by Epic 0.3's SQL ETL</li>
+<li>0.2.2 — read-only API only; no write endpoints; explicit <code>405 Method Not Allowed</code> on write attempts</li>
+<li>Both renumbered ETL stories — now load via direct SQL <code>INSERT</code>, not via API</li>
+</ul></li>
+</ul>
+</div></details><details class="section" id="fr-coverage-phase-0-scope-post-revision"><summary><span class="section-title">FR Coverage (Phase 0 scope, post-revision)</span></summary><div class="section-body">
+<p>Phase-0-applicable MVP FRs:</p>
+<ul>
+<li><strong>Fully covered (10):</strong> FR1 ✅, FR2 ✅, FR3 ✅, FR7 ✅, FR8 ✅, FR9 ✅, FR55 ✅, FR57 ✅, FR59 ✅, FR60 ✅</li>
+<li><strong>Partially covered (4) — data layer in Phase 0, UI surface deferred post-MVP:</strong>
+<ul>
+<li><strong>FR4</strong> — auth tables populated by Epic 0.3's SQL ETL; DBAs can update via direct SQL; <strong>admin UI surface for sysadmins to update role/scope assignments is post-MVP</strong></li>
+<li><strong>FR6</strong> — read API + SQL-loaded data in Phase 0; <strong>RSU UI for maintenance is post-MVP</strong></li>
+<li><strong>FR56</strong> — <code>nji-ui</code> business stack covered; <code>nji-admin-ui</code> admin stack moves post-MVP</li>
+<li><strong>FR58</strong> — initial flag state set by ETL in Phase 0; cutover flips happen per region during Phase 9+ via direct SQL; <strong>activation toggle UI is post-MVP</strong></li>
+</ul></li>
+<li><strong>Intentionally deferred (pre-existing, unchanged):</strong> FR5 (post-MVP per PRD v2.5)</li>
+</ul>
+<p>This is a <strong>conscious scope reduction</strong> approved at the 2026-05-15 product-direction decision. The deferred UI surfaces are documented in <code>epics/fr-coverage-map.md</code> under "Post-MVP roadmap".</p>
+</div></details><details class="section" id="nfr-coverage-phase-0-scope-post-revision"><summary><span class="section-title">NFR Coverage (Phase 0 scope, post-revision)</span></summary><div class="section-body">
 <p>All in-scope Phase 0 NFRs explicitly addressed via story ACs:</p>
-<p>NFR10 ✅ (Story 0.1.1), NFR11 ✅ (Story 0.1.1), NFR12 ✅, NFR13 ✅,
-NFR14 ✅, NFR15 ✅, NFR16 ✅, NFR17–NFR19 ✅, NFR20 ✅, NFR22 ✅, NFR25
-✅, NFR26 ✅ (Story 0.1.1 — 90 day non-prod / 365 day prod default
-subject to HMCTS sign-off), NFR27 ✅, NFR28 ✅, NFR31 ✅, NFR39 ✅,
-NFR40 ✅, NFR42 ✅</p>
+<p>NFR10 ✅ (Story 0.1.1), NFR11 ✅ (Story 0.1.1), NFR12 ✅, NFR13 ✅, NFR14 ✅, NFR15 ✅ (audit now via git commits on <code>signoffs/</code> + delivery log table), NFR16 ✅, NFR17–NFR19 ✅ (business UI only; admin UI accessibility deferred with the admin UI), NFR20 ✅, NFR22 ✅, NFR25 ✅, NFR26 ✅ (Story 0.1.1 — 90 day non-prod / 365 day prod default subject to HMCTS sign-off), NFR27 ✅, NFR28 ✅, NFR31 ✅, NFR39 ✅, NFR40 ✅, NFR42 ✅</p>
 </div></details><details class="section" id="dependency-validation"><summary><span class="section-title">Dependency Validation</span></summary><div class="section-body">
 <ul>
-<li>✅ <strong>Epic independence</strong> — no epic requires a later
-epic to function. Backward dependencies only (Epic 0.2 → Epic 0.1; Epic
-0.3 → Epic 0.1 + 0.2; Epic 0.4 → Epic 0.1 + 0.2).</li>
-<li>✅ <strong>Story sequencing within epics</strong> — strictly
-sequential; no forward references after fix to Story 0.2.5 (sign-off via
-versioned commits to <code>signoffs/</code> directory, independent of
-Story 0.3.4 UI promotion).</li>
-<li>✅ <strong>File-churn check</strong> — each epic targets its own
-slice; cross-epic touches on <code>nji-authorisation</code> and
-<code>nji-admin-ui</code> are additive (new endpoints / new module
-surfaces), not editing of existing code paths.</li>
+<li>✅ <strong>Epic independence</strong> — no epic requires a later epic to function. Backward dependencies only (Epic 0.2 → Epic 0.1; Epic 0.3 → Epic 0.1 + 0.2; Epic 0.4 → Epic 0.1).</li>
+<li>✅ <strong>Story sequencing within epics</strong> — strictly sequential. The cross-epic dependency from Epic 0.4 onto <code>nji-admin-ui</code> is gone (admin UI removed).</li>
+<li>✅ <strong>File-churn check</strong> — each epic targets its own slice. Cross-epic touches on <code>nji-authorisation</code> between Epic 0.1 (read API + JWT validation) and Epic 0.3 (ETL writes to the same auth tables) are additive (Epic 0.1 creates the schema; Epic 0.3 populates it).</li>
 </ul>
 </div></details><details class="section" id="architecture-compliance"><summary><span class="section-title">Architecture Compliance</span></summary><div class="section-body">
 <ul>
-<li>✅ Starter template pattern (AR2–AR4) — Story 0.1.1 establishes;
-Stories 0.2.1, 0.4.1, and mock-auth scaffold in 0.1.2 follow with
-canonical <em>"Scaffold NJI {service-name} from HMCTS starter"</em>
-commit.</li>
-<li>✅ Database creation timing — every service's tables created in the
-service's own first or second story via service-owned Flyway; no upfront
-DB creation.</li>
-<li>✅ Shared baseline — <code>configuration_values</code> table managed
-exclusively by <code>nji-architecture</code> Flyway baseline (Story
-0.1.1), consumed read-only by all services.</li>
+<li>✅ Starter template pattern (AR2–AR4) — Story 0.1.1 establishes; Stories 0.2.1, 0.4.1, and the mock-auth scaffold in 0.1.2 follow with canonical <em>"Scaffold NJI {service-name} from HMCTS starter"</em> commit.</li>
+<li>✅ Database creation timing — every service's tables created in the service's own first or second story via service-owned Flyway; no upfront DB creation. The auth tables (Story 0.1.3) are created by Flyway; populated by ETL (Story 0.3.1).</li>
+<li>✅ Shared baseline — <code>configuration_values</code> table managed exclusively by <code>nji-architecture</code> Flyway baseline (Story 0.1.1), consumed read-only by all services.</li>
+<li>✅ Direct-SQL ETL pattern (AR46–AR49) — clarified in revision: ETLs <strong>insert directly via SQL</strong> rather than going through API admin endpoints (which are now removed). Idempotency via natural-key <code>INSERT ... ON CONFLICT</code> per AR21.</li>
 </ul>
 </div></details><details class="section" id="story-sizing-notes"><summary><span class="section-title">Story Sizing Notes</span></summary><div class="section-body">
 <ul>
-<li><strong>Story 0.1.1 (XL)</strong> — canonical platform-pattern
-story; intentionally large because it establishes scaffolding + CI/CD +
-first deployment + Flyway baseline + TLS / encryption / log-retention
-ACs. Dev agent picking this up should plan a multi-day session OR split
-into 0.1.1a (scaffold + local build), 0.1.1b (CI/CD + first deploy),
-0.1.1c (Flyway baseline + cross-cutting NFR setup) at implementation
-time. Decision deferred to dev agent.</li>
+<li><strong>Story 0.1.1 (XL)</strong> — unchanged from prior validation. Canonical platform-pattern story.</li>
+<li><strong>Story 0.3.1 (L → consolidates the prior 4 stories down to 1)</strong> — bigger than typical, but the user value is one coherent thing: "active APEX users are loaded into the auth tables with explicit handling of unmatched records and named-owner sign-off". Splitting would fragment the user outcome.</li>
 <li>All other stories sized for single dev-agent sessions.</li>
 </ul>
-</div></details><details class="section" id="gaps-fixed-in-validation"><summary><span class="section-title">Gaps Fixed in Validation</span></summary><div class="section-body">
-<p>Three NFR gaps and one forward-dependency softness were identified
-and remediated:</p>
+</div></details><details class="section" id="gaps-fixed-in-the-original-validation-still-applicable"><summary><span class="section-title">Gaps Fixed in the Original Validation (still applicable)</span></summary><div class="section-body">
+<p>Three NFR gaps and one forward-dependency softness were identified in the original 2026-05-15 validation and fixed:</p>
 <ol type="1">
-<li><strong>NFR10 (TLS)</strong> — added explicit AC to Story 0.1.1:
-APIM terminates TLS at the latest supported version; HTTP-only rejected;
-verified by CI <code>testssl.sh</code> check.</li>
-<li><strong>NFR11 (data-at-rest encryption)</strong> — added explicit AC
-to Story 0.1.1: Azure-managed PostgreSQL Flexible Server with encryption
-at rest; AKS persistent volumes encrypted; documented in ADR.</li>
-<li><strong>NFR26 (log retention)</strong> — added explicit AC to Story
-0.1.1: log retention policy set in Phase 0 (default 90/365 days, subject
-to HMCTS owner sign-off); documented in ADR; applied via IaC.</li>
-<li><strong>Story 0.2.5 → Story 0.3.4 forward reference</strong> —
-tightened: sign-off via versioned commit to <code>signoffs/</code>
-directory with <code>CODEOWNERS</code>-enforced two-reviewer policy;
-Story 0.2.5 no longer depends on Story 0.3.4 being delivered first.</li>
+<li><strong>NFR10 (TLS)</strong> — explicit AC in Story 0.1.1: APIM terminates TLS at the latest supported version; HTTP-only rejected; verified by CI <code>testssl.sh</code> check.</li>
+<li><strong>NFR11 (data-at-rest encryption)</strong> — explicit AC in Story 0.1.1: Azure-managed PostgreSQL Flexible Server with encryption at rest; AKS persistent volumes encrypted; documented in ADR.</li>
+<li><strong>NFR26 (log retention)</strong> — explicit AC in Story 0.1.1: log retention policy set in Phase 0 (default 90/365 days, subject to HMCTS owner sign-off); documented in ADR; applied via IaC.</li>
+<li><strong>Story 0.2.5 → Story 0.3.4 forward reference</strong> — tightened in original; <strong>moot in this revision</strong> because Story 0.3.4 is removed. Sign-off via versioned git commits to <code>signoffs/</code> is the only mechanism in MVP. CODEOWNERS-enforced two-reviewer policy.</li>
 </ol>
+</div></details><details class="section" id="new-checks-for-the-2026-05-15-revision"><summary><span class="section-title">New checks for the 2026-05-15 revision</span></summary><div class="section-body">
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All admin-UI references purged from Phase 0 stories?</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Reference Data API confirmed read-only (<code>405</code> on write attempts)?</td>
+<td>✅ in Story 0.2.2 ACs</td>
+</tr>
+<tr>
+<td>Authorisation API confirmed read-only (no admin endpoints)?</td>
+<td>✅ in Story 0.1.3 ACs</td>
+</tr>
+<tr>
+<td>ETL loads documented as direct SQL <code>INSERT</code> (not via API)?</td>
+<td>✅ in Stories 0.2.3 and 0.3.1</td>
+</tr>
+<tr>
+<td>Sign-off workflow documented as git-only?</td>
+<td>✅ in Stories 0.2.3 and 0.3.1</td>
+</tr>
+<tr>
+<td>Unmatched-record decision mechanism documented (CSV in version control)?</td>
+<td>✅ in Story 0.3.1</td>
+</tr>
+<tr>
+<td>Activation flag cutover documented as direct SQL during Phase 9+?</td>
+<td>✅ in Story 0.3.1 and Phase 0 index</td>
+</tr>
+<tr>
+<td>OAuth <code>client_credentials</code> flow moved to Phase 6 (not silently dropped)?</td>
+<td>✅ — noted in Epic 0.4 + Story 0.4.2 + post-MVP roadmap</td>
+</tr>
+<tr>
+<td>Notification <code>client_credentials</code> callers explicitly rejected in Phase 0?</td>
+<td>✅ in Story 0.4.2 ACs (returns <code>403</code> with explanatory RFC 9457 body)</td>
+</tr>
+<tr>
+<td>Post-MVP roadmap items inventoried?</td>
+<td>✅ in Phase 0 index + <code>epics/fr-coverage-map.md</code></td>
+</tr>
+</tbody>
+</table>
 </div></details><details class="section" id="verdict"><summary><span class="section-title">Verdict</span></summary><div class="section-body">
-<p>🟢 <strong>Phase 0 epics + stories are validated and ready for
-implementation.</strong></p>
+<p>🟢 <strong>Phase 0 (revised, 11 stories) is validated and ready for implementation.</strong></p>
 <p>Next steps:</p>
 <ol type="1">
-<li>Re-run <code>bmad-check-implementation-readiness</code> to confirm
-overall status moves to 🟢 READY for Phase 0.</li>
-<li>Begin Phase 1 story design (run
-<code>bmad-create-epics-and-stories</code> step 2 + 3 again, scoped to
-Phase 1: Judge Records &amp; Working Patterns).</li>
-<li>Begin implementation of Story 0.1.1 (the canonical platform-pattern
-story) via <code>bmad-sprint-planning</code> →
-<code>bmad-create-story</code> → <code>bmad-dev-story</code>.</li>
+<li>Begin Phase 1 story design (run <code>bmad-create-epics-and-stories</code> step 2 + 3 again, scoped to Phase 1: Judge Records &amp; Working Patterns).</li>
+<li>Begin implementation of Story 0.1.1 (the canonical platform-pattern story) via <code>bmad-sprint-planning</code> → <code>bmad-create-story</code> → <code>bmad-dev-story</code>.</li>
+<li>Open a separate workstream to track the post-MVP UI items (admin UI repo, modules, admin write endpoints) — this is now a programme deliverable to schedule, not a Phase 0 commitment.</li>
+<li><strong>Recommend updating the PRD</strong> via <code>bmad-correct-course</code> to reflect that the UI surfaces of FR4 / FR6 are post-MVP. The PRD currently lists them as MVP; this revision puts them post-MVP. Without a PRD update, FR4 / FR6 will continue to appear as MVP requirements and may cause readiness-check failures in later phases.</li>
 </ol>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/phase-0/validation-report-2026-05-15.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#fr-coverage-phase-0-scope">FR Coverage (Phase 0 scope)</a></li><li><a href="#nfr-coverage-phase-0-scope">NFR Coverage (Phase 0 scope)</a></li><li><a href="#dependency-validation">Dependency Validation</a></li><li><a href="#architecture-compliance">Architecture Compliance</a></li><li><a href="#story-sizing-notes">Story Sizing Notes</a></li><li><a href="#gaps-fixed-in-validation">Gaps Fixed in Validation</a></li><li><a href="#verdict">Verdict</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#what-changed-in-this-revision">What changed in this revision</a></li><li><a href="#fr-coverage-phase-0-scope-post-revision">FR Coverage (Phase 0 scope, post-revision)</a></li><li><a href="#nfr-coverage-phase-0-scope-post-revision">NFR Coverage (Phase 0 scope, post-revision)</a></li><li><a href="#dependency-validation">Dependency Validation</a></li><li><a href="#architecture-compliance">Architecture Compliance</a></li><li><a href="#story-sizing-notes">Story Sizing Notes</a></li><li><a href="#gaps-fixed-in-the-original-validation-still-applicable">Gaps Fixed in the Original Validation (still applicable)</a></li><li><a href="#new-checks-for-the-2026-05-15-revision">New checks for the 2026-05-15 revision</a></li><li><a href="#verdict">Verdict</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

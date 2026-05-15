@@ -11,6 +11,7 @@ status: 'validated'
 **User outcome:** A judicial user (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, or MI/Reporting user) opens NJI, signs in via SSO, has their roles and Region/Area scope resolved, and lands on a Home page showing the navigation and tiles they're authorised to see.
 
 **Vertical slice:**
+- **GitHub manual-setup runbook** at `nji-architecture/runbooks/github-setup.md` documenting the manual web-UI steps the engineer performs for every new NJI repo (repo creation, branch protection on `main`, team access, CODEOWNERS-setting). The `gh` CLI is **not** available in the engineering environment, so all GitHub admin operations are manual via the web UI — the `nji-scaffold.sh` script handles only local scaffolding + `git push` to a pre-created remote.
 - First scaffolded backend service: `nji-authorisation` (HMCTS Crime SpringBoot template + `nji-scaffold.sh` conventions per AR2–AR4)
 - `nji-mock-auth` OIDC issuer for non-prod (per AR35)
 - 5-table `nji-authorisation` schema (`auth_users`, `auth_roles`, `auth_user_roles`, `auth_user_region_scopes`, `auth_user_activation_flags`) via service-owned Flyway migration (per AR18–AR19)
@@ -37,10 +38,14 @@ So that **subsequent services follow a consistent, version-pinned, supply-chain-
 
 **Acceptance Criteria:**
 
-**Given** a clean development environment with Java 25, Gradle Wrapper, Docker, and `gh` CLI configured,
+**Given** the engineer has performed the GitHub manual-setup checklist (`nji-architecture/runbooks/github-setup.md`) **before** running the scaffold:
+  - Created an empty private GitHub repo `nji-authorisation` under the HMCTS org **via the GitHub web UI**
+  - Enabled branch protection on `main` via Settings → Branches (require PR review, require status checks, require linear history)
+  - Note: the `gh` CLI is **NOT** available in the engineering environment — all GitHub admin config (repo creation, branch protection, team access) happens manually via the web UI per the runbook,
+**And** the engineer has a clean local development environment with Java 25, Gradle Wrapper, and Docker,
 **When** the engineer runs `nji-scaffold.sh nji-authorisation` from `nji-architecture/scaffolding/`,
-**Then** a new private GitHub repo `nji-authorisation` is created under the HMCTS org with branch protection on `main`,
-**And** the repo contains a Spring Boot 4.0.x project scaffolded from `https://github.com/hmcts/spring-boot-template`,
+**Then** the script scaffolds a Spring Boot 4.0.x project **locally** from `https://github.com/hmcts/spring-boot-template`, then commits and pushes to the pre-created remote on a feature branch via plain `git` (no `gh` CLI invocation),
+**And** the project contents include a Spring Boot 4.0.x scaffold from `https://github.com/hmcts/spring-boot-template`,
 **And** Gradle build uses Groovy DSL with Spring Boot Gradle plugin 4.0.6 and `io.spring.dependency-management:1.1.7` (per AR5),
 **And** Group ID is `uk.gov.hmcts.nji`, artefact is `nji-authorisation`, base package is `uk.gov.hmcts.nji.authorisation`, default port is 8082 (per AR3),
 **And** initial commit message is exactly *"Scaffold NJI authorisation from HMCTS starter"* (per AR4),
@@ -63,13 +68,14 @@ So that **subsequent services follow a consistent, version-pinned, supply-chain-
 **And** structured JSON logs via Logstash Logback Encoder 9.0 appear on stdout (per AR30, NFR25),
 **And** logs include a `correlationId` populated by `CorrelationIdFilter` for each request (per AR32).
 
-**Given** the engineer pushes the initial commit and opens a PR,
+**Given** the engineer pushes the initial commit to a feature branch via `git push`,
+**And** opens a Pull Request from that branch to `main` **manually via the GitHub web UI** (no `gh` CLI),
 **When** the GitHub Actions `ci.yml` workflow runs,
 **Then** the workflow runs build + test + Spectral lint + ArchUnit + Spotless + Checkstyle + Helm lint,
 **And** all checks pass on the scaffolded baseline,
 **And** code coverage report is produced by JaCoCo.
 
-**Given** the PR is merged to `main`,
+**Given** the PR is merged to `main` **via the GitHub web UI** (the engineer clicks "Merge pull request" after reviewer approval; no `gh` CLI),
 **When** `deploy-dev.yml` triggers automatically,
 **Then** the service deploys to the dev AKS cluster in UK South (per AR23, NFR31),
 **And** the container image is pushed to Azure Container Registry,
@@ -100,7 +106,7 @@ So that **subsequent services follow a consistent, version-pinned, supply-chain-
 **And** the chosen value is recorded in `nji-architecture/ADR-XXXX-log-retention.md` with the responsible HMCTS owner identity,
 **And** the retention setting is applied to the Application Insights workspace via Terraform / Bicep IaC (engineer to choose; recommendation: Bicep given Azure-native stack).
 
-**References:** FR8, FR59, FR60; NFR10, NFR11, NFR15, NFR16, NFR25–NFR28, NFR31, NFR40, NFR42; AR2–AR17, AR23–AR32, AR41.
+**References:** FR8, FR59, FR60; NFR10, NFR11, NFR15, NFR16, NFR25–NFR28, NFR31, NFR40, NFR42; AR2–AR17, AR23–AR32, AR41; **D10** (admin UI removed from MVP; `gh` CLI not available — manual GitHub web-UI setup per `nji-architecture/runbooks/github-setup.md`).
 
 ---
 
@@ -112,7 +118,8 @@ So that **NJI development and CI/UAT can proceed end-to-end without HMCTS IdP in
 
 **Acceptance Criteria:**
 
-**Given** the engineer scaffolds `nji-mock-auth` using `nji-scaffold.sh nji-mock-auth` (following Story 0.1.1 pattern),
+**Given** the engineer has manually pre-created the private GitHub repo `nji-mock-auth` with branch protection on `main` via the GitHub web UI (per `nji-architecture/runbooks/github-setup.md`; the `gh` CLI is **not** available — see Story 0.1.1 for the canonical manual-setup pattern),
+**And** runs `nji-scaffold.sh nji-mock-auth` (following the Story 0.1.1 pattern),
 **When** the scaffold completes,
 **Then** the service has the same baseline as Story 0.1.1 (Spring Boot 4.0.x, Helm chart, GitHub Actions, Actuator),
 **And** the service implements OIDC `authorization_code` flow for human users,
@@ -147,11 +154,11 @@ So that **NJI development and CI/UAT can proceed end-to-end without HMCTS IdP in
 
 ---
 
-## Story 0.1.3: `nji-authorisation` validates JWTs and resolves roles + Region/Area scope
+## Story 0.1.3: `nji-authorisation` validates JWTs and resolves roles + Region/Area scope (read-only API)
 
 As a **calling service or UI**,
-I want every NJI HTTP request to flow through `JWTFilter` and resolve the principal's roles + Region/Area scope via `nji-authorisation`,
-So that **every domain operation in NJI is authorised against migrated APEX user data** (per FR2, NFR13) and no operation can bypass the Authorisation service.
+I want every NJI HTTP request to flow through `JWTFilter` and resolve the principal's roles + Region/Area scope via `nji-authorisation`'s **read-only** API,
+So that **every domain operation in NJI is authorised against migrated APEX user data** (per FR2, NFR13) and no operation can bypass the Authorisation service. **Admin write endpoints are out of scope for Phase 0 (and MVP)** — user/role/scope edits happen via direct SQL in MVP (the data is loaded by Epic 0.3's SQL ETL); an admin UI surface is post-MVP.
 
 **Acceptance Criteria:**
 
@@ -195,6 +202,10 @@ So that **every domain operation in NJI is authorised against migrated APEX user
 
 **References:** FR2, FR3, FR59, FR60; NFR12, NFR13, NFR25, NFR28, NFR39, NFR40; AR18–AR22, AR27, AR32, AR33, AR34, AR37–AR39.
 
+**Explicitly NOT in scope (deferred post-MVP):**
+- Admin write endpoints on `nji-authorisation` for updating user roles, Region/Area scope, or activation flags (was planned Story 0.3.1 in the prior plan)
+- The auth tables (`auth_users`, `auth_user_roles`, `auth_user_region_scopes`, `auth_user_activation_flags`) are still created here in Phase 0 — they're populated by Epic 0.3's SQL ETL, not by API writes
+
 ---
 
 ## Story 0.1.4: Scaffold `nji-ui` repo with React + TypeScript + Vite + GOV.UK base + auth wrapper
@@ -205,7 +216,8 @@ So that **per-domain UI modules built in Phases 1–8 land on a stable, audited,
 
 **Acceptance Criteria:**
 
-**Given** the engineer initialises the `nji-ui` repo from a Vite React+TypeScript template,
+**Given** the engineer has manually pre-created the private GitHub repo `nji-ui` with branch protection on `main` via the GitHub web UI (per `nji-architecture/runbooks/github-setup.md`; the `gh` CLI is **not** available — repo creation, branch protection, team access, and CODEOWNERS-setting are manual web-UI operations),
+**And** the engineer initialises the `nji-ui` repo locally from a Vite React+TypeScript template and pushes via plain `git push` to the pre-created remote,
 **When** scaffolding completes,
 **Then** the repo uses React + TypeScript + Vite + Vitest (unit) + Playwright (E2E) per AR42,
 **And** the repo is private under HMCTS org with branch protection on `main`,

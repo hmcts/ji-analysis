@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,35 +178,22 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="ji-analysis-nji--epic-breakdown">ji-analysis (NJI) — Epic
-Breakdown</h1>
-<p>This is the <strong>sharded entry point</strong> for the NJI epic and
-story breakdown. Each section below lives in its own file for
-maintainability — the prior single-file <code>epics.md</code> reached
-~1,500 lines covering Phase 0 alone, and Phases 1–9+ would push it past
-4,000 lines.</p>
+<h1 id="ji-analysis-nji--epic-breakdown">ji-analysis (NJI) — Epic Breakdown</h1>
+<p>This is the <strong>sharded entry point</strong> for the NJI epic and story breakdown. Each section below lives in its own file for maintainability — the prior single-file <code>epics.md</code> reached ~1,500 lines covering Phase 0 alone, and Phases 1–9+ would push it past 4,000 lines.</p>
 <details class="section" id="overview"><summary><span class="section-title">Overview</span></summary><div class="section-body">
-<p>NJI (New JI) is the greenfield rebuild of HMCTS's Judicial
-Itineraries system. This document decomposes the requirements from the
-PRD (61 FRs, 42 NFRs, D1–D9) and the Architecture (HMCTS Crime
-SpringBoot starter, polyrepo, shared-DB + per-service DB roles,
-Kubernetes on Azure AKS) into implementable stories.</p>
-<p>UX Design document is not present; downstream epics inherit UI
-requirements directly from PRD FRs (FR55, FR56) and architecture
-conventions (GOV.UK Design System base, WCAG 2.2 AA per NFR17). This gap
-is documented in the 2026-05-06 readiness report.</p>
+<p>NJI (New JI) is the greenfield rebuild of HMCTS's Judicial Itineraries system. This document decomposes the requirements from the PRD (61 FRs, 42 NFRs, D1–D9) and the Architecture (HMCTS Crime SpringBoot starter, polyrepo, shared-DB + per-service DB roles, Kubernetes on Azure AKS) into implementable stories.</p>
+<p>UX Design document is not present; downstream epics inherit UI requirements directly from PRD FRs (FR55, FR56) and architecture conventions (GOV.UK Design System base, WCAG 2.2 AA per NFR17). This gap is documented in the 2026-05-06 readiness report.</p>
 </div></details><details class="section" id="document-map"><summary><span class="section-title">Document Map</span></summary><div class="section-body">
-<h3 id="foundations-project-wide-context">Foundations (project-wide
-context)</h3>
+<h3 id="foundations-project-wide-context">Foundations (project-wide context)</h3>
 <table>
 <thead>
 <tr>
@@ -214,25 +203,20 @@ context)</h3>
 </thead>
 <tbody>
 <tr>
-<td><a
-href="requirements-inventory.html">requirements-inventory.md</a></td>
-<td>All FRs (FR1–FR61), NFRs (NFR1–NFR42), Architecture-derived ARs
-(AR1–AR50), and UX Design Requirements (none — accepted gap)</td>
+<td><a href="requirements-inventory.html">requirements-inventory.md</a></td>
+<td>All FRs (FR1–FR61), NFRs (NFR1–NFR42), Architecture-derived ARs (AR1–AR50), and UX Design Requirements (none — accepted gap)</td>
 </tr>
 <tr>
 <td><a href="framework.html">framework.md</a></td>
-<td>Phase × Area architectural framework — the spine that organises
-concrete epics across 10 sequential phases</td>
+<td>Phase × Area architectural framework — the spine that organises concrete epics across 10 sequential phases</td>
 </tr>
 <tr>
 <td><a href="fr-coverage-map.html">fr-coverage-map.md</a></td>
-<td>Single source of truth for FR → Epic mapping across the whole
-programme</td>
+<td>Single source of truth for FR → Epic mapping across the whole programme</td>
 </tr>
 </tbody>
 </table>
-<h3 id="phase-level-breakdowns-one-folder-per-phase">Phase-level
-breakdowns (one folder per phase)</h3>
+<h3 id="phase-level-breakdowns-one-folder-per-phase">Phase-level breakdowns (one folder per phase)</h3>
 <table>
 <thead>
 <tr>
@@ -294,46 +278,27 @@ breakdowns (one folder per phase)</h3>
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="how-this-document-is-produced"><summary><span class="section-title">How this document is
-produced</span></summary><div class="section-body">
-<p>Each phase advances through four steps of the
-<code>bmad-create-epics-and-stories</code> workflow:</p>
+</div></details><details class="section" id="how-this-document-is-produced"><summary><span class="section-title">How this document is produced</span></summary><div class="section-body">
+<p>Each phase advances through four steps of the <code>bmad-create-epics-and-stories</code> workflow:</p>
 <ol type="1">
-<li><strong>Validate prerequisites</strong> — confirm PRD + Architecture
-available, extract requirements</li>
-<li><strong>Design epics</strong> — group requirements into user-value
-epics (not technical milestones)</li>
-<li><strong>Create stories</strong> — produce Gherkin-AC user stories
-sized for a single dev-agent session</li>
-<li><strong>Final validation</strong> — verify FR/NFR coverage,
-dependency soundness, architecture compliance</li>
+<li><strong>Validate prerequisites</strong> — confirm PRD + Architecture available, extract requirements</li>
+<li><strong>Design epics</strong> — group requirements into user-value epics (not technical milestones)</li>
+<li><strong>Create stories</strong> — produce Gherkin-AC user stories sized for a single dev-agent session</li>
+<li><strong>Final validation</strong> — verify FR/NFR coverage, dependency soundness, architecture compliance</li>
 </ol>
-<p>Phase 0 has completed all four steps. Phases 1–9+ are at the
-framework stage only (Step 1 inputs ready; Steps 2–4 not yet run).</p>
+<p>Phase 0 has completed all four steps. Phases 1–9+ are at the framework stage only (Step 1 inputs ready; Steps 2–4 not yet run).</p>
 </div></details><details class="section" id="how-to-find-your-way"><summary><span class="section-title">How to find your way</span></summary><div class="section-body">
 <ul>
-<li><strong>Looking for what to build next?</strong> Start at the phase
-index (e.g. <a href="phase-0/index.html">phase-0/index.md</a>) and pick
-an epic.</li>
-<li><strong>Looking for a specific story?</strong> Stories are named
-<code>Story {phase}.{epic}.{n}</code> (e.g. Story 0.1.5). They live
-under <code>phase-{n}/epic-{n}.{m}-{slug}.md</code>.</li>
-<li><strong>Looking for an FR?</strong> Use <a
-href="fr-coverage-map.html">fr-coverage-map.md</a>.</li>
-<li><strong>Looking for an architecture rule?</strong> Use <a
-href="requirements-inventory.html">requirements-inventory.md</a> — ARs
-are in the Additional Requirements section.</li>
-<li><strong>Verifying readiness?</strong> Run
-<code>bmad-check-implementation-readiness</code> from the repo root; it
-understands this sharded shape.</li>
+<li><strong>Looking for what to build next?</strong> Start at the phase index (e.g. <a href="phase-0/index.html">phase-0/index.md</a>) and pick an epic.</li>
+<li><strong>Looking for a specific story?</strong> Stories are named <code>Story {phase}.{epic}.{n}</code> (e.g. Story 0.1.5). They live under <code>phase-{n}/epic-{n}.{m}-{slug}.md</code>.</li>
+<li><strong>Looking for an FR?</strong> Use <a href="fr-coverage-map.html">fr-coverage-map.md</a>.</li>
+<li><strong>Looking for an architecture rule?</strong> Use <a href="requirements-inventory.html">requirements-inventory.md</a> — ARs are in the Additional Requirements section.</li>
+<li><strong>Verifying readiness?</strong> Run <code>bmad-check-implementation-readiness</code> from the repo root; it understands this sharded shape.</li>
 </ul>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/epics/index.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#overview">Overview</a></li><li><a href="#document-map">Document Map</a></li><li class="h3"><a href="#foundations-project-wide-context">Foundations (project-wide
-context)</a></li><li class="h3"><a href="#phase-level-breakdowns-one-folder-per-phase">Phase-level
-breakdowns (one folder per phase)</a></li><li><a href="#how-this-document-is-produced">How this document is
-produced</a></li><li><a href="#how-to-find-your-way">How to find your way</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#overview">Overview</a></li><li><a href="#document-map">Document Map</a></li><li class="h3"><a href="#foundations-project-wide-context">Foundations (project-wide context)</a></li><li class="h3"><a href="#phase-level-breakdowns-one-folder-per-phase">Phase-level breakdowns (one folder per phase)</a></li><li><a href="#how-this-document-is-produced">How this document is produced</a></li><li><a href="#how-to-find-your-way">How to find your way</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

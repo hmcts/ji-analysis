@@ -158,7 +158,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="implementation-readiness">
 <summary>Implementation Readiness</summary>
 <ul>
-<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 (current)</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15-rev2.html">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="../../sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="../../implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
 <li><a href="../../implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
 </ul>
@@ -176,88 +178,44 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <summary>Implementation — Phase 0 ✓</summary>
 <ul>
 <li><a href="../../epics/phase-0/index.html">Phase 0 overview</a></li>
-<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates</a></li>
-<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Reference Data</a></li>
-<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users, Roles, Activation</a></li>
-<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Transactional Emails</a></li>
-<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report</a></li>
+<li><a href="../../epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="../../epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="../../epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="../../epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
 </ul>
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="payment-batch-flow">Payment-batch flow</h1>
-<p>Sequence diagram of the scheduled, non-user-initiated half of the
-operational cycle. A scheduler triggers the payment-processing batch.
-The batch authenticates as a service principal, picks up
-bookings/sittings that are confirmed but unpaid, generates the JFEPS
-Excel, and dispatches it via Notification → HMCTS Email to the Payment
-Authoriser. The authoriser uploads to Liberata out-of-band; Liberata
-pays the judge.</p>
-<p>Companion to <a
-href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>.
-The user-initiated flow ends with a booking marked confirmed and ready
-for payment; this batch picks up the record on its next scheduled
-run.</p>
-<p>Four phases: (1) scheduler + batch authentication; (2–3) the batch's
-work; (4) out-of-band processing in Liberata. Phases are colour-tinted
-in the diagram.</p>
-<details class="section" id="what-is-and-isnt-in-this-diagram"><summary><span class="section-title">What is and isn't in this
-diagram</span></summary><div class="section-body">
+<p>Sequence diagram of the scheduled, non-user-initiated half of the operational cycle. A scheduler triggers the payment-processing batch. The batch authenticates as a service principal, picks up bookings/sittings that are confirmed but unpaid, generates the JFEPS Excel, and dispatches it via Notification → HMCTS Email to the Payment Authoriser. The authoriser uploads to Liberata out-of-band; Liberata pays the judge.</p>
+<p>Companion to <a href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>. The user-initiated flow ends with a booking marked confirmed and ready for payment; this batch picks up the record on its next scheduled run.</p>
+<p>Four phases: (1) scheduler + batch authentication; (2–3) the batch's work; (4) out-of-band processing in Liberata. Phases are colour-tinted in the diagram.</p>
+<details class="section" id="what-is-and-isnt-in-this-diagram"><summary><span class="section-title">What is and isn't in this diagram</span></summary><div class="section-body">
 <p><strong>Included</strong> (the batch's runtime activity):</p>
 <ul>
-<li>Scheduler trigger (Kubernetes CronJob, or Spring
-<code>@Scheduled</code> annotation — implementation choice
-deferred).</li>
-<li>Batch acquiring its service-principal token via OAuth
-<code>client_credentials</code> against <code>nji-mock-auth</code>
-(non-prod) — production issuer per <a
-href="../gaps.html"><code>../gaps.md</code> G7.1</a>, default
-recommendation Azure Workload Identity.</li>
-<li>Batch SQL-JOIN read across the shared schema for eligible
-records.</li>
-<li>Batch persisting <code>payments</code> +
-<code>payment_schedules</code> and marking the related bookings as
-<em>payment requested</em>.</li>
-<li>Batch calling the Notification API (with bearer service token) to
-dispatch the JFEPS Excel email.</li>
-<li>Authoriser → Liberata upload as the bridge between NJI and the
-external payment system (out-of-band but architecturally relevant).</li>
+<li>Scheduler trigger (Kubernetes CronJob, or Spring <code>@Scheduled</code> annotation — implementation choice deferred).</li>
+<li>Batch acquiring its service-principal token via OAuth <code>client_credentials</code> against <code>nji-mock-auth</code> (non-prod) — production issuer per <a href="../gaps.html"><code>../gaps.md</code> G7.1</a>, default recommendation Azure Workload Identity.</li>
+<li>Batch SQL-JOIN read across the shared schema for eligible records.</li>
+<li>Batch persisting <code>payments</code> + <code>payment_schedules</code> and marking the related bookings as <em>payment requested</em>.</li>
+<li>Batch calling the Notification API (with bearer service token) to dispatch the JFEPS Excel email.</li>
+<li>Authoriser → Liberata upload as the bridge between NJI and the external payment system (out-of-band but architecturally relevant).</li>
 <li>Liberata processing the payment.</li>
 </ul>
-<p><strong>Not included</strong> (explicitly out of scope of this
-diagram):</p>
+<p><strong>Not included</strong> (explicitly out of scope of this diagram):</p>
 <ul>
-<li>User-initiated activities (logging absences, approving them,
-creating bookings, confirming sittings, marking payments reconciled) —
-those are in <a
-href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>.</li>
-<li>Reconciliation feedback from Liberata back into NJI — at MVP this is
-a manual RSU action (see the user-initiated diagram, Phase 5). Automated
-reconciliation feed from Liberata is post-MVP.</li>
-<li>The mock-auth's internal token-issuing logic (signing, JWKS, etc.) —
-covered by the architecture's Authentication &amp; Security section and
-the auth/JWKS sequences in <code>architecture.md</code>.</li>
+<li>User-initiated activities (logging absences, approving them, creating bookings, confirming sittings, marking payments reconciled) — those are in <a href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>.</li>
+<li>Reconciliation feedback from Liberata back into NJI — at MVP this is a manual RSU action (see the user-initiated diagram, Phase 5). Automated reconciliation feed from Liberata is post-MVP.</li>
+<li>The mock-auth's internal token-issuing logic (signing, JWKS, etc.) — covered by the architecture's Authentication &amp; Security section and the auth/JWKS sequences in <code>architecture.md</code>.</li>
 </ul>
-</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps
-omitted for clarity</span></summary><div class="section-body">
+</div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps omitted for clarity</span></summary><div class="section-body">
 <ul>
-<li>The Notification API call from the batch to
-<code>nji-notification</code> flows through Azure API Management (same
-path as user-initiated calls).</li>
-<li>Notification's <code>JWTFilter</code> validates the batch's
-service-principal JWT against the issuer's JWKS — same mechanism as for
-human user JWTs.</li>
-<li>Notification calls <code>nji-authorisation</code>
-<code>POST /authz/check</code> to resolve the service principal's
-permissions (service principals have records in <code>auth_users</code>
-with a kind flag distinguishing them from humans).</li>
+<li>The Notification API call from the batch to <code>nji-notification</code> flows through Azure API Management (same path as user-initiated calls).</li>
+<li>Notification's <code>JWTFilter</code> validates the batch's service-principal JWT against the issuer's JWKS — same mechanism as for human user JWTs.</li>
+<li>Notification calls <code>nji-authorisation</code> <code>POST /authz/check</code> to resolve the service principal's permissions (service principals have records in <code>auth_users</code> with a kind flag distinguishing them from humans).</li>
 </ul>
-<p><img src="./payment-batch-flow.png"
-alt="Payment-batch sequence — Scheduler → Batch → JFEPS Excel → Authoriser → Liberata" /></p>
-<p><em>Source: <a
-href="./payment-batch-flow.mmd"><code>./payment-batch-flow.mmd</code></a>
-(Mermaid). Regenerate with
-<code>mmdc -i payment-batch-flow.mmd -o payment-batch-flow.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
+<p><img src="./payment-batch-flow.png" alt="Payment-batch sequence — Scheduler → Batch → JFEPS Excel → Authoriser → Liberata" /></p>
+<p><em>Source: <a href="./payment-batch-flow.mmd"><code>./payment-batch-flow.mmd</code></a> (Mermaid). Regenerate with <code>mmdc -i payment-batch-flow.mmd -o payment-batch-flow.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
 </div></details><details class="section" id="phase-summary"><summary><span class="section-title">Phase summary</span></summary><div class="section-body">
 <table>
 <thead>
@@ -272,32 +230,26 @@ href="./payment-batch-flow.mmd"><code>./payment-batch-flow.mmd</code></a>
 <tr>
 <td>1 — Scheduler triggers batch + token acquisition</td>
 <td>Scheduler (cron)</td>
-<td>Batch authenticates as service principal via OAuth
-<code>client_credentials</code></td>
+<td>Batch authenticates as service principal via OAuth <code>client_credentials</code></td>
 <td>Batch holds a short-lived service JWT for its run</td>
 </tr>
 <tr>
 <td>2 — Eligible records collected + schedule persisted</td>
 <td>Batch (no user)</td>
-<td>SQL JOIN over confirmed bookings + sittings without payments;
-FR41–FR45 retry safety via native DB primitives (see <em>Data
-Architecture</em>)</td>
-<td>Payment + schedule rows created; bookings flagged as
-payment-requested</td>
+<td>SQL JOIN over confirmed bookings + sittings without payments; FR41–FR45 retry safety via native DB primitives (see <em>Data Architecture</em>)</td>
+<td>Payment + schedule rows created; bookings flagged as payment-requested</td>
 </tr>
 <tr>
 <td>3 — Schedule dispatched</td>
 <td>Batch (no user)</td>
-<td>Service-token bearer on Notification API call; Notification
-<code>JWTFilter</code> validates same as user JWTs (via JWKS)</td>
+<td>Service-token bearer on Notification API call; Notification <code>JWTFilter</code> validates same as user JWTs (via JWKS)</td>
 <td>JFEPS Excel email delivered to Payment Authoriser</td>
 </tr>
 <tr>
 <td>4 — Liberata processing</td>
 <td>Payment Authoriser → JFEPS</td>
 <td>Out-of-band; NJI is not in the loop</td>
-<td>Judge paid; awaiting reconciliation (which is user-initiated — see
-other diagram)</td>
+<td>Judge paid; awaiting reconciliation (which is user-initiated — see other diagram)</td>
 </tr>
 </tbody>
 </table>
@@ -312,49 +264,34 @@ other diagram)</td>
 <tbody>
 <tr>
 <td>User-initiated activities — absence to reconciliation</td>
-<td><a
-href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a></td>
+<td><a href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a></td>
 </tr>
 <tr>
 <td>Service-principal auth model + production issuer options</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Step 4 <em>Authentication &amp; Security</em></a>; <a
-href="../gaps.html"><code>../gaps.md</code> G1.2 + G7.1</a>; <a
-href="../assumptions.html"><code>../assumptions.md</code> A2 + A26 +
-A35</a></td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Authentication &amp; Security</em></a>; <a href="../gaps.html"><code>../gaps.md</code> G1.2 + G7.1</a>; <a href="../assumptions.html"><code>../assumptions.md</code> A2 + A26 + A35</a></td>
 </tr>
 <tr>
-<td><code>nji-payment</code> Repository List entry — synchronous API +
-batch component</td>
-<td><a href="../../architecture.html"><code>../../architecture.md</code>
-→ Repository List</a></td>
+<td><code>nji-payment</code> Repository List entry — synchronous API + batch component</td>
+<td><a href="../../architecture.html"><code>../../architecture.md</code> → Repository List</a></td>
 </tr>
 <tr>
-<td>Per-table column-level detail (<code>payments</code>,
-<code>payment_schedules</code>, <code>payment_reconciliations</code>,
-<code>notification_dispatches</code>,
-<code>mock_oauth_clients</code>)</td>
-<td><a
-href="../data-tables.html"><code>../data-tables.md</code></a></td>
+<td>Per-table column-level detail (<code>payments</code>, <code>payment_schedules</code>, <code>payment_reconciliations</code>, <code>notification_dispatches</code>, <code>mock_oauth_clients</code>)</td>
+<td><a href="../data-tables.html"><code>../data-tables.md</code></a></td>
 </tr>
 <tr>
 <td>FR41–FR45 (Payment) and NFR12 (Authentication)</td>
-<td>PRD <code>FR41</code>, <code>FR42</code>, <code>FR43</code>,
-<code>FR44</code>, <code>FR45</code>, <code>NFR12</code></td>
+<td>PRD <code>FR41</code>, <code>FR42</code>, <code>FR43</code>, <code>FR44</code>, <code>FR45</code>, <code>NFR12</code></td>
 </tr>
 <tr>
 <td>JWT propagation (the user-initiated counterpart pattern)</td>
-<td><a href="../conventions.html"><code>../conventions.md</code> →
-<em>Communication Patterns / JWT propagation</em></a></td>
+<td><a href="../conventions.html"><code>../conventions.md</code> → <em>Communication Patterns / JWT propagation</em></a></td>
 </tr>
 </tbody>
 </table>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/sequence-diagrams/payment-batch-flow.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#what-is-and-isnt-in-this-diagram">What is and isn't in this
-diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps
-omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#what-is-and-isnt-in-this-diagram">What is and isn't in this diagram</a></li><li><a href="#cross-cutting-steps-omitted-for-clarity">Cross-cutting steps omitted for clarity</a></li><li><a href="#phase-summary">Phase summary</a></li><li><a href="#where-to-find-more-detail">Where to find more detail</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Implementation Readiness Assessment Report — 2026-05-15 (revision 2, post-D10) — NJI Documentation</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;line-height:1.55;background:#fff}
+aside.nav{position:fixed;top:0;left:0;width:280px;height:100vh;overflow-y:auto;background:#f6f8fa;border-right:1px solid #d0d7de;padding:16px 12px;font-size:14px}
+aside.nav h2.site-title{font-size:14px;margin:0 0 12px;letter-spacing:.02em;text-transform:uppercase;color:#57606a}
+aside.nav h2.site-title a{color:inherit;text-decoration:none}
+aside.nav details.nav-group{margin:2px 0;border-radius:5px}
+aside.nav details.nav-group>summary{font-size:11px;padding:5px 8px 5px 4px;cursor:pointer;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-radius:4px;list-style:none;user-select:none;display:flex;align-items:center;gap:6px}
+aside.nav details.nav-group>summary::-webkit-details-marker{display:none}
+aside.nav details.nav-group>summary::before{content:'▸';display:inline-block;font-size:9px;color:#8c959f;transition:transform 0.15s ease;flex:0 0 10px;text-align:center}
+aside.nav details.nav-group[open]>summary::before{transform:rotate(90deg)}
+aside.nav details.nav-group>summary:hover{background:#eaeef2;color:#1f2328}
+aside.nav details.nav-group ul{list-style:none;margin:2px 0 6px;padding:0 0 0 16px}
+aside.nav details.nav-group li{margin:1px 0}
+aside.nav details.nav-group a{color:#0969da;text-decoration:none;display:block;padding:3px 8px;border-radius:6px;font-size:13px}
+aside.nav details.nav-group a:hover{background:#eaeef2}
+aside.nav details.nav-group a.current{background:#ddf4ff;font-weight:600;color:#0a3069}
+.nav-controls{margin:0 0 10px;font-size:11px}
+.nav-controls button{background:none;border:none;color:#0969da;cursor:pointer;padding:2px 4px;font-size:inherit;font-family:inherit;text-decoration:underline}
+.nav-controls button:hover{color:#0a3069}
+aside.toc{position:fixed;top:0;right:0;width:240px;height:100vh;overflow-y:auto;background:#fbfbfc;border-left:1px solid #eaeef2;padding:20px 14px;font-size:13px}
+aside.toc h4{font-size:11px;margin:0 0 8px;color:#57606a;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+aside.toc ul{list-style:none;margin:0;padding:0}
+aside.toc li{margin:1px 0}
+aside.toc li.h3{padding-left:14px;font-size:12px}
+aside.toc a{color:#57606a;text-decoration:none;display:block;padding:3px 8px;border-radius:4px;line-height:1.35;border-left:2px solid transparent}
+aside.toc a:hover{background:#eaeef2;color:#0a3069}
+main.content{margin-left:280px;max-width:1000px;padding:20px 40px 80px}
+body.has-toc main.content{margin-right:240px}
+main h1,main h2,main h3,main h4{margin-top:24px;margin-bottom:8px;font-weight:600;line-height:1.25}
+main h1{border-bottom:1px solid #d0d7de;padding-bottom:6px;font-size:1.9em}
+main h2{border-bottom:1px solid #eaeef2;padding-bottom:4px;font-size:1.4em}
+main h3{font-size:1.15em}
+main p{margin:6px 0 14px}
+main code{background:#eff1f3;padding:1px 4px;border-radius:3px;font-size:.92em;font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace}
+main pre{background:#f6f8fa;padding:12px 14px;border-radius:6px;overflow-x:auto;font-size:.88em;line-height:1.45;border:1px solid #eaeef2}
+main pre code{background:transparent;padding:0;font-size:1em}
+main blockquote{border-left:3px solid #d0d7de;color:#57606a;margin:8px 0;padding:0 12px}
+main table{border-collapse:collapse;margin:12px 0;font-size:.92em;display:block;overflow-x:auto;max-width:100%}
+main th,main td{border:1px solid #d0d7de;padding:6px 10px;vertical-align:top;text-align:left}
+main th{background:#f6f8fa;font-weight:600}
+main tr:nth-child(2n){background:#fafbfc}
+main img{max-width:100%;height:auto;border:1px solid #d0d7de;border-radius:4px;display:block;margin:8px 0}
+main a{color:#0969da;text-decoration:none}
+main a:hover{text-decoration:underline}
+main ul,main ol{margin:6px 0 14px;padding-left:28px}
+main li{margin:2px 0}
+main hr{border:none;border-top:1px solid #d0d7de;margin:24px 0}
+main details.section{border:1px solid #d0d7de;border-radius:6px;margin:14px 0;background:#fff;overflow:hidden}
+main details.section>summary{cursor:pointer;padding:10px 14px;background:#f6f8fa;list-style:none;user-select:none;display:flex;align-items:center;gap:10px;color:#1f2328;border-radius:5px}
+main details.section[open]>summary{border-bottom:1px solid #d0d7de;border-radius:5px 5px 0 0}
+main details.section>summary::-webkit-details-marker{display:none}
+main details.section>summary::before{content:'▸';display:inline-block;font-size:11px;color:#57606a;transition:transform 0.15s ease;flex:0 0 12px;text-align:center}
+main details.section[open]>summary::before{transform:rotate(90deg)}
+main details.section>summary:hover{background:#eaeef2}
+main details.section>summary .section-title{font-size:1.15em;font-weight:600;line-height:1.3}
+main details.section>summary .section-title code{font-size:.95em}
+main .section-body{padding:14px 18px 18px}
+main .section-body>h3:first-child,main .section-body>p:first-child,main .section-body>ul:first-child{margin-top:6px}
+.section-controls{margin:6px 0 18px;display:flex;gap:14px;font-size:13px;align-items:center}
+.section-controls .label{color:#57606a;font-size:12px}
+.section-controls button{background:none;border:1px solid #d0d7de;color:#0969da;cursor:pointer;padding:3px 10px;font-size:13px;font-family:inherit;border-radius:5px}
+.section-controls button:hover{background:#eaeef2;color:#0a3069}
+.breadcrumb{color:#57606a;font-size:13px;margin:0 0 16px}
+.breadcrumb a{color:#0969da;text-decoration:none}
+.source-note{margin-top:40px;padding-top:12px;border-top:1px solid #eaeef2;font-size:12px;color:#57606a}
+.source-note a{color:#57606a;text-decoration:underline}
+@media (max-width: 1200px){
+  aside.toc{display:none}
+  body.has-toc main.content{margin-right:0}
+}
+</style>
+</head>
+<body class="has-toc has-sections">
+<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
+<details class="nav-group" data-group="overview">
+<summary>Overview</summary>
+<ul>
+<li><a href="./index.html">Index</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="product">
+<summary>Product</summary>
+<ul>
+<li><a href="./prd.html">PRD (NJI)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="as-is-ji-architecture-views">
+<summary>As-is — JI Architecture Views</summary>
+<ul>
+<li><a href="./asis/system-context.html">System Context (as-is)</a></li>
+<li><a href="./asis/components.html">Components (as-is)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="as-is-ji-database-schema">
+<summary>As-is — JI Database Schema</summary>
+<ul>
+<li><a href="./asis/database/index.html">Database index</a></li>
+<li><a href="./asis/database/ji_schema_overview.html">Schema overview</a></li>
+<li><a href="./asis/database/ji_schema_judges-profile.html">Judges Profile & Reference</a></li>
+<li><a href="./asis/database/ji_schema_judges-patterns.html">Working Patterns, Tickets & Stats</a></li>
+<li><a href="./asis/database/ji_schema_absence-cover.html">Absence & Cover Workflow</a></li>
+<li><a href="./asis/database/ji_schema_bookings-sittings.html">Bookings & Sittings</a></li>
+<li><a href="./asis/database/ji_schema_reference-work.html">Reference Data</a></li>
+<li><a href="./asis/database/ji_schema_audit-cross-cutting.html">Audit & Cross-cutting</a></li>
+<li><a href="./asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-architecture">
+<summary>To-be — NJI Architecture</summary>
+<ul>
+<li><a href="./architecture.html">Architecture (index)</a></li>
+<li><a href="./architecture-summary.html">Architecture summary</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-reference">
+<summary>To-be — NJI Reference</summary>
+<ul>
+<li><a href="./architecture/user-types.html">User types</a></li>
+<li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
+<li><a href="./architecture/conventions.html">Conventions</a></li>
+<li><a href="./architecture/repository-strategy.html">Repository strategy</a></li>
+<li><a href="./architecture/repo-structure.html">Repository structure</a></li>
+<li><a href="./architecture/starter-template.html">Starter template</a></li>
+<li><a href="./architecture/functional-requirements-coverage.html">Functional requirements coverage</a></li>
+<li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
+<summary>To-be — NJI Sequence Diagrams</summary>
+<ul>
+<li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
+<li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
+<li><a href="./architecture/sequence-diagrams/absence-to-reconciliation.html">Absence → Reconciliation</a></li>
+<li><a href="./architecture/sequence-diagrams/salaried-sitting-confirmation.html">Salaried sitting confirmation</a></li>
+<li><a href="./architecture/sequence-diagrams/payment-batch-flow.html">Payment batch flow</a></li>
+<li><a href="./architecture/sequence-diagrams/itinerary-federated-read.html">Itinerary federated read</a></li>
+<li><a href="./architecture/sequence-diagrams/mi-feed-and-reports-consumption.html">MI Feed & Reports</a></li>
+<li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="to-be-nji-open-items">
+<summary>To-be — NJI Open Items</summary>
+<ul>
+<li><a href="./architecture/gaps.html">Gaps</a></li>
+<li><a href="./architecture/assumptions.html">Assumptions</a></li>
+<li><a href="./architecture/changelog.html">Changelog</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-readiness" data-current="true" open>
+<summary>Implementation Readiness</summary>
+<ul>
+<li><a href="./implementation-readiness-report-2026-05-15-rev2.html" class="current">Report — 2026-05-15 rev2 (current, post-D10)</a></li>
+<li><a href="./sprint-change-proposal-2026-05-15.html">Sprint Change Proposal — 2026-05-15</a></li>
+<li><a href="./implementation-readiness-report-2026-05-15.html">Report — 2026-05-15 rev1 (superseded by rev2)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-06.html">Report — 2026-05-06 (historical)</a></li>
+<li><a href="./implementation-readiness-report-2026-05-05.html">Report — 2026-05-05 (historical)</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-epics-foundations">
+<summary>Implementation — Epics (Foundations)</summary>
+<ul>
+<li><a href="./epics/index.html">Epics index</a></li>
+<li><a href="./epics/requirements-inventory.html">Requirements inventory</a></li>
+<li><a href="./epics/framework.html">Phase × Area framework</a></li>
+<li><a href="./epics/fr-coverage-map.html">FR coverage map</a></li>
+</ul>
+</details>
+<details class="nav-group" data-group="implementation-phase-0">
+<summary>Implementation — Phase 0 ✓</summary>
+<ul>
+<li><a href="./epics/phase-0/index.html">Phase 0 overview</a></li>
+<li><a href="./epics/phase-0/epic-0.1-user-authenticates.html">Epic 0.1 — User authenticates (5 stories)</a></li>
+<li><a href="./epics/phase-0/epic-0.2-admin-manages-ref-data.html">Epic 0.2 — Ref Data SQL-loaded (3 stories)</a></li>
+<li><a href="./epics/phase-0/epic-0.3-admin-manages-users-roles.html">Epic 0.3 — Users/Roles SQL-loaded (1 story)</a></li>
+<li><a href="./epics/phase-0/epic-0.4-system-dispatches-emails.html">Epic 0.4 — Notification scaffolded (2 stories)</a></li>
+<li><a href="./epics/phase-0/validation-report-2026-05-15.html">Phase 0 Validation Report (2026-05-15)</a></li>
+</ul>
+</details></aside>
+<main class="content">
+<div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
+<h1 id="implementation-readiness-assessment-report--2026-05-15-revision-2-post-d10">Implementation Readiness Assessment Report — 2026-05-15 (revision 2, post-D10)</h1>
+<p><strong>Date:</strong> 2026-05-15 <strong>Project:</strong> ji-analysis (NJI rebuild) <strong>Trigger for this re-run:</strong> Formal PRD update via <code>bmad-correct-course</code> added D10 (admin UI removed from MVP; <code>gh</code> CLI not available) and added AR51 (manual GitHub setup). All four Phase 0 epics + the PRD + the requirements inventory were modified earlier today. This report validates that the changes are internally consistent across PRD, architecture-derived requirements, and Phase 0 stories.</p>
+<details class="section" id="1-document-inventory"><summary><span class="section-title">1. Document Inventory</span></summary><div class="section-body">
+<table>
+<thead>
+<tr>
+<th>Artefact</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prd.md</code> (72 KB → <strong>78 KB</strong>)</td>
+<td>Modified today: added D10 + amended FR4 / FR6 / FR56 / FR58 + grew the MVP-exclusions list + grew Growth Features section + D9 amended to reference D10</td>
+</tr>
+<tr>
+<td><code>architecture.md</code> + <code>architecture/</code> folder</td>
+<td>Unchanged (architecture's two-UI-repo split + per-service DB roles + manual UAT pattern already documented; no architectural changes triggered by D10)</td>
+</tr>
+<tr>
+<td><code>architecture-summary.md</code></td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td><code>epics.md</code> (pointer)</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td><code>epics/index.md</code>, <code>framework.md</code>, <code>requirements-inventory.md</code>, <code>fr-coverage-map.md</code></td>
+<td><code>requirements-inventory.md</code> modified (added AR51, revised AR2); other files updated in prior turn; all current</td>
+</tr>
+<tr>
+<td><code>epics/phase-0/index.md</code></td>
+<td>Updated in prior turn (story counts 18→11, scope reduction notes)</td>
+</tr>
+<tr>
+<td><code>epics/phase-0/epic-0.1-user-authenticates.md</code></td>
+<td>Modified today (Story 0.1.1 first + third + fourth AC blocks rewritten for manual GitHub; Stories 0.1.2 + 0.1.4 first AC blocks updated)</td>
+</tr>
+<tr>
+<td><code>epics/phase-0/epic-0.2-admin-manages-ref-data.md</code></td>
+<td>Modified today (Story 0.2.1 first AC block updated)</td>
+</tr>
+<tr>
+<td><code>epics/phase-0/epic-0.3-admin-manages-users-roles.md</code></td>
+<td>Updated in prior turn (single SQL-ETL story)</td>
+</tr>
+<tr>
+<td><code>epics/phase-0/epic-0.4-system-dispatches-emails.md</code></td>
+<td>Modified today (Story 0.4.1 first AC block updated)</td>
+</tr>
+<tr>
+<td><code>epics/phase-0/validation-report-2026-05-15.md</code></td>
+<td>Updated in prior turn (revised scope verdict)</td>
+</tr>
+<tr>
+<td><code>sprint-change-proposal-2026-05-15.md</code></td>
+<td>New today — audit trail of the <code>bmad-correct-course</code> run</td>
+</tr>
+</tbody>
+</table>
+<p>UX still absent — accepted gap, now formally captured under D10 (admin UI post-MVP).</p>
+</div></details><details class="section" id="2-prd-analysis-post-d10-deltas"><summary><span class="section-title">2. PRD Analysis (post-D10 deltas)</span></summary><div class="section-body">
+<p>All 61 FRs and 42 NFRs unchanged in count. The post-D10 amendments are all wording / qualifier additions:</p>
+<ul>
+<li><strong>D10 added</strong> to the Decisions Log as the 10th locked decision.</li>
+<li><strong>D9 amended</strong> to defer to D10 on the "via SQL not via API" framing.</li>
+<li><strong>MVP scope bullet 3</strong> distinguishes business UI (in MVP via <code>nji-ui</code>) vs admin UI (post-MVP per D10).</li>
+<li><strong>MVP exclusions list</strong> added: admin UI (with the four modules itemised) + admin-write API endpoints.</li>
+<li><strong>Growth Features list</strong> added: admin UI as a first-class post-MVP deliverable.</li>
+<li><strong>FR4 / FR6 / FR56 / FR58</strong> each marked "(scoped 2026-05-15 per D10)" with explicit MVP-data-layer + post-MVP-UI-surface split.</li>
+<li><strong>Executive Summary Key characteristic 4</strong> rephrased: Phase 0 ETL loads via direct SQL INSERT (not via API); API-as-Product is exercised on Reference Data reads.</li>
+</ul>
+<p>Cross-references verified: D10 ↔︎ FR4/FR6/FR56/FR58, D10 ↔︎ MVP exclusions, D10 ↔︎ Growth Features. Self-consistent.</p>
+</div></details><details class="section" id="3-epic-coverage-validation"><summary><span class="section-title">3. Epic Coverage Validation</span></summary><div class="section-body">
+<p><strong>Phase 0 stories (post-revision):</strong> 11 stories across 4 epics.</p>
+<pre><code>Epic 0.1 (5): 0.1.1 0.1.2 0.1.3 0.1.4 0.1.5
+Epic 0.2 (3): 0.2.1 0.2.2 0.2.3
+Epic 0.3 (1): 0.3.1
+Epic 0.4 (2): 0.4.1 0.4.2</code></pre>
+<h3 id="phase-0-scope-fr-coverage-matrix-post-d10">Phase-0-scope FR coverage matrix (post-D10)</h3>
+<table>
+<thead>
+<tr>
+<th>FR</th>
+<th>Phase 0 stories covering it</th>
+<th>MVP coverage</th>
+<th>Post-MVP residual</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR1</td>
+<td>0.1.2, 0.1.5</td>
+<td>✅ full</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>FR2</td>
+<td>0.1.3, 0.1.5</td>
+<td>✅ full</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>FR3</td>
+<td>0.1.3, 0.1.5</td>
+<td>✅ full</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>FR4</strong></td>
+<td>0.3.1 (data layer via SQL ETL into <code>auth_users</code>/<code>auth_user_roles</code>/<code>auth_user_region_scopes</code>)</td>
+<td>✅ data layer (DBAs edit via SQL)</td>
+<td>UI surface for sysadmins (<code>nji-admin-ui</code> Users &amp; Roles module)</td>
+<td>✅ correctly scoped per D10 — NOT a coverage gap</td>
+</tr>
+<tr>
+<td>FR5</td>
+<td>—</td>
+<td>n/a (post-MVP per PRD v2.5)</td>
+<td>—</td>
+<td>✅ intentional deferral</td>
+</tr>
+<tr>
+<td><strong>FR6</strong></td>
+<td>0.2.2 (read API), 0.2.3 (SQL ETL load + git sign-off)</td>
+<td>✅ read API + data layer + git-based sign-off</td>
+<td>RSU UI for view/edit/create + UI sign-off workflow</td>
+<td>✅ correctly scoped per D10 — NOT a coverage gap</td>
+</tr>
+<tr>
+<td>FR7</td>
+<td>0.2.1, 0.2.2</td>
+<td>✅ full</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>FR8</td>
+<td>0.1.1</td>
+<td>✅ full</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>FR9</td>
+<td>0.4.1, 0.4.2</td>
+<td>✅ user-JWT propagation surface</td>
+<td><code>client_credentials</code> flow ships in Phase 6 (still MVP, just later)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>FR55</td>
+<td>0.1.5</td>
+<td>✅ full</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>FR56</strong></td>
+<td>0.1.4 (<code>nji-ui</code> scaffold), 0.1.5 (Home shell), 0.2.2 (consumes API)</td>
+<td>✅ business stack</td>
+<td><code>nji-admin-ui</code> admin stack post-MVP per D10</td>
+<td>✅ correctly scoped — NOT a coverage gap</td>
+</tr>
+<tr>
+<td>FR57</td>
+<td>0.2.3 (Ref Data ETL via SQL), 0.3.1 (Users/Roles ETL via SQL)</td>
+<td>✅ full (both ETL streams)</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>FR58</strong></td>
+<td>0.3.1 (initial flag state via ETL — all FALSE)</td>
+<td>✅ initial state set; cutover flips via DBA SQL per Phase 9+ runbook</td>
+<td>Activation toggle UI post-MVP per D10</td>
+<td>✅ correctly scoped — NOT a coverage gap</td>
+</tr>
+<tr>
+<td>FR59</td>
+<td>0.1.3, 0.2.2, 0.4.2</td>
+<td>✅ full (read-side API-as-Product)</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>FR60</td>
+<td>0.1.1 (Logback baseline), 0.2.1 (consumes pattern)</td>
+<td>✅ full</td>
+<td>—</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Phase-0-scope FR coverage: 14 / 14 in-scope FRs ✅</strong> (FR5 intentionally deferred pre-2026-05-15; FR4 / FR6 / FR56 / FR58 each delivered to the boundary correctly defined in D10).</p>
+<h3 id="non-phase-0-frs-out-of-this-readiness-check">Non-Phase-0 FRs (out of this readiness check)</h3>
+<p>FR10–FR54 + FR61 belong to Phases 1–9+ and are framework-only (no concrete stories yet). They'll be storied phase-by-phase as Phase 0 implementation progresses. Not a Phase 0 readiness concern.</p>
+<h3 id="coverage-statistics">Coverage statistics</h3>
+<ul>
+<li>Total PRD FRs: <strong>61</strong></li>
+<li>In scope for Phase 0 (post-D10): <strong>14</strong> (was 14; the count didn't change — only the depth at FR4/FR6/FR56/FR58 changed, and that depth correctly matches D10)</li>
+<li>Phase 0 stories covering the in-scope FRs: <strong>11 / 11</strong> (no orphan stories — every story maps to at least one FR)</li>
+<li>Coverage of in-scope FRs: <strong>100%</strong> within the D10-defined MVP boundary</li>
+<li>Post-MVP residuals: <strong>4 FRs</strong> (FR4 UI / FR6 UI / FR56 admin stack / FR58 toggle UI) — explicitly tracked in <code>epics/fr-coverage-map.md</code> post-MVP table and PRD Growth Features</li>
+</ul>
+<p><strong>No gaps within the D10-defined MVP boundary.</strong> The four FRs that previously appeared as "partial coverage with admin UI deferred" no longer appear as gaps because the PRD itself now scopes them to data-layer-MVP + UI-surface-post-MVP. The PRD and epics are aligned.</p>
+</div></details><details class="section" id="4-ux-alignment-assessment"><summary><span class="section-title">4. UX Alignment Assessment</span></summary><div class="section-body">
+<p>UX document still absent. Now formally <strong>PRD-blessed</strong>:</p>
+<ul>
+<li><strong>Business UI</strong> (<code>nji-ui</code>) — in MVP via D4 (modern stack replicates APEX), GOV.UK Design System, WCAG 2.2 AA per NFR17–NFR19. No UX doc; APEX is the behavioural reference.</li>
+<li><strong>Admin UI</strong> (<code>nji-admin-ui</code>) — post-MVP per D10. A UX design will be needed when the admin UI is scheduled. Out of MVP scope, no gap.</li>
+</ul>
+<p>Internal consistency PRD ↔︎ architecture ↔︎ epics on UI matters: ✅.</p>
+<p>Carry-forward note from the prior validation: the <em>deferral-model ambiguity</em> (Phase 0 UI Foundations vs UX deferred) is now <strong>resolved by D10</strong>. The business UI ships in MVP via FR55/FR56 with APEX-replica framing; admin UI is fully deferred. No remaining ambiguity.</p>
+</div></details><details class="section" id="5-epic-quality-review"><summary><span class="section-title">5. Epic Quality Review</span></summary><div class="section-body">
+<h3 id="story-sizing--dependency-check-all-11-stories">Story sizing + dependency check (all 11 stories)</h3>
+<table>
+<thead>
+<tr>
+<th>Story</th>
+<th>Size</th>
+<th>Forward dependencies?</th>
+<th>Gherkin ACs</th>
+<th>FRs/NFRs/ARs/Decisions referenced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1.1</td>
+<td>XL — canonical platform pattern</td>
+<td>None</td>
+<td>✅ 8 AC blocks (added 2 for manual-GitHub steps)</td>
+<td>✅ + D10 + AR51</td>
+</tr>
+<tr>
+<td>0.1.2</td>
+<td>M</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>0.1.3</td>
+<td>L</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>0.1.4</td>
+<td>L</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>0.1.5</td>
+<td>M (demo synthesis)</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>0.2.1</td>
+<td>M</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>0.2.2</td>
+<td>L (read-only enforcement via <code>405</code>)</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>0.2.3</td>
+<td>L (direct SQL ETL + git sign-off)</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>0.3.1</td>
+<td>L (consolidates ETL + decisions CSV + sign-off)</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>0.4.1</td>
+<td>M</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>0.4.2</td>
+<td>L (rejects <code>client_credentials</code> with <code>403</code>)</td>
+<td>None</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h3 id="architecture-compliance">Architecture compliance</h3>
+<ul>
+<li>✅ AR2 (revised 2026-05-15) — scaffold script handles only local + <code>git push</code>; consistent across all 5 scaffold stories</li>
+<li>✅ AR51 (new 2026-05-15) — manual GitHub setup constraint codified; runbook location specified; referenced by every scaffold story</li>
+<li>✅ Per-service Flyway pattern — unchanged</li>
+<li>✅ Direct-SQL ETL pattern (AR46–AR49) — Stories 0.2.3 and 0.3.1 follow the SQL <code>INSERT</code> framing per D10</li>
+</ul>
+<h3 id="findings-by-severity">Findings by severity</h3>
+<p><strong>🔴 Critical Violations:</strong> None.</p>
+<p><strong>🟠 Major Issues:</strong> None.</p>
+<p><strong>🟡 Minor Concerns:</strong></p>
+<ol type="1">
+<li><p><strong>AR46 / AR47 wording could be tightened</strong> — they still describe ETLs as "calls NJI APIs to load". D10 supersedes (load via direct SQL). The story ACs and AR2 already reflect D10; AR46/AR47 themselves are merely less-precise. <strong>Recommendation:</strong> add a <code>(amended by D10, 2026-05-15)</code> qualifier to AR46 and AR47 in <code>epics/requirements-inventory.md</code> for full internal consistency.</p></li>
+<li><p><strong><code>nji-architecture/runbooks/github-setup.md</code> doesn't exist yet</strong> — referenced from 5 stories + AR51. Story 0.1.1 owns it as a deliverable. As long as Story 0.1.1 is implemented first (and it should be — it's the canonical platform pattern), the runbook will exist before any other scaffold work. <strong>No action needed; just preserve story ordering.</strong></p></li>
+</ol>
+</div></details><details class="section" id="6-summary-and-recommendations"><summary><span class="section-title">6. Summary and Recommendations</span></summary><div class="section-body">
+<h3 id="overall-readiness-status">Overall Readiness Status</h3>
+<h1 id="green_circle-ready">🟢 READY</h1>
+<p>The 2026-05-15 PRD update (D10) successfully closes the gap that the previous readiness check flagged. PRD ↔︎ Phase 0 epics ↔︎ requirements inventory are now internally consistent. The four previously "partial coverage" FRs (FR4 / FR6 / FR56 / FR58) are now correctly scoped at the PRD level — data layer in MVP, UI surface post-MVP — and the Phase 0 stories cover the MVP portion completely.</p>
+<h3 id="whats-still-pending-not-blockers-just-sequencing">What's still pending (not blockers, just sequencing)</h3>
+<ol type="1">
+<li><strong>Phase 1–9+ stories</strong> — to be produced in follow-up <code>bmad-create-epics-and-stories</code> runs. Phase 0 stories are ready; subsequent phases will inherit the patterns established here (manual GitHub setup, direct-SQL ETLs, read-only APIs in MVP).</li>
+<li><strong>Minor wording tweaks to AR46 / AR47</strong> — non-blocking, but worth fixing in the next maintenance pass for full internal consistency. Should not delay Phase 0 implementation.</li>
+</ol>
+<h3 id="recommended-next-steps">Recommended Next Steps</h3>
+<ol type="1">
+<li><strong>Run <code>bmad-sprint-planning</code></strong> to produce the Phase 0 sprint plan. The 11 stories are ready; the sprint plan will sequence them and assign owners.</li>
+<li><strong>Implement Story 0.1.1 first</strong> — produces the canonical platform pattern AND the <code>nji-architecture/runbooks/github-setup.md</code> deliverable that the other scaffold stories depend on.</li>
+<li><strong>In parallel:</strong> the platform engineering team should provision the dev/staging/production Azure infrastructure (AKS, PostgreSQL Flexible Server, APIM, Application Insights, Key Vault, Static Web Apps) so Story 0.1.1's deploy ACs can pass.</li>
+<li><strong>After Phase 0 stories implementation begins:</strong> continue producing Phase 1+ stories via <code>bmad-create-epics-and-stories</code>.</li>
+</ol>
+<h3 id="comparison-with-prior-readiness-report">Comparison with prior readiness report</h3>
+<table>
+<thead>
+<tr>
+<th>Concern from prior readiness check (2026-05-15 rev 1)</th>
+<th>Status now</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Epics framework only, no stories yet</td>
+<td>✅ Resolved (Phase 0 storied; 11 stories with Gherkin ACs)</td>
+</tr>
+<tr>
+<td>UX deferral model not declared in epics.md</td>
+<td>✅ Resolved (D10 + Phase 0 index explicit)</td>
+</tr>
+<tr>
+<td>3 technical proto-epics need re-framing at story-design time</td>
+<td>✅ Resolved (vertical-slice stories with user-value framing in current epics)</td>
+</tr>
+<tr>
+<td>Cross-cutting NFRs lack explicit per-phase ACs</td>
+<td>✅ Resolved (NFR10/11/12/13/14/15/16/17–19/20/22/25–28/31/39/40/42 explicit in Story 0.1.1 + per-story ACs)</td>
+</tr>
+<tr>
+<td><strong>NEW: FR4 / FR6 / FR56 / FR58 PRD wording implied admin UI in MVP</strong></td>
+<td>✅ Resolved by D10 (PRD update via correct-course)</td>
+</tr>
+<tr>
+<td><strong>NEW: <code>gh</code> CLI assumed in scaffold stories</strong></td>
+<td>✅ Resolved (manual web-UI setup documented in Story 0.1.1 + AR51 + runbook deliverable)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="final-note">Final note</h3>
+<p>The PRD update via <code>bmad-correct-course</code> was the right intervention. Without it, FR4 / FR6 / FR56 / FR58 would have continued to read as "MVP requirements" while the epics deferred their UI surfaces — that mismatch is now closed. The implementation can proceed with confidence that PRD expectations match Phase 0 epic deliverables.</p>
+<hr />
+<p><strong>Report generated:</strong> 2026-05-15 (revision 2, post-D10) <strong>Assessor:</strong> Claude (bmad-check-implementation-readiness) <strong>Output file:</strong> <code>_bmad-output/planning-artifacts/implementation-readiness-report-2026-05-15-rev2.md</code> <strong>Supersedes:</strong> <code>implementation-readiness-report-2026-05-15.md</code> (rev 1, pre-D10)</p>
+</div></details>
+<p class="source-note">Source: <code>_bmad-output/planning-artifacts/implementation-readiness-report-2026-05-15-rev2.md</code></p>
+</main>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#1-document-inventory">1. Document Inventory</a></li><li><a href="#2-prd-analysis-post-d10-deltas">2. PRD Analysis (post-D10 deltas)</a></li><li><a href="#3-epic-coverage-validation">3. Epic Coverage Validation</a></li><li class="h3"><a href="#phase-0-scope-fr-coverage-matrix-post-d10">Phase-0-scope FR coverage matrix (post-D10)</a></li><li class="h3"><a href="#non-phase-0-frs-out-of-this-readiness-check">Non-Phase-0 FRs (out of this readiness check)</a></li><li class="h3"><a href="#coverage-statistics">Coverage statistics</a></li><li><a href="#4-ux-alignment-assessment">4. UX Alignment Assessment</a></li><li><a href="#5-epic-quality-review">5. Epic Quality Review</a></li><li class="h3"><a href="#story-sizing--dependency-check-all-11-stories">Story sizing + dependency check (all 11 stories)</a></li><li class="h3"><a href="#architecture-compliance">Architecture compliance</a></li><li class="h3"><a href="#findings-by-severity">Findings by severity</a></li><li><a href="#6-summary-and-recommendations">6. Summary and Recommendations</a></li><li class="h3"><a href="#overall-readiness-status">Overall Readiness Status</a></li><li class="h3"><a href="#whats-still-pending-not-blockers-just-sequencing">What's still pending (not blockers, just sequencing)</a></li><li class="h3"><a href="#recommended-next-steps">Recommended Next Steps</a></li><li class="h3"><a href="#comparison-with-prior-readiness-report">Comparison with prior readiness report</a></li><li class="h3"><a href="#final-note">Final note</a></li></ul></aside>
+<script>
+(function(){
+  // 1. Sidebar accordion: persist user's group open/close preference per group.
+  //    The current page's group is always open on load (regardless of stored state).
+  document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){
+    var key = 'nav-group-' + d.dataset.group;
+    if (d.dataset.current !== 'true') {
+      var stored = localStorage.getItem(key);
+      if (stored === 'open') d.open = true;
+      else if (stored === 'closed') d.open = false;
+    }
+    d.addEventListener('toggle', function(){
+      localStorage.setItem(key, d.open ? 'open' : 'closed');
+    });
+  });
+
+  // 2. Expand all / Collapse all (sidebar)
+  document.querySelectorAll('button[data-nav-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.navAction === 'expand';
+      document.querySelectorAll('aside.nav details.nav-group').forEach(function(d){ d.open = open; });
+    });
+  });
+
+  // 3. When a fragment link points to a heading inside a collapsed <details>,
+  //    open all ancestor <details> elements so the target is visible.
+  function openAncestors(id){
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    var cur = el.parentElement;
+    while (cur) {
+      if (cur.tagName === 'DETAILS') cur.open = true;
+      cur = cur.parentElement;
+    }
+    setTimeout(function(){
+      try { el.scrollIntoView({block: 'start', behavior: 'smooth'}); } catch (e) {}
+    }, 60);
+  }
+  if (window.location.hash) {
+    openAncestors(window.location.hash.slice(1));
+  }
+  window.addEventListener('hashchange', function(){
+    openAncestors(window.location.hash.slice(1));
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.length < 2) return;
+    setTimeout(function(){ openAncestors(href.slice(1)); }, 10);
+  });
+
+  // 4. Expand all / Collapse all (content sections)
+  document.querySelectorAll('button[data-section-action]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.dataset.sectionAction === 'expand';
+      document.querySelectorAll('main.content details.section').forEach(function(d){ d.open = open; });
+    });
+  });
+})();
+</script>
+</body>
+</html>
