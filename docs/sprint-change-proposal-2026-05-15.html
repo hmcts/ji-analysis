@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sprint Change Proposal — 2026-05-15 — NJI Documentation</title>
+<title>Sprint Change Proposal — 2026-05-15 — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="./index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="./prd.html">PRD (NJI)</a></li>
+<li><a href="./prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="./architecture.html">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
@@ -191,7 +191,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="section" id="1-issue-summary"><summary><span class="section-title">1. Issue Summary</span></summary><div class="section-body">
 <p>Two product-direction decisions taken on <strong>2026-05-15</strong> require propagation into the PRD, the Phase 0 epics, and supporting reference documents:</p>
 <h3 id="trigger-a--admin-ui-removed-from-mvp">Trigger A — Admin UI removed from MVP</h3>
-<p>The product team has decided that <strong><code>nji-admin-ui</code></strong> — the entire admin-facing SPA, including its Reference Data maintenance, Users &amp; Roles admin, Migration Reports, and Activation Toggle modules — is <strong>not in scope for MVP</strong> and moves to the post-MVP roadmap. Admin-write API endpoints on <code>nji-reference-data</code> and <code>nji-authorisation</code> likewise move post-MVP. The data layer remains in MVP: reference data and users are loaded via direct-SQL ETLs; ongoing operational maintenance is performed by DBAs via direct SQL per runbooks; named-owner sign-off happens via versioned git commits.</p>
+<p>The product team has decided that <strong><code>ram-admin-ui</code></strong> — the entire admin-facing SPA, including its Reference Data maintenance, Users &amp; Roles admin, Migration Reports, and Activation Toggle modules — is <strong>not in scope for MVP</strong> and moves to the post-MVP roadmap. Admin-write API endpoints on <code>ram-reference-data</code> and <code>ram-authorisation</code> likewise move post-MVP. The data layer remains in MVP: reference data and users are loaded via direct-SQL ETLs; ongoing operational maintenance is performed by DBAs via direct SQL per runbooks; named-owner sign-off happens via versioned git commits.</p>
 <p><strong>Evidence:</strong> product-direction decision recorded 2026-05-15 in a prior conversation turn; phase-0 epic stories were already restructured to remove admin UI stories (5 stories cut, 1 moved, count went 18 → 11). PRD and the Decisions Log had not yet been formally updated.</p>
 <h3 id="trigger-b--gh-cli-not-available-in-the-engineering-environment">Trigger B — <code>gh</code> CLI not available in the engineering environment</h3>
 <p>The engineering environment does not have the GitHub CLI (<code>gh</code>) available. All GitHub admin operations (private repo creation, branch protection on <code>main</code>, team / CODEOWNERS access, PR open / review / merge) must be performed <strong>manually via the GitHub web UI</strong>. Story 0.1.1 previously specified <code>gh CLI configured</code> as a precondition; that and the implicit "scaffold script creates the GitHub repo" assumption are no longer valid.</p>
@@ -208,7 +208,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tbody>
 <tr>
 <td>Phase 0 Epic 0.1 (user authenticates)</td>
-<td>Story 0.1.1 first AC block rewritten (manual GitHub setup runbook + plain <code>git push</code>); Story 0.1.1 third AC block clarifies manual PR open via web UI; Story 0.1.2 scaffold-mock-auth precondition + Story 0.1.4 scaffold-<code>nji-ui</code> precondition updated. Story 0.1.3 already reflects read-only API surface from prior turn.</td>
+<td>Story 0.1.1 first AC block rewritten (manual GitHub setup runbook + plain <code>git push</code>); Story 0.1.1 third AC block clarifies manual PR open via web UI; Story 0.1.2 scaffold-mock-auth precondition + Story 0.1.4 scaffold-<code>ram-ui</code> precondition updated. Story 0.1.3 already reflects read-only API surface from prior turn.</td>
 </tr>
 <tr>
 <td>Phase 0 Epic 0.2 (Ref Data)</td>
@@ -241,7 +241,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td><strong>PRD</strong></td>
 <td>FR4 / FR6 / FR56 / FR58 wording implied admin UI in MVP. MVP scope section listed "Modern UI for all 11 user roles" without distinguishing business vs admin. Explicit MVP exclusions list did not mention admin UI. Decisions Log lacked the 2026-05-15 decision.</td>
-<td>FR4, FR6, FR56, FR58 wording amended with "(scoped 2026-05-15 per D10)" clarifiers. MVP scope tweaked to distinguish business UI (in) vs admin UI (out). Admin UI items added to "Explicit exclusions from MVP". Growth Features section enriched with <code>nji-admin-ui</code> deliverables. <strong>New D10 decision added to the Decisions Log</strong> capturing both Trigger A and Trigger B. D9 wording amended to reference D10 (load via SQL, not via API). Phase 0 "platform smoke-test" characteristic updated. Document Map line updated D1–D9 → D1–D10.</td>
+<td>FR4, FR6, FR56, FR58 wording amended with "(scoped 2026-05-15 per D10)" clarifiers. MVP scope tweaked to distinguish business UI (in) vs admin UI (out). Admin UI items added to "Explicit exclusions from MVP". Growth Features section enriched with <code>ram-admin-ui</code> deliverables. <strong>New D10 decision added to the Decisions Log</strong> capturing both Trigger A and Trigger B. D9 wording amended to reference D10 (load via SQL, not via API). Phase 0 "platform smoke-test" characteristic updated. Document Map line updated D1–D9 → D1–D10.</td>
 </tr>
 <tr>
 <td><strong>Architecture-derived requirements (AR list)</strong></td>
@@ -251,7 +251,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td><strong>Phase 0 epic stories</strong></td>
 <td>Story 0.1.1, 0.1.2, 0.1.4, 0.2.1, 0.4.1 implicitly relied on <code>gh</code> CLI.</td>
-<td>All five scaffold-precondition AC blocks updated with explicit manual web-UI setup steps + reference to <code>nji-architecture/runbooks/github-setup.md</code>.</td>
+<td>All five scaffold-precondition AC blocks updated with explicit manual web-UI setup steps + reference to <code>ram-architecture/runbooks/github-setup.md</code>.</td>
 </tr>
 <tr>
 <td><strong>FR coverage map</strong></td>
@@ -275,8 +275,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>Branch protection setup</strong> — manual via Settings → Branches on GitHub web UI (per repo)</li>
 <li><strong>CODEOWNERS, PULL_REQUEST_TEMPLATE.md</strong> — still committed via git as usual; no special tooling needed (just files in the repo)</li>
 <li><strong>PR open / review / merge</strong> — manual web UI; no <code>gh</code> CLI invocations</li>
-<li><strong><code>nji-scaffold.sh</code></strong> — script implementation simplifies (no <code>gh repo create</code>, no <code>gh api</code> calls for branch protection); plain <code>git init</code> + <code>git remote add</code> + <code>git push</code> only</li>
-<li><strong><code>nji-architecture/runbooks/github-setup.md</code></strong> — new artefact, owned by Story 0.1.1; documents the canonical "before you scaffold" checklist</li>
+<li><strong><code>ram-scaffold.sh</code></strong> — script implementation simplifies (no <code>gh repo create</code>, no <code>gh api</code> calls for branch protection); plain <code>git init</code> + <code>git remote add</code> + <code>git push</code> only</li>
+<li><strong><code>ram-architecture/runbooks/github-setup.md</code></strong> — new artefact, owned by Story 0.1.1; documents the canonical "before you scaffold" checklist</li>
 </ul>
 </div></details><details class="section" id="3-recommended-approach"><summary><span class="section-title">3. Recommended Approach</span></summary><div class="section-body">
 <p><strong>Direct Adjustment.</strong> Both triggers can be addressed by amending existing PRD wording + adding a single new decision (D10) + a single new AR (AR51) + targeted scaffold-AC tweaks. No epic reordering, no rollback, no MVP redefinition beyond what was already storied.</p>
@@ -289,30 +289,30 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <h3 id="41-prd-edits">4.1 PRD edits</h3>
 <p><strong>Document Map</strong> — D1–D9 → D1–D10.</p>
 <p><strong>Executive Summary § Key characteristic 4 (Phase 0 platform smoke-test)</strong> — reword: "via the Reference Data and Authorisation APIs" → "via direct SQL INSERT per D10"; reword API-as-Product exercise from "Reference Data writes" to "Reference Data read endpoints".</p>
-<p><strong>MVP — Minimum Viable Product</strong> bullet 3 — "Modern UI for all 11 user roles replicating APEX layouts (D4)" → "Modern <strong>business-user UI</strong> for all 11 judicial/operational roles replicating APEX layouts (D4) … through <code>nji-ui</code>. Admin UI (<code>nji-admin-ui</code>) is NOT in MVP per D10 (2026-05-15 scope decision); admin tasks in MVP — reference-data maintenance, user/role/scope updates, activation toggles, migration-report review — happen via direct SQL by DBAs per operational runbooks."</p>
+<p><strong>MVP — Minimum Viable Product</strong> bullet 3 — "Modern UI for all 11 user roles replicating APEX layouts (D4)" → "Modern <strong>business-user UI</strong> for all 11 judicial/operational roles replicating APEX layouts (D4) … through <code>ram-ui</code>. Admin UI (<code>ram-admin-ui</code>) is NOT in MVP per D10 (2026-05-15 scope decision); admin tasks in MVP — reference-data maintenance, user/role/scope updates, activation toggles, migration-report review — happen via direct SQL by DBAs per operational runbooks."</p>
 <p><strong>MVP § Explicit exclusions</strong> — added admin UI + admin-write API endpoints to the exclusion list, with the four MVP-deferred admin-UI modules itemised.</p>
-<p><strong>Growth Features (Post-MVP)</strong> — added <code>nji-admin-ui</code> + admin-write API endpoints as the first bullet (with the four MVP-deferred modules itemised) to make the post-MVP commitment explicit.</p>
+<p><strong>Growth Features (Post-MVP)</strong> — added <code>ram-admin-ui</code> + admin-write API endpoints as the first bullet (with the four MVP-deferred modules itemised) to make the post-MVP commitment explicit.</p>
 <p><strong>FR4 / FR6 / FR56 / FR58</strong> — each amended with "(scoped 2026-05-15 per D10)" qualifier, stating: data layer in MVP, UI surface post-MVP, and pointing to Growth Features for the UI commitment.</p>
-<p><strong>Decisions Log D9</strong> — amended to note D10 supersedes its "load via the NJI Authorisation API" wording.</p>
+<p><strong>Decisions Log D9</strong> — amended to note D10 supersedes its "load via the RAM Pathfinder Authorisation API" wording.</p>
 <p><strong>Decisions Log D10 (new)</strong> — captures both Trigger A (admin UI → post-MVP) and Trigger B (no <code>gh</code> CLI); references the revised Phase 0 epic plan.</p>
 <h3 id="42-architecture-derived-requirements-edits">4.2 Architecture-derived requirements edits</h3>
-<p><strong>AR2</strong> — added 2026-05-15 revision note: <code>gh</code> CLI not available; scaffold script handles only local scaffolding + <code>git push</code>; GitHub admin operations are manual web-UI work per <code>nji-architecture/runbooks/github-setup.md</code>.</p>
+<p><strong>AR2</strong> — added 2026-05-15 revision note: <code>gh</code> CLI not available; scaffold script handles only local scaffolding + <code>git push</code>; GitHub admin operations are manual web-UI work per <code>ram-architecture/runbooks/github-setup.md</code>.</p>
 <p><strong>AR51 (new)</strong> — codifies the manual GitHub setup constraint as a non-negotiable environment constraint; declares the runbook location; explicitly notes that PRs are opened / reviewed / merged via the web UI.</p>
 <h3 id="43-story-edits-phase-0">4.3 Story edits (Phase 0)</h3>
-<p><strong>Story 0.1.1 (Scaffold <code>nji-authorisation</code>)</strong> — first AC block rewritten:</p>
+<p><strong>Story 0.1.1 (Scaffold <code>ram-authorisation</code>)</strong> — first AC block rewritten:</p>
 <ul>
 <li>Removed <code>gh CLI configured</code> from "Given" environment</li>
 <li>Added a leading precondition AC about the engineer manually creating the empty GitHub repo + enabling branch protection + the runbook reference</li>
 <li>Rewrote the corresponding "Then" line — scaffold script scaffolds locally and pushes via plain <code>git</code>; the GitHub repo exists already</li>
 <li>Third AC block (PR + CI) updated to specify "opens a PR via the GitHub web UI"</li>
 <li>Fourth AC block (PR merged) updated to specify "merged via the GitHub web UI"</li>
-<li>Vertical-slice description updated to list the new <code>nji-architecture/runbooks/github-setup.md</code> runbook as a Phase 0 deliverable</li>
+<li>Vertical-slice description updated to list the new <code>ram-architecture/runbooks/github-setup.md</code> runbook as a Phase 0 deliverable</li>
 <li>References line updated to include D10 + the runbook reference</li>
 </ul>
-<p><strong>Story 0.1.2 (Scaffold <code>nji-mock-auth</code>)</strong> — first AC block updated to require manual pre-creation of the GitHub repo per the runbook.</p>
-<p><strong>Story 0.1.4 (Scaffold <code>nji-ui</code>)</strong> — first AC block updated to require manual pre-creation of the GitHub repo per the runbook + plain <code>git push</code>.</p>
-<p><strong>Story 0.2.1 (Scaffold <code>nji-reference-data</code>)</strong> — first AC block updated to require manual pre-creation per the runbook.</p>
-<p><strong>Story 0.4.1 (Scaffold <code>nji-notification</code>)</strong> — first AC block updated to require manual pre-creation per the runbook.</p>
+<p><strong>Story 0.1.2 (Scaffold <code>ram-mock-auth</code>)</strong> — first AC block updated to require manual pre-creation of the GitHub repo per the runbook.</p>
+<p><strong>Story 0.1.4 (Scaffold <code>ram-ui</code>)</strong> — first AC block updated to require manual pre-creation of the GitHub repo per the runbook + plain <code>git push</code>.</p>
+<p><strong>Story 0.2.1 (Scaffold <code>ram-reference-data</code>)</strong> — first AC block updated to require manual pre-creation per the runbook.</p>
+<p><strong>Story 0.4.1 (Scaffold <code>ram-notification</code>)</strong> — first AC block updated to require manual pre-creation per the runbook.</p>
 </div></details><details class="section" id="5-implementation-handoff"><summary><span class="section-title">5. Implementation Handoff</span></summary><div class="section-body">
 <p><strong>Scope:</strong> Moderate (PRD + architecture-derived requirements + 5 stories — all reflect existing product decisions, not new design work).</p>
 <p><strong>Routed to:</strong></p>
@@ -323,7 +323,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </ol>
 <p><strong>Success criteria:</strong></p>
 <ul>
-<li>Story 0.1.1's GitHub-setup runbook artefact exists at <code>nji-architecture/runbooks/github-setup.md</code></li>
+<li>Story 0.1.1's GitHub-setup runbook artefact exists at <code>ram-architecture/runbooks/github-setup.md</code></li>
 <li>No Phase 0 story AC mentions <code>gh</code> CLI or assumes scripted GitHub repo creation</li>
 <li>PRD Decisions Log includes D10 and references it from FR4/FR6/FR56/FR58</li>
 <li>The <code>epics/fr-coverage-map.md</code> post-MVP roadmap matches the PRD's Growth Features section</li>

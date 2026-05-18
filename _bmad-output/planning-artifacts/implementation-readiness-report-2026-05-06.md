@@ -1,7 +1,7 @@
 ---
 stepsCompleted: ['step-01-document-discovery', 'step-02-prd-analysis', 'step-03-epic-coverage-validation', 'step-04-ux-alignment', 'step-05-epic-quality-review', 'step-06-final-assessment']
 projectName: 'ji-analysis'
-productCodename: 'NJI'
+productCodename: 'RAM Pathfinder'
 inputDocuments:
   - '_bmad-output/planning-artifacts/prd.md'
   - '_bmad-output/planning-artifacts/architecture.md'
@@ -16,7 +16,7 @@ supersedes: 'implementation-readiness-report-2026-05-05.md'
 # Implementation Readiness Assessment Report (Re-run)
 
 **Date:** 2026-05-06
-**Project:** ji-analysis (NJI — New JI)
+**Project:** ji-analysis (RAM Pathfinder — RAM Pathfinder)
 **Supersedes:** the 2026-05-05 readiness report
 
 ## What changed since the previous run
@@ -102,7 +102,7 @@ The Architecture document resolves the 7 architecture-phase TBDs from the PRD:
 |---|---|---|
 | Rate limit policy | TBD | Azure API Management at ingress; 100 req/sec/principal default; 10 req/sec/principal for MI Feed; 200 req/sec burst |
 | UI framework family | TBD | React + TypeScript + GOV.UK Design System + Vite |
-| Service-to-service auth | Resolved v2.6 (2026-05-07) | **Two patterns at MVP**: (1) **JWT propagation** for user-initiated flows — outbound calls forward the inbound user JWT; (2) **Service-principal OAuth `client_credentials`** for the **payment-processing batch** (`nji-payment-batch`) which has no upstream user — non-prod via `nji-mock-auth` (`mock_oauth_clients`), production issuer per `gaps.md` G7.1 (default recommendation: Azure Workload Identity). No mTLS at MVP. *(v2.5 had narrowed this to JWT propagation only; v2.6 widened it again to support the batch.)* |
+| Service-to-service auth | Resolved v2.6 (2026-05-07) | **Two patterns at MVP**: (1) **JWT propagation** for user-initiated flows — outbound calls forward the inbound user JWT; (2) **Service-principal OAuth `client_credentials`** for the **payment-processing batch** (`ram-payment-batch`) which has no upstream user — non-prod via `ram-mock-auth` (`mock_oauth_clients`), production issuer per `gaps.md` G7.1 (default recommendation: Azure Workload Identity). No mTLS at MVP. *(v2.5 had narrowed this to JWT propagation only; v2.6 widened it again to support the batch.)* |
 | Log retention | TBD | 30 days hot in App Insights; 90 days cold in Log Analytics archive |
 | API versioning specifics | TBD | URI prefix major versioning (`/v1/`); 6-month internal / 12-month external deprecation; `Deprecation` header per [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745); `Sunset` header per [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) |
 | Historical-data access | TBD | Read-only APEX bridge for 12 months post-region-cutover; one-shot extract thereafter |
@@ -114,14 +114,14 @@ The Architecture's Step 7 validation table maps every PRD FR capability area to 
 
 | FR group | Architectural support |
 |---|---|
-| Identity & Authorisation (FR1–FR5) | Authorisation service + per-service custom JWTFilter (HMCTS template pattern) + OIDC integration for human users (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + JWT propagation interceptor on outbound HTTP clients for user-initiated flows + OAuth `client_credentials` (via `nji-mock-auth`) for the payment batch service principal (`nji-payment-batch`) per v2.6. FR5 (full programmatic service-account directory) remains post-MVP. |
-| Foundational Data Management (FR6–FR9) | Reference Data and Notification services; direct SQL access to Reference Data tables (no caching at MVP per Principle 2). Configuration: per-service Spring profiles + Key Vault; shared `configuration_values` infrastructure table (no API) for cross-service policy values, schema-managed by `nji-architecture` Flyway baseline. *(Revised v2.2, 2026-05-07.)* |
+| Identity & Authorisation (FR1–FR5) | Authorisation service + per-service custom JWTFilter (HMCTS template pattern) + OIDC integration for human users (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + JWT propagation interceptor on outbound HTTP clients for user-initiated flows + OAuth `client_credentials` (via `ram-mock-auth`) for the payment batch service principal (`ram-payment-batch`) per v2.6. FR5 (full programmatic service-account directory) remains post-MVP. |
+| Foundational Data Management (FR6–FR9) | Reference Data and Notification services; direct SQL access to Reference Data tables (no caching at MVP per Principle 2). Configuration: per-service Spring profiles + Key Vault; shared `configuration_values` infrastructure table (no API) for cross-service policy values, schema-managed by `ram-architecture` Flyway baseline. *(Revised v2.2, 2026-05-07.)* |
 | Judge Records & Working Patterns (FR10–FR18) | Judge service (Phase 1); working-pattern engine owned by Judge |
 | Absence Workflow (FR19–FR22) | Absence service (Phase 2); approval workflow with auto-vacancy creation per R4 |
 | Vacancy & Cover (FR23–FR28) | Vacancy service (Phase 3); `markFilled` direct DB UPDATE (per Principle 1 simple-cross-service-write rule) |
 | Booking Management (FR29–FR34) | Booking service (Phase 4); idempotency-key handling for retryable creates |
 | Sitting Management (FR35–FR40) | Sitting service (Phase 5); generated from Judge working patterns |
-| Payment & Reconciliation (FR41–FR47) | Payment service (Phase 6) — **scheduled batch** (`nji-payment-batch`) authenticates as a service principal via OAuth `client_credentials`, picks up confirmed-but-unpaid bookings/sittings, generates the JFEPS-shaped Excel, dispatches it to the Payment Authoriser via Notification → HMCTS Email; reconciliation marked manually by RSU at MVP (per v2.6 reframing — FR41–45 are batch-driven, not user-initiated). See `architecture/sequence-diagrams/payment-batch-flow.md`. |
+| Payment & Reconciliation (FR41–FR47) | Payment service (Phase 6) — **scheduled batch** (`ram-payment-batch`) authenticates as a service principal via OAuth `client_credentials`, picks up confirmed-but-unpaid bookings/sittings, generates the JFEPS-shaped Excel, dispatches it to the Payment Authoriser via Notification → HMCTS Email; reconciliation marked manually by RSU at MVP (per v2.6 reframing — FR41–45 are batch-driven, not user-initiated). See `architecture/sequence-diagrams/payment-batch-flow.md`. |
 | Itineraries & Reporting (FR48–FR54) | Itinerary + MI Feed services (Phases 7–8); SQL JOINs across schemas (replaces Strategy A) |
 | Platform Operations & Migration (FR55–FR61) | Per-service implementations (HMCTS Crime SpringBoot template scaffolding) + Phase 0 migration via Flyway |
 
@@ -136,7 +136,7 @@ The Architecture's Step 7 validation table maps every PRD FR capability area to 
 | Observability (NFR25–NFR29) | Logstash JSON logs + OpenTelemetry → Application Insights; correlation-ID MDC; Spring Actuator probes |
 | Data Privacy & Sovereignty (NFR30–NFR33) | Azure UK regions only; PostgreSQL Flexible Server in UK South; case-level data forbidden by schema; FOI scope by contract |
 | Reliability & Availability (NFR34–NFR38) | Operational hours availability; per-wave rollback via region activation flag (FR58); region-isolated AKS clusters; PostgreSQL HA configuration |
-| Maintainability (NFR39–NFR42) | API-as-Product standards (versioned, OpenAPI spec, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details, [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) `Deprecation` + [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) `Sunset` for deprecation signalling); per-service deployment unit; **manual UAT scripts per domain service** (FR61 / NFR41 revised 2026-05-06 — APEX-experienced users compare NJI vs APEX side-by-side, sign-off per role per region as wave-cutover gate); Postman collections per phase. *(There is no automated APEX-comparison test suite — automated CI tests are unit, integration with Testcontainers, and contract tests only.)* |
+| Maintainability (NFR39–NFR42) | API-as-Product standards (versioned, OpenAPI spec, [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details, [RFC 9745](https://datatracker.ietf.org/doc/html/rfc9745) `Deprecation` + [RFC 8594](https://datatracker.ietf.org/doc/html/rfc8594) `Sunset` for deprecation signalling); per-service deployment unit; **manual UAT scripts per domain service** (FR61 / NFR41 revised 2026-05-06 — APEX-experienced users compare RAM Pathfinder vs APEX side-by-side, sign-off per role per region as wave-cutover gate); Postman collections per phase. *(There is no automated APEX-comparison test suite — automated CI tests are unit, integration with Testcontainers, and contract tests only.)* |
 
 **All 61 FRs and 42 NFRs have explicit architectural support.** None unaddressed.
 
@@ -152,8 +152,8 @@ Two principles formalised in the Architecture that shape downstream work:
 The Architecture's Step 7 surfaces 27 gaps across 6 categories (G1–G6), each with mitigation, fallback, and named owner. None are critical (none block implementation). Most pertinent to this readiness assessment:
 
 - **G1.4** confirmed via HMCTS Crime template review (2026-05-06) — Java 25, Spring Boot 4.0.6, Gradle Groovy DSL, Flyway, OpenTelemetry, Logstash, JWTFilter, Lombok, MapStruct, OWASP encoder, JaCoCo, CycloneDX, Swagger Core all present.
-- **G1.4a** Helm chart not in template baseline; NJI scaffolding script must add.
-- **G1.4b** Spring Cloud Azure Key Vault not in template baseline; NJI scaffolding script must add.
+- **G1.4a** Helm chart not in template baseline; RAM Pathfinder scaffolding script must add.
+- **G1.4b** Spring Cloud Azure Key Vault not in template baseline; RAM Pathfinder scaffolding script must add.
 - **G6.1–G6.5** Shared-DB topology risks (schema-evolution coordination, single-DB blast radius, cross-region rollout, DB role grant maintenance, Flyway migration versioning across schema boundaries).
 
 ### Architecture's documented assumptions (carry forward)
@@ -216,17 +216,17 @@ The candidate-epic mapping is now better-grounded thanks to the Architecture. Wh
 
 | Candidate epic | Maps to | Phase | Architecture support |
 |---|---|---|---|
-| Identity & Authorisation (incl. Phase 0 user/role migration) | FR1–FR5, FR57, FR58 | Phase 0 | `nji-authorisation` repo + per-service `JWTFilter` + `nji-mock-auth` repo |
-| Reference Data + Notification + shared `configuration_values` table | FR6–FR9 | Phase 0 | `nji-reference-data`, `nji-notification` repos + shared infrastructure table managed by `nji-architecture` Flyway baseline (no separate configuration service per arch v2.2) |
-| API Platform + Deployment + Logging | FR59, FR60, NFR25–NFR28, NFR39, NFR40 | Phase 0 | NJI scaffolding script + per-service Helm + OpenTelemetry config |
-| Judge Records & Working Patterns | FR10–FR18 | Phase 1 | `nji-judge` repo |
-| Absence Workflow | FR19–FR22 | Phase 2 | `nji-absence` repo |
-| Vacancy & Cover | FR23–FR28 | Phase 3 | `nji-vacancy` repo |
-| Booking Management | FR29–FR34 | Phase 4 | `nji-booking` repo |
-| Sitting Management | FR35–FR40 | Phase 5 | `nji-sitting` repo |
-| Payment & Reconciliation | FR41–FR47 | Phase 6 | `nji-payment` repo |
-| Itineraries (Court, Judge, Forward Look) | FR48–FR52 | Phase 7 | `nji-itinerary` repo with SQL-based read model |
-| Reports + MI Feed | FR53, FR54 | Phase 8 | `nji-mi-feed` repo with SQL-based read model |
+| Identity & Authorisation (incl. Phase 0 user/role migration) | FR1–FR5, FR57, FR58 | Phase 0 | `ram-authorisation` repo + per-service `JWTFilter` + `ram-mock-auth` repo |
+| Reference Data + Notification + shared `configuration_values` table | FR6–FR9 | Phase 0 | `ram-reference-data`, `ram-notification` repos + shared infrastructure table managed by `ram-architecture` Flyway baseline (no separate configuration service per arch v2.2) |
+| API Platform + Deployment + Logging | FR59, FR60, NFR25–NFR28, NFR39, NFR40 | Phase 0 | RAM Pathfinder scaffolding script + per-service Helm + OpenTelemetry config |
+| Judge Records & Working Patterns | FR10–FR18 | Phase 1 | `ram-judge` repo |
+| Absence Workflow | FR19–FR22 | Phase 2 | `ram-absence` repo |
+| Vacancy & Cover | FR23–FR28 | Phase 3 | `ram-vacancy` repo |
+| Booking Management | FR29–FR34 | Phase 4 | `ram-booking` repo |
+| Sitting Management | FR35–FR40 | Phase 5 | `ram-sitting` repo |
+| Payment & Reconciliation | FR41–FR47 | Phase 6 | `ram-payment` repo |
+| Itineraries (Court, Judge, Forward Look) | FR48–FR52 | Phase 7 | `ram-itinerary` repo with SQL-based read model |
+| Reports + MI Feed | FR53, FR54 | Phase 8 | `ram-mi-feed` repo with SQL-based read model |
 | Real HMCTS IdP Integration | A1, A2, A3, G1.1, G1.2, G1.3 | Pre-Phase-9 | Mock-to-real-IdP cutover playbook (G1.6) |
 | Pilot Rollout (per-region cutover playbook) | FR58 (activation flag), Risk #1 mitigation | Phase 9+ | Per-region application-tier deployment with shared DB |
 
@@ -236,9 +236,9 @@ Each candidate epic has at least one repo and a defined per-service file layout.
 
 When epics are authored, watch for:
 
-- **Phase 0 cross-cutting epics** (Identity & Authorisation, Reference Data, API Platform) tend to look like technical milestones. Frame them as user-value (e.g. "RSU users can log in to NJI via SSO and see their authorised regions" rather than "Setup SSO").
+- **Phase 0 cross-cutting epics** (Identity & Authorisation, Reference Data, API Platform) tend to look like technical milestones. Frame them as user-value (e.g. "RSU users can log in to RAM Pathfinder via SSO and see their authorised regions" rather than "Setup SSO").
 - **Mock-to-real-IdP cutover** belongs in its own pre-Phase-9 epic, not bolted onto Phase 9 rollout.
-- **Behavioural-parity UAT stories** (FR61 / NFR41 revised 2026-05-06): per-service manual UAT script authoring (under `docs/uat/`) and per-wave UAT execution belong inside each domain epic, not as a separate technical epic. UAT is performed by APEX-experienced users (RSU, Court, Judge, Clerks, Finance, MI) comparing NJI vs APEX side-by-side; sign-off per role per region is the wave-cutover gate. There is no automated APEX-comparison test work to schedule.
+- **Behavioural-parity UAT stories** (FR61 / NFR41 revised 2026-05-06): per-service manual UAT script authoring (under `docs/uat/`) and per-wave UAT execution belong inside each domain epic, not as a separate technical epic. UAT is performed by APEX-experienced users (RSU, Court, Judge, Clerks, Finance, MI) comparing RAM Pathfinder vs APEX side-by-side; sign-off per role per region is the wave-cutover gate. There is no automated APEX-comparison test work to schedule.
 - **UI replication stories** (per D4) should be co-located with the API stories of the same phase.
 - **Data migration stories** (Reference Data + Users/Roles) belong in Phase 0; stories should reference the APEX-export → Flyway migration sequence.
 - **Whitelisted-table grant stories** (per Architecture Principle 1) belong in the table-owning service's epic — when Service B grants Service A access to one of its tables, Service B owns the grant story.

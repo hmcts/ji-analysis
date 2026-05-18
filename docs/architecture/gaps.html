@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Documented Gaps (G1–G7) — NJI Documentation</title>
+<title>Documented Gaps (G1–G7) — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../architecture.html">Architecture (index)</a></li>
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html">User types</a></li>
 <li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items" data-current="true" open>
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items" data-current="true" open>
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../architecture/gaps.html" class="current">Gaps</a></li>
 <li><a href="../architecture/assumptions.html">Assumptions</a></li>
@@ -213,7 +213,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>G1.2</strong> <em>(reopened v2.6, 2026-05-07)</em></td>
-<td>HMCTS IdP support for OAuth 2.0 <code>client_credentials</code> grant — needed in production for the payment-batch service principal (<code>nji-payment-batch</code>). <code>nji-mock-auth</code> covers dev/CI/integration. Production options in G7.1: NJI-internal issuer, Azure Workload Identity, mTLS, or HMCTS IdP <code>client_credentials</code>.</td>
+<td>HMCTS IdP support for OAuth 2.0 <code>client_credentials</code> grant — needed in production for the payment-batch service principal (<code>ram-payment-batch</code>). <code>ram-mock-auth</code> covers dev/CI/integration. Production options in G7.1: RAM Pathfinder-internal issuer, Azure Workload Identity, mTLS, or HMCTS IdP <code>client_credentials</code>.</td>
 <td>Pre-Phase-9 — IdP team confirmation, or adopt an alternative from G7.1</td>
 <td></td>
 </tr>
@@ -225,21 +225,21 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>G1.4</strong></td>
-<td>HMCTS Crime SpringBoot template (<code>hmcts/service-hmcts-crime-springboot-template</code>) is assumed to be the appropriate starter for NJI. <strong>Confirmed via template review (2026-05-06):</strong> Java 25, Spring Boot 4.0.6, Gradle Groovy DSL, Flyway, PostgreSQL, Logstash JSON logging, OpenTelemetry, Testcontainers, Lombok, MapStruct, OWASP encoder, JaCoCo, CycloneDX, Swagger Core, JWTFilter pattern.</td>
-<td>Confirmed. Residual risk: NJI may want to fork or use a closer-fit HMCTS judicial-services template if one exists.</td>
-<td>NJI architecture team</td>
+<td>HMCTS Crime SpringBoot template (<code>hmcts/service-hmcts-crime-springboot-template</code>) is assumed to be the appropriate starter for RAM Pathfinder. <strong>Confirmed via template review (2026-05-06):</strong> Java 25, Spring Boot 4.0.6, Gradle Groovy DSL, Flyway, PostgreSQL, Logstash JSON logging, OpenTelemetry, Testcontainers, Lombok, MapStruct, OWASP encoder, JaCoCo, CycloneDX, Swagger Core, JWTFilter pattern.</td>
+<td>Confirmed. Residual risk: RAM Pathfinder may want to fork or use a closer-fit HMCTS judicial-services template if one exists.</td>
+<td>RAM Pathfinder architecture team</td>
 </tr>
 <tr>
 <td><strong>G1.4a</strong> <em>(new)</em></td>
 <td><strong>Helm chart for AKS deployment is not included in the HMCTS Crime template.</strong> The architecture assumes per-service Helm charts.</td>
-<td>NJI scaffolding script must include Helm chart templates; verify whether HMCTS provides Helm charts via a separate mechanism (shared chart library, Bicep templates) or whether each team provides its own.</td>
-<td>Phase 0 deliverable — NJI architecture team</td>
+<td>RAM Pathfinder scaffolding script must include Helm chart templates; verify whether HMCTS provides Helm charts via a separate mechanism (shared chart library, Bicep templates) or whether each team provides its own.</td>
+<td>Phase 0 deliverable — RAM Pathfinder architecture team</td>
 </tr>
 <tr>
 <td><strong>G1.4b</strong> <em>(new)</em></td>
 <td><strong>Spring Cloud Azure Key Vault integration is not in the template baseline.</strong></td>
 <td>Add per service via <code>com.azure.spring:spring-cloud-azure-starter-keyvault-secrets</code>. Phase 0 scaffolding includes this.</td>
-<td>Phase 0 deliverable — NJI architecture team</td>
+<td>Phase 0 deliverable — RAM Pathfinder architecture team</td>
 </tr>
 <tr>
 <td><strong>G1.5</strong></td>
@@ -251,7 +251,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td><strong>G1.6</strong></td>
 <td>Mock-to-real-IdP cutover plan must be operationally rehearsed before pre-Phase-9.</td>
 <td>Cutover is a Spring profile change (no code change); rehearse on staging environment with real IdP credentials before scheduling pilot wave 1.</td>
-<td>Pre-Phase-9 deliverable — NJI team</td>
+<td>Pre-Phase-9 deliverable — RAM Pathfinder team</td>
 </tr>
 </tbody>
 </table>
@@ -336,7 +336,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td><strong>G3.6</strong> <em>(open; consolidated v2.8, 2026-05-08)</em></td>
 <td><strong>Disaster recovery (DR) — open gap.</strong> MVP runs in a single Azure region (UK South) with multi-AZ HA. All DR design and scope is held here; no DR detail is asserted elsewhere. Decision points: (a) <strong>DR in MVP scope?</strong> Programme decision; default post-MVP (programme accepts full-region-UK-South-unavailability risk for MVP and pilot waves). (b) <strong>Target region</strong> — UK West is the natural candidate (data-residency-compliant per NFR31); not committed. (c) <strong>Posture</strong> — cold-standby (manual failover) vs warm-standby vs active/active. Working assumption: cold-standby. Active/active is incompatible with the shared global PostgreSQL without multi-master replication (premature per Principle 2). (d) <strong>PostgreSQL geo-redundant backup</strong> with the chosen DR region as restore target. (e) <strong>AKS Helm definitions</strong> for the DR region held in source control; cluster not pre-provisioned until activation. (f) <strong>DNS failover</strong> (Azure Front Door / Traffic Manager) and runbook. (g) <strong>RTO/RPO targets</strong> agreed with HMCTS.</td>
-<td>Programme (in/out of MVP) + NJI architecture team (design once in scope). Pre-broad-GA at the latest.</td>
+<td>Programme (in/out of MVP) + RAM Pathfinder architecture team (design once in scope). Pre-broad-GA at the latest.</td>
 </tr>
 </tbody>
 </table>
@@ -352,13 +352,13 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tbody>
 <tr>
 <td><strong>G4.1</strong></td>
-<td>Mermaid / C4 diagrams in <code>nji-architecture/diagrams/</code> to replace ASCII-art representations of internal communication, data flow, and deployment topology</td>
-<td>NJI architecture team post-completion</td>
+<td>Mermaid / C4 diagrams in <code>ram-architecture/diagrams/</code> to replace ASCII-art representations of internal communication, data flow, and deployment topology</td>
+<td>RAM Pathfinder architecture team post-completion</td>
 </tr>
 <tr>
 <td><strong>G4.2</strong></td>
 <td>Sample ADRs (<code>ADR-001-greenfield-not-strangler.md</code>, <code>ADR-002-no-shared-library.md</code>, <code>ADR-003-rest-first-no-event-bus.md</code>, etc.) capturing locked decisions in formal ADR shape</td>
-<td>NJI architecture team post-completion</td>
+<td>RAM Pathfinder architecture team post-completion</td>
 </tr>
 <tr>
 <td><strong>G4.3</strong></td>
@@ -377,13 +377,13 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>G4.6</strong> <em>(revised 2026-05-06)</em></td>
-<td><strong>Phase 0 ETL — APEX-side input mapping needs validation against the APEX SQL dump.</strong> NJI's 39 tables in <a href="./data-tables.html"><code>./data-tables.md</code></a> are NJI's design, not under revalidation. The migration tool's APEX → NJI mapping is. When the dump arrives, verify: (a) every APEX field the tool expects is present; (b) every APEX value lands in an existing NJI vocabulary row, or triggers a new row via the Reference Data API; (c) no APEX structure lacks a transform path. New vocabulary values are inserted as rows; an unmapped APEX structure raises an architectural PR.</td>
-<td>Phase 0 deliverable — NJI architecture team + Reference Data sign-off owner (G2.5). Closes when the ETL runs end-to-end against the real APEX dump and named owners sign off.</td>
+<td><strong>Phase 0 ETL — APEX-side input mapping needs validation against the APEX SQL dump.</strong> RAM Pathfinder's 39 tables in <a href="./data-tables.html"><code>./data-tables.md</code></a> are RAM Pathfinder's design, not under revalidation. The migration tool's APEX → RAM Pathfinder mapping is. When the dump arrives, verify: (a) every APEX field the tool expects is present; (b) every APEX value lands in an existing RAM Pathfinder vocabulary row, or triggers a new row via the Reference Data API; (c) no APEX structure lacks a transform path. New vocabulary values are inserted as rows; an unmapped APEX structure raises an architectural PR.</td>
+<td>Phase 0 deliverable — RAM Pathfinder architecture team + Reference Data sign-off owner (G2.5). Closes when the ETL runs end-to-end against the real APEX dump and named owners sign off.</td>
 </tr>
 <tr>
 <td><strong>G4.7</strong> <em>(v2.5, 2026-05-07)</em></td>
 <td><strong>Operator-initiated ETL — post-MVP refinement.</strong> At MVP, the production / pilot-region migration runs operator-initiated: a named programme operator authenticates at HMCTS IdP and runs the ETL with their JWT. Acceptable at MVP: one-off per region; preserves "all calls user-initiated"; clean audit trail (operator identity). To refine post-MVP: better automation; explicit audit-trail capture; possible service-identity for the ETL tool (would reopen G7 service-auth); resolve the dev/CI-script vs production-API divergence.</td>
-<td>Post-MVP refinement — NJI architecture team. Not blocking; revisit before broad GA.</td>
+<td>Post-MVP refinement — RAM Pathfinder architecture team. Not blocking; revisit before broad GA.</td>
 </tr>
 </tbody>
 </table>
@@ -431,17 +431,17 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>G6.2</strong> <em>(refined 2026-05-06; 2026-05-08)</em></td>
-<td><strong>Single-DB blast radius.</strong> A PostgreSQL outage affects every NJI service simultaneously (vs per-service DBs where one DB outage affects only one service).</td>
-<td>Mitigation: PostgreSQL Flexible Server <strong>zone-redundant HA</strong> within UK South — primary + standby in different AZs, synchronous replication, automatic failover (&lt;60 s typical). Single-AZ failure inside UK South is tolerated transparently. Point-in-time restore retained. <strong>Full-region UK South loss is the residual risk</strong> — addressed by DR (see G3.6) if/when approved; without DR, the residual risk is accepted for MVP and pilot waves. Acceptable trade for the operational simplicity of one DB at NJI's bounded scale.</td>
+<td><strong>Single-DB blast radius.</strong> A PostgreSQL outage affects every RAM Pathfinder service simultaneously (vs per-service DBs where one DB outage affects only one service).</td>
+<td>Mitigation: PostgreSQL Flexible Server <strong>zone-redundant HA</strong> within UK South — primary + standby in different AZs, synchronous replication, automatic failover (&lt;60 s typical). Single-AZ failure inside UK South is tolerated transparently. Point-in-time restore retained. <strong>Full-region UK South loss is the residual risk</strong> — addressed by DR (see G3.6) if/when approved; without DR, the residual risk is accepted for MVP and pilot waves. Acceptable trade for the operational simplicity of one DB at RAM Pathfinder's bounded scale.</td>
 </tr>
 <tr>
 <td><strong>G6.3</strong></td>
-<td><strong>Cross-region rollout with global DB.</strong> All regions share one DB instance, so Region B's data is visible to Region A immediately on cutover (no APEX-bridge needed for cross-region NJI data). However, during phased rollout, non-migrated regions still have data only in APEX, not in the shared DB.</td>
+<td><strong>Cross-region rollout with global DB.</strong> All regions share one DB instance, so Region B's data is visible to Region A immediately on cutover (no APEX-bridge needed for cross-region RAM Pathfinder data). However, during phased rollout, non-migrated regions still have data only in APEX, not in the shared DB.</td>
 <td>Mitigation: per-region DB writes only happen for migrated regions; cross-region workflows during partial rollout still rely on the APEX read-only bridge for non-migrated regions' data (Risk #1 unchanged).</td>
 </tr>
 <tr>
 <td><strong>G6.4</strong></td>
-<td><strong>DB role grant maintenance.</strong> Each cross-service grant is a piece of operational state (<code>GRANT SELECT ON vacancies TO nji_booking;</code>) that must be applied via Flyway migrations owned by the granting service. Adding/removing grants requires PR coordination between services.</td>
+<td><strong>DB role grant maintenance.</strong> Each cross-service grant is a piece of operational state (<code>GRANT SELECT ON vacancies TO ram_booking;</code>) that must be applied via Flyway migrations owned by the granting service. Adding/removing grants requires PR coordination between services.</td>
 <td>Mitigation: grants codified in the table-owning service's Flyway migrations; PR template includes "grants checklist"; ArchUnit-style fitness function in CI verifies declared grants match actual code-level cross-service table access.</td>
 </tr>
 <tr>
@@ -468,12 +468,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tbody>
 <tr>
 <td><strong>G7.1</strong> <em>(revised v2.6, 2026-05-07 — now MVP-relevant for the payment batch)</em></td>
-<td><strong>Service-identity mechanism for non-user-initiated flows.</strong> v2.6 introduces the <strong>payment-processing batch</strong> (<code>nji-payment-batch</code>) as a scheduled service principal — the first MVP non-user-initiated runtime flow. <strong>At MVP</strong> the batch authenticates against <code>nji-mock-auth</code> via OAuth <code>client_credentials</code> (mock issues both human and service-principal tokens). <strong>For production</strong>, the issuer choice is still deferred. Other future triggers that would also need a service identity: (a) DA&amp;I post-MVP integration; (b) async messaging / event-bus patterns; (c) other scheduled background jobs (MI Feed pre-aggregation, reconciliation feed); (d) Phase 0 ETL evolving from operator-initiated to automated (per G4.7).</td>
-<td><strong>Pre-Phase-9 decision needed</strong> for production service-auth issuer. Options: <br/>(A) <strong>NJI-internal service-auth issuer</strong> — production-harden the mock-auth Spring Authorization Server; runs as a real (non-mock) service. JWTFilter configured for multi-issuer (HMCTS IdP for humans + nji-service-auth for services). <br/>(B) <strong>Azure Workload Identity / Managed Identity</strong> — cloud-native; no shared secrets; tokens issued by Entra ID and validated via its JWKS. <strong>Likely the default given NJI is on AKS.</strong> <br/>(C) <strong>mTLS</strong> — per-service certs at TLS layer; operationally heavy. <br/>(D) <strong>HMCTS IdP <code>client_credentials</code></strong> — only if HMCTS IdP supports it (G1.2). <br/>Default recommendation: <strong>(B) Azure Workload Identity</strong> for the AKS pod that runs the batch — zero shared secrets, cloud-managed, fits the existing Azure stack.</td>
+<td><strong>Service-identity mechanism for non-user-initiated flows.</strong> v2.6 introduces the <strong>payment-processing batch</strong> (<code>ram-payment-batch</code>) as a scheduled service principal — the first MVP non-user-initiated runtime flow. <strong>At MVP</strong> the batch authenticates against <code>ram-mock-auth</code> via OAuth <code>client_credentials</code> (mock issues both human and service-principal tokens). <strong>For production</strong>, the issuer choice is still deferred. Other future triggers that would also need a service identity: (a) DA&amp;I post-MVP integration; (b) async messaging / event-bus patterns; (c) other scheduled background jobs (MI Feed pre-aggregation, reconciliation feed); (d) Phase 0 ETL evolving from operator-initiated to automated (per G4.7).</td>
+<td><strong>Pre-Phase-9 decision needed</strong> for production service-auth issuer. Options: <br/>(A) <strong>RAM Pathfinder-internal service-auth issuer</strong> — production-harden the mock-auth Spring Authorization Server; runs as a real (non-mock) service. JWTFilter configured for multi-issuer (HMCTS IdP for humans + ram-service-auth for services). <br/>(B) <strong>Azure Workload Identity / Managed Identity</strong> — cloud-native; no shared secrets; tokens issued by Entra ID and validated via its JWKS. <strong>Likely the default given RAM Pathfinder is on AKS.</strong> <br/>(C) <strong>mTLS</strong> — per-service certs at TLS layer; operationally heavy. <br/>(D) <strong>HMCTS IdP <code>client_credentials</code></strong> — only if HMCTS IdP supports it (G1.2). <br/>Default recommendation: <strong>(B) Azure Workload Identity</strong> for the AKS pod that runs the batch — zero shared secrets, cloud-managed, fits the existing Azure stack.</td>
 </tr>
 <tr>
 <td><strong>G7.2</strong> <em>(new v2.5, 2026-05-07)</em></td>
-<td><strong>DA&amp;I post-MVP integration auth model is undecided.</strong> When DA&amp;I starts consuming NJI's MI Feed API post-MVP, it needs an authentication mechanism. If DA&amp;I has a human-user identity at HMCTS IdP it can use the same OIDC flow as other users; if DA&amp;I is a service consumer it needs a service-identity mechanism (see G7.1).</td>
+<td><strong>DA&amp;I post-MVP integration auth model is undecided.</strong> When DA&amp;I starts consuming RAM Pathfinder's MI Feed API post-MVP, it needs an authentication mechanism. If DA&amp;I has a human-user identity at HMCTS IdP it can use the same OIDC flow as other users; if DA&amp;I is a service consumer it needs a service-identity mechanism (see G7.1).</td>
 <td><strong>Open question for post-MVP.</strong> Resolve as part of DA&amp;I onboarding work, alongside G7.1.</td>
 </tr>
 </tbody>

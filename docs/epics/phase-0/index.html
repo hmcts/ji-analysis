@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Phase 0 — Foundations — NJI Documentation</title>
+<title>Phase 0 — Foundations — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../../prd.html">PRD (NJI)</a></li>
+<li><a href="../../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../../architecture.html">Architecture (index)</a></li>
 <li><a href="../../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../../architecture/user-types.html">User types</a></li>
 <li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../../architecture/gaps.html">Gaps</a></li>
 <li><a href="../../architecture/assumptions.html">Assumptions</a></li>
@@ -246,30 +246,30 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </table>
 </div></details><details class="section" id="epic-summaries"><summary><span class="section-title">Epic summaries</span></summary><div class="section-body">
 <h3 id="epic-01-user-authenticates-and-lands-on-a-role-scoped-home-page-5-stories-unchanged-scope">Epic 0.1: User authenticates and lands on a role-scoped Home page (5 stories, unchanged scope)</h3>
-<p><strong>User outcome:</strong> A judicial user (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, or MI/Reporting user) opens NJI, signs in via SSO, has their roles and Region/Area scope resolved by <code>nji-authorisation</code>'s <strong>read-only</strong> API, and lands on a Home page showing the navigation and tiles they're authorised to see.</p>
+<p><strong>User outcome:</strong> A judicial user (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, or MI/Reporting user) opens RAM Pathfinder, signs in via SSO, has their roles and Region/Area scope resolved by <code>ram-authorisation</code>'s <strong>read-only</strong> API, and lands on a Home page showing the navigation and tiles they're authorised to see.</p>
 <p><strong>FRs covered:</strong> FR1, FR2, FR3, FR55, FR56 (business stack portion)</p>
 <p><strong>Key NFRs first exercised here:</strong> NFR10, NFR11, NFR12, NFR13, NFR15, NFR16, NFR17–NFR19 (business UI WCAG), NFR20, NFR25–NFR28, NFR31, NFR40</p>
-<p><strong>2026-05-15 change:</strong> Story 0.1.3 reworded slightly to make explicit that <code>nji-authorisation</code> is read-only — its planned admin write endpoints (was Story 0.3.1 in the prior plan) are removed from MVP. The auth tables are still created here in Phase 0 — they're populated by Epic 0.3's SQL ETL.</p>
+<p><strong>2026-05-15 change:</strong> Story 0.1.3 reworded slightly to make explicit that <code>ram-authorisation</code> is read-only — its planned admin write endpoints (was Story 0.3.1 in the prior plan) are removed from MVP. The auth tables are still created here in Phase 0 — they're populated by Epic 0.3's SQL ETL.</p>
 <p>→ <a href="epic-0.1-user-authenticates.html">Full epic with stories</a></p>
 <h3 id="epic-02-reference-data-is-sql-loaded-and-served-read-only-3-stories-was-5">Epic 0.2: Reference data is SQL-loaded and served read-only (3 stories, was 5)</h3>
-<p><strong>User outcome:</strong> Reference Data (Regions, Offices, judicial vocabularies, calendar / financial-year boundaries) is loaded into NJI via a direct-SQL ETL with named-owner sign-off, and is queryable read-only by downstream NJI services via a versioned REST API. Named owners approve via versioned git commits — <strong>no admin UI</strong> in MVP.</p>
+<p><strong>User outcome:</strong> Reference Data (Regions, Offices, judicial vocabularies, calendar / financial-year boundaries) is loaded into RAM Pathfinder via a direct-SQL ETL with named-owner sign-off, and is queryable read-only by downstream RAM Pathfinder services via a versioned REST API. Named owners approve via versioned git commits — <strong>no admin UI</strong> in MVP.</p>
 <p><strong>FRs covered (Phase 0 surface):</strong> FR7, FR57 (Reference Data portion via SQL), FR59, FR60</p>
 <p><strong>FRs deferred post-MVP (UI surface):</strong> FR6 (RSU UI for ref-data maintenance), FR4 (admin UI is the surface; data still loadable by DBAs via SQL)</p>
 <p><strong>Key NFRs:</strong> NFR14, NFR40, NFR42. <em>(NFR17–NFR19 do not apply here in Phase 0 — no UI for this domain until post-MVP.)</em></p>
 <p><strong>2026-05-15 change:</strong> Stories 0.2.3 (Admin UI scaffolding) and 0.2.4 (Admin UI Reference Data module) removed. API becomes read-only (no admin CRUD writes). ETL loads via direct SQL <code>INSERT</code> rather than calling the API. What was Story 0.2.5 is renumbered to Story 0.2.3.</p>
 <p>→ <a href="epic-0.2-admin-manages-ref-data.html">Full epic with stories</a></p>
 <h3 id="epic-03-users-roles-and-activation-flags-are-sql-loaded-1-story-was-4">Epic 0.3: Users, roles, and activation flags are SQL-loaded (1 story, was 4)</h3>
-<p><strong>User outcome:</strong> Active APEX users and their role/Region/Area assignments are loaded into the NJI Authorisation tables via a direct-SQL ETL, with named-owner sign-off and explicit handling of unmatched records via versioned CSV decision files. Per-region activation flags are initialised all-FALSE and flipped per region during Phase 9+ cutover via direct SQL. <strong>No admin UI.</strong></p>
+<p><strong>User outcome:</strong> Active APEX users and their role/Region/Area assignments are loaded into the RAM Pathfinder Authorisation tables via a direct-SQL ETL, with named-owner sign-off and explicit handling of unmatched records via versioned CSV decision files. Per-region activation flags are initialised all-FALSE and flipped per region during Phase 9+ cutover via direct SQL. <strong>No admin UI.</strong></p>
 <p><strong>FRs covered (Phase 0 surface):</strong> FR57 (Users/Roles portion via SQL), FR58 (initial flag state via ETL)</p>
 <p><strong>FRs deferred post-MVP (UI surface):</strong> FR4 (admin UI for role/scope edits — data still editable by DBAs via SQL)</p>
 <p><strong>2026-05-15 change:</strong> Stories 0.3.1 (admin API extensions), 0.3.2 (admin UI users/roles), 0.3.4 (admin UI migration reports) all removed. Only what was Story 0.3.3 remains, renumbered to Story 0.3.1. Unmatched-record decisions move from a UI workflow to an <strong>editable CSV</strong> in version control.</p>
 <p><strong>Why one story is OK as an epic:</strong> the user value (users can sign in because their records exist) is distinct from Reference Data, the named-owner is different (identity/IT lead vs RSU/judicial-vocabulary owners), and the risk profile (Risk #14) differs from Reference Data's Risk #13.</p>
 <p>→ <a href="epic-0.3-admin-manages-users-roles.html">Full epic with stories</a></p>
 <h3 id="epic-04-notification-service-is-scaffolded-and-contractually-ready-2-stories-was-4">Epic 0.4: Notification service is scaffolded and contractually ready (2 stories, was 4)</h3>
-<p><strong>User outcome:</strong> <code>nji-notification</code> is deployed with its API contract published, delivery log table created, SMTP integration configured, and <code>POST /v1/notifications/send</code> working. The contract is consumable from Phase 2+ via <strong>user-JWT propagation</strong>. Integration testing in MVP happens via Postman — <strong>no admin UI</strong>.</p>
+<p><strong>User outcome:</strong> <code>ram-notification</code> is deployed with its API contract published, delivery log table created, SMTP integration configured, and <code>POST /v1/notifications/send</code> working. The contract is consumable from Phase 2+ via <strong>user-JWT propagation</strong>. Integration testing in MVP happens via Postman — <strong>no admin UI</strong>.</p>
 <p><strong>FRs covered:</strong> FR9</p>
 <p><strong>Key NFRs:</strong> NFR12 (JWT propagation), NFR15, NFR22, NFR25–NFR28, NFR39, NFR42</p>
-<p><strong>2026-05-15 change:</strong> Story 0.4.3 (OAuth <code>client_credentials</code> flow) <strong>moved to Phase 6</strong> — that's when <code>nji-payment-batch</code> arrives as the first non-user-initiated consumer that needs it. Story 0.4.4 (admin "Send Test Email" UI) <strong>removed</strong>, deferred post-MVP — Postman covers the integration-test gap.</p>
+<p><strong>2026-05-15 change:</strong> Story 0.4.3 (OAuth <code>client_credentials</code> flow) <strong>moved to Phase 6</strong> — that's when <code>ram-payment-batch</code> arrives as the first non-user-initiated consumer that needs it. Story 0.4.4 (admin "Send Test Email" UI) <strong>removed</strong>, deferred post-MVP — Postman covers the integration-test gap.</p>
 <p>→ <a href="epic-0.4-system-dispatches-emails.html">Full epic with stories</a></p>
 </div></details><details class="section" id="phase-0-epic-stories-summary"><summary><span class="section-title">Phase 0 Epic Stories Summary</span></summary><div class="section-body">
 <table>
@@ -318,18 +318,18 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </div></details><details class="section" id="post-mvp-roadmap-items-spun-out-of-phase-0-2026-05-15-revision"><summary><span class="section-title">Post-MVP roadmap items spun out of Phase 0 (2026-05-15 revision)</span></summary><div class="section-body">
 <p>The following surfaces were removed from Phase 0 / MVP and now sit on the post-MVP roadmap:</p>
 <ol type="1">
-<li><strong><code>nji-admin-ui</code> repo</strong> — scaffolding + auth wrapper + GOV.UK Design System admin theme</li>
-<li><strong>Reference Data admin module</strong> in <code>nji-admin-ui</code> — list/edit/create flows with named-owner sign-off workflow</li>
-<li><strong>Users &amp; Roles admin module</strong> in <code>nji-admin-ui</code> — search, edit roles, edit Region/Area scope, toggle activation flag</li>
-<li><strong>Migration Reports admin module</strong> in <code>nji-admin-ui</code> — view reconciliation reports, apply decisions to unmatched records, sign off via UI</li>
+<li><strong><code>ram-admin-ui</code> repo</strong> — scaffolding + auth wrapper + GOV.UK Design System admin theme</li>
+<li><strong>Reference Data admin module</strong> in <code>ram-admin-ui</code> — list/edit/create flows with named-owner sign-off workflow</li>
+<li><strong>Users &amp; Roles admin module</strong> in <code>ram-admin-ui</code> — search, edit roles, edit Region/Area scope, toggle activation flag</li>
+<li><strong>Migration Reports admin module</strong> in <code>ram-admin-ui</code> — view reconciliation reports, apply decisions to unmatched records, sign off via UI</li>
 <li><strong>Reference Data API write endpoints</strong> — <code>POST/PUT/PATCH/DELETE</code>, admin-gated</li>
-<li><strong><code>nji-authorisation</code> admin write endpoints</strong> — <code>PUT /v1/admin/users/{id}/roles</code>, <code>PUT /v1/admin/users/{id}/region-scopes</code>, <code>PUT /v1/admin/users/{id}/activation</code></li>
-<li><strong>Admin "Send Test Email" UI</strong> in <code>nji-admin-ui</code></li>
+<li><strong><code>ram-authorisation</code> admin write endpoints</strong> — <code>PUT /v1/admin/users/{id}/roles</code>, <code>PUT /v1/admin/users/{id}/region-scopes</code>, <code>PUT /v1/admin/users/{id}/activation</code></li>
+<li><strong>Admin "Send Test Email" UI</strong> in <code>ram-admin-ui</code></li>
 <li><strong>Delivery-log viewer UI</strong></li>
 </ol>
 <p>What's NOT in this post-MVP list (because it migrated out of Phase 0 to a different MVP phase rather than post-MVP):</p>
 <ul>
-<li><strong>OAuth <code>client_credentials</code> flow</strong> for batch / scheduled callers — moved to <strong>Phase 6</strong> alongside <code>nji-payment-batch</code>. Still MVP, just later.</li>
+<li><strong>OAuth <code>client_credentials</code> flow</strong> for batch / scheduled callers — moved to <strong>Phase 6</strong> alongside <code>ram-payment-batch</code>. Still MVP, just later.</li>
 </ul>
 </div></details><details class="section" id="validation"><summary><span class="section-title">Validation</span></summary><div class="section-body">
 <ul>

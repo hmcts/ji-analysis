@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Judge onboarding + working-pattern-driven sitting generation — NJI Documentation</title>
+<title>Judge onboarding + working-pattern-driven sitting generation — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../../prd.html">PRD (NJI)</a></li>
+<li><a href="../../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../../architecture.html">Architecture (index)</a></li>
 <li><a href="../../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../../architecture/user-types.html">User types</a></li>
 <li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams" data-current="true" open>
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams" data-current="true" open>
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html" class="current">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../../architecture/gaps.html">Gaps</a></li>
 <li><a href="../../architecture/assumptions.html">Assumptions</a></li>
@@ -188,20 +188,20 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="judge-onboarding--working-pattern-driven-sitting-generation">Judge onboarding + working-pattern-driven sitting generation</h1>
-<p>Sequence diagram of how a new judge is onboarded into NJI and how that judge's working pattern automatically populates planned sittings up to the next 31 March. This is the upstream of every downstream operational flow — absences, vacancies, bookings, sittings, payments, itineraries all depend on the judge records and planned sittings produced here.</p>
-<p>The as-is equivalent is Module 2 <em>Manage Judges</em> in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a> and Integration Flow 1 <em>Judge Master Data (eLinks / HR → JI)</em> in <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>. In the as-is system the data is copied in manually from eLinks and HR records and JI auto-overwrites future sittings on pattern save. NJI keeps the same business behaviour but with explicit API contracts and DB-level constraints.</p>
+<p>Sequence diagram of how a new judge is onboarded into RAM Pathfinder and how that judge's working pattern automatically populates planned sittings up to the next 31 March. This is the upstream of every downstream operational flow — absences, vacancies, bookings, sittings, payments, itineraries all depend on the judge records and planned sittings produced here.</p>
+<p>The as-is equivalent is Module 2 <em>Manage Judges</em> in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a> and Integration Flow 1 <em>Judge Master Data (eLinks / HR → JI)</em> in <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>. In the as-is system the data is copied in manually from eLinks and HR records and JI auto-overwrites future sittings on pattern save. RAM Pathfinder keeps the same business behaviour but with explicit API contracts and DB-level constraints.</p>
 <p>Three phases: (1) judge profile create; (2) working pattern + jurisdictional split; (3) forward-sitting generation up to next 31 March.</p>
 <details class="section" id="not-in-this-diagram"><summary><span class="section-title">Not in this diagram</span></summary><div class="section-body">
 <ul>
-<li><strong>eLinks / HR system integration</strong> — neither in as-is nor in NJI MVP (NFR24 / Risk #1 in PRD). Judge data continues to be entered manually by RSU.</li>
-<li><strong>Cross-Region base-location change</strong> (FR17) — out-of-system; requires OPT Advice Point in the as-is and a programme decision in NJI.</li>
+<li><strong>eLinks / HR system integration</strong> — neither in as-is nor in RAM Pathfinder MVP (NFR24 / Risk #1 in PRD). Judge data continues to be entered manually by RSU.</li>
+<li><strong>Cross-Region base-location change</strong> (FR17) — out-of-system; requires OPT Advice Point in the as-is and a programme decision in RAM Pathfinder.</li>
 <li><strong>Off-circuit / cross-Region judge linking for bookings</strong> (FR18) — handled as a read-only link in <a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>, not in this flow.</li>
 <li><strong>Editing an existing working pattern</strong> — same shape as Phase 2 + Phase 3 but with prior-absence preservation logic; not drawn separately to keep the diagram lean. The architectural rule (preserve prior absences when regenerating sittings, FR13) is the same.</li>
 <li><strong>Ticket maintenance</strong> (FR15) — a small follow-up CRUD operation; same shape as Phase 1.</li>
 </ul>
 </div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps omitted for clarity</span></summary><div class="section-body">
 <ul>
-<li><strong>Authentication + per-request authorisation</strong> — Sys Admin / RSU's JWT is validated by each service's <code>JWTFilter</code> and resolved against <code>nji-authorisation</code> on every call. See <a href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
+<li><strong>Authentication + per-request authorisation</strong> — Sys Admin / RSU's JWT is validated by each service's <code>JWTFilter</code> and resolved against <code>ram-authorisation</code> on every call. See <a href="./user-authentication-and-authorisation.html"><code>./user-authentication-and-authorisation.md</code></a>.</li>
 <li>All UI → service calls flow through Azure API Management.</li>
 <li>Validation errors at any step return RFC 9457 problem-details and the user retries; not drawn explicitly.</li>
 </ul>
@@ -232,9 +232,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>3 — Forward-sitting generation</td>
-<td><code>nji-judge</code> (server-side, in-transaction with pattern save)</td>
+<td><code>ram-judge</code> (server-side, in-transaction with pattern save)</td>
 <td>FR13 — auto-populate planned sittings up to the next 31 March, preserving any prior absences on the affected dates</td>
-<td><code>sittings</code> rows in <code>planned</code> status for the judge over the generation horizon; visible to <code>nji-sitting</code> for confirmation flows and to <code>nji-itinerary</code> for read federation</td>
+<td><code>sittings</code> rows in <code>planned</code> status for the judge over the generation horizon; visible to <code>ram-sitting</code> for confirmation flows and to <code>ram-itinerary</code> for read federation</td>
 </tr>
 </tbody>
 </table>
@@ -248,7 +248,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </thead>
 <tbody>
 <tr>
-<td><code>nji-judge</code> repo purpose and key functions</td>
+<td><code>ram-judge</code> repo purpose and key functions</td>
 <td><a href="../repository-strategy.html"><code>../repository-strategy.md</code></a> Phase 1 row</td>
 </tr>
 <tr>
@@ -261,10 +261,10 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Judge UI module structure</td>
-<td><a href="../repo-structure.html"><code>../repo-structure.md</code> → <code>nji-ui/src/modules/judge/</code></a></td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> → <code>ram-ui/src/modules/judge/</code></a></td>
 </tr>
 <tr>
-<td>Why this flow is in <code>nji-ui</code> and not <code>nji-admin-ui</code> (RSU operational vs admin)</td>
+<td>Why this flow is in <code>ram-ui</code> and not <code>ram-admin-ui</code> (RSU operational vs admin)</td>
 <td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Frontend Architecture</em></a> — v2.10</td>
 </tr>
 <tr>

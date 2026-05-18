@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Repository Directory Structures, File Organisation, Local Development Workflow — NJI Documentation</title>
+<title>Repository Directory Structures, File Organisation, Local Development Workflow — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../architecture.html">Architecture (index)</a></li>
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference" data-current="true" open>
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference" data-current="true" open>
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html">User types</a></li>
 <li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../architecture/gaps.html">Gaps</a></li>
 <li><a href="../architecture/assumptions.html">Assumptions</a></li>
@@ -192,7 +192,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p>Sibling of <a href="../architecture.html"><code>../architecture.md</code></a>. The parent's <em>Project Structure &amp; Boundaries</em> holds the architectural decisions. This file holds the per-repo directory inventory and the developer-facing build/run/deploy commands.</p>
 </blockquote>
 <details class="section" id="complete-project-directory-structure--per-backend-service"><summary><span class="section-title">Complete Project Directory Structure — per backend service</span></summary><div class="section-body">
-<pre><code>nji-{service}/
+<pre><code>ram-{service}/
 ├── README.md                                    (service-specific overview, runbook, contacts)
 ├── settings.gradle
 ├── build.gradle                             (Gradle Groovy DSL (per HMCTS template))
@@ -200,14 +200,14 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 ├── gradlew, gradlew.bat                         (Gradle Wrapper, committed)
 ├── gradle/wrapper/
 ├── .github/
-│   ├── CODEOWNERS                               (NJI team + service-specific reviewers)
+│   ├── CODEOWNERS                               (RAM Pathfinder team + service-specific reviewers)
 │   ├── PULL_REQUEST_TEMPLATE.md                 (patterns checklist)
 │   └── workflows/
 │       ├── ci.yml                               (build + test + lint + ArchUnit + Spectral)
 │       ├── deploy-dev.yml
 │       ├── deploy-staging.yml
 │       └── deploy-production.yml                (per-region per-wave gated)
-├── src/main/java/uk/gov/hmcts/nji/{service}/
+├── src/main/java/uk/gov/hmcts/ram/{service}/
 │   ├── {Service}Application.java
 │   ├── controller/
 │   │   ├── {Resource}Controller.java
@@ -248,7 +248,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 │       ├── V1__init.sql
 │       ├── V2__add_judges_table.sql
 │       └── ...
-├── src/test/java/uk/gov/hmcts/nji/{service}/
+├── src/test/java/uk/gov/hmcts/ram/{service}/
 │   ├── controller/                              (unit tests, mocked deps)
 │   ├── service/
 │   ├── repository/                              (integration tests, Testcontainers)
@@ -266,7 +266,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 │       ├── configmap.yaml
 │       └── hpa.yaml
 ├── postman/
-│   ├── nji-{service}-phase{N}.postman_collection.json
+│   ├── ram-{service}-phase{N}.postman_collection.json
 │   └── README.md                                (how to run; environment files)
 ├── api-spec/
 │   └── openapi.yaml                             (committed snapshot, regenerated on release)
@@ -276,13 +276,13 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 │   │   └── ADR-001-database-schema.md
 │   ├── runbook.md                               (incident response per service)
 │   ├── api/                                     (extended API docs beyond OpenAPI)
-│   └── uat/                                     (manual UAT scripts: APEX-vs-NJI behavioural-parity walkthroughs per FR61 / NFR41 revised; domain services only)
+│   └── uat/                                     (manual UAT scripts: APEX-vs-RAM Pathfinder behavioural-parity walkthroughs per FR61 / NFR41 revised; domain services only)
 ├── .gitignore
 └── .editorconfig</code></pre>
 </div></details><details class="section" id="complete-project-directory-structure--ui-repos"><summary><span class="section-title">Complete Project Directory Structure — UI repos</span></summary><div class="section-body">
-<p>There are <strong>two UI repos</strong> with the same stack and conventions: <code>nji-ui</code> (business-user-facing) and <code>nji-admin-ui</code> (admin-facing). The split exists so admin workflows (Reference Data maintenance, User &amp; Role admin) cannot leak into business users' nav, and so each has its own CI/CD, CODEOWNERS, and rollout cadence. <code>nji-admin-ui</code> mirrors the structure below, with admin modules replacing the per-domain operational modules.</p>
-<h3 id="nji-ui-business"><code>nji-ui</code> (business)</h3>
-<pre><code>nji-ui/
+<p>There are <strong>two UI repos</strong> with the same stack and conventions: <code>ram-ui</code> (business-user-facing) and <code>ram-admin-ui</code> (admin-facing). The split exists so admin workflows (Reference Data maintenance, User &amp; Role admin) cannot leak into business users' nav, and so each has its own CI/CD, CODEOWNERS, and rollout cadence. <code>ram-admin-ui</code> mirrors the structure below, with admin modules replacing the per-domain operational modules.</p>
+<h3 id="ram-ui-business"><code>ram-ui</code> (business)</h3>
+<pre><code>ram-ui/
 ├── README.md
 ├── package.json
 ├── package-lock.json (or yarn.lock / pnpm-lock.yaml)
@@ -337,7 +337,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 │   │       └── errorHandling.ts                 (RFC 9457 problem-details → display)
 │   └── styles/
 │       ├── govuk.scss                           (GOV.UK Design System imports)
-│       └── overrides.scss                       (HMCTS / NJI extensions)
+│       └── overrides.scss                       (HMCTS / RAM Pathfinder extensions)
 ├── tests/
 │   ├── unit/                                    (Vitest)
 │   └── e2e/                                     (Playwright; one suite per phase)
@@ -358,10 +358,10 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 └── docs/
     ├── README.md
     └── decisions/                               (UI-specific ADRs)</code></pre>
-<h3 id="nji-admin-ui-admin"><code>nji-admin-ui</code> (admin)</h3>
-<p>Same scaffolding as <code>nji-ui</code> above — React + TypeScript + Vite + Vitest + Playwright, GOV.UK Design System, OIDC client, RFC 9457 error handling, axe-core in CI — but with admin modules instead of per-domain operational modules.</p>
-<pre><code>nji-admin-ui/
-├── (same top-level scaffolding as nji-ui: package.json, vite.config.ts, etc.)
+<h3 id="ram-admin-ui-admin"><code>ram-admin-ui</code> (admin)</h3>
+<p>Same scaffolding as <code>ram-ui</code> above — React + TypeScript + Vite + Vitest + Playwright, GOV.UK Design System, OIDC client, RFC 9457 error handling, axe-core in CI — but with admin modules instead of per-domain operational modules.</p>
+<pre><code>ram-admin-ui/
+├── (same top-level scaffolding as ram-ui: package.json, vite.config.ts, etc.)
 ├── src/
 │   ├── main.tsx
 │   ├── App.tsx
@@ -377,20 +377,20 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 │   │   │   ├── pages/CalendarAdminPage.tsx      (financial-year boundaries, calendar periods)
 │   │   │   ├── components/NamedOwnerSignOff.tsx (cross-cutting sign-off pattern per FR6)
 │   │   │   ├── hooks/useReferenceDataAdmin.ts
-│   │   │   ├── api/                             (generated TypeScript client from nji-reference-data OpenAPI)
+│   │   │   ├── api/                             (generated TypeScript client from ram-reference-data OpenAPI)
 │   │   │   └── index.ts
 │   │   └── users-roles/                         (FR4 — system administrators)
 │   │       ├── pages/UserListPage.tsx
 │   │       ├── pages/UserDetailPage.tsx          (role assignment, Region/Area scope)
 │   │       ├── components/RoleAssignmentEditor.tsx
 │   │       ├── hooks/useUserAdmin.ts
-│   │       ├── api/                             (generated TypeScript client from nji-authorisation OpenAPI)
+│   │       ├── api/                             (generated TypeScript client from ram-authorisation OpenAPI)
 │   │       └── index.ts
-│   ├── shared/                                  (mirrors nji-ui — auth, http client, error handling, layout)
+│   ├── shared/                                  (mirrors ram-ui — auth, http client, error handling, layout)
 │   │   ├── components/Layout.tsx                 (Admin-specific Header marking this as the admin surface)
 │   │   ├── hooks/useAuth.ts
 │   │   ├── auth/HmctsIdpProvider.tsx
-│   │   ├── auth/ProtectedRoute.tsx               (gates routes by admin role from nji-authorisation)
+│   │   ├── auth/ProtectedRoute.tsx               (gates routes by admin role from ram-authorisation)
 │   │   └── api/httpClient.ts
 │   └── styles/
 │       ├── govuk.scss
@@ -400,12 +400,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 │   └── e2e/                                     (Playwright)
 │       ├── reference-data.spec.ts
 │       └── users-roles.spec.ts
-├── api-clients/                                 (generated; regenerated in CI from nji-reference-data + nji-authorisation OpenAPI specs)
+├── api-clients/                                 (generated; regenerated in CI from ram-reference-data + ram-authorisation OpenAPI specs)
 │   ├── reference-data-client/
 │   └── authorisation-client/
-├── helm/                                        (Helm chart for Static Web App / CDN deployment — separate from nji-ui)
+├── helm/                                        (Helm chart for Static Web App / CDN deployment — separate from ram-ui)
 ├── .github/
-│   ├── CODEOWNERS                                (admin-team scoped; distinct from nji-ui)
+│   ├── CODEOWNERS                                (admin-team scoped; distinct from ram-ui)
 │   └── workflows/
 │       ├── ci.yml                                (build + test + lint + axe-core)
 │       └── deploy-{env}.yml
@@ -418,9 +418,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><code>modules/migration-reports/</code> — Phase 0 reconciliation report viewer (FR57)</li>
 <li><code>modules/audit/</code> — post-MVP user-action audit viewer (D7 roadmap)</li>
 </ul>
-<p><strong>Deployment:</strong> independent of <code>nji-ui</code>. Same Azure Static Web Apps pattern, separate hostname (e.g. <code>admin.nji.hmcts.gov.uk</code> vs <code>nji.hmcts.gov.uk</code>), separate Helm release, separate per-environment rollout.</p>
-</div></details><details class="section" id="complete-project-directory-structure--nji-architecture-repo"><summary><span class="section-title">Complete Project Directory Structure — <code>nji-architecture</code> repo</span></summary><div class="section-body">
-<pre><code>nji-architecture/
+<p><strong>Deployment:</strong> independent of <code>ram-ui</code>. Same Azure Static Web Apps pattern, separate hostname (e.g. <code>admin.ram.hmcts.gov.uk</code> vs <code>ram.hmcts.gov.uk</code>), separate Helm release, separate per-environment rollout.</p>
+</div></details><details class="section" id="complete-project-directory-structure--ram-architecture-repo"><summary><span class="section-title">Complete Project Directory Structure — <code>ram-architecture</code> repo</span></summary><div class="section-body">
+<pre><code>ram-architecture/
 ├── README.md
 ├── architecture.md                              (the index document — see ../architecture.md)
 ├── architecture/                                (sibling files referenced by architecture.md)
@@ -444,16 +444,16 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 ├── diagrams/                                    (C4 model, sequence diagrams, deployment topology)
 ├── scaffolding/
 │   ├── README.md
-│   ├── nji-scaffold.sh                          (creates new service from HMCTS starter)
+│   ├── ram-scaffold.sh                          (creates new service from HMCTS starter)
 │   ├── templates/                               (service-specific overlays applied by the script)
 │   └── conventions/
-├── migration/                                   (Phase 0 Data Migration ETL — APEX → NJI APIs)
+├── migration/                                   (Phase 0 Data Migration ETL — APEX → RAM Pathfinder APIs)
 │   ├── README.md                                (mapping notes, run procedure, sign-off checklist)
-│   ├── reference-data/                          (extract + transform + POST to nji-reference-data)
+│   ├── reference-data/                          (extract + transform + POST to ram-reference-data)
 │   │   ├── extract-apex.sql                     (selects against APEX schema; produces CSV/JSON)
-│   │   ├── transform.py (or .ts / .java)        (APEX shape → NJI shape per data-tables.md)
+│   │   ├── transform.py (or .ts / .java)        (APEX shape → RAM Pathfinder shape per data-tables.md)
 │   │   └── load.py                              (calls Reference Data API: POST /v1/regions etc.)
-│   ├── users-roles/                             (extract + reconcile to IdP + POST to nji-authorisation)
+│   ├── users-roles/                             (extract + reconcile to IdP + POST to ram-authorisation)
 │   │   ├── extract-apex.sql
 │   │   ├── reconcile.py                         (email-then-employee-number match against IdP principals; produces matched / employee-matched / unmatched buckets)
 │   │   ├── transform.py
@@ -466,9 +466,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Why <code>migration/</code> lives here, not as a separate service or as Flyway files:</strong></p>
 <ul>
 <li>The migration is a <strong>one-shot programme deliverable</strong> (Phase 0; re-run per wave for incremental user activation). It is not a runtime service, so it has no <code>controller/</code> / <code>service/</code> / <code>repository/</code> shape.</li>
-<li>It is <strong>owned by the architecture team</strong> (and the named Phase 0 owners per Risk #13), not by any single domain service. Living under <code>nji-architecture/</code> keeps that ownership visible.</li>
-<li>It <strong>calls NJI APIs</strong> (Reference Data API, Authorisation API) — it does not write directly to NJI tables. Per the v1.6 decision, writes go via the API so validation, idempotency, and any audit-logging hooks fire.</li>
-<li>It is <strong>separate from Flyway</strong>. Flyway in NJI is for NJI's DDL (creating tables, adding columns, granting permissions). The ETL is for moving APEX data into NJI tables that Flyway has already created.</li>
+<li>It is <strong>owned by the architecture team</strong> (and the named Phase 0 owners per Risk #13), not by any single domain service. Living under <code>ram-architecture/</code> keeps that ownership visible.</li>
+<li>It <strong>calls RAM Pathfinder APIs</strong> (Reference Data API, Authorisation API) — it does not write directly to RAM Pathfinder tables. Per the v1.6 decision, writes go via the API so validation, idempotency, and any audit-logging hooks fire.</li>
+<li>It is <strong>separate from Flyway</strong>. Flyway in RAM Pathfinder is for RAM Pathfinder's DDL (creating tables, adding columns, granting permissions). The ETL is for moving APEX data into RAM Pathfinder tables that Flyway has already created.</li>
 </ul>
 </div></details><details class="section" id="file-organisation-patterns"><summary><span class="section-title">File Organisation Patterns</span></summary><div class="section-body">
 <p><strong>Configuration files:</strong></p>
@@ -483,7 +483,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li>Integration tests: same location, <code>*IT.java</code> suffix, Testcontainers PostgreSQL.</li>
 <li>Contract tests (Pact or equivalent): <code>src/test/java/.../contract/</code>.</li>
 <li>Manual UAT scripts (FR61 / NFR41 revised 2026-05-06): <code>docs/uat/</code> per domain service — markdown walkthroughs for APEX-experienced users to follow side-by-side against APEX. Not part of automated CI.</li>
-<li>E2E tests: separate <code>tests/e2e/</code> directory in <code>nji-ui</code> repo, Playwright per phase.</li>
+<li>E2E tests: separate <code>tests/e2e/</code> directory in <code>ram-ui</code> repo, Playwright per phase.</li>
 </ul>
 <p><strong>Asset organisation (UI):</strong></p>
 <ul>
@@ -494,8 +494,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </div></details><details class="section" id="development-workflow-integration"><summary><span class="section-title">Development Workflow Integration</span></summary><div class="section-body">
 <p><strong>Local development per service:</strong></p>
 <pre class="bash"><code># Clone the service repo
-git clone https://github.com/hmcts/nji-{service}.git
-cd nji-{service}
+git clone https://github.com/hmcts/ram-{service}.git
+cd ram-{service}
 
 # Run locally (uses Testcontainers for DB and stub Authorisation in dev profile)
 ./gradlew bootRun --args=&#39;--spring.profiles.active=dev&#39;
@@ -508,8 +508,8 @@ cd nji-{service}
 # Build container image
 ./gradlew jib          # or ./gradlew bootBuildImage</code></pre>
 <p><strong>Local development for UI:</strong></p>
-<pre class="bash"><code>git clone https://github.com/hmcts/nji-ui.git
-cd nji-ui
+<pre class="bash"><code>git clone https://github.com/hmcts/ram-ui.git
+cd ram-ui
 
 # Install dependencies
 npm install   # or yarn / pnpm
@@ -557,7 +557,7 @@ Manual approval (per region/wave)
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/repo-structure.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#complete-project-directory-structure--per-backend-service">Complete Project Directory Structure — per backend service</a></li><li><a href="#complete-project-directory-structure--ui-repos">Complete Project Directory Structure — UI repos</a></li><li class="h3"><a href="#nji-ui-business">nji-ui (business)</a></li><li class="h3"><a href="#nji-admin-ui-admin">nji-admin-ui (admin)</a></li><li><a href="#complete-project-directory-structure--nji-architecture-repo">Complete Project Directory Structure — nji-architecture repo</a></li><li><a href="#file-organisation-patterns">File Organisation Patterns</a></li><li><a href="#development-workflow-integration">Development Workflow Integration</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#complete-project-directory-structure--per-backend-service">Complete Project Directory Structure — per backend service</a></li><li><a href="#complete-project-directory-structure--ui-repos">Complete Project Directory Structure — UI repos</a></li><li class="h3"><a href="#ram-ui-business">ram-ui (business)</a></li><li class="h3"><a href="#ram-admin-ui-admin">ram-admin-ui (admin)</a></li><li><a href="#complete-project-directory-structure--ram-architecture-repo">Complete Project Directory Structure — ram-architecture repo</a></li><li><a href="#file-organisation-patterns">File Organisation Patterns</a></li><li><a href="#development-workflow-integration">Development Workflow Integration</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

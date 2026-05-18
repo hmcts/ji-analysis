@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Assumptions (A1–A35) — NJI Documentation</title>
+<title>Assumptions (A1–A35) — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../architecture.html">Architecture (index)</a></li>
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html">User types</a></li>
 <li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items" data-current="true" open>
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items" data-current="true" open>
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../architecture/gaps.html">Gaps</a></li>
 <li><a href="../architecture/assumptions.html" class="current">Assumptions</a></li>
@@ -215,7 +215,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A2</strong> <em>(reopened v2.6, 2026-05-07)</em></td>
-<td>HMCTS IdP supports OAuth 2.0 <code>client_credentials</code> grant for service principals — needed in production for the <strong>payment-processing batch</strong> (introduced in v2.6). At MVP this is satisfied by <code>nji-mock-auth</code> (non-prod only); production issuer is a deferred decision (G7.1, with Azure Workload Identity as the default recommendation).</td>
+<td>HMCTS IdP supports OAuth 2.0 <code>client_credentials</code> grant for service principals — needed in production for the <strong>payment-processing batch</strong> (introduced in v2.6). At MVP this is satisfied by <code>ram-mock-auth</code> (non-prod only); production issuer is a deferred decision (G7.1, with Azure Workload Identity as the default recommendation).</td>
 <td>Pre-Phase-9 decision per G7.1; mock covers Phase 0–8</td>
 <td></td>
 </tr>
@@ -227,7 +227,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A4</strong></td>
-<td>HMCTS Crime SpringBoot template (<code>hmcts/service-hmcts-crime-springboot-template</code>) is the appropriate scaffold for NJI. Template confirmed (2026-05-06) to provide Java 25, Spring Boot 4.0.6, Gradle Groovy DSL, Flyway, OpenTelemetry, Logstash JSON logging, custom JWTFilter, Lombok/MapStruct/OWASP encoder, JaCoCo, CycloneDX, and Swagger Core. <strong>Helm chart and Spring Cloud Azure Key Vault are NOT in the template baseline</strong> — NJI scaffolding script adds them.</td>
+<td>HMCTS Crime SpringBoot template (<code>hmcts/service-hmcts-crime-springboot-template</code>) is the appropriate scaffold for RAM Pathfinder. Template confirmed (2026-05-06) to provide Java 25, Spring Boot 4.0.6, Gradle Groovy DSL, Flyway, OpenTelemetry, Logstash JSON logging, custom JWTFilter, Lombok/MapStruct/OWASP encoder, JaCoCo, CycloneDX, and Swagger Core. <strong>Helm chart and Spring Cloud Azure Key Vault are NOT in the template baseline</strong> — RAM Pathfinder scaffolding script adds them.</td>
 <td>Load-bearing</td>
 <td>Confirmed (G1.4); Helm + Key Vault gaps tracked (G1.4a, G1.4b)</td>
 </tr>
@@ -269,7 +269,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A11</strong></td>
-<td>The 12 user roles documented in <code>functional-modules.md</code> line 497 are the authoritative role set for NJI Authorisation</td>
+<td>The 12 user roles documented in <code>functional-modules.md</code> line 497 are the authoritative role set for RAM Pathfinder Authorisation</td>
 <td>Load-bearing</td>
 <td>Verified against PRD</td>
 </tr>
@@ -281,7 +281,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A13</strong> <em>(revised 2026-05-06)</em></td>
-<td>APEX behaviour is stable for the duration of the build, as observed by UAT users. If APEX changes, UAT scripts and NJI behaviour are updated in lockstep.</td>
+<td>APEX behaviour is stable for the duration of the build, as observed by UAT users. If APEX changes, UAT scripts and RAM Pathfinder behaviour are updated in lockstep.</td>
 <td>Reversible</td>
 <td>Risk</td>
 </tr>
@@ -317,7 +317,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A19</strong></td>
-<td>No bank details, no case-level data invariants from APEX continue to apply to NJI</td>
+<td>No bank details, no case-level data invariants from APEX continue to apply to RAM Pathfinder</td>
 <td>Load-bearing</td>
 <td>Per PRD</td>
 </tr>
@@ -347,7 +347,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A24</strong></td>
-<td>The 11-service decomposition (revised v2.2, 2026-05-07 — <code>nji-configuration</code> dropped in favour of Spring profiles + Key Vault and a shared <code>configuration_values</code> infrastructure table) is programme-approved and binding</td>
+<td>The 11-service decomposition (revised v2.2, 2026-05-07 — <code>ram-configuration</code> dropped in favour of Spring profiles + Key Vault and a shared <code>configuration_values</code> infrastructure table) is programme-approved and binding</td>
 <td>Load-bearing</td>
 <td>Per PRD</td>
 </tr>
@@ -359,7 +359,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A26</strong> <em>(widened v2.6, 2026-05-07)</em></td>
-<td>Mock auth (Spring Authorization Server) provides full OIDC contract parity with the production issuer for (a) human <code>authorization_code</code> and (b) <code>client_credentials</code> for batch service principals (initially <code>nji-payment-batch</code>).</td>
+<td>Mock auth (Spring Authorization Server) provides full OIDC contract parity with the production issuer for (a) human <code>authorization_code</code> and (b) <code>client_credentials</code> for batch service principals (initially <code>ram-payment-batch</code>).</td>
 <td>Load-bearing</td>
 <td>Phase 0 deliverable; integration tests verify human + service-principal contract parity</td>
 </tr>
@@ -371,13 +371,13 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A28</strong></td>
-<td>One global PostgreSQL Flexible Server instance is sufficient for the full bounded NJI workload (~hundreds of concurrent users, read-mostly patterns, indexed joins)</td>
+<td>One global PostgreSQL Flexible Server instance is sufficient for the full bounded RAM Pathfinder workload (~hundreds of concurrent users, read-mostly patterns, indexed joins)</td>
 <td>Load-bearing</td>
 <td>Phase 0 sizing decision; reversible — can introduce read replicas post-MVP per Principle 2</td>
 </tr>
 <tr>
 <td><strong>A29</strong></td>
-<td>Schema evolution: Flyway, per the HMCTS Crime SpringBoot template (<code>spring-boot-starter-flyway</code> + <code>flyway-core</code> + <code>flyway-database-postgresql</code>). Flyway owns NJI's own DDL — table creation, column add/drop, grants. <strong>Not</strong> APEX-to-NJI data movement; the Phase 0 ETL (see <a href="../architecture.html"><code>../architecture.md</code></a>) loads NJI data via the Reference Data and Authorisation APIs.</td>
+<td>Schema evolution: Flyway, per the HMCTS Crime SpringBoot template (<code>spring-boot-starter-flyway</code> + <code>flyway-core</code> + <code>flyway-database-postgresql</code>). Flyway owns RAM Pathfinder's own DDL — table creation, column add/drop, grants. <strong>Not</strong> APEX-to-RAM Pathfinder data movement; the Phase 0 ETL (see <a href="../architecture.html"><code>../architecture.md</code></a>) loads RAM Pathfinder data via the Reference Data and Authorisation APIs.</td>
 <td>Confirmed via template review (2026-05-06)</td>
 <td></td>
 </tr>
@@ -395,13 +395,13 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A32</strong> <em>(revised 2026-05-06)</em></td>
-<td>Phase 0 Reference Data + Users/Roles migration is an ETL: read APEX SQL exports → transform to NJI shape → load via NJI Reference Data API and Authorisation API. Operationally feasible with named-owner sign-off.</td>
+<td>Phase 0 Reference Data + Users/Roles migration is an ETL: read APEX SQL exports → transform to RAM Pathfinder shape → load via RAM Pathfinder Reference Data API and Authorisation API. Operationally feasible with named-owner sign-off.</td>
 <td>Load-bearing</td>
-<td>Phase 0 deliverable; reconciliation per D3 + Risk #13. Tool at <code>nji-architecture/migration/</code>.</td>
+<td>Phase 0 deliverable; reconciliation per D3 + Risk #13. Tool at <code>ram-architecture/migration/</code>.</td>
 </tr>
 <tr>
 <td><strong>A33</strong> <em>(revised 2026-05-06)</em></td>
-<td>The Authoritative Table Ownership Mapping (39 NJI tables in <a href="./data-tables.html"><code>./data-tables.md</code></a>) is NJI's design, fixed by NJI; not revalidated against APEX shape. What is revalidated in Phase 0 is the migration tool's APEX-side input mapping: when the dump arrives, verify the tool covers every APEX field NJI needs and every APEX value lands in a known NJI vocabulary row (new values added via the Reference Data API; no schema change). An unmapped APEX structure raises an architectural PR.</td>
+<td>The Authoritative Table Ownership Mapping (39 RAM Pathfinder tables in <a href="./data-tables.html"><code>./data-tables.md</code></a>) is RAM Pathfinder's design, fixed by RAM Pathfinder; not revalidated against APEX shape. What is revalidated in Phase 0 is the migration tool's APEX-side input mapping: when the dump arrives, verify the tool covers every APEX field RAM Pathfinder needs and every APEX value lands in a known RAM Pathfinder vocabulary row (new values added via the Reference Data API; no schema change). An unmapped APEX structure raises an architectural PR.</td>
 <td>Load-bearing for migration correctness</td>
 <td>Phase 0 deliverable (G4.6); architecture changes only if an unmapped APEX structure surfaces.</td>
 </tr>
@@ -413,7 +413,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>A35</strong> <em>(softened v2.6, 2026-05-07)</em></td>
-<td>Most MVP runtime requests are user-initiated. One exception: the payment-processing batch (<code>nji-payment-batch</code>), which runs on a schedule and authenticates as a service principal. User-initiated inter-service auth: JWT propagation. Batch inter-service auth: OAuth <code>client_credentials</code> against <code>nji-mock-auth</code> in non-prod; production issuer per G7.1. Other non-user-initiated flows (DA&amp;I service-consumer calls, scheduled aggregations, async messaging) are out of MVP scope and would reuse the service-principal pattern. Phase 0 production migration runs operator-initiated (G4.7); dev/CI seeding via one-off scripts.</td>
+<td>Most MVP runtime requests are user-initiated. One exception: the payment-processing batch (<code>ram-payment-batch</code>), which runs on a schedule and authenticates as a service principal. User-initiated inter-service auth: JWT propagation. Batch inter-service auth: OAuth <code>client_credentials</code> against <code>ram-mock-auth</code> in non-prod; production issuer per G7.1. Other non-user-initiated flows (DA&amp;I service-consumer calls, scheduled aggregations, async messaging) are out of MVP scope and would reuse the service-principal pattern. Phase 0 production migration runs operator-initiated (G4.7); dev/CI seeding via one-off scripts.</td>
 <td>Load-bearing</td>
 <td>The payment batch is the only non-user-initiated runtime flow at MVP. Adding more reopens the production service-auth choice (G7.1).</td>
 </tr>

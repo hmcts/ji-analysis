@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Epic 0.3: Users, roles, and activation flags are SQL-loaded — NJI Documentation</title>
+<title>Epic 0.3: Users, roles, and activation flags are SQL-loaded — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="">
-<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../../prd.html">PRD (NJI)</a></li>
+<li><a href="../../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../../architecture.html">Architecture (index)</a></li>
 <li><a href="../../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../../architecture/user-types.html">User types</a></li>
 <li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../../architecture/gaps.html">Gaps</a></li>
 <li><a href="../../architecture/assumptions.html">Assumptions</a></li>
@@ -188,12 +188,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <main class="content">
 
 <h1 id="epic-03-users-roles-and-activation-flags-are-sql-loaded">Epic 0.3: Users, roles, and activation flags are SQL-loaded</h1>
-<p><strong>User outcome:</strong> Active APEX users and their role/Region/Area assignments are loaded into the NJI Authorisation tables via a direct-SQL ETL, with named-owner sign-off and explicit handling of unmatched records via versioned CSV decision files. Per-region activation flags are initialised based on Phase 9+ planned cutover order (all <code>FALSE</code> initially; flipped per region during cutover via direct SQL). <strong>No admin UI in MVP</strong> — operational user/role/scope maintenance happens via direct SQL by DBAs; an admin UI surface is on the post-MVP roadmap.</p>
+<p><strong>User outcome:</strong> Active APEX users and their role/Region/Area assignments are loaded into the RAM Pathfinder Authorisation tables via a direct-SQL ETL, with named-owner sign-off and explicit handling of unmatched records via versioned CSV decision files. Per-region activation flags are initialised based on Phase 9+ planned cutover order (all <code>FALSE</code> initially; flipped per region during cutover via direct SQL). <strong>No admin UI in MVP</strong> — operational user/role/scope maintenance happens via direct SQL by DBAs; an admin UI surface is on the post-MVP roadmap.</p>
 <p><strong>Vertical slice:</strong></p>
 <ul>
-<li>Phase 0 Users/Roles ETL stream at <code>nji-architecture/migration/users-roles/</code> (per AR46–AR48)</li>
+<li>Phase 0 Users/Roles ETL stream at <code>ram-architecture/migration/users-roles/</code> (per AR46–AR48)</li>
 <li>Reads APEX user dumps, reconciles to HMCTS IdP principals (email primary, employee number fallback per D9 / Risk #14)</li>
-<li><strong>Loads matched records via direct SQL INSERT</strong> into <code>auth_users</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, <code>auth_user_activation_flags</code> (using the <code>nji_authorisation</code> DB role — write access for the ETL runner is granted via a one-time DBA-issued credential held in Azure Key Vault)</li>
+<li><strong>Loads matched records via direct SQL INSERT</strong> into <code>auth_users</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, <code>auth_user_activation_flags</code> (using the <code>ram_authorisation</code> DB role — write access for the ETL runner is granted via a one-time DBA-issued credential held in Azure Key Vault)</li>
 <li>Unmatched records routed to <code>unmatched/{run-date}.csv</code> with an editable <code>decision</code> column (drop / hold / <code>manual_map:&lt;idp_email&gt;</code>)</li>
 <li>Named owner edits the CSV; ETL re-run applies decisions</li>
 <li>Per-run reconciliation report under <code>migration/reports/users-roles/{run-date}.md</code></li>
@@ -212,27 +212,27 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </ul>
 <p><strong>Out of scope for Phase 0 (deferred post-MVP):</strong></p>
 <ul>
-<li><code>nji-authorisation</code> admin write endpoints (was Story 0.3.1 in the prior plan, removed)</li>
-<li><code>nji-admin-ui</code> Users &amp; Roles module (was Story 0.3.2)</li>
-<li><code>nji-admin-ui</code> Migration Reports module with decisions UI (was Story 0.3.4 — replaced by editable CSV files in MVP)</li>
+<li><code>ram-authorisation</code> admin write endpoints (was Story 0.3.1 in the prior plan, removed)</li>
+<li><code>ram-admin-ui</code> Users &amp; Roles module (was Story 0.3.2)</li>
+<li><code>ram-admin-ui</code> Migration Reports module with decisions UI (was Story 0.3.4 — replaced by editable CSV files in MVP)</li>
 <li>Activation flag toggle UI (Phase 9+ cutover happens via direct SQL only in MVP)</li>
 </ul>
 <hr />
 <h2 id="story-031-phase-0-usersroles-etl--apex-users-via-direct-sql--decisions-csv--reconciliation-report--owner-sign-off">Story 0.3.1: Phase 0 Users/Roles ETL — APEX users via direct SQL + decisions CSV + reconciliation report + owner sign-off</h2>
-<p>As a <strong>Users/Roles named owner</strong> (identity / HMCTS IT lead), I want the Phase 0 ETL to read APEX user dumps, reconcile to HMCTS IdP principals (email primary, employee number fallback), load matched users via direct SQL into the NJI Authorisation tables, and route unmatched users into an explicit decisions CSV that I edit and approve via versioned git commits, So that <strong>migration correctness is auditably owned</strong> (per FR57, D9, Risk #14), unmatched records are not silently dropped, and the workflow works without an admin UI (which is now post-MVP).</p>
+<p>As a <strong>Users/Roles named owner</strong> (identity / HMCTS IT lead), I want the Phase 0 ETL to read APEX user dumps, reconcile to HMCTS IdP principals (email primary, employee number fallback), load matched users via direct SQL into the RAM Pathfinder Authorisation tables, and route unmatched users into an explicit decisions CSV that I edit and approve via versioned git commits, So that <strong>migration correctness is auditably owned</strong> (per FR57, D9, Risk #14), unmatched records are not silently dropped, and the workflow works without an admin UI (which is now post-MVP).</p>
 <p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> the engineer creates the ETL at <code>nji-architecture/migration/users-roles/</code><br/><strong>When</strong> the ETL is implemented<br/><strong>Then</strong> it reads APEX user dumps (format per the migration spec)<br/><strong>And</strong> for each row, it reconciles to an HMCTS IdP principal: • try exact email match against the HMCTS IdP directory (primary key per D9) • on no email match, try employee-number match (fallback per D9) • on neither match, route the row to the unmatched bucket<br/><strong>And</strong> matched rows are <strong>inserted via direct SQL</strong> into <code>auth_users</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, and <code>auth_user_activation_flags</code> using the <code>nji_authorisation</code> DB role<br/><strong>And</strong> the ETL does NOT call the Authorisation API (which is read-only in Phase 0).</p>
-<p><strong>Given</strong> the ETL completes a run<br/><strong>When</strong> the reconciliation report is generated at <code>nji-architecture/migration/reports/users-roles/{run-date}.md</code><br/><strong>Then</strong> the report shows: • source-row count per APEX dump • matched count (email primary, employee-number fallback breakdown) • unmatched count with per-row reason • per-role assignment counts • per-Region/Area scope counts • activation-flag initial state per region (all FALSE at MVP) • anomalies (e.g. APEX role not in NJI controlled list, ambiguous email match)<br/><strong>And</strong> the unmatched rows are written to <code>nji-architecture/migration/reports/users-roles/unmatched/{run-date}.csv</code> with columns <code>apex_id</code>, <code>apex_email</code>, <code>apex_employee_number</code>, <code>apex_name</code>, <code>apex_role</code>, <code>apex_region</code>, <code>apex_area</code>, <code>reason</code>, <code>decision</code> (last column empty for owner to fill).</p>
+<p><strong>Given</strong> the engineer creates the ETL at <code>ram-architecture/migration/users-roles/</code><br/><strong>When</strong> the ETL is implemented<br/><strong>Then</strong> it reads APEX user dumps (format per the migration spec)<br/><strong>And</strong> for each row, it reconciles to an HMCTS IdP principal: • try exact email match against the HMCTS IdP directory (primary key per D9) • on no email match, try employee-number match (fallback per D9) • on neither match, route the row to the unmatched bucket<br/><strong>And</strong> matched rows are <strong>inserted via direct SQL</strong> into <code>auth_users</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, and <code>auth_user_activation_flags</code> using the <code>ram_authorisation</code> DB role<br/><strong>And</strong> the ETL does NOT call the Authorisation API (which is read-only in Phase 0).</p>
+<p><strong>Given</strong> the ETL completes a run<br/><strong>When</strong> the reconciliation report is generated at <code>ram-architecture/migration/reports/users-roles/{run-date}.md</code><br/><strong>Then</strong> the report shows: • source-row count per APEX dump • matched count (email primary, employee-number fallback breakdown) • unmatched count with per-row reason • per-role assignment counts • per-Region/Area scope counts • activation-flag initial state per region (all FALSE at MVP) • anomalies (e.g. APEX role not in RAM Pathfinder controlled list, ambiguous email match)<br/><strong>And</strong> the unmatched rows are written to <code>ram-architecture/migration/reports/users-roles/unmatched/{run-date}.csv</code> with columns <code>apex_id</code>, <code>apex_email</code>, <code>apex_employee_number</code>, <code>apex_name</code>, <code>apex_role</code>, <code>apex_region</code>, <code>apex_area</code>, <code>reason</code>, <code>decision</code> (last column empty for owner to fill).</p>
 <p><strong>Given</strong> a named owner edits the decisions CSV with <code>drop</code> / <code>hold</code> / <code>manual_map:&lt;idp_email&gt;</code> per row<br/><strong>When</strong> the owner commits the updated CSV to git<br/><strong>Then</strong> the next ETL re-run reads the decisions<br/><strong>And</strong> applies them: <code>drop</code> rows are skipped; <code>hold</code> rows remain unmatched (carried forward); <code>manual_map:&lt;email&gt;</code> rows are loaded with the specified IdP email binding (the email is recorded in <code>auth_users.idp_principal</code> alongside the original APEX identifiers for audit).</p>
 <p><strong>Given</strong> the ETL is re-run incrementally for a subsequent wave<br/><strong>When</strong> the second run completes<br/><strong>Then</strong> previously-matched users are not re-created (idempotency per AR49, via <code>INSERT ... ON CONFLICT DO NOTHING</code>)<br/><strong>And</strong> new APEX rows are matched fresh against IdP<br/><strong>And</strong> previously-unmatched rows whose APEX side has changed re-enter the unmatched CSV with an updated reason.</p>
 <p><strong>Given</strong> an APEX role appears that does not exist in <code>auth_roles</code><br/><strong>When</strong> the ETL encounters the row<br/><strong>Then</strong> the row routes to the unmatched CSV with reason <em>"Unknown APEX role: {role-name}"</em><br/><strong>And</strong> the row does not load with a partial role assignment.</p>
 <p><strong>Given</strong> the activation flag initial state is being set<br/><strong>When</strong> the ETL inserts <code>auth_user_activation_flags</code><br/><strong>Then</strong> every user has an entry per applicable region with <code>activated = FALSE</code><br/><strong>And</strong> Phase 9+ cutover flips these flags per region via direct SQL (no UI in MVP).</p>
-<p><strong>Given</strong> a named owner reviews the reconciliation report<br/><strong>When</strong> they sign off via a versioned commit to <code>nji-architecture/migration/reports/users-roles/signoffs/{run-date}-{owner-handle}.md</code><br/><strong>Then</strong> the sign-off is recorded in git history (immutable audit trail)<br/><strong>And</strong> the commit is co-signed by a second reviewer per the <code>CODEOWNERS</code> policy on <code>migration/reports/</code><br/><strong>And</strong> the absence of a signoff file blocks Phase 9+ regional activation (enforced operationally — the cutover runbook checks for the signoff before flipping flags).</p>
+<p><strong>Given</strong> a named owner reviews the reconciliation report<br/><strong>When</strong> they sign off via a versioned commit to <code>ram-architecture/migration/reports/users-roles/signoffs/{run-date}-{owner-handle}.md</code><br/><strong>Then</strong> the sign-off is recorded in git history (immutable audit trail)<br/><strong>And</strong> the commit is co-signed by a second reviewer per the <code>CODEOWNERS</code> policy on <code>migration/reports/</code><br/><strong>And</strong> the absence of a signoff file blocks Phase 9+ regional activation (enforced operationally — the cutover runbook checks for the signoff before flipping flags).</p>
 <p><strong>References:</strong> FR57 (Users/Roles via SQL ETL per D9), FR58 (initial activation flag state); NFR15 (audit via git); AR21, AR46, AR47, AR48, AR49.</p>
 <p><strong>Explicitly NOT in scope (deferred post-MVP):</strong></p>
 <ul>
-<li>Admin API for user / role / scope edits on <code>nji-authorisation</code> (was Story 0.3.1 in the prior plan)</li>
-<li>Admin UI Users &amp; Roles module in <code>nji-admin-ui</code> (was Story 0.3.2)</li>
+<li>Admin API for user / role / scope edits on <code>ram-authorisation</code> (was Story 0.3.1 in the prior plan)</li>
+<li>Admin UI Users &amp; Roles module in <code>ram-admin-ui</code> (was Story 0.3.2)</li>
 <li>Admin UI Migration Reports module with decisions UI (was Story 0.3.4 — replaced by editable CSV files)</li>
 <li>UI for activation flag toggle</li>
 </ul>

@@ -13,7 +13,7 @@ This is the canonical FR-to-Epic mapping. It is updated each time a phase advanc
 
 | FR | Phase 0 epic / coverage | Post-MVP residual? | Notes |
 |---|---|---|---|
-| FR1 | [Epic 0.1](phase-0/epic-0.1-user-authenticates.md) | — | SSO via `nji-mock-auth` in non-prod |
+| FR1 | [Epic 0.1](phase-0/epic-0.1-user-authenticates.md) | — | SSO via `ram-mock-auth` in non-prod |
 | FR2 | [Epic 0.1](phase-0/epic-0.1-user-authenticates.md) | — | Authorisation principal → roles + scope (read-only API) |
 | FR3 | [Epic 0.1](phase-0/epic-0.1-user-authenticates.md) | — | `GET /v1/users/{id}/effective-permissions` |
 | **FR4** | **Data layer only** in [Epic 0.3](phase-0/epic-0.3-admin-manages-users-roles.md) (auth tables populated by SQL ETL; editable by DBAs via SQL) | **YES — UI surface** for sysadmins to update assignments **is post-MVP** | Was previously planned in Epic 0.2/0.3 admin UI stories — those stories were removed in the 2026-05-15 scope revision |
@@ -23,7 +23,7 @@ This is the canonical FR-to-Epic mapping. It is updated each time a phase advanc
 | FR8 | distributed (lands in [Epic 0.1](phase-0/epic-0.1-user-authenticates.md) first) | — | Shared `configuration_values` Flyway baseline |
 | FR9 | [Epic 0.4](phase-0/epic-0.4-system-dispatches-emails.md) | — | Notification dispatch + delivery log. User-JWT propagation only at Phase 0; `client_credentials` flow moved to Phase 6 |
 | FR55 | [Epic 0.1](phase-0/epic-0.1-user-authenticates.md) | — | Home shell with role-scoped navigation |
-| FR56 | [Epic 0.1](phase-0/epic-0.1-user-authenticates.md) (business stack) | **Partial — admin stack** is post-MVP | The `nji-ui` business-user stack is delivered in Phase 0; the `nji-admin-ui` admin stack is post-MVP |
+| FR56 | [Epic 0.1](phase-0/epic-0.1-user-authenticates.md) (business stack) | **Partial — admin stack** is post-MVP | The `ram-ui` business-user stack is delivered in Phase 0; the `ram-admin-ui` admin stack is post-MVP |
 | FR57 | [Epic 0.2](phase-0/epic-0.2-admin-manages-ref-data.md) (Ref Data ETL via SQL) + [Epic 0.3](phase-0/epic-0.3-admin-manages-users-roles.md) (Users/Roles ETL via SQL) | — | Both ETL streams now load via direct SQL rather than via API; named-owner sign-off via versioned git commits |
 | FR58 | [Epic 0.3](phase-0/epic-0.3-admin-manages-users-roles.md) (initial flag state via ETL — all FALSE) — orchestration in Phase 9+ (per-region flip via direct SQL by DBA) | **Partial — activation toggle UI** is post-MVP | MVP cutover happens by DBA running `UPDATE auth_user_activation_flags SET activated = TRUE WHERE region = …` per the rollout runbook |
 | FR59 | [Epic 0.2](phase-0/epic-0.2-admin-manages-ref-data.md) | — | API-as-Product first exercise on Reference Data read API |
@@ -35,7 +35,7 @@ This is the canonical FR-to-Epic mapping. It is updated each time a phase advanc
 |---|---|---|
 | FR4 | Auth tables loaded via SQL ETL; data editable by DBAs via direct SQL | Admin UI surface for system administrators to update role + Region/Area scope assignments |
 | FR6 | Read API + SQL-loaded data with git-based owner sign-off | RSU UI for view/edit/create on controlled lists; pending-change workflow with named-owner sign-off via UI |
-| FR56 | Business-user `nji-ui` (modern stack, WCAG 2.2 AA) | Admin-user `nji-admin-ui` (same stack, distinct hostname) — was already partially admin-only; now fully post-MVP |
+| FR56 | Business-user `ram-ui` (modern stack, WCAG 2.2 AA) | Admin-user `ram-admin-ui` (same stack, distinct hostname) — was already partially admin-only; now fully post-MVP |
 | FR58 | Activation flag table populated by ETL; cutover flips via DBA SQL | Activation toggle UI for system administrators |
 
 ## Phases 1–9+ (FR10–FR54, FR61) — pending
@@ -62,10 +62,10 @@ Items removed from MVP per the 2026-05-15 admin-UI-out-of-scope decision:
 
 | Capability | Original Phase 0 owner (now removed) | Post-MVP owner |
 |---|---|---|
-| `nji-admin-ui` repo scaffold + auth wrapper | was Story 0.2.3 | Post-MVP UI programme |
+| `ram-admin-ui` repo scaffold + auth wrapper | was Story 0.2.3 | Post-MVP UI programme |
 | Reference Data admin module (list/edit/create + sign-off workflow) | was Story 0.2.4 | Post-MVP UI programme |
 | Reference Data API write endpoints (`POST/PUT/PATCH/DELETE`) | was part of Story 0.2.2 | Post-MVP — paired with the admin UI |
-| `nji-authorisation` admin write endpoints (`PUT /admin/users/{id}/...`) | was Story 0.3.1 | Post-MVP — paired with the admin UI |
+| `ram-authorisation` admin write endpoints (`PUT /admin/users/{id}/...`) | was Story 0.3.1 | Post-MVP — paired with the admin UI |
 | Users & Roles admin module | was Story 0.3.2 | Post-MVP UI programme |
 | Migration Reports admin module | was Story 0.3.4 | Post-MVP UI programme |
 | Admin "Send Test Email" UI | was Story 0.4.4 | Post-MVP UI programme |

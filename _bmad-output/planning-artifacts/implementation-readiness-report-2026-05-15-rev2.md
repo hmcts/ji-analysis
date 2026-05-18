@@ -27,7 +27,7 @@ filesIncluded:
   - _bmad-output/planning-artifacts/epics/phase-0/validation-report-2026-05-15.md
   - _bmad-output/planning-artifacts/sprint-change-proposal-2026-05-15.md
 uxIncluded: false
-uxDeferralReason: 'Project currently scoped to domains and APIs only; UI deferred. Admin UI explicitly post-MVP per D10 (2026-05-15). Business UI accessibility constraints (WCAG 2.2 AA) carried in nji-ui scaffold stories.'
+uxDeferralReason: 'Project currently scoped to domains and APIs only; UI deferred. Admin UI explicitly post-MVP per D10 (2026-05-15). Business UI accessibility constraints (WCAG 2.2 AA) carried in ram-ui scaffold stories.'
 priorReports:
   - implementation-readiness-report-2026-05-05.md (historical)
   - implementation-readiness-report-2026-05-06.md (historical)
@@ -37,7 +37,7 @@ priorReports:
 # Implementation Readiness Assessment Report — 2026-05-15 (revision 2, post-D10)
 
 **Date:** 2026-05-15
-**Project:** ji-analysis (NJI rebuild)
+**Project:** ji-analysis (RAM Pathfinder rebuild)
 **Trigger for this re-run:** Formal PRD update via `bmad-correct-course` added D10 (admin UI removed from MVP; `gh` CLI not available) and added AR51 (manual GitHub setup). All four Phase 0 epics + the PRD + the requirements inventory were modified earlier today. This report validates that the changes are internally consistent across PRD, architecture-derived requirements, and Phase 0 stories.
 
 ## 1. Document Inventory
@@ -65,7 +65,7 @@ All 61 FRs and 42 NFRs unchanged in count. The post-D10 amendments are all wordi
 
 - **D10 added** to the Decisions Log as the 10th locked decision.
 - **D9 amended** to defer to D10 on the "via SQL not via API" framing.
-- **MVP scope bullet 3** distinguishes business UI (in MVP via `nji-ui`) vs admin UI (post-MVP per D10).
+- **MVP scope bullet 3** distinguishes business UI (in MVP via `ram-ui`) vs admin UI (post-MVP per D10).
 - **MVP exclusions list** added: admin UI (with the four modules itemised) + admin-write API endpoints.
 - **Growth Features list** added: admin UI as a first-class post-MVP deliverable.
 - **FR4 / FR6 / FR56 / FR58** each marked "(scoped 2026-05-15 per D10)" with explicit MVP-data-layer + post-MVP-UI-surface split.
@@ -91,14 +91,14 @@ Epic 0.4 (2): 0.4.1 0.4.2
 | FR1 | 0.1.2, 0.1.5 | ✅ full | — | ✅ |
 | FR2 | 0.1.3, 0.1.5 | ✅ full | — | ✅ |
 | FR3 | 0.1.3, 0.1.5 | ✅ full | — | ✅ |
-| **FR4** | 0.3.1 (data layer via SQL ETL into `auth_users`/`auth_user_roles`/`auth_user_region_scopes`) | ✅ data layer (DBAs edit via SQL) | UI surface for sysadmins (`nji-admin-ui` Users & Roles module) | ✅ correctly scoped per D10 — NOT a coverage gap |
+| **FR4** | 0.3.1 (data layer via SQL ETL into `auth_users`/`auth_user_roles`/`auth_user_region_scopes`) | ✅ data layer (DBAs edit via SQL) | UI surface for sysadmins (`ram-admin-ui` Users & Roles module) | ✅ correctly scoped per D10 — NOT a coverage gap |
 | FR5 | — | n/a (post-MVP per PRD v2.5) | — | ✅ intentional deferral |
 | **FR6** | 0.2.2 (read API), 0.2.3 (SQL ETL load + git sign-off) | ✅ read API + data layer + git-based sign-off | RSU UI for view/edit/create + UI sign-off workflow | ✅ correctly scoped per D10 — NOT a coverage gap |
 | FR7 | 0.2.1, 0.2.2 | ✅ full | — | ✅ |
 | FR8 | 0.1.1 | ✅ full | — | ✅ |
 | FR9 | 0.4.1, 0.4.2 | ✅ user-JWT propagation surface | `client_credentials` flow ships in Phase 6 (still MVP, just later) | ✅ |
 | FR55 | 0.1.5 | ✅ full | — | ✅ |
-| **FR56** | 0.1.4 (`nji-ui` scaffold), 0.1.5 (Home shell), 0.2.2 (consumes API) | ✅ business stack | `nji-admin-ui` admin stack post-MVP per D10 | ✅ correctly scoped — NOT a coverage gap |
+| **FR56** | 0.1.4 (`ram-ui` scaffold), 0.1.5 (Home shell), 0.2.2 (consumes API) | ✅ business stack | `ram-admin-ui` admin stack post-MVP per D10 | ✅ correctly scoped — NOT a coverage gap |
 | FR57 | 0.2.3 (Ref Data ETL via SQL), 0.3.1 (Users/Roles ETL via SQL) | ✅ full (both ETL streams) | — | ✅ |
 | **FR58** | 0.3.1 (initial flag state via ETL — all FALSE) | ✅ initial state set; cutover flips via DBA SQL per Phase 9+ runbook | Activation toggle UI post-MVP per D10 | ✅ correctly scoped — NOT a coverage gap |
 | FR59 | 0.1.3, 0.2.2, 0.4.2 | ✅ full (read-side API-as-Product) | — | ✅ |
@@ -124,8 +124,8 @@ FR10–FR54 + FR61 belong to Phases 1–9+ and are framework-only (no concrete s
 
 UX document still absent. Now formally **PRD-blessed**:
 
-- **Business UI** (`nji-ui`) — in MVP via D4 (modern stack replicates APEX), GOV.UK Design System, WCAG 2.2 AA per NFR17–NFR19. No UX doc; APEX is the behavioural reference.
-- **Admin UI** (`nji-admin-ui`) — post-MVP per D10. A UX design will be needed when the admin UI is scheduled. Out of MVP scope, no gap.
+- **Business UI** (`ram-ui`) — in MVP via D4 (modern stack replicates APEX), GOV.UK Design System, WCAG 2.2 AA per NFR17–NFR19. No UX doc; APEX is the behavioural reference.
+- **Admin UI** (`ram-admin-ui`) — post-MVP per D10. A UX design will be needed when the admin UI is scheduled. Out of MVP scope, no gap.
 
 Internal consistency PRD ↔ architecture ↔ epics on UI matters: ✅.
 
@@ -164,9 +164,9 @@ Carry-forward note from the prior validation: the *deferral-model ambiguity* (Ph
 
 **🟡 Minor Concerns:**
 
-1. **AR46 / AR47 wording could be tightened** — they still describe ETLs as "calls NJI APIs to load". D10 supersedes (load via direct SQL). The story ACs and AR2 already reflect D10; AR46/AR47 themselves are merely less-precise. **Recommendation:** add a `(amended by D10, 2026-05-15)` qualifier to AR46 and AR47 in `epics/requirements-inventory.md` for full internal consistency.
+1. **AR46 / AR47 wording could be tightened** — they still describe ETLs as "calls RAM Pathfinder APIs to load". D10 supersedes (load via direct SQL). The story ACs and AR2 already reflect D10; AR46/AR47 themselves are merely less-precise. **Recommendation:** add a `(amended by D10, 2026-05-15)` qualifier to AR46 and AR47 in `epics/requirements-inventory.md` for full internal consistency.
 
-2. **`nji-architecture/runbooks/github-setup.md` doesn't exist yet** — referenced from 5 stories + AR51. Story 0.1.1 owns it as a deliverable. As long as Story 0.1.1 is implemented first (and it should be — it's the canonical platform pattern), the runbook will exist before any other scaffold work. **No action needed; just preserve story ordering.**
+2. **`ram-architecture/runbooks/github-setup.md` doesn't exist yet** — referenced from 5 stories + AR51. Story 0.1.1 owns it as a deliverable. As long as Story 0.1.1 is implemented first (and it should be — it's the canonical platform pattern), the runbook will exist before any other scaffold work. **No action needed; just preserve story ordering.**
 
 ## 6. Summary and Recommendations
 
@@ -184,7 +184,7 @@ The 2026-05-15 PRD update (D10) successfully closes the gap that the previous re
 ### Recommended Next Steps
 
 1. **Run `bmad-sprint-planning`** to produce the Phase 0 sprint plan. The 11 stories are ready; the sprint plan will sequence them and assign owners.
-2. **Implement Story 0.1.1 first** — produces the canonical platform pattern AND the `nji-architecture/runbooks/github-setup.md` deliverable that the other scaffold stories depend on.
+2. **Implement Story 0.1.1 first** — produces the canonical platform pattern AND the `ram-architecture/runbooks/github-setup.md` deliverable that the other scaffold stories depend on.
 3. **In parallel:** the platform engineering team should provision the dev/staging/production Azure infrastructure (AKS, PostgreSQL Flexible Server, APIM, Application Insights, Key Vault, Static Web Apps) so Story 0.1.1's deploy ACs can pass.
 4. **After Phase 0 stories implementation begins:** continue producing Phase 1+ stories via `bmad-create-epics-and-stories`.
 

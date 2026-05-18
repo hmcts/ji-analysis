@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Starter Template — Initialisation Flow, Build Tool, Dependency Inventory, NJI Conventions — NJI Documentation</title>
+<title>Starter Template — Initialisation Flow, Build Tool, Dependency Inventory, RAM Pathfinder Conventions — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../architecture.html">Architecture (index)</a></li>
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference" data-current="true" open>
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference" data-current="true" open>
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html">User types</a></li>
 <li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../architecture/gaps.html">Gaps</a></li>
 <li><a href="../architecture/assumptions.html">Assumptions</a></li>
@@ -187,29 +187,29 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="starter-template--initialisation-flow-build-tool-dependency-inventory-nji-conventions">Starter Template — Initialisation Flow, Build Tool, Dependency Inventory, NJI Conventions</h1>
+<h1 id="starter-template--initialisation-flow-build-tool-dependency-inventory-ram-conventions">Starter Template — Initialisation Flow, Build Tool, Dependency Inventory, RAM Pathfinder Conventions</h1>
 <blockquote>
-<p>Sibling of <a href="../architecture.html"><code>../architecture.md</code></a>. Selection rationale lives in the parent. This file holds the per-service initialisation flow, dependency inventory, and NJI conventions overlaid by the scaffolding script.</p>
+<p>Sibling of <a href="../architecture.html"><code>../architecture.md</code></a>. Selection rationale lives in the parent. This file holds the per-service initialisation flow, dependency inventory, and RAM Pathfinder conventions overlaid by the scaffolding script.</p>
 </blockquote>
 <details class="section" id="initialisation-flow-per-service"><summary><span class="section-title">Initialisation Flow (per service)</span></summary><div class="section-body">
-<p>Each new NJI service is scaffolded from the HMCTS starter, then customised. The exact CLI depends on what HMCTS publishes; conceptual flow:</p>
+<p>Each new RAM Pathfinder service is scaffolded from the HMCTS starter, then customised. The exact CLI depends on what HMCTS publishes; conceptual flow:</p>
 <pre class="bash"><code># Conceptual — actual command per HMCTS published documentation
-git clone https://github.com/hmcts/spring-boot-template.git nji-{service-name}
-cd nji-{service-name}
+git clone https://github.com/hmcts/spring-boot-template.git ram-{service-name}
+cd ram-{service-name}
 git remote remove origin
 git remote add origin &lt;new-repo-url&gt;
 
 # Rename package, artifact, application name to match the service
 # (specific tooling / scripts per HMCTS starter conventions)
-./scripts/rename uk.gov.hmcts.nji.{service-name}
+./scripts/rename uk.gov.hmcts.ram.{service-name}
 
 # Verify build
 ./gradlew build
 
 # Initial commit on new repo
-git add . &amp;&amp; git commit -m &quot;Scaffold NJI {service-name} from HMCTS starter&quot;
+git add . &amp;&amp; git commit -m &quot;Scaffold RAM Pathfinder {service-name} from HMCTS starter&quot;
 git push -u origin main</code></pre>
-<p><strong>NJI scaffolding script:</strong> a thin wrapper over the HMCTS starter clone-and-rename steps, with NJI-specific defaults (Azure UK region, Application Insights workspace, naming conventions). Used at service-creation time only — not a runtime dependency.</p>
+<p><strong>RAM Pathfinder scaffolding script:</strong> a thin wrapper over the HMCTS starter clone-and-rename steps, with RAM Pathfinder-specific defaults (Azure UK region, Application Insights workspace, naming conventions). Used at service-creation time only — not a runtime dependency.</p>
 </div></details><details class="section" id="build-tool-gradle"><summary><span class="section-title">Build Tool: Gradle</span></summary><div class="section-body">
 <p>Gradle for all 11 services and the scaffolding script.</p>
 <p>Reasons:</p>
@@ -259,7 +259,7 @@ git push -u origin main</code></pre>
 <ul>
 <li>TLS-only configuration (no HTTP).</li>
 <li>Secure header defaults.</li>
-<li><strong>Custom <code>JWTFilter</code></strong> (using <code>io.jsonwebtoken:jjwt:0.13.0</code>) for JWT validation; integrates with NJI Authorisation service per Step 4 of <a href="../architecture.html"><code>../architecture.md</code></a>.</li>
+<li><strong>Custom <code>JWTFilter</code></strong> (using <code>io.jsonwebtoken:jjwt:0.13.0</code>) for JWT validation; integrates with RAM Pathfinder Authorisation service per Step 4 of <a href="../architecture.html"><code>../architecture.md</code></a>.</li>
 <li><strong><code>org.owasp.encoder:encoder:1.4.0</code></strong> for XSS-safe output encoding.</li>
 <li>Azure Key Vault integration for secret retrieval (added per service via Spring Cloud Azure — not in template baseline).</li>
 </ul>
@@ -267,12 +267,12 @@ git push -u origin main</code></pre>
 <ul>
 <li>Dockerfile (multi-stage build, JDK image) — provided by HMCTS template.</li>
 <li>Standard health probe configuration via Spring Actuator — provided by HMCTS template.</li>
-<li><strong>Helm chart for AKS deployment is NOT in the template baseline</strong> (G1.4a in <a href="./gaps.html"><code>./gaps.md</code></a>) — NJI scaffolding script adds it.</li>
+<li><strong>Helm chart for AKS deployment is NOT in the template baseline</strong> (G1.4a in <a href="./gaps.html"><code>./gaps.md</code></a>) — RAM Pathfinder scaffolding script adds it.</li>
 </ul>
 <p><strong>Code Organisation:</strong></p>
 <ul>
 <li>Standard Gradle directory layout: <code>src/main/java</code>, <code>src/main/resources</code>, <code>src/test/java</code>.</li>
-<li>Per-service top-level package: <code>uk.gov.hmcts.nji.{service-name}</code> (e.g. <code>uk.gov.hmcts.nji.judge</code>, <code>uk.gov.hmcts.nji.booking</code>).</li>
+<li>Per-service top-level package: <code>uk.gov.hmcts.ram.{service-name}</code> (e.g. <code>uk.gov.hmcts.ram.judge</code>, <code>uk.gov.hmcts.ram.booking</code>).</li>
 <li>Standard Spring Boot application class with <code>@SpringBootApplication</code>.</li>
 <li>Service internals follow a layered approach (controller / service / repository) — the precise pattern is settled in <a href="./conventions.html"><code>./conventions.md</code></a>.</li>
 </ul>
@@ -281,16 +281,16 @@ git push -u origin main</code></pre>
 <li><strong>Lombok 1.18.46</strong> for boilerplate reduction (<code>@Data</code>, <code>@Builder</code>, <code>@RequiredArgsConstructor</code>, <code>@Slf4j</code>, etc.).</li>
 <li><strong>MapStruct 1.6.3</strong> for compile-time bean mapping (DTO ↔︎ entity); pairs naturally with the per-service <code>dto/</code> and <code>domain/</code> package layout.</li>
 </ul>
-</div></details><details class="section" id="per-service-nji-conventions-encoded-in-scaffolding-script-not-in-shared-library"><summary><span class="section-title">Per-service NJI Conventions (encoded in scaffolding script, not in shared library)</span></summary><div class="section-body">
-<p>The scaffolding script applies NJI-specific defaults on top of the HMCTS starter:</p>
+</div></details><details class="section" id="per-service-ram-conventions-encoded-in-scaffolding-script-not-in-shared-library"><summary><span class="section-title">Per-service RAM Pathfinder Conventions (encoded in scaffolding script, not in shared library)</span></summary><div class="section-body">
+<p>The scaffolding script applies RAM Pathfinder-specific defaults on top of the HMCTS starter:</p>
 <ul>
-<li>Group ID: <code>uk.gov.hmcts.nji</code>.</li>
-<li>Naming: artefact <code>nji-{service-name}</code>, package <code>uk.gov.hmcts.nji.{service-name}</code>.</li>
+<li>Group ID: <code>uk.gov.hmcts.ram</code>.</li>
+<li>Naming: artefact <code>ram-{service-name}</code>, package <code>uk.gov.hmcts.ram.{service-name}</code>.</li>
 <li>Default Azure UK region: UK South. (DR scope and target region are an open gap — see <a href="./gaps.html"><code>./gaps.md</code> G3.6</a>.)</li>
-<li>Default Application Insights workspace: NJI shared workspace (HMCTS-provided).</li>
+<li>Default Application Insights workspace: RAM Pathfinder shared workspace (HMCTS-provided).</li>
 <li>Default Reference Data and Authorisation service URL placeholders.</li>
 <li>Boilerplate <code>@ControllerAdvice</code> for <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details error envelopes (formerly RFC 7807; obsoleted July 2023 — content type and field shape unchanged).</li>
-<li>Boilerplate <code>JWTFilter</code> + <code>AuthDetails</code> bean (per HMCTS template pattern); modified to call NJI Authorisation service per request (NJI variance from template's claims-only approach — required by FR58).</li>
+<li>Boilerplate <code>JWTFilter</code> + <code>AuthDetails</code> bean (per HMCTS template pattern); modified to call RAM Pathfinder Authorisation service per request (RAM Pathfinder variance from template's claims-only approach — required by FR58).</li>
 <li>Boilerplate Reference Data direct-SQL access (JPA entities mapped to whitelisted Reference Data tables — 15 tables, see <a href="./data-tables.html"><code>./data-tables.md</code></a>: <code>regions</code>, <code>offices</code>, <code>calendar_periods</code>, plus the 12 vocabulary tables); no client class.</li>
 <li><em>(removed 2026-05-06)</em> Boilerplate APEX-comparison test base class — retracted. Behavioural parity is verified via <strong>manual UAT performed by APEX-experienced users</strong> (FR61 / NFR41 revised). Per-service UAT scripts live under <code>docs/uat/</code> in the service repo, not as test code.</li>
 <li>Default port <code>8082</code> (per HMCTS template).</li>
@@ -300,7 +300,7 @@ git push -u origin main</code></pre>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/starter-template.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#initialisation-flow-per-service">Initialisation Flow (per service)</a></li><li><a href="#build-tool-gradle">Build Tool: Gradle</a></li><li><a href="#architectural-decisions-provided-by-starter">Architectural Decisions Provided by Starter</a></li><li><a href="#per-service-nji-conventions-encoded-in-scaffolding-script-not-in-shared-library">Per-service NJI Conventions (encoded in scaffolding script, not in shared library)</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#initialisation-flow-per-service">Initialisation Flow (per service)</a></li><li><a href="#build-tool-gradle">Build Tool: Gradle</a></li><li><a href="#architectural-decisions-provided-by-starter">Architectural Decisions Provided by Starter</a></li><li><a href="#per-service-ram-conventions-encoded-in-scaffolding-script-not-in-shared-library">Per-service RAM Pathfinder Conventions (encoded in scaffolding script, not in shared library)</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

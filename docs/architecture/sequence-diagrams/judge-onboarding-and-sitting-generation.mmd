@@ -4,10 +4,10 @@ sequenceDiagram
 
     actor RSU
 
-    participant UI as nji-ui judge module
-    participant Judge as nji-judge
-    participant Itin as nji-itinerary
-    participant Sit as nji-sitting
+    participant UI as ram-ui judge module
+    participant Judge as ram-judge
+    participant Itin as ram-itinerary
+    participant Sit as ram-sitting
 
     rect rgb(232, 240, 250)
         Note over RSU,Sit: Phase 1 — Create judge profile
@@ -39,4 +39,4 @@ sequenceDiagram
         UI-->>RSU: confirmation toast
     end
 
-    Note over RSU,Sit: Downstream — nji-itinerary now sees the planned sittings via SQL JOIN, and nji-sitting picks them up for daily confirmation. See itinerary-federated-read.md and salaried-sitting-confirmation.md.
+    Note over RSU,Sit: Downstream — ram-itinerary now sees the planned sittings via SQL JOIN, and ram-sitting picks them up for daily confirmation. See itinerary-federated-read.md and salaried-sitting-confirmation.md.

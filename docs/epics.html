@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ji-analysis (NJI) — Epic Breakdown — NJI Documentation</title>
+<title>ji-analysis (RAM Pathfinder) — Epic Breakdown — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="">
-<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="./index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="./prd.html">PRD (NJI)</a></li>
+<li><a href="./prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="./architecture.html">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
@@ -187,7 +187,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </details></aside>
 <main class="content">
 
-<h1 id="ji-analysis-nji--epic-breakdown">ji-analysis (NJI) — Epic Breakdown</h1>
+<h1 id="ji-analysis-ram--epic-breakdown">ji-analysis (RAM Pathfinder) — Epic Breakdown</h1>
 <blockquote>
 <p>This document has been <strong>sharded for maintainability</strong>. The canonical content lives under <a href="epics/index.html"><code>epics/</code></a>.</p>
 <p>The original monolithic <code>epics.md</code> reached ~1,500 lines covering Phase 0 alone and would have passed 4,000 lines once Phases 1–9+ were storied. Sharding by phase keeps each file small, makes per-phase reviews easier, and matches BMad's sharded-document convention (the readiness check skill discovers either <code>*epic*.md</code> whole OR <code>*epic*/index.md</code> sharded).</p>

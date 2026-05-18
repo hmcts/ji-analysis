@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Phase 0 Step 4 — Final Validation Report (2026-05-15, revised) — NJI Documentation</title>
+<title>Phase 0 Step 4 — Final Validation Report (2026-05-15, revised) — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../../prd.html">PRD (NJI)</a></li>
+<li><a href="../../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../../architecture.html">Architecture (index)</a></li>
 <li><a href="../../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../../architecture/user-types.html">User types</a></li>
 <li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../../architecture/gaps.html">Gaps</a></li>
 <li><a href="../../architecture/assumptions.html">Assumptions</a></li>
@@ -195,16 +195,16 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>Story count:</strong> 18 → <strong>11</strong></li>
 <li><strong>Stories removed:</strong>
 <ul>
-<li>Was 0.2.3 (Scaffold <code>nji-admin-ui</code>) — removed</li>
+<li>Was 0.2.3 (Scaffold <code>ram-admin-ui</code>) — removed</li>
 <li>Was 0.2.4 (Admin UI Reference Data module) — removed</li>
-<li>Was 0.3.1 (<code>nji-authorisation</code> admin API extensions) — removed</li>
+<li>Was 0.3.1 (<code>ram-authorisation</code> admin API extensions) — removed</li>
 <li>Was 0.3.2 (Admin UI Users &amp; Roles module) — removed</li>
 <li>Was 0.3.4 (Admin UI Migration Reports module) — removed</li>
 <li>Was 0.4.4 (Admin "Send Test Email" UI) — removed</li>
 </ul></li>
 <li><strong>Stories moved:</strong>
 <ul>
-<li>Was 0.4.3 (OAuth <code>client_credentials</code> flow) — <strong>moved to Phase 6</strong> alongside <code>nji-payment-batch</code></li>
+<li>Was 0.4.3 (OAuth <code>client_credentials</code> flow) — <strong>moved to Phase 6</strong> alongside <code>ram-payment-batch</code></li>
 </ul></li>
 <li><strong>Stories renumbered:</strong>
 <ul>
@@ -226,7 +226,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <ul>
 <li><strong>FR4</strong> — auth tables populated by Epic 0.3's SQL ETL; DBAs can update via direct SQL; <strong>admin UI surface for sysadmins to update role/scope assignments is post-MVP</strong></li>
 <li><strong>FR6</strong> — read API + SQL-loaded data in Phase 0; <strong>RSU UI for maintenance is post-MVP</strong></li>
-<li><strong>FR56</strong> — <code>nji-ui</code> business stack covered; <code>nji-admin-ui</code> admin stack moves post-MVP</li>
+<li><strong>FR56</strong> — <code>ram-ui</code> business stack covered; <code>ram-admin-ui</code> admin stack moves post-MVP</li>
 <li><strong>FR58</strong> — initial flag state set by ETL in Phase 0; cutover flips happen per region during Phase 9+ via direct SQL; <strong>activation toggle UI is post-MVP</strong></li>
 </ul></li>
 <li><strong>Intentionally deferred (pre-existing, unchanged):</strong> FR5 (post-MVP per PRD v2.5)</li>
@@ -238,14 +238,14 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </div></details><details class="section" id="dependency-validation"><summary><span class="section-title">Dependency Validation</span></summary><div class="section-body">
 <ul>
 <li>✅ <strong>Epic independence</strong> — no epic requires a later epic to function. Backward dependencies only (Epic 0.2 → Epic 0.1; Epic 0.3 → Epic 0.1 + 0.2; Epic 0.4 → Epic 0.1).</li>
-<li>✅ <strong>Story sequencing within epics</strong> — strictly sequential. The cross-epic dependency from Epic 0.4 onto <code>nji-admin-ui</code> is gone (admin UI removed).</li>
-<li>✅ <strong>File-churn check</strong> — each epic targets its own slice. Cross-epic touches on <code>nji-authorisation</code> between Epic 0.1 (read API + JWT validation) and Epic 0.3 (ETL writes to the same auth tables) are additive (Epic 0.1 creates the schema; Epic 0.3 populates it).</li>
+<li>✅ <strong>Story sequencing within epics</strong> — strictly sequential. The cross-epic dependency from Epic 0.4 onto <code>ram-admin-ui</code> is gone (admin UI removed).</li>
+<li>✅ <strong>File-churn check</strong> — each epic targets its own slice. Cross-epic touches on <code>ram-authorisation</code> between Epic 0.1 (read API + JWT validation) and Epic 0.3 (ETL writes to the same auth tables) are additive (Epic 0.1 creates the schema; Epic 0.3 populates it).</li>
 </ul>
 </div></details><details class="section" id="architecture-compliance"><summary><span class="section-title">Architecture Compliance</span></summary><div class="section-body">
 <ul>
-<li>✅ Starter template pattern (AR2–AR4) — Story 0.1.1 establishes; Stories 0.2.1, 0.4.1, and the mock-auth scaffold in 0.1.2 follow with canonical <em>"Scaffold NJI {service-name} from HMCTS starter"</em> commit.</li>
+<li>✅ Starter template pattern (AR2–AR4) — Story 0.1.1 establishes; Stories 0.2.1, 0.4.1, and the mock-auth scaffold in 0.1.2 follow with canonical <em>"Scaffold RAM Pathfinder {service-name} from HMCTS starter"</em> commit.</li>
 <li>✅ Database creation timing — every service's tables created in the service's own first or second story via service-owned Flyway; no upfront DB creation. The auth tables (Story 0.1.3) are created by Flyway; populated by ETL (Story 0.3.1).</li>
-<li>✅ Shared baseline — <code>configuration_values</code> table managed exclusively by <code>nji-architecture</code> Flyway baseline (Story 0.1.1), consumed read-only by all services.</li>
+<li>✅ Shared baseline — <code>configuration_values</code> table managed exclusively by <code>ram-architecture</code> Flyway baseline (Story 0.1.1), consumed read-only by all services.</li>
 <li>✅ Direct-SQL ETL pattern (AR46–AR49) — clarified in revision: ETLs <strong>insert directly via SQL</strong> rather than going through API admin endpoints (which are now removed). Idempotency via natural-key <code>INSERT ... ON CONFLICT</code> per AR21.</li>
 </ul>
 </div></details><details class="section" id="story-sizing-notes"><summary><span class="section-title">Story Sizing Notes</span></summary><div class="section-body">

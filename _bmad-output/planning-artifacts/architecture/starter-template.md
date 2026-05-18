@@ -1,38 +1,38 @@
 ---
 parent: ../architecture.md
-title: HMCTS Crime SpringBoot starter — initialisation, build tool, dependency inventory, NJI conventions
+title: HMCTS Crime SpringBoot starter — initialisation, build tool, dependency inventory, RAM Pathfinder conventions
 last_updated: 2026-05-06
 extracted_in: architecture.md v1.8 — Strategy B refactor
 ---
 
-# Starter Template — Initialisation Flow, Build Tool, Dependency Inventory, NJI Conventions
+# Starter Template — Initialisation Flow, Build Tool, Dependency Inventory, RAM Pathfinder Conventions
 
-> Sibling of [`../architecture.md`](../architecture.md). Selection rationale lives in the parent. This file holds the per-service initialisation flow, dependency inventory, and NJI conventions overlaid by the scaffolding script.
+> Sibling of [`../architecture.md`](../architecture.md). Selection rationale lives in the parent. This file holds the per-service initialisation flow, dependency inventory, and RAM Pathfinder conventions overlaid by the scaffolding script.
 
 ## Initialisation Flow (per service)
 
-Each new NJI service is scaffolded from the HMCTS starter, then customised. The exact CLI depends on what HMCTS publishes; conceptual flow:
+Each new RAM Pathfinder service is scaffolded from the HMCTS starter, then customised. The exact CLI depends on what HMCTS publishes; conceptual flow:
 
 ```bash
 # Conceptual — actual command per HMCTS published documentation
-git clone https://github.com/hmcts/spring-boot-template.git nji-{service-name}
-cd nji-{service-name}
+git clone https://github.com/hmcts/spring-boot-template.git ram-{service-name}
+cd ram-{service-name}
 git remote remove origin
 git remote add origin <new-repo-url>
 
 # Rename package, artifact, application name to match the service
 # (specific tooling / scripts per HMCTS starter conventions)
-./scripts/rename uk.gov.hmcts.nji.{service-name}
+./scripts/rename uk.gov.hmcts.ram.{service-name}
 
 # Verify build
 ./gradlew build
 
 # Initial commit on new repo
-git add . && git commit -m "Scaffold NJI {service-name} from HMCTS starter"
+git add . && git commit -m "Scaffold RAM Pathfinder {service-name} from HMCTS starter"
 git push -u origin main
 ```
 
-**NJI scaffolding script:** a thin wrapper over the HMCTS starter clone-and-rename steps, with NJI-specific defaults (Azure UK region, Application Insights workspace, naming conventions). Used at service-creation time only — not a runtime dependency.
+**RAM Pathfinder scaffolding script:** a thin wrapper over the HMCTS starter clone-and-rename steps, with RAM Pathfinder-specific defaults (Azure UK region, Application Insights workspace, naming conventions). Used at service-creation time only — not a runtime dependency.
 
 ## Build Tool: Gradle
 
@@ -87,7 +87,7 @@ The HMCTS Crime SpringBoot template provides (verified by review on 2026-05-06):
 
 - TLS-only configuration (no HTTP).
 - Secure header defaults.
-- **Custom `JWTFilter`** (using `io.jsonwebtoken:jjwt:0.13.0`) for JWT validation; integrates with NJI Authorisation service per Step 4 of [`../architecture.md`](../architecture.md).
+- **Custom `JWTFilter`** (using `io.jsonwebtoken:jjwt:0.13.0`) for JWT validation; integrates with RAM Pathfinder Authorisation service per Step 4 of [`../architecture.md`](../architecture.md).
 - **`org.owasp.encoder:encoder:1.4.0`** for XSS-safe output encoding.
 - Azure Key Vault integration for secret retrieval (added per service via Spring Cloud Azure — not in template baseline).
 
@@ -95,12 +95,12 @@ The HMCTS Crime SpringBoot template provides (verified by review on 2026-05-06):
 
 - Dockerfile (multi-stage build, JDK image) — provided by HMCTS template.
 - Standard health probe configuration via Spring Actuator — provided by HMCTS template.
-- **Helm chart for AKS deployment is NOT in the template baseline** (G1.4a in [`./gaps.md`](./gaps.md)) — NJI scaffolding script adds it.
+- **Helm chart for AKS deployment is NOT in the template baseline** (G1.4a in [`./gaps.md`](./gaps.md)) — RAM Pathfinder scaffolding script adds it.
 
 **Code Organisation:**
 
 - Standard Gradle directory layout: `src/main/java`, `src/main/resources`, `src/test/java`.
-- Per-service top-level package: `uk.gov.hmcts.nji.{service-name}` (e.g. `uk.gov.hmcts.nji.judge`, `uk.gov.hmcts.nji.booking`).
+- Per-service top-level package: `uk.gov.hmcts.ram.{service-name}` (e.g. `uk.gov.hmcts.ram.judge`, `uk.gov.hmcts.ram.booking`).
 - Standard Spring Boot application class with `@SpringBootApplication`.
 - Service internals follow a layered approach (controller / service / repository) — the precise pattern is settled in [`./conventions.md`](./conventions.md).
 
@@ -109,17 +109,17 @@ The HMCTS Crime SpringBoot template provides (verified by review on 2026-05-06):
 - **Lombok 1.18.46** for boilerplate reduction (`@Data`, `@Builder`, `@RequiredArgsConstructor`, `@Slf4j`, etc.).
 - **MapStruct 1.6.3** for compile-time bean mapping (DTO ↔ entity); pairs naturally with the per-service `dto/` and `domain/` package layout.
 
-## Per-service NJI Conventions (encoded in scaffolding script, not in shared library)
+## Per-service RAM Pathfinder Conventions (encoded in scaffolding script, not in shared library)
 
-The scaffolding script applies NJI-specific defaults on top of the HMCTS starter:
+The scaffolding script applies RAM Pathfinder-specific defaults on top of the HMCTS starter:
 
-- Group ID: `uk.gov.hmcts.nji`.
-- Naming: artefact `nji-{service-name}`, package `uk.gov.hmcts.nji.{service-name}`.
+- Group ID: `uk.gov.hmcts.ram`.
+- Naming: artefact `ram-{service-name}`, package `uk.gov.hmcts.ram.{service-name}`.
 - Default Azure UK region: UK South. (DR scope and target region are an open gap — see [`./gaps.md` G3.6](./gaps.md).)
-- Default Application Insights workspace: NJI shared workspace (HMCTS-provided).
+- Default Application Insights workspace: RAM Pathfinder shared workspace (HMCTS-provided).
 - Default Reference Data and Authorisation service URL placeholders.
 - Boilerplate `@ControllerAdvice` for [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) problem-details error envelopes (formerly RFC 7807; obsoleted July 2023 — content type and field shape unchanged).
-- Boilerplate `JWTFilter` + `AuthDetails` bean (per HMCTS template pattern); modified to call NJI Authorisation service per request (NJI variance from template's claims-only approach — required by FR58).
+- Boilerplate `JWTFilter` + `AuthDetails` bean (per HMCTS template pattern); modified to call RAM Pathfinder Authorisation service per request (RAM Pathfinder variance from template's claims-only approach — required by FR58).
 - Boilerplate Reference Data direct-SQL access (JPA entities mapped to whitelisted Reference Data tables — 15 tables, see [`./data-tables.md`](./data-tables.md): `regions`, `offices`, `calendar_periods`, plus the 12 vocabulary tables); no client class.
 - *(removed 2026-05-06)* Boilerplate APEX-comparison test base class — retracted. Behavioural parity is verified via **manual UAT performed by APEX-experienced users** (FR61 / NFR41 revised). Per-service UAT scripts live under `docs/uat/` in the service repo, not as test code.
 - Default port `8082` (per HMCTS template).

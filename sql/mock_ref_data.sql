@@ -2,7 +2,7 @@
 -- mock_ref_data.sql
 -- =============================================================================
 --
--- Mock data for the 15 tables owned by nji-reference-data.
+-- Mock data for the 15 tables owned by ram-reference-data.
 --
 -- Every row below is either:
 --   * an enumerated value documented in the planning artefacts (most rows), or
@@ -39,7 +39,7 @@
 --   calendar_periods       FY 2026/27 derived from functional-modules.md (31st
 --                          March horizon) and PRD timeline
 --
--- NOT production DDL. Production DDL lives in nji-reference-data's Flyway
+-- NOT production DDL. Production DDL lives in ram-reference-data's Flyway
 -- migrations. This file exists for visualisation, local prototyping, and
 -- exploratory queries against a throwaway PostgreSQL instance.
 --
@@ -277,7 +277,7 @@ INSERT INTO judge_fee_entitlements (id, code, display_name, sort_order, is_activ
 -- -----------------------------------------------------------------------------
 -- payment_lifecycle_statuses  —  Pending / Requested / Paid / Reconciled / Queried
 -- Lifecycle state of an individual payment record as it moves through JFEPS /
--- Liberata and back to NJI for reconciliation.
+-- Liberata and back to RAM Pathfinder for reconciliation.
 -- -----------------------------------------------------------------------------
 
 DROP TABLE IF EXISTS payment_lifecycle_statuses CASCADE;
@@ -327,7 +327,7 @@ INSERT INTO reconciliation_statuses (id, code, display_name, sort_order, is_acti
 -- -----------------------------------------------------------------------------
 -- regions  —  Northern, Western
 -- HMCTS judicial regions explicitly named in PRD NFR38. The full HMCTS regional
--- structure (Midlands, South-Eastern, etc.) is not enumerated in the NJI docs;
+-- structure (Midlands, South-Eastern, etc.) is not enumerated in the RAM Pathfinder docs;
 -- only these two are explicitly referenced.
 -- -----------------------------------------------------------------------------
 
@@ -348,7 +348,7 @@ INSERT INTO regions (id, code, name, is_active, created_at, updated_at) VALUES
 
 -- -----------------------------------------------------------------------------
 -- offices  —  ILLUSTRATIVE placeholders.
--- The NJI docs reference offices generically but do not enumerate specific
+-- The RAM Pathfinder docs reference offices generically but do not enumerate specific
 -- offices. The rows below exist so mock_judge_data.sql has FK targets for each
 -- judge's base office. They pair the two documented regions with the three
 -- documented court types.

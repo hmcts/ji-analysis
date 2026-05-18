@@ -12,7 +12,7 @@ extracted_in: architecture.md v1.8 — Strategy B refactor
 ## Complete Project Directory Structure — per backend service
 
 ```
-nji-{service}/
+ram-{service}/
 ├── README.md                                    (service-specific overview, runbook, contacts)
 ├── settings.gradle
 ├── build.gradle                             (Gradle Groovy DSL (per HMCTS template))
@@ -20,14 +20,14 @@ nji-{service}/
 ├── gradlew, gradlew.bat                         (Gradle Wrapper, committed)
 ├── gradle/wrapper/
 ├── .github/
-│   ├── CODEOWNERS                               (NJI team + service-specific reviewers)
+│   ├── CODEOWNERS                               (RAM Pathfinder team + service-specific reviewers)
 │   ├── PULL_REQUEST_TEMPLATE.md                 (patterns checklist)
 │   └── workflows/
 │       ├── ci.yml                               (build + test + lint + ArchUnit + Spectral)
 │       ├── deploy-dev.yml
 │       ├── deploy-staging.yml
 │       └── deploy-production.yml                (per-region per-wave gated)
-├── src/main/java/uk/gov/hmcts/nji/{service}/
+├── src/main/java/uk/gov/hmcts/ram/{service}/
 │   ├── {Service}Application.java
 │   ├── controller/
 │   │   ├── {Resource}Controller.java
@@ -68,7 +68,7 @@ nji-{service}/
 │       ├── V1__init.sql
 │       ├── V2__add_judges_table.sql
 │       └── ...
-├── src/test/java/uk/gov/hmcts/nji/{service}/
+├── src/test/java/uk/gov/hmcts/ram/{service}/
 │   ├── controller/                              (unit tests, mocked deps)
 │   ├── service/
 │   ├── repository/                              (integration tests, Testcontainers)
@@ -86,7 +86,7 @@ nji-{service}/
 │       ├── configmap.yaml
 │       └── hpa.yaml
 ├── postman/
-│   ├── nji-{service}-phase{N}.postman_collection.json
+│   ├── ram-{service}-phase{N}.postman_collection.json
 │   └── README.md                                (how to run; environment files)
 ├── api-spec/
 │   └── openapi.yaml                             (committed snapshot, regenerated on release)
@@ -96,19 +96,19 @@ nji-{service}/
 │   │   └── ADR-001-database-schema.md
 │   ├── runbook.md                               (incident response per service)
 │   ├── api/                                     (extended API docs beyond OpenAPI)
-│   └── uat/                                     (manual UAT scripts: APEX-vs-NJI behavioural-parity walkthroughs per FR61 / NFR41 revised; domain services only)
+│   └── uat/                                     (manual UAT scripts: APEX-vs-RAM Pathfinder behavioural-parity walkthroughs per FR61 / NFR41 revised; domain services only)
 ├── .gitignore
 └── .editorconfig
 ```
 
 ## Complete Project Directory Structure — UI repos
 
-There are **two UI repos** with the same stack and conventions: `nji-ui` (business-user-facing) and `nji-admin-ui` (admin-facing). The split exists so admin workflows (Reference Data maintenance, User & Role admin) cannot leak into business users' nav, and so each has its own CI/CD, CODEOWNERS, and rollout cadence. `nji-admin-ui` mirrors the structure below, with admin modules replacing the per-domain operational modules.
+There are **two UI repos** with the same stack and conventions: `ram-ui` (business-user-facing) and `ram-admin-ui` (admin-facing). The split exists so admin workflows (Reference Data maintenance, User & Role admin) cannot leak into business users' nav, and so each has its own CI/CD, CODEOWNERS, and rollout cadence. `ram-admin-ui` mirrors the structure below, with admin modules replacing the per-domain operational modules.
 
-### `nji-ui` (business)
+### `ram-ui` (business)
 
 ```
-nji-ui/
+ram-ui/
 ├── README.md
 ├── package.json
 ├── package-lock.json (or yarn.lock / pnpm-lock.yaml)
@@ -163,7 +163,7 @@ nji-ui/
 │   │       └── errorHandling.ts                 (RFC 9457 problem-details → display)
 │   └── styles/
 │       ├── govuk.scss                           (GOV.UK Design System imports)
-│       └── overrides.scss                       (HMCTS / NJI extensions)
+│       └── overrides.scss                       (HMCTS / RAM Pathfinder extensions)
 ├── tests/
 │   ├── unit/                                    (Vitest)
 │   └── e2e/                                     (Playwright; one suite per phase)
@@ -186,13 +186,13 @@ nji-ui/
     └── decisions/                               (UI-specific ADRs)
 ```
 
-### `nji-admin-ui` (admin)
+### `ram-admin-ui` (admin)
 
-Same scaffolding as `nji-ui` above — React + TypeScript + Vite + Vitest + Playwright, GOV.UK Design System, OIDC client, RFC 9457 error handling, axe-core in CI — but with admin modules instead of per-domain operational modules.
+Same scaffolding as `ram-ui` above — React + TypeScript + Vite + Vitest + Playwright, GOV.UK Design System, OIDC client, RFC 9457 error handling, axe-core in CI — but with admin modules instead of per-domain operational modules.
 
 ```
-nji-admin-ui/
-├── (same top-level scaffolding as nji-ui: package.json, vite.config.ts, etc.)
+ram-admin-ui/
+├── (same top-level scaffolding as ram-ui: package.json, vite.config.ts, etc.)
 ├── src/
 │   ├── main.tsx
 │   ├── App.tsx
@@ -208,20 +208,20 @@ nji-admin-ui/
 │   │   │   ├── pages/CalendarAdminPage.tsx      (financial-year boundaries, calendar periods)
 │   │   │   ├── components/NamedOwnerSignOff.tsx (cross-cutting sign-off pattern per FR6)
 │   │   │   ├── hooks/useReferenceDataAdmin.ts
-│   │   │   ├── api/                             (generated TypeScript client from nji-reference-data OpenAPI)
+│   │   │   ├── api/                             (generated TypeScript client from ram-reference-data OpenAPI)
 │   │   │   └── index.ts
 │   │   └── users-roles/                         (FR4 — system administrators)
 │   │       ├── pages/UserListPage.tsx
 │   │       ├── pages/UserDetailPage.tsx          (role assignment, Region/Area scope)
 │   │       ├── components/RoleAssignmentEditor.tsx
 │   │       ├── hooks/useUserAdmin.ts
-│   │       ├── api/                             (generated TypeScript client from nji-authorisation OpenAPI)
+│   │       ├── api/                             (generated TypeScript client from ram-authorisation OpenAPI)
 │   │       └── index.ts
-│   ├── shared/                                  (mirrors nji-ui — auth, http client, error handling, layout)
+│   ├── shared/                                  (mirrors ram-ui — auth, http client, error handling, layout)
 │   │   ├── components/Layout.tsx                 (Admin-specific Header marking this as the admin surface)
 │   │   ├── hooks/useAuth.ts
 │   │   ├── auth/HmctsIdpProvider.tsx
-│   │   ├── auth/ProtectedRoute.tsx               (gates routes by admin role from nji-authorisation)
+│   │   ├── auth/ProtectedRoute.tsx               (gates routes by admin role from ram-authorisation)
 │   │   └── api/httpClient.ts
 │   └── styles/
 │       ├── govuk.scss
@@ -231,12 +231,12 @@ nji-admin-ui/
 │   └── e2e/                                     (Playwright)
 │       ├── reference-data.spec.ts
 │       └── users-roles.spec.ts
-├── api-clients/                                 (generated; regenerated in CI from nji-reference-data + nji-authorisation OpenAPI specs)
+├── api-clients/                                 (generated; regenerated in CI from ram-reference-data + ram-authorisation OpenAPI specs)
 │   ├── reference-data-client/
 │   └── authorisation-client/
-├── helm/                                        (Helm chart for Static Web App / CDN deployment — separate from nji-ui)
+├── helm/                                        (Helm chart for Static Web App / CDN deployment — separate from ram-ui)
 ├── .github/
-│   ├── CODEOWNERS                                (admin-team scoped; distinct from nji-ui)
+│   ├── CODEOWNERS                                (admin-team scoped; distinct from ram-ui)
 │   └── workflows/
 │       ├── ci.yml                                (build + test + lint + axe-core)
 │       └── deploy-{env}.yml
@@ -251,12 +251,12 @@ nji-admin-ui/
 - `modules/migration-reports/` — Phase 0 reconciliation report viewer (FR57)
 - `modules/audit/` — post-MVP user-action audit viewer (D7 roadmap)
 
-**Deployment:** independent of `nji-ui`. Same Azure Static Web Apps pattern, separate hostname (e.g. `admin.nji.hmcts.gov.uk` vs `nji.hmcts.gov.uk`), separate Helm release, separate per-environment rollout.
+**Deployment:** independent of `ram-ui`. Same Azure Static Web Apps pattern, separate hostname (e.g. `admin.ram.hmcts.gov.uk` vs `ram.hmcts.gov.uk`), separate Helm release, separate per-environment rollout.
 
-## Complete Project Directory Structure — `nji-architecture` repo
+## Complete Project Directory Structure — `ram-architecture` repo
 
 ```
-nji-architecture/
+ram-architecture/
 ├── README.md
 ├── architecture.md                              (the index document — see ../architecture.md)
 ├── architecture/                                (sibling files referenced by architecture.md)
@@ -280,16 +280,16 @@ nji-architecture/
 ├── diagrams/                                    (C4 model, sequence diagrams, deployment topology)
 ├── scaffolding/
 │   ├── README.md
-│   ├── nji-scaffold.sh                          (creates new service from HMCTS starter)
+│   ├── ram-scaffold.sh                          (creates new service from HMCTS starter)
 │   ├── templates/                               (service-specific overlays applied by the script)
 │   └── conventions/
-├── migration/                                   (Phase 0 Data Migration ETL — APEX → NJI APIs)
+├── migration/                                   (Phase 0 Data Migration ETL — APEX → RAM Pathfinder APIs)
 │   ├── README.md                                (mapping notes, run procedure, sign-off checklist)
-│   ├── reference-data/                          (extract + transform + POST to nji-reference-data)
+│   ├── reference-data/                          (extract + transform + POST to ram-reference-data)
 │   │   ├── extract-apex.sql                     (selects against APEX schema; produces CSV/JSON)
-│   │   ├── transform.py (or .ts / .java)        (APEX shape → NJI shape per data-tables.md)
+│   │   ├── transform.py (or .ts / .java)        (APEX shape → RAM Pathfinder shape per data-tables.md)
 │   │   └── load.py                              (calls Reference Data API: POST /v1/regions etc.)
-│   ├── users-roles/                             (extract + reconcile to IdP + POST to nji-authorisation)
+│   ├── users-roles/                             (extract + reconcile to IdP + POST to ram-authorisation)
 │   │   ├── extract-apex.sql
 │   │   ├── reconcile.py                         (email-then-employee-number match against IdP principals; produces matched / employee-matched / unmatched buckets)
 │   │   ├── transform.py
@@ -304,9 +304,9 @@ nji-architecture/
 **Why `migration/` lives here, not as a separate service or as Flyway files:**
 
 - The migration is a **one-shot programme deliverable** (Phase 0; re-run per wave for incremental user activation). It is not a runtime service, so it has no `controller/` / `service/` / `repository/` shape.
-- It is **owned by the architecture team** (and the named Phase 0 owners per Risk #13), not by any single domain service. Living under `nji-architecture/` keeps that ownership visible.
-- It **calls NJI APIs** (Reference Data API, Authorisation API) — it does not write directly to NJI tables. Per the v1.6 decision, writes go via the API so validation, idempotency, and any audit-logging hooks fire.
-- It is **separate from Flyway**. Flyway in NJI is for NJI's DDL (creating tables, adding columns, granting permissions). The ETL is for moving APEX data into NJI tables that Flyway has already created.
+- It is **owned by the architecture team** (and the named Phase 0 owners per Risk #13), not by any single domain service. Living under `ram-architecture/` keeps that ownership visible.
+- It **calls RAM Pathfinder APIs** (Reference Data API, Authorisation API) — it does not write directly to RAM Pathfinder tables. Per the v1.6 decision, writes go via the API so validation, idempotency, and any audit-logging hooks fire.
+- It is **separate from Flyway**. Flyway in RAM Pathfinder is for RAM Pathfinder's DDL (creating tables, adding columns, granting permissions). The ETL is for moving APEX data into RAM Pathfinder tables that Flyway has already created.
 
 ## File Organisation Patterns
 
@@ -322,7 +322,7 @@ nji-architecture/
 - Integration tests: same location, `*IT.java` suffix, Testcontainers PostgreSQL.
 - Contract tests (Pact or equivalent): `src/test/java/.../contract/`.
 - Manual UAT scripts (FR61 / NFR41 revised 2026-05-06): `docs/uat/` per domain service — markdown walkthroughs for APEX-experienced users to follow side-by-side against APEX. Not part of automated CI.
-- E2E tests: separate `tests/e2e/` directory in `nji-ui` repo, Playwright per phase.
+- E2E tests: separate `tests/e2e/` directory in `ram-ui` repo, Playwright per phase.
 
 **Asset organisation (UI):**
 
@@ -336,8 +336,8 @@ nji-architecture/
 
 ```bash
 # Clone the service repo
-git clone https://github.com/hmcts/nji-{service}.git
-cd nji-{service}
+git clone https://github.com/hmcts/ram-{service}.git
+cd ram-{service}
 
 # Run locally (uses Testcontainers for DB and stub Authorisation in dev profile)
 ./gradlew bootRun --args='--spring.profiles.active=dev'
@@ -354,8 +354,8 @@ cd nji-{service}
 **Local development for UI:**
 
 ```bash
-git clone https://github.com/hmcts/nji-ui.git
-cd nji-ui
+git clone https://github.com/hmcts/ram-ui.git
+cd ram-ui
 
 # Install dependencies
 npm install   # or yarn / pnpm

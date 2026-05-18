@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Implementation Patterns & Consistency Rules — NJI Documentation</title>
+<title>Implementation Patterns & Consistency Rules — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../architecture.html">Architecture (index)</a></li>
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference" data-current="true" open>
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference" data-current="true" open>
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html">User types</a></li>
 <li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../architecture/gaps.html">Gaps</a></li>
 <li><a href="../architecture/assumptions.html">Assumptions</a></li>
@@ -196,13 +196,13 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </div></details><details class="section" id="naming-patterns"><summary><span class="section-title">Naming Patterns</span></summary><div class="section-body">
 <p><strong>Database (PostgreSQL):</strong></p>
 <ul>
-<li><strong>Schema:</strong> single shared schema (e.g. <code>nji</code> or default <code>public</code>). All NJI tables live in this schema. Per-service DB roles enforce write boundaries; the team that writes the Flyway migration owns the table.</li>
+<li><strong>Schema:</strong> single shared schema (e.g. <code>ram</code> or default <code>public</code>). All RAM Pathfinder tables live in this schema. Per-service DB roles enforce write boundaries; the team that writes the Flyway migration owns the table.</li>
 <li><strong>Tables:</strong> <code>snake_case</code>, plural. Two naming variants:
 <ul>
 <li><strong>Primary domain entities</strong> use entity-plural without prefix. Full inventory in <a href="./data-tables.html"><code>./data-tables.md</code></a>. Owner is unambiguous from the inventory.</li>
 <li><strong>Service-internal or potentially-ambiguous tables</strong> use service-prefix: <code>payment_reconciliations</code>, <code>notification_dispatches</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>. Use the prefix when the table name alone wouldn't disclose its owner, or when there's a credible risk of collision.</li>
 </ul></li>
-<li><strong>Authoritative ownership mapping</strong> is documented in <a href="./data-tables.html"><code>./data-tables.md</code></a> (table-ownership table maps every NJI table → owning service-role). The team that authors the Flyway migration is the owning team.</li>
+<li><strong>Authoritative ownership mapping</strong> is documented in <a href="./data-tables.html"><code>./data-tables.md</code></a> (table-ownership table maps every RAM Pathfinder table → owning service-role). The team that authors the Flyway migration is the owning team.</li>
 <li><strong>Fitness function in CI</strong> verifies: (a) no two services' Flyway migrations create overlapping table names; (b) DB role grants align with the documented ownership; (c) tables not in the ownership mapping are flagged.</li>
 <li><strong>Columns:</strong> <code>snake_case</code> — <code>id</code>, <code>created_at</code>, <code>updated_at</code>, <code>payroll_number</code>, <code>is_active</code>.</li>
 <li><strong>Primary keys:</strong> <code>id</code>, type <code>uuid</code>. UUIDs avoid integer-range coupling and "guess the next ID" patterns. Cost over bigint is negligible at this scale. PK generation detail in <a href="../architecture.html"><code>../architecture.md</code></a> → <em>Data Architecture</em>.</li>
@@ -224,7 +224,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </ul>
 <p><strong>Java code:</strong></p>
 <ul>
-<li><strong>Package:</strong> <code>uk.gov.hmcts.nji.{service}.{layer}</code> — e.g. <code>uk.gov.hmcts.nji.judge.controller</code>, <code>uk.gov.hmcts.nji.booking.service</code>.</li>
+<li><strong>Package:</strong> <code>uk.gov.hmcts.ram.{service}.{layer}</code> — e.g. <code>uk.gov.hmcts.ram.judge.controller</code>, <code>uk.gov.hmcts.ram.booking.service</code>.</li>
 <li><strong>Classes:</strong> <code>PascalCase</code> — <code>Judge</code>, <code>JudgeController</code>, <code>JudgeService</code>, <code>JudgeRepository</code>, <code>JudgeNotFoundException</code>.</li>
 <li><strong>Methods / fields:</strong> <code>camelCase</code> — <code>getJudgeById</code>, <code>firstName</code>, <code>isActive</code>.</li>
 <li><strong>Constants:</strong> <code>SCREAMING_SNAKE_CASE</code> — <code>MAX_BOOKING_DAYS_PER_VACANCY</code>, <code>DEFAULT_PESSIMISTIC_LOCK_TIMEOUT_MS</code>.</li>
@@ -242,15 +242,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </ul>
 </div></details><details class="section" id="structure-patterns"><summary><span class="section-title">Structure Patterns</span></summary><div class="section-body">
 <p><strong>Per-service Java structure (Spring Boot conventional, no shared parent):</strong></p>
-<pre><code>nji-{service}/
-├── src/main/java/uk/gov/hmcts/nji/{service}/
+<pre><code>ram-{service}/
+├── src/main/java/uk/gov/hmcts/ram/{service}/
 │   ├── {Service}Application.java       (Spring Boot @SpringBootApplication)
 │   ├── controller/                     (REST controllers, @RestController)
 │   ├── service/                        (business logic, @Service)
 │   ├── repository/                     (Spring Data JPA, @Repository)
 │   ├── domain/                         (entities + value objects, @Entity)
 │   ├── dto/                            (request/response DTOs)
-│   ├── client/                         (clients to other NJI services)
+│   ├── client/                         (clients to other RAM Pathfinder services)
 │   ├── config/                         (Spring config: JWTFilter, AuthDetails, OpenAPI Swagger Core)
 │   ├── error/                          (RFC 9457 ControllerAdvice, problem-detail factories)
 │   └── exception/                      (domain exceptions extending base classes)
@@ -258,20 +258,20 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 │   ├── application.yml                 (defaults)
 │   ├── application-{profile}.yml       (dev/staging/production overrides)
 │   └── db/migration/                   (Flyway V1__init.sql, V2__add_x.sql, ...)
-├── src/test/java/uk/gov/hmcts/nji/{service}/
+├── src/test/java/uk/gov/hmcts/ram/{service}/
 │   └── {layer}/                        (mirrors src/main package layout — unit + integration tests)
 ├── docs/
-│   └── uat/                            (manual UAT scripts: APEX-vs-NJI behavioural-parity walkthroughs per FR61 / NFR41 revised)
+│   └── uat/                            (manual UAT scripts: APEX-vs-RAM Pathfinder behavioural-parity walkthroughs per FR61 / NFR41 revised)
 ├── helm/                                (Kubernetes Helm chart)
 ├── postman/                             (Postman collections per phase)
 ├── build.gradle                     (Gradle Groovy DSL (per HMCTS template))
 ├── settings.gradle
 └── README.md                            (service-specific docs)</code></pre>
 <blockquote>
-<p>Full per-service / UI / <code>nji-architecture</code> directory trees with the inventory of every file: see <a href="./repo-structure.html"><code>./repo-structure.md</code></a>.</p>
+<p>Full per-service / UI / <code>ram-architecture</code> directory trees with the inventory of every file: see <a href="./repo-structure.html"><code>./repo-structure.md</code></a>.</p>
 </blockquote>
 <p><strong>UI repo structure (single repo, modules per domain):</strong></p>
-<pre><code>nji-ui/
+<pre><code>ram-ui/
 ├── src/
 │   ├── main.tsx                         (entry point)
 │   ├── App.tsx                          (router root + auth wrapper)
@@ -392,7 +392,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Inter-service authentication at MVP — two patterns:</strong></p>
 <ol type="1">
 <li><strong>JWT propagation (token forwarding)</strong> — for <strong>user-initiated</strong> flows (the majority at MVP). The user's JWT (issued by HMCTS IdP at SSO) is the relevant security context end-to-end. Inter-service calls forward that JWT as-is.</li>
-<li><strong>Service-principal authentication (OAuth <code>client_credentials</code>)</strong> — for <strong>batch / scheduled</strong> components without an upstream user. The MVP-relevant case is <code>nji-payment-batch</code>.</li>
+<li><strong>Service-principal authentication (OAuth <code>client_credentials</code>)</strong> — for <strong>batch / scheduled</strong> components without an upstream user. The MVP-relevant case is <code>ram-payment-batch</code>.</li>
 </ol>
 <p><strong>JWT propagation (token forwarding) — for user-initiated flows:</strong></p>
 <ul>
@@ -407,12 +407,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>Limit:</strong> propagation requires a request-scoped user JWT to exist. Background, scheduled, or async flows have no user context — those use the service-principal pattern below.</li>
 </ul>
 <p><strong>Service-principal authentication (for batch / scheduled components):</strong></p>
-<p>The MVP-relevant case is the <strong>payment-processing batch</strong> (<code>nji-payment-batch</code>), which runs on a schedule and has no upstream user context. It uses OAuth <code>client_credentials</code>:</p>
+<p>The MVP-relevant case is the <strong>payment-processing batch</strong> (<code>ram-payment-batch</code>), which runs on a schedule and has no upstream user context. It uses OAuth <code>client_credentials</code>:</p>
 <ul>
-<li><strong>Client registration</strong>: a service-principal entry exists in the OIDC issuer's client store. In non-prod that's <code>mock_oauth_clients</code> on <code>nji-mock-auth</code>; in production it's whichever issuer is chosen per <a href="./gaps.html"><code>./gaps.md</code> G7.1</a> (default recommendation: Azure Workload Identity, which substitutes managed-identity tokens for client-secret-based ones).</li>
+<li><strong>Client registration</strong>: a service-principal entry exists in the OIDC issuer's client store. In non-prod that's <code>mock_oauth_clients</code> on <code>ram-mock-auth</code>; in production it's whichever issuer is chosen per <a href="./gaps.html"><code>./gaps.md</code> G7.1</a> (default recommendation: Azure Workload Identity, which substitutes managed-identity tokens for client-secret-based ones).</li>
 <li><strong>Token acquisition</strong>: at run start (or on token expiry), the batch component does <code>POST /oauth2/token</code> with <code>grant_type=client_credentials</code>. Spring Boot 4's <code>OAuth2AuthorizedClientManager</code> handles caching + refresh.</li>
 <li><strong>Outbound calls</strong>: the resulting service JWT is attached as <code>Authorization: Bearer …</code> to outbound HTTP calls (e.g. to the Notification API). The receiving service's <code>JWTFilter</code> validates it via the same JWKS path used for human user JWTs — same code path; only the principal's "kind" claim differs.</li>
-<li><strong>Authorisation</strong>: service principals have records in <code>auth_users</code> with a kind flag (e.g. <code>principal_kind = service</code>) distinguishing them from humans. <code>nji-authorisation</code> resolves their permissions the same way as human users.</li>
+<li><strong>Authorisation</strong>: service principals have records in <code>auth_users</code> with a kind flag (e.g. <code>principal_kind = service</code>) distinguishing them from humans. <code>ram-authorisation</code> resolves their permissions the same way as human users.</li>
 <li><strong>Scheduling</strong>: implementation choice between Spring <code>@Scheduled</code> (in-process; runs inside the same JVM as the synchronous service API) and a Kubernetes CronJob (separate pod; scales independently). Either is acceptable at MVP — the batch's external observable behaviour is the same.</li>
 </ul>
 <p><strong>Correlation ID propagation:</strong></p>
@@ -496,7 +496,7 @@ return &lt;ActualContent data={data} /&gt;;</code></pre></li>
 <li>Integration tests: <code>*IT.java</code>, Testcontainers for PostgreSQL, run on every commit.</li>
 <li>Contract tests (Pact or equivalent): per-consumer / per-provider, run on every commit.</li>
 <li>E2E tests (UI): Playwright, one suite per phase, run as a phase gate.</li>
-<li><strong>Manual UAT — APEX-vs-NJI behavioural parity (FR61 / NFR41 revised 2026-05-06):</strong> scripted walkthroughs maintained under <code>docs/uat/</code> per service. Performed by APEX-experienced users (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, MI) opening APEX side-by-side with NJI, comparing behaviour for the workflows + edge cases the script enumerates, and signing off per role per region. Sign-off is the wave-cutover gate; there is no automated APEX-comparison harness in CI.</li>
+<li><strong>Manual UAT — APEX-vs-RAM Pathfinder behavioural parity (FR61 / NFR41 revised 2026-05-06):</strong> scripted walkthroughs maintained under <code>docs/uat/</code> per service. Performed by APEX-experienced users (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, MI) opening APEX side-by-side with RAM Pathfinder, comparing behaviour for the workflows + edge cases the script enumerates, and signing off per role per region. Sign-off is the wave-cutover gate; there is no automated APEX-comparison harness in CI.</li>
 <li><strong>Coverage target:</strong> behaviour coverage, not line coverage. PRs include behaviour-test rationale, not coverage stats.</li>
 </ul>
 <p><strong>Logging conventions (per HMCTS Crime template):</strong></p>
@@ -519,14 +519,14 @@ return &lt;ActualContent data={data} /&gt;;</code></pre></li>
 <li>PR target: <code>main</code>. Trunk-based development; release branches per region/wave only if needed.</li>
 </ul>
 </div></details><details class="section" id="enforcement-guidelines"><summary><span class="section-title">Enforcement Guidelines</span></summary><div class="section-body">
-<p><strong>All NJI services MUST:</strong></p>
+<p><strong>All RAM Pathfinder services MUST:</strong></p>
 <ul>
 <li>Use the HMCTS Crime SpringBoot template as scaffold (per <a href="./starter-template.html"><code>./starter-template.md</code></a>) and customise per service.</li>
-<li>Follow the package layout <code>uk.gov.hmcts.nji.{service}.{layer}</code>.</li>
+<li>Follow the package layout <code>uk.gov.hmcts.ram.{service}.{layer}</code>.</li>
 <li>Use Gradle Groovy DSL (per HMCTS Crime SpringBoot template) with Gradle Wrapper.</li>
 <li>Implement RFC 9457 errors via per-service <code>@ControllerAdvice</code> (no shared library).</li>
-<li>Implement Authorisation enforcement via per-service custom <code>JWTFilter</code> + <code>AuthDetails</code> request-scoped bean (HMCTS template pattern); the filter calls NJI Authorisation per request to resolve role + Region/Area scope (NJI variance from template's claims-only approach — required by FR58).</li>
-<li>Generate OpenAPI 3.x specs via Swagger Core; publish per-service spec as a Maven artefact (<code>uk.gov.hmcts.nji:api-nji-{service}:{version}</code>).</li>
+<li>Implement Authorisation enforcement via per-service custom <code>JWTFilter</code> + <code>AuthDetails</code> request-scoped bean (HMCTS template pattern); the filter calls RAM Pathfinder Authorisation per request to resolve role + Region/Area scope (RAM Pathfinder variance from template's claims-only approach — required by FR58).</li>
+<li>Generate OpenAPI 3.x specs via Swagger Core; publish per-service spec as a Maven artefact (<code>uk.gov.hmcts.ram:api-ram-{service}:{version}</code>).</li>
 <li>Emit structured JSON logs (Logstash encoder) with correlation IDs; export traces via OpenTelemetry.</li>
 <li>Use Flyway migrations in <code>src/main/resources/db/migration/</code> (per HMCTS Crime SpringBoot template).</li>
 <li>Use Lombok and MapStruct (per HMCTS Crime SpringBoot template) for boilerplate reduction and DTO/entity mapping.</li>
@@ -563,7 +563,7 @@ return &lt;ActualContent data={data} /&gt;;</code></pre></li>
 </tr>
 <tr>
 <td><strong>OpenAPI lint (Spectral)</strong></td>
-<td>OpenAPI specs validated against an NJI-specific ruleset (consistent error envelope, versioning prefix, RFC 9457 references).</td>
+<td>OpenAPI specs validated against an RAM Pathfinder-specific ruleset (consistent error envelope, versioning prefix, RFC 9457 references).</td>
 </tr>
 <tr>
 <td><strong>JaCoCo + CycloneDX</strong></td>

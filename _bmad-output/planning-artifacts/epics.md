@@ -4,7 +4,7 @@ shardRoot: 'epics/'
 shardedAt: '2026-05-15'
 ---
 
-# ji-analysis (NJI) — Epic Breakdown
+# ji-analysis (RAM Pathfinder) — Epic Breakdown
 
 > This document has been **sharded for maintainability**. The canonical content lives under [`epics/`](epics/index.md).
 >

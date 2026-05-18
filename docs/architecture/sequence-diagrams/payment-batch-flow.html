@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Payment-batch flow — NJI Documentation</title>
+<title>Payment-batch flow — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../../prd.html">PRD (NJI)</a></li>
+<li><a href="../../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../../architecture.html">Architecture (index)</a></li>
 <li><a href="../../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../../architecture/user-types.html">User types</a></li>
 <li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams" data-current="true" open>
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams" data-current="true" open>
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../../architecture/gaps.html">Gaps</a></li>
 <li><a href="../../architecture/assumptions.html">Assumptions</a></li>
@@ -195,24 +195,24 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Included</strong> (the batch's runtime activity):</p>
 <ul>
 <li>Scheduler trigger (Kubernetes CronJob, or Spring <code>@Scheduled</code> annotation — implementation choice deferred).</li>
-<li>Batch acquiring its service-principal token via OAuth <code>client_credentials</code> against <code>nji-mock-auth</code> (non-prod) — production issuer per <a href="../gaps.html"><code>../gaps.md</code> G7.1</a>, default recommendation Azure Workload Identity.</li>
+<li>Batch acquiring its service-principal token via OAuth <code>client_credentials</code> against <code>ram-mock-auth</code> (non-prod) — production issuer per <a href="../gaps.html"><code>../gaps.md</code> G7.1</a>, default recommendation Azure Workload Identity.</li>
 <li>Batch SQL-JOIN read across the shared schema for eligible records.</li>
 <li>Batch persisting <code>payments</code> + <code>payment_schedules</code> and marking the related bookings as <em>payment requested</em>.</li>
 <li>Batch calling the Notification API (with bearer service token) to dispatch the JFEPS Excel email.</li>
-<li>Authoriser → Liberata upload as the bridge between NJI and the external payment system (out-of-band but architecturally relevant).</li>
+<li>Authoriser → Liberata upload as the bridge between RAM Pathfinder and the external payment system (out-of-band but architecturally relevant).</li>
 <li>Liberata processing the payment.</li>
 </ul>
 <p><strong>Not included</strong> (explicitly out of scope of this diagram):</p>
 <ul>
 <li>User-initiated activities (logging absences, approving them, creating bookings, confirming sittings, marking payments reconciled) — those are in <a href="./absence-to-reconciliation.html"><code>./absence-to-reconciliation.md</code></a>.</li>
-<li>Reconciliation feedback from Liberata back into NJI — at MVP this is a manual RSU action (see the user-initiated diagram, Phase 5). Automated reconciliation feed from Liberata is post-MVP.</li>
+<li>Reconciliation feedback from Liberata back into RAM Pathfinder — at MVP this is a manual RSU action (see the user-initiated diagram, Phase 5). Automated reconciliation feed from Liberata is post-MVP.</li>
 <li>The mock-auth's internal token-issuing logic (signing, JWKS, etc.) — covered by the architecture's Authentication &amp; Security section and the auth/JWKS sequences in <code>architecture.md</code>.</li>
 </ul>
 </div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps omitted for clarity</span></summary><div class="section-body">
 <ul>
-<li>The Notification API call from the batch to <code>nji-notification</code> flows through Azure API Management (same path as user-initiated calls).</li>
+<li>The Notification API call from the batch to <code>ram-notification</code> flows through Azure API Management (same path as user-initiated calls).</li>
 <li>Notification's <code>JWTFilter</code> validates the batch's service-principal JWT against the issuer's JWKS — same mechanism as for human user JWTs.</li>
-<li>Notification calls <code>nji-authorisation</code> <code>POST /authz/check</code> to resolve the service principal's permissions (service principals have records in <code>auth_users</code> with a kind flag distinguishing them from humans).</li>
+<li>Notification calls <code>ram-authorisation</code> <code>POST /authz/check</code> to resolve the service principal's permissions (service principals have records in <code>auth_users</code> with a kind flag distinguishing them from humans).</li>
 </ul>
 <p><img src="./payment-batch-flow.png" alt="Payment-batch sequence — Scheduler → Batch → JFEPS Excel → Authoriser → Liberata" /></p>
 <p><em>Source: <a href="./payment-batch-flow.mmd"><code>./payment-batch-flow.mmd</code></a> (Mermaid). Regenerate with <code>mmdc -i payment-batch-flow.mmd -o payment-batch-flow.png -w 2400 -s 2 --backgroundColor white</code>.</em></p>
@@ -248,7 +248,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td>4 — Liberata processing</td>
 <td>Payment Authoriser → JFEPS</td>
-<td>Out-of-band; NJI is not in the loop</td>
+<td>Out-of-band; RAM Pathfinder is not in the loop</td>
 <td>Judge paid; awaiting reconciliation (which is user-initiated — see other diagram)</td>
 </tr>
 </tbody>
@@ -271,7 +271,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td><a href="../../architecture.html"><code>../../architecture.md</code> → Step 4 <em>Authentication &amp; Security</em></a>; <a href="../gaps.html"><code>../gaps.md</code> G1.2 + G7.1</a>; <a href="../assumptions.html"><code>../assumptions.md</code> A2 + A26 + A35</a></td>
 </tr>
 <tr>
-<td><code>nji-payment</code> Repository List entry — synchronous API + batch component</td>
+<td><code>ram-payment</code> Repository List entry — synchronous API + batch component</td>
 <td><a href="../../architecture.html"><code>../../architecture.md</code> → Repository List</a></td>
 </tr>
 <tr>

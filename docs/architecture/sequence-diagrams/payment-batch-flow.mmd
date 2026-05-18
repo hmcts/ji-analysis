@@ -3,9 +3,9 @@ sequenceDiagram
     autonumber
 
     participant Sched as Scheduler
-    participant Batch as nji-payment-batch
-    participant Auth as nji-mock-auth
-    participant Notif as nji-notification
+    participant Batch as ram-payment-batch
+    participant Auth as ram-mock-auth
+    participant Notif as ram-notification
     actor PA as Payment Authoriser
     participant JFEPS as JFEPS / Liberata
 
@@ -35,9 +35,9 @@ sequenceDiagram
 
     rect rgb(250, 232, 240)
         Note over Sched,JFEPS: Phase 4 — Authoriser uploads to Liberata (out-of-band)
-        Note right of PA: Authoriser reviews schedule and uploads to Liberata via the existing JFEPS workflow. NJI is not in the loop.
+        Note right of PA: Authoriser reviews schedule and uploads to Liberata via the existing JFEPS workflow. RAM Pathfinder is not in the loop.
         PA->>JFEPS: review and upload Excel
         JFEPS->>JFEPS: process payments and pay judge
     end
 
-    Note over Sched,JFEPS: Reconciliation feedback from Liberata back to NJI is manual at MVP — RSU clicks "mark reconciled" in the user-initiated flow (see absence-to-reconciliation diagram, Phase 5). Automated reconciliation is post-MVP.
+    Note over Sched,JFEPS: Reconciliation feedback from Liberata back to RAM Pathfinder is manual at MVP — RSU clicks "mark reconciled" in the user-initiated flow (see absence-to-reconciliation diagram, Phase 5). Automated reconciliation is post-MVP.

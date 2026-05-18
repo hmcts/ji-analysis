@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a static HTML view of the NJI planning artefacts.
+"""Build a static HTML view of the RAM Pathfinder planning artefacts.
 
 Reads markdown from `_bmad-output/planning-artifacts/` and writes HTML to `html/`
 at the repo root. Mirrors the source directory structure. Rewrites `.md` links
@@ -32,8 +32,8 @@ ASIS_VIEWS: List[Tuple[str, str, str, str]] = [
     (
         "System Context — as-is JI",
         "High-level system context view of the legacy JI (Oracle APEX / OPT) application — actors, "
-        "external systems, and integrations as they exist before the NJI rebuild. Authoritative "
-        "source for system-context parity validation during NJI design. "
+        "external systems, and integrations as they exist before the RAM Pathfinder rebuild. Authoritative "
+        "source for system-context parity validation during RAM Pathfinder design. "
         "Revised version: Finance and Payment Authoriser are shown as separate roles; eLinks, "
         "HR / Administrative Records and HMCTS Email have been removed (the first two are not "
         "real integrations, the third is pure SMTP transport and is now annotated on the edges). "
@@ -44,7 +44,7 @@ ASIS_VIEWS: List[Tuple[str, str, str, str]] = [
     (
         "Components — as-is JI",
         "Component view of the legacy JI application — internal modules and their relationships in "
-        "the existing APEX implementation. Used as the parity reference for the NJI functional "
+        "the existing APEX implementation. Used as the parity reference for the RAM Pathfinder functional "
         "decomposition into 11 services.",
         "JI-Components.png",
         "asis/components",
@@ -118,13 +118,13 @@ DATABASE_MARKDOWN: List[Tuple[str, str]] = [
 
 # Sidebar navigation. Each entry: (display label, source path without .md, is_special)
 # is_special marks entries that have no source file (e.g. the index page).
-# Group naming convention: "As-is — …" for legacy JI; "To-be — …" for NJI.
+# Group naming convention: "As-is — …" for legacy JI; "To-be — …" for RAM Pathfinder.
 NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
     ("Overview", [
         ("Index", "index", True),
     ]),
     ("Product", [
-        ("PRD (NJI)", "prd", False),
+        ("PRD (RAM Pathfinder)", "prd", False),
     ]),
     ("As-is — JI Architecture Views", [
         ("System Context (as-is)", "asis/system-context", False),
@@ -141,11 +141,11 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
         ("Audit & Cross-cutting", "asis/database/ji_schema_audit-cross-cutting", False),
         ("Companion reference (triggers, FKs, externals)", "asis/database/ji_schema_companion", False),
     ]),
-    ("To-be — NJI Architecture", [
+    ("To-be — RAM Pathfinder Architecture", [
         ("Architecture (index)", "architecture", False),
         ("Architecture summary", "architecture-summary", False),
     ]),
-    ("To-be — NJI Reference", [
+    ("To-be — RAM Pathfinder Reference", [
         ("User types", "architecture/user-types", False),
         ("Authoritative table ownership", "architecture/data-tables", False),
         ("Conventions", "architecture/conventions", False),
@@ -155,7 +155,7 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
         ("Functional requirements coverage", "architecture/functional-requirements-coverage", False),
         ("Non-functional requirements coverage", "architecture/non-functional-requirements-coverage", False),
     ]),
-    ("To-be — NJI Sequence Diagrams", [
+    ("To-be — RAM Pathfinder Sequence Diagrams", [
         ("Authentication & authorisation", "architecture/sequence-diagrams/user-authentication-and-authorisation", False),
         ("Judge onboarding & sitting gen.", "architecture/sequence-diagrams/judge-onboarding-and-sitting-generation", False),
         ("Absence → Reconciliation", "architecture/sequence-diagrams/absence-to-reconciliation", False),
@@ -165,7 +165,7 @@ NAV: List[Tuple[str, List[Tuple[str, str, bool]]]] = [
         ("MI Feed & Reports", "architecture/sequence-diagrams/mi-feed-and-reports-consumption", False),
         ("Admin maintenance flows", "architecture/sequence-diagrams/admin-maintenance-flows", False),
     ]),
-    ("To-be — NJI Open Items", [
+    ("To-be — RAM Pathfinder Open Items", [
         ("Gaps", "architecture/gaps", False),
         ("Assumptions", "architecture/assumptions", False),
         ("Changelog", "architecture/changelog", False),
@@ -409,7 +409,7 @@ def slugify_group(group_name: str) -> str:
 
 
 def nav_html(current_relpath: str, page_to_root: str) -> str:
-    parts = [f'<h2 class="site-title"><a href="{page_to_root}index.html">NJI Documentation</a></h2>']
+    parts = [f'<h2 class="site-title"><a href="{page_to_root}index.html">RAM Pathfinder Documentation</a></h2>']
     parts.append(
         '<div class="nav-controls">'
         '<button data-nav-action="expand" title="Expand all groups">Expand all</button> '
@@ -469,7 +469,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{title} — NJI Documentation</title>
+<title>{title} — RAM Pathfinder Documentation</title>
 <style>{css}</style>
 </head>
 <body class="{body_class}">
@@ -531,11 +531,11 @@ def write_page(out_path: Path, title: str, content: str, current_relpath: str, s
 
 
 def build_index_body() -> str:
-    parts = ["<h1>JI / NJI Documentation</h1>"]
+    parts = ["<h1>JI / RAM Pathfinder Documentation</h1>"]
     parts.append(
-        "<p>HTML rendering of the JI / NJI planning artefacts. The sidebar — available on every page — "
+        "<p>HTML rendering of the JI / RAM Pathfinder planning artefacts. The sidebar — available on every page — "
         "is organised so it is clear what belongs to the legacy <strong>as-is</strong> JI and what "
-        "belongs to the <strong>to-be</strong> NJI rebuild.</p>"
+        "belongs to the <strong>to-be</strong> RAM Pathfinder rebuild.</p>"
     )
     for group_name, items in NAV:
         parts.append(f"<h2>{group_name}</h2>")
@@ -672,7 +672,7 @@ def main() -> int:
     build_database_views()
 
     # write index page
-    write_page(OUT / "index.html", "JI / NJI Documentation", build_index_body(), "index", None)
+    write_page(OUT / "index.html", "JI / RAM Pathfinder Documentation", build_index_body(), "index", None)
     print("build: index.html")
 
     print(f"\nDone. Output: {OUT}")

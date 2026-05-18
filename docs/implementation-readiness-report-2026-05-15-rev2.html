@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Implementation Readiness Assessment Report — 2026-05-15 (revision 2, post-D10) — NJI Documentation</title>
+<title>Implementation Readiness Assessment Report — 2026-05-15 (revision 2, post-D10) — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="./index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="./prd.html">PRD (NJI)</a></li>
+<li><a href="./prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="./architecture.html">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
@@ -188,7 +188,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="implementation-readiness-assessment-report--2026-05-15-revision-2-post-d10">Implementation Readiness Assessment Report — 2026-05-15 (revision 2, post-D10)</h1>
-<p><strong>Date:</strong> 2026-05-15 <strong>Project:</strong> ji-analysis (NJI rebuild) <strong>Trigger for this re-run:</strong> Formal PRD update via <code>bmad-correct-course</code> added D10 (admin UI removed from MVP; <code>gh</code> CLI not available) and added AR51 (manual GitHub setup). All four Phase 0 epics + the PRD + the requirements inventory were modified earlier today. This report validates that the changes are internally consistent across PRD, architecture-derived requirements, and Phase 0 stories.</p>
+<p><strong>Date:</strong> 2026-05-15 <strong>Project:</strong> ji-analysis (RAM Pathfinder rebuild) <strong>Trigger for this re-run:</strong> Formal PRD update via <code>bmad-correct-course</code> added D10 (admin UI removed from MVP; <code>gh</code> CLI not available) and added AR51 (manual GitHub setup). All four Phase 0 epics + the PRD + the requirements inventory were modified earlier today. This report validates that the changes are internally consistent across PRD, architecture-derived requirements, and Phase 0 stories.</p>
 <details class="section" id="1-document-inventory"><summary><span class="section-title">1. Document Inventory</span></summary><div class="section-body">
 <table>
 <thead>
@@ -254,7 +254,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <ul>
 <li><strong>D10 added</strong> to the Decisions Log as the 10th locked decision.</li>
 <li><strong>D9 amended</strong> to defer to D10 on the "via SQL not via API" framing.</li>
-<li><strong>MVP scope bullet 3</strong> distinguishes business UI (in MVP via <code>nji-ui</code>) vs admin UI (post-MVP per D10).</li>
+<li><strong>MVP scope bullet 3</strong> distinguishes business UI (in MVP via <code>ram-ui</code>) vs admin UI (post-MVP per D10).</li>
 <li><strong>MVP exclusions list</strong> added: admin UI (with the four modules itemised) + admin-write API endpoints.</li>
 <li><strong>Growth Features list</strong> added: admin UI as a first-class post-MVP deliverable.</li>
 <li><strong>FR4 / FR6 / FR56 / FR58</strong> each marked "(scoped 2026-05-15 per D10)" with explicit MVP-data-layer + post-MVP-UI-surface split.</li>
@@ -304,7 +304,7 @@ Epic 0.4 (2): 0.4.1 0.4.2</code></pre>
 <td><strong>FR4</strong></td>
 <td>0.3.1 (data layer via SQL ETL into <code>auth_users</code>/<code>auth_user_roles</code>/<code>auth_user_region_scopes</code>)</td>
 <td>✅ data layer (DBAs edit via SQL)</td>
-<td>UI surface for sysadmins (<code>nji-admin-ui</code> Users &amp; Roles module)</td>
+<td>UI surface for sysadmins (<code>ram-admin-ui</code> Users &amp; Roles module)</td>
 <td>✅ correctly scoped per D10 — NOT a coverage gap</td>
 </tr>
 <tr>
@@ -351,9 +351,9 @@ Epic 0.4 (2): 0.4.1 0.4.2</code></pre>
 </tr>
 <tr>
 <td><strong>FR56</strong></td>
-<td>0.1.4 (<code>nji-ui</code> scaffold), 0.1.5 (Home shell), 0.2.2 (consumes API)</td>
+<td>0.1.4 (<code>ram-ui</code> scaffold), 0.1.5 (Home shell), 0.2.2 (consumes API)</td>
 <td>✅ business stack</td>
-<td><code>nji-admin-ui</code> admin stack post-MVP per D10</td>
+<td><code>ram-admin-ui</code> admin stack post-MVP per D10</td>
 <td>✅ correctly scoped — NOT a coverage gap</td>
 </tr>
 <tr>
@@ -401,8 +401,8 @@ Epic 0.4 (2): 0.4.1 0.4.2</code></pre>
 </div></details><details class="section" id="4-ux-alignment-assessment"><summary><span class="section-title">4. UX Alignment Assessment</span></summary><div class="section-body">
 <p>UX document still absent. Now formally <strong>PRD-blessed</strong>:</p>
 <ul>
-<li><strong>Business UI</strong> (<code>nji-ui</code>) — in MVP via D4 (modern stack replicates APEX), GOV.UK Design System, WCAG 2.2 AA per NFR17–NFR19. No UX doc; APEX is the behavioural reference.</li>
-<li><strong>Admin UI</strong> (<code>nji-admin-ui</code>) — post-MVP per D10. A UX design will be needed when the admin UI is scheduled. Out of MVP scope, no gap.</li>
+<li><strong>Business UI</strong> (<code>ram-ui</code>) — in MVP via D4 (modern stack replicates APEX), GOV.UK Design System, WCAG 2.2 AA per NFR17–NFR19. No UX doc; APEX is the behavioural reference.</li>
+<li><strong>Admin UI</strong> (<code>ram-admin-ui</code>) — post-MVP per D10. A UX design will be needed when the admin UI is scheduled. Out of MVP scope, no gap.</li>
 </ul>
 <p>Internal consistency PRD ↔︎ architecture ↔︎ epics on UI matters: ✅.</p>
 <p>Carry-forward note from the prior validation: the <em>deferral-model ambiguity</em> (Phase 0 UI Foundations vs UX deferred) is now <strong>resolved by D10</strong>. The business UI ships in MVP via FR55/FR56 with APEX-replica framing; admin UI is fully deferred. No remaining ambiguity.</p>
@@ -510,8 +510,8 @@ Epic 0.4 (2): 0.4.1 0.4.2</code></pre>
 <p><strong>🟠 Major Issues:</strong> None.</p>
 <p><strong>🟡 Minor Concerns:</strong></p>
 <ol type="1">
-<li><p><strong>AR46 / AR47 wording could be tightened</strong> — they still describe ETLs as "calls NJI APIs to load". D10 supersedes (load via direct SQL). The story ACs and AR2 already reflect D10; AR46/AR47 themselves are merely less-precise. <strong>Recommendation:</strong> add a <code>(amended by D10, 2026-05-15)</code> qualifier to AR46 and AR47 in <code>epics/requirements-inventory.md</code> for full internal consistency.</p></li>
-<li><p><strong><code>nji-architecture/runbooks/github-setup.md</code> doesn't exist yet</strong> — referenced from 5 stories + AR51. Story 0.1.1 owns it as a deliverable. As long as Story 0.1.1 is implemented first (and it should be — it's the canonical platform pattern), the runbook will exist before any other scaffold work. <strong>No action needed; just preserve story ordering.</strong></p></li>
+<li><p><strong>AR46 / AR47 wording could be tightened</strong> — they still describe ETLs as "calls RAM Pathfinder APIs to load". D10 supersedes (load via direct SQL). The story ACs and AR2 already reflect D10; AR46/AR47 themselves are merely less-precise. <strong>Recommendation:</strong> add a <code>(amended by D10, 2026-05-15)</code> qualifier to AR46 and AR47 in <code>epics/requirements-inventory.md</code> for full internal consistency.</p></li>
+<li><p><strong><code>ram-architecture/runbooks/github-setup.md</code> doesn't exist yet</strong> — referenced from 5 stories + AR51. Story 0.1.1 owns it as a deliverable. As long as Story 0.1.1 is implemented first (and it should be — it's the canonical platform pattern), the runbook will exist before any other scaffold work. <strong>No action needed; just preserve story ordering.</strong></p></li>
 </ol>
 </div></details><details class="section" id="6-summary-and-recommendations"><summary><span class="section-title">6. Summary and Recommendations</span></summary><div class="section-body">
 <h3 id="overall-readiness-status">Overall Readiness Status</h3>
@@ -525,7 +525,7 @@ Epic 0.4 (2): 0.4.1 0.4.2</code></pre>
 <h3 id="recommended-next-steps">Recommended Next Steps</h3>
 <ol type="1">
 <li><strong>Run <code>bmad-sprint-planning</code></strong> to produce the Phase 0 sprint plan. The 11 stories are ready; the sprint plan will sequence them and assign owners.</li>
-<li><strong>Implement Story 0.1.1 first</strong> — produces the canonical platform pattern AND the <code>nji-architecture/runbooks/github-setup.md</code> deliverable that the other scaffold stories depend on.</li>
+<li><strong>Implement Story 0.1.1 first</strong> — produces the canonical platform pattern AND the <code>ram-architecture/runbooks/github-setup.md</code> deliverable that the other scaffold stories depend on.</li>
 <li><strong>In parallel:</strong> the platform engineering team should provision the dev/staging/production Azure infrastructure (AKS, PostgreSQL Flexible Server, APIM, Application Insights, Key Vault, Static Web Apps) so Story 0.1.1's deploy ACs can pass.</li>
 <li><strong>After Phase 0 stories implementation begins:</strong> continue producing Phase 1+ stories via <code>bmad-create-epics-and-stories</code>.</li>
 </ol>

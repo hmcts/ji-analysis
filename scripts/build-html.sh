@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build static HTML view of the NJI planning artefacts.
+# Build static HTML view of the RAM Pathfinder planning artefacts.
 # Reads _bmad-output/planning-artifacts/ and writes html/ at the repo root.
 # Requirements: pandoc on PATH; Python 3.
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Authoritative Table Ownership Mapping — NJI Documentation</title>
+<title>Authoritative Table Ownership Mapping — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../architecture.html">Architecture (index)</a></li>
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference" data-current="true" open>
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference" data-current="true" open>
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html">User types</a></li>
 <li><a href="../architecture/data-tables.html" class="current">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../architecture/gaps.html">Gaps</a></li>
 <li><a href="../architecture/assumptions.html">Assumptions</a></li>
@@ -191,14 +191,14 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <blockquote>
 <p>Sibling of <a href="../architecture.html"><code>../architecture.md</code></a>. The parent's <em>Data Architecture</em> section holds the strategy (shared schema, per-service DB roles, table-name convention, Flyway). This file holds the per-table inventory.</p>
 </blockquote>
-<details class="section" id="nji-tables-not-apex"><summary><span class="section-title">NJI tables, not APEX</span></summary><div class="section-body">
-<p>This is the inventory of NJI database tables, grouped by owning service. The table list, column shapes, FK relationships, and ownership boundaries are NJI's design.</p>
-<p>APEX has its own (different) schema. APEX's schema is not in this inventory and is not owned by any NJI service. The Phase 0 ETL (see <a href="../architecture.html"><code>../architecture.md</code> → <em>Phase 0 Data Migration from APEX</em></a>) reads APEX dumps, transforms rows into NJI shape, and loads via NJI APIs.</p>
+<details class="section" id="ram-tables-not-apex"><summary><span class="section-title">RAM Pathfinder tables, not APEX</span></summary><div class="section-body">
+<p>This is the inventory of RAM Pathfinder database tables, grouped by owning service. The table list, column shapes, FK relationships, and ownership boundaries are RAM Pathfinder's design.</p>
+<p>APEX has its own (different) schema. APEX's schema is not in this inventory and is not owned by any RAM Pathfinder service. The Phase 0 ETL (see <a href="../architecture.html"><code>../architecture.md</code> → <em>Phase 0 Data Migration from APEX</em></a>) reads APEX dumps, transforms rows into RAM Pathfinder shape, and loads via RAM Pathfinder APIs.</p>
 <blockquote>
-<p><strong>Revalidation scope.</strong> When the APEX SQL dump arrives in Phase 0, the migration tool's input-side mapping is revalidated against it: does the mapping cover every APEX field NJI needs, and does NJI have a slot for every APEX value? NJI's schema itself is not under revalidation — it is fixed by NJI design. New APEX vocabulary values are added as Reference Data rows via the API. Tracked as G4.6 in <a href="./gaps.html"><code>./gaps.md</code></a> and A33 in <a href="./assumptions.html"><code>./assumptions.md</code></a>.</p>
+<p><strong>Revalidation scope.</strong> When the APEX SQL dump arrives in Phase 0, the migration tool's input-side mapping is revalidated against it: does the mapping cover every APEX field RAM Pathfinder needs, and does RAM Pathfinder have a slot for every APEX value? RAM Pathfinder's schema itself is not under revalidation — it is fixed by RAM Pathfinder design. New APEX vocabulary values are added as Reference Data rows via the API. Tracked as G4.6 in <a href="./gaps.html"><code>./gaps.md</code></a> and A33 in <a href="./assumptions.html"><code>./assumptions.md</code></a>.</p>
 </blockquote>
 <p>For naming convention rules (entity-plural for primary domain tables, service-prefix for service-internal or potentially-ambiguous tables), see <a href="./conventions.html"><code>./conventions.md</code> → "Naming Patterns"</a>.</p>
-</div></details><details class="section" id="reference-data-service-nji-reference-data--15-tables"><summary><span class="section-title">Reference Data service (<code>nji-reference-data</code>) — 15 tables</span></summary><div class="section-body">
+</div></details><details class="section" id="reference-data-service-ram-reference-data--15-tables"><summary><span class="section-title">Reference Data service (<code>ram-reference-data</code>) — 15 tables</span></summary><div class="section-body">
 <p>Cross-cutting controlled lists. Reads go directly via SQL JOIN with per-service SELECT grants. Writes go via the Reference Data API.</p>
 <table>
 <thead>
@@ -292,7 +292,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td><code>payment_lifecycle_statuses</code></td>
 <td>Vocabulary</td>
 <td>Payment-record lifecycle (pending / requested / paid / reconciled / queried). State of an individual payment as it moves through the JFEPS / Liberata flow.</td>
-<td>Payment (FR41, FR46), Booking (<code>payment_lifecycle_status_id</code> column UPDATE-granted to <code>nji_payment</code>)</td>
+<td>Payment (FR41, FR46), Booking (<code>payment_lifecycle_status_id</code> column UPDATE-granted to <code>ram_payment</code>)</td>
 </tr>
 <tr>
 <td><code>reconciliation_statuses</code></td>
@@ -302,8 +302,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="authorisation-service-nji-authorisation--5-tables"><summary><span class="section-title">Authorisation service (<code>nji-authorisation</code>) — 5 tables</span></summary><div class="section-body">
-<p>NJI-owned tables, designed by NJI. Seeded in Phase 0 by the Phase 0 Data Migration ETL (per D9), which reads APEX user dumps, transforms them, and loads via the Authorisation API. Service prefix used because "users" / "roles" are domain-overloaded terms.</p>
+</div></details><details class="section" id="authorisation-service-ram-authorisation--5-tables"><summary><span class="section-title">Authorisation service (<code>ram-authorisation</code>) — 5 tables</span></summary><div class="section-body">
+<p>RAM Pathfinder-owned tables, designed by RAM Pathfinder. Seeded in Phase 0 by the Phase 0 Data Migration ETL (per D9), which reads APEX user dumps, transforms them, and loads via the Authorisation API. Service prefix used because "users" / "roles" are domain-overloaded terms.</p>
 <table>
 <thead>
 <tr>
@@ -316,12 +316,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td><code>auth_users</code></td>
 <td>Domain</td>
-<td>NJI users (one row per active APEX user that the Phase 0 ETL was able to reconcile to an IdP principal by email + employee number)</td>
+<td>RAM Pathfinder users (one row per active APEX user that the Phase 0 ETL was able to reconcile to an IdP principal by email + employee number)</td>
 </tr>
 <tr>
 <td><code>auth_roles</code></td>
 <td>Domain</td>
-<td>NJI authorisation roles (the 12 documented roles from <code>functional-modules.md</code>)</td>
+<td>RAM Pathfinder authorisation roles (the 12 documented roles from <code>functional-modules.md</code>)</td>
 </tr>
 <tr>
 <td><code>auth_user_roles</code></td>
@@ -336,12 +336,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td><code>auth_user_activation_flags</code></td>
 <td>Domain</td>
-<td>Per-user "active in NJI" flag (FR58 — per-region phased activation)</td>
+<td>Per-user "active in RAM Pathfinder" flag (FR58 — per-region phased activation)</td>
 </tr>
 </tbody>
 </table>
 </div></details><details class="section" id="shared-infrastructure-tables-no-owning-service--1-table"><summary><span class="section-title">Shared infrastructure tables (no owning service) — 1 table</span></summary><div class="section-body">
-<p>Schema-managed by <code>nji-architecture</code>'s Flyway baseline migration; SELECT-granted to every NJI service DB role; writes are admin / Flyway-only (no API). <em>(Introduced in v2.2, 2026-05-07 — replaces the dedicated <code>nji-configuration</code> service.)</em></p>
+<p>Schema-managed by <code>ram-architecture</code>'s Flyway baseline migration; SELECT-granted to every RAM Pathfinder service DB role; writes are admin / Flyway-only (no API). <em>(Introduced in v2.2, 2026-05-07 — replaces the dedicated <code>ram-configuration</code> service.)</em></p>
 <table>
 <thead>
 <tr>
@@ -358,7 +358,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="notification-service-nji-notification--1-table"><summary><span class="section-title">Notification service (<code>nji-notification</code>) — 1 table</span></summary><div class="section-body">
+</div></details><details class="section" id="notification-service-ram-notification--1-table"><summary><span class="section-title">Notification service (<code>ram-notification</code>) — 1 table</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -375,7 +375,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="judge-service-nji-judge--5-tables"><summary><span class="section-title">Judge service (<code>nji-judge</code>) — 5 tables</span></summary><div class="section-body">
+</div></details><details class="section" id="judge-service-ram-judge--5-tables"><summary><span class="section-title">Judge service (<code>ram-judge</code>) — 5 tables</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -412,7 +412,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="absence-service-nji-absence--1-table"><summary><span class="section-title">Absence service (<code>nji-absence</code>) — 1 table</span></summary><div class="section-body">
+</div></details><details class="section" id="absence-service-ram-absence--1-table"><summary><span class="section-title">Absence service (<code>ram-absence</code>) — 1 table</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -429,7 +429,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="vacancy-service-nji-vacancy--2-tables"><summary><span class="section-title">Vacancy service (<code>nji-vacancy</code>) — 2 tables</span></summary><div class="section-body">
+</div></details><details class="section" id="vacancy-service-ram-vacancy--2-tables"><summary><span class="section-title">Vacancy service (<code>ram-vacancy</code>) — 2 tables</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -442,7 +442,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td><code>vacancies</code></td>
 <td>Domain</td>
-<td>Cover-requirement records (FR23, FR24); <code>filled</code> and <code>filled_at</code> columns are UPDATE-granted to <code>nji_booking</code> per Principle 1</td>
+<td>Cover-requirement records (FR23, FR24); <code>filled</code> and <code>filled_at</code> columns are UPDATE-granted to <code>ram_booking</code> per Principle 1</td>
 </tr>
 <tr>
 <td><code>vacancy_days</code></td>
@@ -451,7 +451,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="booking-service-nji-booking--1-table"><summary><span class="section-title">Booking service (<code>nji-booking</code>) — 1 table</span></summary><div class="section-body">
+</div></details><details class="section" id="booking-service-ram-booking--1-table"><summary><span class="section-title">Booking service (<code>ram-booking</code>) — 1 table</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -464,11 +464,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td><code>bookings</code></td>
 <td>Domain</td>
-<td>Fee-paid booking records (FR29, FR31); <code>payment_lifecycle_status_id</code> column is UPDATE-granted to <code>nji_payment</code> per Principle 1. Has <code>version integer NOT NULL DEFAULT 0</code> (<code>@Version</code> for optimistic locking) and a <code>uq_bookings_vacancy_judge_session_date_type</code> unique constraint enforcing natural-key dedup on retries.</td>
+<td>Fee-paid booking records (FR29, FR31); <code>payment_lifecycle_status_id</code> column is UPDATE-granted to <code>ram_payment</code> per Principle 1. Has <code>version integer NOT NULL DEFAULT 0</code> (<code>@Version</code> for optimistic locking) and a <code>uq_bookings_vacancy_judge_session_date_type</code> unique constraint enforcing natural-key dedup on retries.</td>
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="sitting-service-nji-sitting--1-table"><summary><span class="section-title">Sitting service (<code>nji-sitting</code>) — 1 table</span></summary><div class="section-body">
+</div></details><details class="section" id="sitting-service-ram-sitting--1-table"><summary><span class="section-title">Sitting service (<code>ram-sitting</code>) — 1 table</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -485,7 +485,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="payment-service-nji-payment--3-tables"><summary><span class="section-title">Payment service (<code>nji-payment</code>) — 3 tables</span></summary><div class="section-body">
+</div></details><details class="section" id="payment-service-ram-payment--3-tables"><summary><span class="section-title">Payment service (<code>ram-payment</code>) — 3 tables</span></summary><div class="section-body">
 <table>
 <thead>
 <tr>
@@ -512,12 +512,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 </tbody>
 </table>
-</div></details><details class="section" id="itinerary-service-nji-itinerary--0-tables"><summary><span class="section-title">Itinerary service (<code>nji-itinerary</code>) — 0 tables</span></summary><div class="section-body">
+</div></details><details class="section" id="itinerary-service-ram-itinerary--0-tables"><summary><span class="section-title">Itinerary service (<code>ram-itinerary</code>) — 0 tables</span></summary><div class="section-body">
 <p>Read-model service. No persistent state at MVP per Principle 2 — every read is a SQL JOIN over the shared schema across <code>judges</code>, <code>absences</code>, <code>vacancies</code>, <code>bookings</code>, <code>sittings</code>. Strategy C cache is post-MVP if measurement justifies.</p>
-</div></details><details class="section" id="mi-feed-service-nji-mi-feed--0-tables"><summary><span class="section-title">MI Feed service (<code>nji-mi-feed</code>) — 0 tables</span></summary><div class="section-body">
+</div></details><details class="section" id="mi-feed-service-ram-mi-feed--0-tables"><summary><span class="section-title">MI Feed service (<code>ram-mi-feed</code>) — 0 tables</span></summary><div class="section-body">
 <p>Read-model service. Same pattern as Itinerary; SQL JOIN over the shared schema for aggregate reporting.</p>
-</div></details><details class="section" id="mock-authentication-service-nji-mock-auth--2-tables-devintegration-only"><summary><span class="section-title">Mock authentication service (<code>nji-mock-auth</code>) — 2 tables (dev/integration only)</span></summary><div class="section-body">
-<p>Per <code>nji_mock_auth</code> DB role. <strong>Never deployed to production</strong>; production deployments reject mock-auth issuer URLs (per G5.3 in <a href="./gaps.html"><code>./gaps.md</code></a>).</p>
+</div></details><details class="section" id="mock-authentication-service-ram-mock-auth--2-tables-devintegration-only"><summary><span class="section-title">Mock authentication service (<code>ram-mock-auth</code>) — 2 tables (dev/integration only)</span></summary><div class="section-body">
+<p>Per <code>ram_mock_auth</code> DB role. <strong>Never deployed to production</strong>; production deployments reject mock-auth issuer URLs (per G5.3 in <a href="./gaps.html"><code>./gaps.md</code></a>).</p>
 <table>
 <thead>
 <tr>
@@ -530,7 +530,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td><code>mock_oauth_clients</code></td>
 <td>Dev-only</td>
-<td>OAuth client registrations (Spring Authorization Server backend). Holds <strong>(a)</strong> the SPA client for human <code>authorization_code</code> flow, and <strong>(b)</strong> service-principal client registrations for <strong>batch / scheduled components</strong> that need a service identity (initially: <code>nji-payment-batch</code>). User-initiated runtime calls between services use <strong>JWT propagation</strong> (no service principal needed); batch / scheduled components — which have no upstream user context — use OAuth <code>client_credentials</code> against this mock issuer. <em>(v2.5 narrowing reverted in v2.6 to support the payment batch.)</em></td>
+<td>OAuth client registrations (Spring Authorization Server backend). Holds <strong>(a)</strong> the SPA client for human <code>authorization_code</code> flow, and <strong>(b)</strong> service-principal client registrations for <strong>batch / scheduled components</strong> that need a service identity (initially: <code>ram-payment-batch</code>). User-initiated runtime calls between services use <strong>JWT propagation</strong> (no service principal needed); batch / scheduled components — which have no upstream user context — use OAuth <code>client_credentials</code> against this mock issuer. <em>(v2.5 narrowing reverted in v2.6 to support the payment batch.)</em></td>
 </tr>
 <tr>
 <td><code>mock_user_roster</code></td>
@@ -555,13 +555,13 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>Mock auth:</strong> 2 tables (dev/integration only)</li>
 </ul>
 <p><strong>Total: 37 tables</strong> across the shared schema (34 service-owned production + 1 shared infrastructure + 2 dev-only).</p>
-<p><strong>Retry safety convention:</strong> every NJI domain table that supports create has a <code>uq_{table}_{columns}</code> unique constraint on its natural key, and every entity that supports update has a <code>version</code> column for JPA <code>@Version</code> optimistic locking. There are <em>no</em> per-service <code>*_idempotency_keys</code> tables — those were dropped in v2.1 in favour of these PostgreSQL-native primitives. See <a href="./conventions.html"><code>./conventions.md</code> → "Retry safety and concurrency control"</a> for the pattern.</p>
-<p><strong>On APEX SQL dump validation:</strong> when the dump arrives in Phase 0 (per A32 + A33 in <a href="./assumptions.html"><code>./assumptions.md</code></a>; G4.6 in <a href="./gaps.html"><code>./gaps.md</code></a>), the validation focus is on the <strong>Phase 0 Data Migration ETL's input/output mapping</strong>, not on this NJI table inventory. NJI's shape is fixed by NJI design; the dump can surface (a) APEX fields the migration tool didn't anticipate (mapping gap → update the tool), or (b) APEX values not yet in NJI vocabularies (vocabulary row insertion via the Reference Data API; no schema change). If a fundamental mismatch surfaces — e.g. an APEX-side data structure NJI has no place for at all — that is an architectural decision (do we add a new NJI table?), and it lands via PR against the architecture document set, exactly as any other architectural change would.</p>
-<p><strong>Fitness function</strong> (Step 4 <em>ArchUnit-style fitness functions</em> in <a href="../architecture.html"><code>../architecture.md</code></a>) operates against this inventory: every table created by Flyway DDL must appear here with the matching owning service (or under "Shared infrastructure"); DB role grants must align. The Phase 0 ETL is <em>not</em> in scope for the fitness function — it's an external programme that calls NJI APIs.</p>
+<p><strong>Retry safety convention:</strong> every RAM Pathfinder domain table that supports create has a <code>uq_{table}_{columns}</code> unique constraint on its natural key, and every entity that supports update has a <code>version</code> column for JPA <code>@Version</code> optimistic locking. There are <em>no</em> per-service <code>*_idempotency_keys</code> tables — those were dropped in v2.1 in favour of these PostgreSQL-native primitives. See <a href="./conventions.html"><code>./conventions.md</code> → "Retry safety and concurrency control"</a> for the pattern.</p>
+<p><strong>On APEX SQL dump validation:</strong> when the dump arrives in Phase 0 (per A32 + A33 in <a href="./assumptions.html"><code>./assumptions.md</code></a>; G4.6 in <a href="./gaps.html"><code>./gaps.md</code></a>), the validation focus is on the <strong>Phase 0 Data Migration ETL's input/output mapping</strong>, not on this RAM Pathfinder table inventory. RAM Pathfinder's shape is fixed by RAM Pathfinder design; the dump can surface (a) APEX fields the migration tool didn't anticipate (mapping gap → update the tool), or (b) APEX values not yet in RAM Pathfinder vocabularies (vocabulary row insertion via the Reference Data API; no schema change). If a fundamental mismatch surfaces — e.g. an APEX-side data structure RAM Pathfinder has no place for at all — that is an architectural decision (do we add a new RAM Pathfinder table?), and it lands via PR against the architecture document set, exactly as any other architectural change would.</p>
+<p><strong>Fitness function</strong> (Step 4 <em>ArchUnit-style fitness functions</em> in <a href="../architecture.html"><code>../architecture.md</code></a>) operates against this inventory: every table created by Flyway DDL must appear here with the matching owning service (or under "Shared infrastructure"); DB role grants must align. The Phase 0 ETL is <em>not</em> in scope for the fitness function — it's an external programme that calls RAM Pathfinder APIs.</p>
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/data-tables.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#nji-tables-not-apex">NJI tables, not APEX</a></li><li><a href="#reference-data-service-nji-reference-data--15-tables">Reference Data service (nji-reference-data) — 15 tables</a></li><li><a href="#authorisation-service-nji-authorisation--5-tables">Authorisation service (nji-authorisation) — 5 tables</a></li><li><a href="#shared-infrastructure-tables-no-owning-service--1-table">Shared infrastructure tables (no owning service) — 1 table</a></li><li><a href="#notification-service-nji-notification--1-table">Notification service (nji-notification) — 1 table</a></li><li><a href="#judge-service-nji-judge--5-tables">Judge service (nji-judge) — 5 tables</a></li><li><a href="#absence-service-nji-absence--1-table">Absence service (nji-absence) — 1 table</a></li><li><a href="#vacancy-service-nji-vacancy--2-tables">Vacancy service (nji-vacancy) — 2 tables</a></li><li><a href="#booking-service-nji-booking--1-table">Booking service (nji-booking) — 1 table</a></li><li><a href="#sitting-service-nji-sitting--1-table">Sitting service (nji-sitting) — 1 table</a></li><li><a href="#payment-service-nji-payment--3-tables">Payment service (nji-payment) — 3 tables</a></li><li><a href="#itinerary-service-nji-itinerary--0-tables">Itinerary service (nji-itinerary) — 0 tables</a></li><li><a href="#mi-feed-service-nji-mi-feed--0-tables">MI Feed service (nji-mi-feed) — 0 tables</a></li><li><a href="#mock-authentication-service-nji-mock-auth--2-tables-devintegration-only">Mock authentication service (nji-mock-auth) — 2 tables (dev/integration only)</a></li><li><a href="#inventory-totals">Inventory totals</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#ram-tables-not-apex">RAM Pathfinder tables, not APEX</a></li><li><a href="#reference-data-service-ram-reference-data--15-tables">Reference Data service (ram-reference-data) — 15 tables</a></li><li><a href="#authorisation-service-ram-authorisation--5-tables">Authorisation service (ram-authorisation) — 5 tables</a></li><li><a href="#shared-infrastructure-tables-no-owning-service--1-table">Shared infrastructure tables (no owning service) — 1 table</a></li><li><a href="#notification-service-ram-notification--1-table">Notification service (ram-notification) — 1 table</a></li><li><a href="#judge-service-ram-judge--5-tables">Judge service (ram-judge) — 5 tables</a></li><li><a href="#absence-service-ram-absence--1-table">Absence service (ram-absence) — 1 table</a></li><li><a href="#vacancy-service-ram-vacancy--2-tables">Vacancy service (ram-vacancy) — 2 tables</a></li><li><a href="#booking-service-ram-booking--1-table">Booking service (ram-booking) — 1 table</a></li><li><a href="#sitting-service-ram-sitting--1-table">Sitting service (ram-sitting) — 1 table</a></li><li><a href="#payment-service-ram-payment--3-tables">Payment service (ram-payment) — 3 tables</a></li><li><a href="#itinerary-service-ram-itinerary--0-tables">Itinerary service (ram-itinerary) — 0 tables</a></li><li><a href="#mi-feed-service-ram-mi-feed--0-tables">MI Feed service (ram-mi-feed) — 0 tables</a></li><li><a href="#mock-authentication-service-ram-mock-auth--2-tables-devintegration-only">Mock authentication service (ram-mock-auth) — 2 tables (dev/integration only)</a></li><li><a href="#inventory-totals">Inventory totals</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

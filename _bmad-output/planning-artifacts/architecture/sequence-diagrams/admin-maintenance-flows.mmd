@@ -4,15 +4,15 @@ sequenceDiagram
 
     actor Admin as Sys Admin
 
-    participant AUI as nji-admin-ui
-    participant Authz as nji-authorisation
-    participant Ref as nji-reference-data
+    participant AUI as ram-admin-ui
+    participant Authz as ram-authorisation
+    participant Ref as ram-reference-data
     participant DB as Shared schema
-    participant OtherSvc as Any other nji service
+    participant OtherSvc as Any other ram service
 
     rect rgb(232, 240, 250)
         Note over Admin,OtherSvc: Phase 1 — Admin login and role-gate
-        Admin->>AUI: open admin.nji.hmcts.gov.uk
+        Admin->>AUI: open admin.ram.hmcts.gov.uk
         AUI->>Authz: OIDC and POST /authz/check requiring sys-admin role
         Authz-->>AUI: sys-admin allowed, or 403 for non-admin users
         AUI-->>Admin: admin-scoped Home with Reference Data and User & Role nav
@@ -34,7 +34,7 @@ sequenceDiagram
         Note right of Admin: Affects any of the 5 auth tables — auth_users, auth_roles, auth_user_roles, auth_user_region_scopes, auth_user_activation_flags.
         Admin->>AUI: edit user role or Region/Area scope and submit
         AUI->>Authz: POST /v1/users or PUT /v1/users/{id}/roles
-        Authz->>Authz: validate. nji-authorisation is both gatekeeper and writer here
+        Authz->>Authz: validate. ram-authorisation is both gatekeeper and writer here
         Authz->>DB: persist row to the owning auth table
         Authz-->>AUI: 201 or 200
         AUI-->>Admin: confirmation toast
@@ -51,4 +51,4 @@ sequenceDiagram
         Authz-->>OtherSvc: new effective permissions
     end
 
-    Note over Admin,OtherSvc: Phase 0 Data Migration ETL is the bulk-load equivalent of Phases 2 and 3 — operator-initiated, not via nji-admin-ui. Lives at nji-architecture/migration/.
+    Note over Admin,OtherSvc: Phase 0 Data Migration ETL is the bulk-load equivalent of Phases 2 and 3 — operator-initiated, not via ram-admin-ui. Lives at ram-architecture/migration/.

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Architecture Decision Document — NJI Documentation</title>
+<title>Architecture Decision Document — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="./index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="./prd.html">PRD (NJI)</a></li>
+<li><a href="./prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture" data-current="true" open>
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture" data-current="true" open>
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="./architecture.html" class="current">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
@@ -224,7 +224,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="#project-structure--boundaries">Project Structure &amp; Boundaries</a>
 <ol type="1">
 <li><a href="#repository-strategy--list">Repository Strategy &amp; List</a></li>
-<li><a href="#complete-project-directory-structures-per-service--ui--nji-architecture">Complete Project Directory Structures</a></li>
+<li><a href="#complete-project-directory-structures-per-service--ui--ram-architecture">Complete Project Directory Structures</a></li>
 <li><a href="#architectural-boundaries">Architectural Boundaries</a></li>
 <li><a href="#requirements-to-structure-mapping">Requirements to Structure Mapping</a></li>
 <li><a href="#cross-cutting-concerns-to-file-locations">Cross-Cutting Concerns to File Locations</a></li>
@@ -248,7 +248,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="#changelog">Changelog</a></li>
 </ol>
 </div></details><details class="section" id="system-context--at-a-glance"><summary><span class="section-title">System context — at a glance</span></summary><div class="section-body">
-<p><img src="./architecture/diagrams/system-context.png" alt="NJI System Context — high-level service map and key interactions" /></p>
+<p><img src="./architecture/diagrams/system-context.png" alt="RAM Pathfinder System Context — high-level service map and key interactions" /></p>
 <p><em>High-level service map. For detail, see the relevant section in this document or its siblings.</em></p>
 </div></details><details class="section" id="how-this-document-is-structured"><summary><span class="section-title">How this document is structured</span></summary><div class="section-body">
 <table>
@@ -261,11 +261,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tbody>
 <tr>
 <td><a href="./architecture/starter-template.html"><code>./architecture/starter-template.md</code></a></td>
-<td>HMCTS Crime SpringBoot starter — initialisation flow, Gradle build tool rationale, dependency inventory, per-service NJI conventions overlaid by the scaffolding script</td>
+<td>HMCTS Crime SpringBoot starter — initialisation flow, Gradle build tool rationale, dependency inventory, per-service RAM Pathfinder conventions overlaid by the scaffolding script</td>
 </tr>
 <tr>
 <td><a href="./architecture/data-tables.html"><code>./architecture/data-tables.md</code></a></td>
-<td>Authoritative Table Ownership Mapping — 39 NJI tables grouped by owning service</td>
+<td>Authoritative Table Ownership Mapping — 39 RAM Pathfinder tables grouped by owning service</td>
 </tr>
 <tr>
 <td><a href="./architecture/conventions.html"><code>./architecture/conventions.md</code></a></td>
@@ -273,7 +273,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><a href="./architecture/repo-structure.html"><code>./architecture/repo-structure.md</code></a></td>
-<td>Per-service / UI / <code>nji-architecture</code> directory structures, file organisation, deployment pipeline</td>
+<td>Per-service / UI / <code>ram-architecture</code> directory structures, file organisation, deployment pipeline</td>
 </tr>
 <tr>
 <td><a href="./architecture/repository-strategy.html"><code>./architecture/repository-strategy.md</code></a></td>
@@ -308,7 +308,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p>Refactor history: the single-file <code>architecture.md</code> was split into the index + sibling structure above in v1.8 (Strategy B).</p>
 </div></details><details class="section" id="project-context-analysis"><summary><span class="section-title">Project Context Analysis</span></summary><div class="section-body">
 <h3 id="requirements-overview">Requirements Overview</h3>
-<p><strong>Functional Requirements (61, in 9 capability areas).</strong> NJI is 11 services (revised v2.2 — <code>nji-configuration</code> dropped; per-service config in Spring profiles + Key Vault; a shared <code>configuration_values</code> table holds cross-service policy values), in three clusters:</p>
+<p><strong>Functional Requirements (61, in 9 capability areas).</strong> RAM Pathfinder is 11 services (revised v2.2 — <code>ram-configuration</code> dropped; per-service config in Spring profiles + Key Vault; a shared <code>configuration_values</code> table holds cross-service policy values), in three clusters:</p>
 <ul>
 <li><strong>Domain services</strong> — Judge, Absence, Vacancy, Booking, Sitting, Payment. Operational chain: Manage Judges → Absence → Vacancy → Booking → Sitting → Payment → Reconciliation.</li>
 <li><strong>Cross-cutting services</strong> — Reference Data (single writer), Authorisation (gates every call), Notification (transactional email).</li>
@@ -325,7 +325,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Non-Functional Requirements (42, in 8 categories):</strong></p>
 <ul>
 <li><strong>Performance</strong> — page-level: ≤ 5 s dashboard, ≤ 30 s reports/Forward Look (APEX baseline). API: ≤ 500 ms p95 read, ≤ 1 s p95 write. Capacity ~50–100/region; ~200–500 national.</li>
-<li><strong>Security</strong> — TLS only; encryption at rest; AuthN via HMCTS IdP SSO; AuthZ owned by NJI; no bank details, no case-level data; aligned with GFS-7.</li>
+<li><strong>Security</strong> — TLS only; encryption at rest; AuthN via HMCTS IdP SSO; AuthZ owned by RAM Pathfinder; no bank details, no case-level data; aligned with GFS-7.</li>
 <li><strong>Accessibility</strong> — WCAG 2.2 AA; tested per UI page per phase.</li>
 <li><strong>Integration</strong> — OIDC issuer (mock auth Phase 0–8; HMCTS IdP from pre-Phase-9); JFEPS/Liberata unchanged; HMCTS email; DA&amp;I MI Feed; no eLinks integration in MVP.</li>
 <li><strong>Observability</strong> — log-based MVP only (D7); structured logs + correlation IDs; OpenTelemetry → Application Insights.</li>
@@ -345,13 +345,13 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>No bank details, no case-level data</strong> anywhere by contract.</li>
 <li><strong>No automated eLinks/HR integration</strong> in MVP scope.</li>
 </ul>
-<p><strong>External systems (not controlled by NJI):</strong></p>
+<p><strong>External systems (not controlled by RAM Pathfinder):</strong></p>
 <ul>
 <li><strong>HMCTS IdP</strong> — pre-Phase-9 hard dependency; mock auth covers Phase 0–8.</li>
 <li><strong>JFEPS-compatible Excel format</strong> for Payment — externally owned; treated as a versioned content-type.</li>
 <li><strong>HMCTS email infrastructure</strong> for transactional notifications.</li>
-<li><strong>DA&amp;I MI Feed consumers</strong> (post-MVP) — they call NJI APIs.</li>
-<li><strong>APEX</strong> — used by UAT users to compare behaviour. No programmatic linkage to NJI's CI or runtime.</li>
+<li><strong>DA&amp;I MI Feed consumers</strong> (post-MVP) — they call RAM Pathfinder APIs.</li>
+<li><strong>APEX</strong> — used by UAT users to compare behaviour. No programmatic linkage to RAM Pathfinder's CI or runtime.</li>
 </ul>
 <p><strong>Migration (Phase 0 only):</strong> Reference Data + Users/Roles from APEX (D3 + D9). No transactional data. APEX ⇄ IdP reconciliation: every active APEX user reconciles to an IdP principal; unmatched records get explicit handling (drop / hold / manual map).</p>
 <h3 id="cross-cutting-concerns-identified">Cross-Cutting Concerns Identified</h3>
@@ -360,10 +360,10 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>Authorisation enforcement</strong> — every API call resolves principal → roles + Region/Area scope through Authorisation (FR2, FR3). Implemented as middleware.</li>
 <li><strong>Reference Data is single-writer</strong> — sole source of truth for Regions, Offices, vocabularies, calendar (FR6, FR7). Reads: direct SQL on the 15 Reference Data tables (no caching per Principle 2). Writes: via the Reference Data API.</li>
 <li><strong>Per-region scoping</strong> — domain operations default-scope by Region/Area from the Authorisation context (FR49). Cross-region operations are explicit.</li>
-<li><strong>Per-region phased activation</strong> — per D8, NJI access is gated by <code>auth_user_activation_flags</code> (FR58). Authorisation distinguishes "active in NJI" from "exists in NJI".</li>
+<li><strong>Per-region phased activation</strong> — per D8, RAM Pathfinder access is gated by <code>auth_user_activation_flags</code> (FR58). Authorisation distinguishes "active in RAM Pathfinder" from "exists in RAM Pathfinder".</li>
 <li><strong>Retry safety via native DB primitives</strong> — natural-key uniqueness, optimistic locking, pessimistic row locking. No custom idempotency-key tables. Detail in <em>Data Architecture</em> and <a href="./architecture/data-tables.html"><code>./architecture/data-tables.md</code></a>.</li>
 <li><strong>API-as-Product compliance</strong> — versioned contract, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details, OpenAPI per service (FR59).</li>
-<li><strong>Manual UAT</strong> (FR61 / NFR41) — APEX-experienced users compare NJI vs APEX per service per region; sign-off is the wave-cutover gate. No automated APEX-comparison in CI.</li>
+<li><strong>Manual UAT</strong> (FR61 / NFR41) — APEX-experienced users compare RAM Pathfinder vs APEX per service per region; sign-off is the wave-cutover gate. No automated APEX-comparison in CI.</li>
 <li><strong>Forbidden data</strong> — no bank details (FR47); no case-level data (FR54). Enforced at the schema and API boundary.</li>
 </ul>
 <h3 id="architecture-phase-decisions-still-open">Architecture-phase decisions still open</h3>
@@ -431,7 +431,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <ul>
 <li><strong>The PostgreSQL database</strong> (one instance, one schema, per-service roles with explicit grants).</li>
 <li><strong>API contracts</strong> — OpenAPI specs, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> envelope, content-type negotiation. Specification, not runtime code.</li>
-<li><strong>API spec Maven artefacts</strong> — <code>uk.gov.hmcts.nji:api-nji-{service}:{version}</code>. Contract, not runtime code.</li>
+<li><strong>API spec Maven artefacts</strong> — <code>uk.gov.hmcts.ram:api-ram-{service}:{version}</code>. Contract, not runtime code.</li>
 <li><strong>Runtime infrastructure services</strong> (Authorisation, Reference Data, Notification) — by API call (workflows) or direct DB read (simple lookups).</li>
 <li><strong>Scaffolding templates</strong> (HMCTS Crime SpringBoot template) — at scaffold time, then forked.</li>
 <li><strong>CI/CD and operational conventions</strong> (Gradle idioms, OpenTelemetry → Application Insights ingestion contract, Flyway baseline) — by convention and tooling, not library.</li>
@@ -460,7 +460,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tbody>
 <tr>
 <td><strong>HMCTS internal Java/Spring Boot starter</strong> (<code>hmcts/service-hmcts-crime-springboot-template</code>)</td>
-<td>✅ <strong>Selected.</strong> Confirmed via review (2026-05-06). Encodes Logstash JSON logging, health checks, OpenTelemetry → App Insights, IdP integration patterns (custom <code>JWTFilter</code>), and security defaults. <strong>Helm chart and Spring Cloud Azure Key Vault are not in the template baseline</strong> — NJI scaffolding script adds them (G1.4a, G1.4b).</td>
+<td>✅ <strong>Selected.</strong> Confirmed via review (2026-05-06). Encodes Logstash JSON logging, health checks, OpenTelemetry → App Insights, IdP integration patterns (custom <code>JWTFilter</code>), and security defaults. <strong>Helm chart and Spring Cloud Azure Key Vault are not in the template baseline</strong> — RAM Pathfinder scaffolding script adds them (G1.4a, G1.4b).</td>
 </tr>
 <tr>
 <td><strong>Spring Initializr</strong></td>
@@ -475,7 +475,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td>❌ Rejected. Service discovery / config server / circuit breakers — not needed under REST-first synchronous + Kubernetes.</td>
 </tr>
 <tr>
-<td><strong>Custom NJI Platform Library</strong></td>
+<td><strong>Custom RAM Pathfinder Platform Library</strong></td>
 <td>❌ Rejected on the no-shared-runtime-library principle.</td>
 </tr>
 </tbody>
@@ -493,7 +493,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Topology:</strong> one global instance, one shared schema, per-service DB roles.</p>
 <ul>
 <li><strong>One PostgreSQL Flexible Server instance</strong> (not per-region, not per-service); sized for the full user population.</li>
-<li><strong>One logical database</strong>, one shared schema (e.g. <code>nji</code>).</li>
+<li><strong>One logical database</strong>, one shared schema (e.g. <code>ram</code>).</li>
 <li><strong>Table ownership</strong> encoded by table name (below) + per-service DB roles with explicit grants (below).</li>
 </ul>
 <p><strong>Table naming and ownership:</strong></p>
@@ -552,20 +552,20 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tbody>
 </table>
 <p><strong>Foreign keys within the shared schema</strong> are allowed and encouraged (e.g. <code>bookings.judge_id REFERENCES judges(id)</code>).</p>
-<p><strong>Per-service DB roles with explicit grants</strong> — <code>nji_judge</code>, <code>nji_booking</code>, etc. (one per service; <code>nji_mock_auth</code> for dev/integration). <code>ALL</code> privileges on owned tables. Cross-table access granted explicitly: <code>GRANT SELECT ON vacancies TO nji_booking; GRANT UPDATE (filled, filled_at) ON vacancies TO nji_booking;</code>. Grants live in Flyway migrations owned by the table-owning service. <strong>Day 1: grants start broad, tighten as patterns become visible.</strong></p>
+<p><strong>Per-service DB roles with explicit grants</strong> — <code>ram_judge</code>, <code>ram_booking</code>, etc. (one per service; <code>ram_mock_auth</code> for dev/integration). <code>ALL</code> privileges on owned tables. Cross-table access granted explicitly: <code>GRANT SELECT ON vacancies TO ram_booking; GRANT UPDATE (filled, filled_at) ON vacancies TO ram_booking;</code>. Grants live in Flyway migrations owned by the table-owning service. <strong>Day 1: grants start broad, tighten as patterns become visible.</strong></p>
 <p><strong>Forward compatibility:</strong> per-service DB roles are the seam for future schema-per-service or service-extraction without connection-layer code changes.</p>
 <p><strong>Data modelling:</strong> Spring Data JPA + Hibernate. Per-service entities, repositories, and queries. No shared entity classes. Another service's whitelisted tables are <code>@Immutable</code> JPA entities in the consuming service.</p>
-<p><strong>Schema evolution: Flyway</strong> (<code>spring-boot-starter-flyway</code>, <code>flyway-core</code>, <code>flyway-database-postgresql</code>). Per-service <code>src/main/resources/db/migration/V*__*.sql</code>. Migrations run on application startup. <strong>Flyway is for NJI's DDL only — not for loading APEX data into NJI</strong> (see Phase 0 ETL below).</p>
+<p><strong>Schema evolution: Flyway</strong> (<code>spring-boot-starter-flyway</code>, <code>flyway-core</code>, <code>flyway-database-postgresql</code>). Per-service <code>src/main/resources/db/migration/V*__*.sql</code>. Migrations run on application startup. <strong>Flyway is for RAM Pathfinder's DDL only — not for loading APEX data into RAM Pathfinder</strong> (see Phase 0 ETL below).</p>
 <p><strong>Phase 0 Data Migration from APEX (separate from Flyway):</strong></p>
 <ul>
-<li><strong>Source:</strong> APEX SQL dumps for Reference Data and APEX user records + role/scope assignments. NJI does not own or constrain APEX's schema.</li>
-<li><strong>Target:</strong> NJI tables — <code>regions</code>, <code>offices</code>, <code>calendar_periods</code>, the 12 vocabulary tables, <code>auth_users</code>, <code>auth_roles</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, <code>auth_user_activation_flags</code>.</li>
-<li><strong>Mechanism:</strong> the migration tool reads APEX dumps, transforms each row to NJI shape, and loads via NJI APIs (<code>POST /v1/regions</code>, <code>POST /authz/users</code>, etc.). The API is the seeding mechanism; the migration tool is the bulk caller.</li>
-<li><strong>Not Flyway data-seeding.</strong> APEX shape ≠ NJI shape; the transform is in code. Writes go via the API so validation, idempotency, and audit-logging hooks fire.</li>
-<li><strong>Location:</strong> <code>nji-architecture/migration/</code> (CLI/script). Phase 0 deliverable; re-runnable per rollout wave.</li>
+<li><strong>Source:</strong> APEX SQL dumps for Reference Data and APEX user records + role/scope assignments. RAM Pathfinder does not own or constrain APEX's schema.</li>
+<li><strong>Target:</strong> RAM Pathfinder tables — <code>regions</code>, <code>offices</code>, <code>calendar_periods</code>, the 12 vocabulary tables, <code>auth_users</code>, <code>auth_roles</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, <code>auth_user_activation_flags</code>.</li>
+<li><strong>Mechanism:</strong> the migration tool reads APEX dumps, transforms each row to RAM Pathfinder shape, and loads via RAM Pathfinder APIs (<code>POST /v1/regions</code>, <code>POST /authz/users</code>, etc.). The API is the seeding mechanism; the migration tool is the bulk caller.</li>
+<li><strong>Not Flyway data-seeding.</strong> APEX shape ≠ RAM Pathfinder shape; the transform is in code. Writes go via the API so validation, idempotency, and audit-logging hooks fire.</li>
+<li><strong>Location:</strong> <code>ram-architecture/migration/</code> (CLI/script). Phase 0 deliverable; re-runnable per rollout wave.</li>
 <li><strong>Scope:</strong> Reference Data (D3) + active APEX users with role/Region-Area scope (D9). No transactional data.</li>
 <li><strong>Reconciliation:</strong> Reference Data lists signed off by RSU/judicial-team owners (Risk #13); every migrated user reconciled against an IdP principal; unmatched records get drop/hold/manual map handling (Risk #14).</li>
-<li><strong>APEX revalidation:</strong> when the APEX SQL dump lands, validate the tool's APEX-side input mapping. Confirms the tool covers every APEX field NJI needs; does not reshape NJI's tables. New APEX vocabulary values are inserted via the Reference Data API. Tracked as G4.6 / A33.</li>
+<li><strong>APEX revalidation:</strong> when the APEX SQL dump lands, validate the tool's APEX-side input mapping. Confirms the tool covers every APEX field RAM Pathfinder needs; does not reshape RAM Pathfinder's tables. New APEX vocabulary values are inserted via the Reference Data API. Tracked as G4.6 / A33.</li>
 </ul>
 <p><strong>Read models:</strong> SQL JOINs across the shared schema. Itinerary and MI Feed run joins across <code>judges</code>, <code>absences</code>, <code>vacancies</code>, <code>bookings</code>, <code>sittings</code>, <code>payments</code> (read-only via SELECT grants). Indexed joins meet the ≤ 30 s Forward Look NFR (NFR8).</p>
 <p><strong>Caching:</strong> none at MVP (per Principle 2). Added per-service post-MVP if measurement shows the need.</p>
@@ -609,18 +609,18 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p>See <a href="./architecture/data-tables.html"><code>./architecture/data-tables.md</code></a>. The fitness function checks that every Flyway-created table appears there with the correct owning service.</p>
 <h3 id="authentication--security">Authentication &amp; Security</h3>
 <h4 id="phasing-of-authentication-mock-first-real-idp-later">Phasing of Authentication: Mock-First, Real IdP Later</h4>
-<p>Phases 0–8 use <code>nji-mock-auth</code>. Real HMCTS IdP integration is a pre-Phase-9 deliverable — a configuration cutover.</p>
-<p><strong><code>nji-mock-auth</code> (Phase 0 deliverable):</strong></p>
+<p>Phases 0–8 use <code>ram-mock-auth</code>. Real HMCTS IdP integration is a pre-Phase-9 deliverable — a configuration cutover.</p>
+<p><strong><code>ram-mock-auth</code> (Phase 0 deliverable):</strong></p>
 <ul>
 <li>OIDC <code>authorization_code</code> flow for human users (<code>/oauth2/authorize</code>, <code>/oauth2/token</code>, <code>/oauth2/jwks</code>, <code>/oauth2/userinfo</code>).</li>
-<li>OAuth <code>client_credentials</code> grant for batch service principals (initially <code>nji-payment-batch</code>).</li>
+<li>OAuth <code>client_credentials</code> grant for batch service principals (initially <code>ram-payment-batch</code>).</li>
 <li>JWTs for a fixed roster of test users covering all 11 user roles × representative Region/Area combinations.</li>
-<li>User roster mirrors what the Phase 0 dev/CI scripts seed into NJI Authorisation.</li>
+<li>User roster mirrors what the Phase 0 dev/CI scripts seed into RAM Pathfinder Authorisation.</li>
 <li>Spring Authorization Server. Deployed to AKS dev/integration alongside other Phase 0 services.</li>
 <li><strong>Production safeguard:</strong> refuses to start with the <code>production</code> Spring profile. CI lint blocks production manifests that reference the mock-auth issuer URL.</li>
 </ul>
 <p><strong>Environments:</strong> local dev, CI, unit and integration tests use mock auth. Integration and staging run on mock until the pre-Phase-9 cutover. Production runs on real HMCTS IdP only.</p>
-<p><strong>Why mock-first:</strong> decouples NJI build from the HMCTS IdP team's roadmap; lets developers work without IdP credentials. Reduces Risk #6 (IdP integration timing) from a Phase 0 blocker to a pre-Phase-9 prerequisite.</p>
+<p><strong>Why mock-first:</strong> decouples RAM Pathfinder build from the HMCTS IdP team's roadmap; lets developers work without IdP credentials. Reduces Risk #6 (IdP integration timing) from a Phase 0 blocker to a pre-Phase-9 prerequisite.</p>
 <p><strong>Real HMCTS IdP cutover (pre-Phase-9):</strong></p>
 <ul>
 <li><strong>Triggers:</strong> G1.1 (HMCTS IdP supports OIDC for human authN), G1.2 (HMCTS IdP supports <code>client_credentials</code> for batch — or an alternative per G7.1), G1.3 (principal export/query API for migration reconciliation).</li>
@@ -630,12 +630,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>Test suite:</strong> every automated suite (unit, Testcontainers integration, contract) and per-service manual UAT must pass against real IdP in staging before Phase 9 pilot.</li>
 </ul>
 <h4 id="end-user-authentication">End-user Authentication</h4>
-<p>End-user authentication: OIDC. End-user authorisation: NJI Authorisation service.</p>
+<p>End-user authentication: OIDC. End-user authorisation: RAM Pathfinder Authorisation service.</p>
 <p>Each service runs a custom <code>JWTFilter</code> (HMCTS Crime template pattern, <code>io.jsonwebtoken:jjwt</code>):</p>
 <ol type="1">
 <li>Validate JWT signature and issuer against the issuer's JWKS (mock auth in Phase 0–8; HMCTS IdP from pre-Phase-9). Public keys cached per the issuer's cache headers.</li>
 <li>Extract principal identity (sub, email, employee number) from JWT claims.</li>
-<li>Call <code>POST /authz/check</code> against NJI Authorisation for roles + Region/Area scope + activation flag (FR58). NJI's authz state lives in Authorisation, not the IdP — this differs from the template's claims-only approach.</li>
+<li>Call <code>POST /authz/check</code> against RAM Pathfinder Authorisation for roles + Region/Area scope + activation flag (FR58). RAM Pathfinder's authz state lives in Authorisation, not the IdP — this differs from the template's claims-only approach.</li>
 <li>Store the result in a request-scoped <code>AuthDetails</code> bean.</li>
 </ol>
 <p>The filter caches authorisation decisions for the request lifecycle only.</p>
@@ -648,10 +648,10 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </ul>
 <p><strong>Pattern 2 — Service-principal authentication</strong> (batch / scheduled components without an upstream user):</p>
 <ul>
-<li>The case at MVP is <code>nji-payment-batch</code> — runs on a schedule, picks up bookings ready for payment, generates the JFEPS Excel, dispatches via Notification.</li>
-<li>Authenticates via OAuth 2.0 <code>client_credentials</code> against the OIDC issuer. <code>nji-mock-auth</code> in Phase 0–8; production issuer per <a href="./architecture/gaps.html"><code>./architecture/gaps.md</code> G7.1</a> (default recommendation: Azure Workload Identity).</li>
+<li>The case at MVP is <code>ram-payment-batch</code> — runs on a schedule, picks up bookings ready for payment, generates the JFEPS Excel, dispatches via Notification.</li>
+<li>Authenticates via OAuth 2.0 <code>client_credentials</code> against the OIDC issuer. <code>ram-mock-auth</code> in Phase 0–8; production issuer per <a href="./architecture/gaps.html"><code>./architecture/gaps.md</code> G7.1</a> (default recommendation: Azure Workload Identity).</li>
 <li>Service token attached as <code>Authorization: Bearer &lt;service-token&gt;</code> on outbound calls. The receiving service's <code>JWTFilter</code> validates via the same JWKS path as human JWTs.</li>
-<li>Service-principal records live in <code>auth_users</code> (with a <code>principal_kind</code> flag); <code>nji-authorisation</code> resolves their permissions the same way. Registrations live in <code>mock_oauth_clients</code> at MVP.</li>
+<li>Service-principal records live in <code>auth_users</code> (with a <code>principal_kind</code> flag); <code>ram-authorisation</code> resolves their permissions the same way. Registrations live in <code>mock_oauth_clients</code> at MVP.</li>
 </ul>
 <p><strong>Other non-runtime auth:</strong> Phase 0 dev/CI seeding via one-off scripts (no runtime API call); Phase 0 production data migration via operator-initiated ETL with the operator's user JWT (G4.7 — flagged for post-MVP refinement).</p>
 <p><strong>Resolves PRD TBD #3:</strong> JWT propagation for user-initiated calls; service principals (mock-auth in non-prod) for the payment batch; production issuer per G7.1.</p>
@@ -670,23 +670,23 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Build / version metadata</strong> is served by Spring Boot Actuator's <code>/actuator/info</code> (populated by <code>gradle-git-properties</code>), ops-restricted at the APIM layer. The OpenAPI spec is the consumer-facing contract.</p>
 <p><strong>Rate limiting: Azure API Management at ingress. (Resolves PRD TBD #1.)</strong> 100 req/sec/principal default; 10 req/sec/principal for MI Feed; 200 req/sec burst (sliding 1-second window). The <code>429 Too Many Requests</code> status code is per <a href="https://datatracker.ietf.org/doc/html/rfc6585">RFC 6585</a>; the <code>Retry-After</code> response header is per <a href="https://datatracker.ietf.org/doc/html/rfc9110#section-10.2.3">RFC 9110 §10.2.3</a>.</p>
 <p><strong>Error handling:</strong> <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details (<code>application/problem+json</code>). Per-service <code>@ControllerAdvice</code> converts domain exceptions. Standard <code>type</code> URIs: <code>/errors/validation</code>, <code>/errors/authorisation</code>, <code>/errors/business-rule</code>, <code>/errors/dependency</code>, <code>/errors/conflict</code>. Correlation ID echoed in the response.</p>
-<p><strong>API documentation:</strong> Swagger Core. Each service's OpenAPI 3.x spec is published as a Maven artefact (<code>uk.gov.hmcts.nji:api-nji-{service}:{version}</code>); consumers pull it at compile time. Postman collections per phase derived from the spec (FR42 / NFR42). The artefact is contract, not runtime code.</p>
-<p><strong>Service-to-service communication:</strong> REST over HTTPS. Service discovery via Kubernetes DNS (<code>http://nji-judge.{namespace}.svc.cluster.local:8080</code>). No service mesh. Synchronous workflows only. Retry safety via native DB primitives — see <em>Data Architecture</em>.</p>
+<p><strong>API documentation:</strong> Swagger Core. Each service's OpenAPI 3.x spec is published as a Maven artefact (<code>uk.gov.hmcts.ram:api-ram-{service}:{version}</code>); consumers pull it at compile time. Postman collections per phase derived from the spec (FR42 / NFR42). The artefact is contract, not runtime code.</p>
+<p><strong>Service-to-service communication:</strong> REST over HTTPS. Service discovery via Kubernetes DNS (<code>http://ram-judge.{namespace}.svc.cluster.local:8080</code>). No service mesh. Synchronous workflows only. Retry safety via native DB primitives — see <em>Data Architecture</em>.</p>
 <h3 id="frontend-architecture">Frontend Architecture</h3>
 <p><strong>Two UI repos with the same stack and conventions, separated by audience</strong> (v2.10):</p>
 <ul>
-<li><strong><code>nji-ui</code></strong> — business-user-facing SPA. Per-domain operational modules (Judge, Absence, Vacancy, Booking, Sitting, Payment, Itinerary, Reports). Audience: RSU operational users, Court users, Judges, Judges' Clerks, Finance/Payment Authoriser, MI consumers.</li>
-<li><strong><code>nji-admin-ui</code></strong> — admin-facing SPA. Reference Data maintenance (FR6) and User &amp; Role admin (FR4). Audience: system administrators. Future admin surfaces reserved for per-region activation, migration reconciliation, audit log viewer.</li>
+<li><strong><code>ram-ui</code></strong> — business-user-facing SPA. Per-domain operational modules (Judge, Absence, Vacancy, Booking, Sitting, Payment, Itinerary, Reports). Audience: RSU operational users, Court users, Judges, Judges' Clerks, Finance/Payment Authoriser, MI consumers.</li>
+<li><strong><code>ram-admin-ui</code></strong> — admin-facing SPA. Reference Data maintenance (FR6) and User &amp; Role admin (FR4). Audience: system administrators. Future admin surfaces reserved for per-region activation, migration reconciliation, audit log viewer.</li>
 </ul>
-<p>The split prevents admin workflows from leaking into business users' nav, gives each repo its own CI/CD and CODEOWNERS, and matches the backend's per-service polyrepo discipline (minimise shared code, accept duplication, gain independence). Both repos use the same SSO + Authorisation pattern; admin gating happens at the <code>nji-authorisation</code> layer via role assignment.</p>
+<p>The split prevents admin workflows from leaking into business users' nav, gives each repo its own CI/CD and CODEOWNERS, and matches the backend's per-service polyrepo discipline (minimise shared code, accept duplication, gain independence). Both repos use the same SSO + Authorisation pattern; admin gating happens at the <code>ram-authorisation</code> layer via role assignment.</p>
 <p><strong>Framework (both):</strong> React 18.x + TypeScript 5.x. (Resolves PRD TBD #2.) Common in HMCTS applications; aligns with <code>govuk-react</code>.</p>
-<p><strong>Component library (both):</strong> GOV.UK Design System — required for WCAG 2.2 AA (NFR17). <code>nji-admin-ui</code> uses a distinct accent in its header/nav so the admin surface is visually unambiguous.</p>
+<p><strong>Component library (both):</strong> GOV.UK Design System — required for WCAG 2.2 AA (NFR17). <code>ram-admin-ui</code> uses a distinct accent in its header/nav so the admin surface is visually unambiguous.</p>
 <p><strong>State management (both):</strong> TanStack Query for server state; Zustand or React Context for UI state; React Hook Form for form state (pairs with JSR-380 backend validation via OpenAPI-generated clients).</p>
 <p><strong>Routing (both):</strong> React Router 6.x.</p>
 <p><strong>API client (both):</strong> generated per backend service from the OpenAPI spec (<code>openapi-typescript-codegen</code> or <code>orval</code>). Generated clients live in each UI repo and are regenerated in its own CI. No shared client library across services or between the two UI repos.</p>
 <p><strong>Build tool (both):</strong> Vite 5.x.</p>
 <p><strong>Styling (both):</strong> GOV.UK Design System CSS (Sass-compiled). Per-component CSS modules for extensions. No Tailwind.</p>
-<p><strong>Testing (both):</strong> Vitest (unit) + React Testing Library (components) + Playwright (E2E) + axe-core (accessibility). <code>nji-ui</code> has one Playwright suite per backend phase; <code>nji-admin-ui</code> has one suite per admin module (Reference Data, User &amp; Role).</p>
+<p><strong>Testing (both):</strong> Vitest (unit) + React Testing Library (components) + Playwright (E2E) + axe-core (accessibility). <code>ram-ui</code> has one Playwright suite per backend phase; <code>ram-admin-ui</code> has one suite per admin module (Reference Data, User &amp; Role).</p>
 <p><strong>Performance (both):</strong> route-based code splitting via <code>React.lazy</code> + Suspense. Vite tree-shaking and minification. No PWA at MVP.</p>
 <p><strong>Deployment:</strong> each UI repo is independently deployed to Azure Static Web Apps (or Blob Storage + CDN) on its own hostname. Independent rollout — admin surface can deploy without touching business surface, and vice versa.</p>
 <h3 id="infrastructure--deployment">Infrastructure &amp; Deployment</h3>
@@ -726,7 +726,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>HMCTS judicial region</strong></td>
-<td>NJI's per-region phased-rollout boundary — the business region used by D8 (Northern, Western, etc.).</td>
+<td>RAM Pathfinder's per-region phased-rollout boundary — the business region used by D8 (Northern, Western, etc.).</td>
 <td>Application tier: per-user activation flag in <code>auth_user_activation_flags</code> (FR58). No infrastructure isolation per HMCTS region.</td>
 </tr>
 </tbody>
@@ -755,7 +755,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>Application Insights / Log Analytics</strong></td>
-<td>Microsoft-managed regional service; AZ-level redundancy is Microsoft's responsibility. One workspace shared across NJI services.</td>
+<td>Microsoft-managed regional service; AZ-level redundancy is Microsoft's responsibility. One workspace shared across RAM Pathfinder services.</td>
 </tr>
 <tr>
 <td><strong>Azure API Management</strong></td>
@@ -771,7 +771,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td><strong>Azure Front Door / DNS</strong></td>
-<td>Single DNS endpoint (e.g. <code>nji.production.hmcts.gov.uk</code>) routes to UK South ingress. Not per-HMCTS-region.</td>
+<td>Single DNS endpoint (e.g. <code>ram.production.hmcts.gov.uk</code>) routes to UK South ingress. Not per-HMCTS-region.</td>
 </tr>
 </tbody>
 </table>
@@ -803,19 +803,19 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <h3 id="decision-impact-analysis">Decision Impact Analysis</h3>
 <p><strong>Implementation Sequence:</strong></p>
 <ol type="1">
-<li><strong>Phase 0 prerequisites</strong> — Azure subscription + UK regions; shared global PostgreSQL Flexible Server (single shared schema, per-service DB roles); HMCTS Crime SpringBoot template forked into NJI scaffolding script. <em>(HMCTS IdP feature confirmation deferred to pre-Phase-9; see point 8.)</em></li>
-<li><strong>Phase 0 mock authentication</strong> — <code>nji-mock-auth</code> deployed as Spring Authorization Server-based service. Issues OIDC tokens for human user roster; <strong>issues service tokens via <code>client_credentials</code> for <code>nji-payment-batch</code></strong>.</li>
-<li><strong>Phase 0 services</strong> — Reference Data, Authorisation, Notification — built per HMCTS starter pattern, each with own DB role + table set, OpenAPI spec, Postman collection, Helm chart. <em>(A shared <code>configuration_values</code> table is created by <code>nji-architecture</code> Flyway baseline; SELECT-granted to every NJI service role.)</em></li>
-<li><strong>Dev/CI environments seeded by one-off scripts</strong> — Reference Data + a representative user roster. <em>(For pilot-region production seeding, the <strong>Phase 0 Data Migration ETL</strong> at <code>nji-architecture/migration/</code> runs operator-initiated; flagged for post-MVP refinement at G4.7.)</em></li>
+<li><strong>Phase 0 prerequisites</strong> — Azure subscription + UK regions; shared global PostgreSQL Flexible Server (single shared schema, per-service DB roles); HMCTS Crime SpringBoot template forked into RAM Pathfinder scaffolding script. <em>(HMCTS IdP feature confirmation deferred to pre-Phase-9; see point 8.)</em></li>
+<li><strong>Phase 0 mock authentication</strong> — <code>ram-mock-auth</code> deployed as Spring Authorization Server-based service. Issues OIDC tokens for human user roster; <strong>issues service tokens via <code>client_credentials</code> for <code>ram-payment-batch</code></strong>.</li>
+<li><strong>Phase 0 services</strong> — Reference Data, Authorisation, Notification — built per HMCTS starter pattern, each with own DB role + table set, OpenAPI spec, Postman collection, Helm chart. <em>(A shared <code>configuration_values</code> table is created by <code>ram-architecture</code> Flyway baseline; SELECT-granted to every RAM Pathfinder service role.)</em></li>
+<li><strong>Dev/CI environments seeded by one-off scripts</strong> — Reference Data + a representative user roster. <em>(For pilot-region production seeding, the <strong>Phase 0 Data Migration ETL</strong> at <code>ram-architecture/migration/</code> runs operator-initiated; flagged for post-MVP refinement at G4.7.)</em></li>
 <li><strong>Phase 0 API gateway</strong> — Azure API Management with default rate-limit policies (TBD #1 resolution).</li>
-<li><strong>Phase 0 UI shells</strong> — two Vite + React + GOV.UK Design System scaffolds deployed independently to Azure Static Web Apps: <code>nji-ui</code> (business) and <code>nji-admin-ui</code> (admin). <code>nji-admin-ui</code> carries the Reference Data maintenance module (FR6) and User &amp; Role admin module (FR4); <code>nji-ui</code> carries the role-scoped Home shell for business users.</li>
-<li><strong>Phases 1–8</strong> — domain services per the brainstorming sequence (Judge → Absence → Vacancy → Booking → Sitting → Payment → Itinerary → MI Feed); each adds its own tables, OpenAPI spec, Postman collection, and a <code>nji-ui</code> module. <strong>No further APEX-data migration in Phases 1–8</strong> — D3 caps data migration at Reference Data + Users/Roles only. <code>nji-admin-ui</code> evolves only when admin surfaces grow (e.g. activation flag dashboard in Phase 9+).</li>
+<li><strong>Phase 0 UI shells</strong> — two Vite + React + GOV.UK Design System scaffolds deployed independently to Azure Static Web Apps: <code>ram-ui</code> (business) and <code>ram-admin-ui</code> (admin). <code>ram-admin-ui</code> carries the Reference Data maintenance module (FR6) and User &amp; Role admin module (FR4); <code>ram-ui</code> carries the role-scoped Home shell for business users.</li>
+<li><strong>Phases 1–8</strong> — domain services per the brainstorming sequence (Judge → Absence → Vacancy → Booking → Sitting → Payment → Itinerary → MI Feed); each adds its own tables, OpenAPI spec, Postman collection, and a <code>ram-ui</code> module. <strong>No further APEX-data migration in Phases 1–8</strong> — D3 caps data migration at Reference Data + Users/Roles only. <code>ram-admin-ui</code> evolves only when admin surfaces grow (e.g. activation flag dashboard in Phase 9+).</li>
 <li><strong>Pre-Phase-9 — Real HMCTS IdP integration cutover</strong> — confirm G1.1, G1.2 (client_credentials for batch — re-opened v2.6), G1.3. Switch staging <code>issuer-url</code> from mock auth to HMCTS IdP via Spring profile. Run reconciliation pass. Re-execute full automated test suite + per-service manual UAT scripts before opening pilot region.</li>
 <li><strong>Phase 9+</strong> — per-region rollout waves on production with real HMCTS IdP. App Insights retention and APEX read-only bridge activated per region.</li>
 </ol>
 <p><strong>Cross-Component Dependencies:</strong></p>
 <ul>
-<li><strong>Authorisation service</strong> — every <code>JWTFilter</code> calls it. Outage → outage of NJI. Mitigations: min 3 replicas; per-request-lifetime caching; circuit-breaker fail-closed (deny).</li>
+<li><strong>Authorisation service</strong> — every <code>JWTFilter</code> calls it. Outage → outage of RAM Pathfinder. Mitigations: min 3 replicas; per-request-lifetime caching; circuit-breaker fail-closed (deny).</li>
 <li><strong>Reference Data tables</strong> — read directly via SQL JOINs by every service; no caching at MVP. The Reference Data <em>service</em> outage (the API) blocks writes only; reads are served from the tables. Mitigation: PostgreSQL HA.</li>
 <li><strong>HMCTS IdP</strong> — every authentication depends on it. IdP outage is HMCTS-wide.</li>
 <li><strong>Azure API Management</strong> — all external client requests flow through it. Mitigation: Premium SKU with zone-redundancy.</li>
@@ -844,7 +844,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td>3</td>
 <td>Service-to-service auth</td>
-<td><strong>Two patterns at MVP</strong>: JWT propagation (forward inbound user JWT) for user-initiated calls; OAuth <code>client_credentials</code> (via <code>nji-mock-auth</code> in non-prod; production issuer per G7.1) for the payment-processing batch service principal</td>
+<td><strong>Two patterns at MVP</strong>: JWT propagation (forward inbound user JWT) for user-initiated calls; OAuth <code>client_credentials</code> (via <code>ram-mock-auth</code> in non-prod; production issuer per G7.1) for the payment-processing batch service principal</td>
 </tr>
 <tr>
 <td>4</td>
@@ -873,10 +873,10 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </div></details><details class="section" id="project-structure--boundaries"><summary><span class="section-title">Project Structure &amp; Boundaries</span></summary><div class="section-body">
 <h3 id="repository-strategy--list">Repository Strategy &amp; List</h3>
 <p>See <a href="./architecture/repository-strategy.html"><code>./architecture/repository-strategy.md</code></a>.</p>
-<h3 id="complete-project-directory-structures-per-service--ui--nji-architecture">Complete Project Directory Structures (per-service / UI / nji-architecture)</h3>
+<h3 id="complete-project-directory-structures-per-service--ui--ram-architecture">Complete Project Directory Structures (per-service / UI / ram-architecture)</h3>
 <p>See <a href="./architecture/repo-structure.html"><code>./architecture/repo-structure.md</code></a>.</p>
 <h3 id="architectural-boundaries">Architectural Boundaries</h3>
-<p><strong>API:</strong> every service is exposed at <code>https://api.nji.{environment}.hmcts.gov.uk/{service-name}/v1/...</code> via APIM. Within AKS, services call each other via Kubernetes DNS. External traffic is TLS-only via APIM. No service is reachable directly from outside the cluster.</p>
+<p><strong>API:</strong> every service is exposed at <code>https://api.ram.{environment}.hmcts.gov.uk/{service-name}/v1/...</code> via APIM. Within AKS, services call each other via Kubernetes DNS. External traffic is TLS-only via APIM. No service is reachable directly from outside the cluster.</p>
 <p><strong>Service:</strong> one Spring Boot app per service; one container image; one Helm chart. One shared PostgreSQL Flexible Server with one shared schema. One Azure Key Vault namespace per service. One Application Insights workspace shared by all services (correlation IDs join logs).</p>
 <p><strong>Data:</strong></p>
 <ul>
@@ -886,9 +886,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li>FKs within the shared schema are encouraged.</li>
 <li>Reference Data is single-writer; other services read directly via SQL.</li>
 <li>Forbidden data: no bank-detail or case-level columns anywhere.</li>
-<li>Migrated transactional history stays in APEX; NJI tables are empty at region cutover.</li>
+<li>Migrated transactional history stays in APEX; RAM Pathfinder tables are empty at region cutover.</li>
 </ul>
-<p><strong>UI Boundaries:</strong> <strong>two SPAs</strong> (v2.10) — <code>nji-ui</code> (business) and <code>nji-admin-ui</code> (admin). Each SPA contains multiple modules; each module imports its generated API client; cross-module communication via TanStack Query cache + React Context. No code-sharing between the two SPAs — same stack and conventions, but independent repos, pipelines, and deployments. Admin workflows (Reference Data maintenance per FR6, User &amp; Role admin per FR4) live exclusively in <code>nji-admin-ui</code> and never appear in <code>nji-ui</code>'s nav.</p>
+<p><strong>UI Boundaries:</strong> <strong>two SPAs</strong> (v2.10) — <code>ram-ui</code> (business) and <code>ram-admin-ui</code> (admin). Each SPA contains multiple modules; each module imports its generated API client; cross-module communication via TanStack Query cache + React Context. No code-sharing between the two SPAs — same stack and conventions, but independent repos, pipelines, and deployments. Admin workflows (Reference Data maintenance per FR6, User &amp; Role admin per FR4) live exclusively in <code>ram-admin-ui</code> and never appear in <code>ram-ui</code>'s nav.</p>
 <p><strong>External Systems:</strong> HMCTS IdP (every authentication); JFEPS/Liberata (outbound only via Notification → email); HMCTS Email (outbound only); APEX during build (manual UAT only); APEX during rollout (read-only for migrated users for 12 months, served separately); DA&amp;I (inbound only, post-MVP).</p>
 <h3 id="requirements-to-structure-mapping">Requirements to Structure Mapping</h3>
 <table>
@@ -901,43 +901,43 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tbody>
 <tr>
 <td>Identity &amp; Authorisation (FR1–FR5)</td>
-<td><code>nji-authorisation</code> repo + per-service <code>config/JWTFilter.java</code>, <code>config/AuthDetails.java</code>, <code>client/AuthorisationClient.java</code>. <strong>FR4 (User &amp; Role admin)</strong> surface lives in <code>nji-admin-ui</code> — not in <code>nji-ui</code>.</td>
+<td><code>ram-authorisation</code> repo + per-service <code>config/JWTFilter.java</code>, <code>config/AuthDetails.java</code>, <code>client/AuthorisationClient.java</code>. <strong>FR4 (User &amp; Role admin)</strong> surface lives in <code>ram-admin-ui</code> — not in <code>ram-ui</code>.</td>
 </tr>
 <tr>
 <td>Foundational Data Management (FR6–FR9)</td>
-<td><code>nji-reference-data</code>, <code>nji-notification</code> repos + per-service direct JPA reads from the 15 Reference Data tables. <strong>FR6 (Reference Data maintenance)</strong> surface lives in <code>nji-admin-ui</code> — not in <code>nji-ui</code>. <strong>Configuration</strong>: per-service Spring profiles + Key Vault; shared <code>configuration_values</code> table (no API) for cross-service policy values, schema-managed by <code>nji-architecture</code> Flyway baseline.</td>
+<td><code>ram-reference-data</code>, <code>ram-notification</code> repos + per-service direct JPA reads from the 15 Reference Data tables. <strong>FR6 (Reference Data maintenance)</strong> surface lives in <code>ram-admin-ui</code> — not in <code>ram-ui</code>. <strong>Configuration</strong>: per-service Spring profiles + Key Vault; shared <code>configuration_values</code> table (no API) for cross-service policy values, schema-managed by <code>ram-architecture</code> Flyway baseline.</td>
 </tr>
 <tr>
 <td>Judge Records &amp; Working Patterns (FR10–FR18)</td>
-<td><code>nji-judge</code> repo</td>
+<td><code>ram-judge</code> repo</td>
 </tr>
 <tr>
 <td>Absence Workflow (FR19–FR22)</td>
-<td><code>nji-absence</code> repo</td>
+<td><code>ram-absence</code> repo</td>
 </tr>
 <tr>
 <td>Vacancy &amp; Cover (FR23–FR28)</td>
-<td><code>nji-vacancy</code> repo. Booking marks the linked vacancy as filled within Booking's transaction (per Principle 1; see <em>Data Architecture</em>).</td>
+<td><code>ram-vacancy</code> repo. Booking marks the linked vacancy as filled within Booking's transaction (per Principle 1; see <em>Data Architecture</em>).</td>
 </tr>
 <tr>
 <td>Booking Management (FR29–FR34)</td>
-<td><code>nji-booking</code> repo</td>
+<td><code>ram-booking</code> repo</td>
 </tr>
 <tr>
 <td>Sitting Management (FR35–FR40)</td>
-<td><code>nji-sitting</code> repo</td>
+<td><code>ram-sitting</code> repo</td>
 </tr>
 <tr>
 <td>Payment &amp; Reconciliation (FR41–FR47)</td>
-<td><code>nji-payment</code> repo (batch component + reconciliation API)</td>
+<td><code>ram-payment</code> repo (batch component + reconciliation API)</td>
 </tr>
 <tr>
 <td>Itineraries &amp; Reporting (FR48–FR54)</td>
-<td><code>nji-itinerary</code> and <code>nji-mi-feed</code> repos</td>
+<td><code>ram-itinerary</code> and <code>ram-mi-feed</code> repos</td>
 </tr>
 <tr>
 <td>Platform Operations &amp; Migration (FR55–FR61)</td>
-<td>Cross-cutting: per-service implementations + <code>nji-architecture</code> scaffolding script</td>
+<td>Cross-cutting: per-service implementations + <code>ram-architecture</code> scaffolding script</td>
 </tr>
 </tbody>
 </table>
@@ -955,7 +955,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td><code>src/main/java/.../config/JWTFilter.java</code> + <code>config/AuthDetails.java</code></td>
 </tr>
 <tr>
-<td>Authorisation client called by <code>JWTFilter</code> (FR2 — NJI variance from template)</td>
+<td>Authorisation client called by <code>JWTFilter</code> (FR2 — RAM Pathfinder variance from template)</td>
 <td><code>src/main/java/.../client/AuthorisationClient.java</code></td>
 </tr>
 <tr>
@@ -980,7 +980,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>OpenAPI 3.x generation (FR59)</td>
-<td><code>src/main/java/.../config/OpenApiConfig.java</code> (Swagger Core); spec published as Maven artefact (<code>uk.gov.hmcts.nji:api-nji-{service}</code>)</td>
+<td><code>src/main/java/.../config/OpenApiConfig.java</code> (Swagger Core); spec published as Maven artefact (<code>uk.gov.hmcts.ram:api-ram-{service}</code>)</td>
 </tr>
 <tr>
 <td>Structured logging (FR60)</td>
@@ -998,7 +998,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </table>
 <h3 id="integration-points--internal-communication">Integration Points — Internal Communication</h3>
 <pre><code>      ┌──────────────────────┐    ┌────────────────────────┐
-      │   nji-ui (business)  │    │ nji-admin-ui (admin)   │
+      │   ram-ui (business)  │    │ ram-admin-ui (admin)   │
       └──────────┬───────────┘    └────────────┬───────────┘
                  │                              │
                  └──────────┬───────────────────┘
@@ -1028,7 +1028,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li>Every service → Reference Data tables (direct SQL; no caching at MVP).</li>
 <li>Booking → in-transaction direct DB update on the linked vacancy (no API roundtrip per Principle 1).</li>
 <li>Itinerary read-model → SQL JOIN across domain tables in the shared schema (single indexed query).</li>
-<li>MI Feed read-model → SQL JOIN across NJI domain tables (single aggregate query).</li>
+<li>MI Feed read-model → SQL JOIN across RAM Pathfinder domain tables (single aggregate query).</li>
 </ul>
 <h3 id="integration-points--external">Integration Points — External</h3>
 <table>
@@ -1036,7 +1036,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <th>External system</th>
 <th>Direction</th>
-<th>NJI service interacting</th>
+<th>RAM Pathfinder service interacting</th>
 <th>Pattern</th>
 </tr>
 </thead>
@@ -1044,14 +1044,14 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td>HMCTS IdP</td>
 <td>inbound (human authN)</td>
-<td>Every service's <code>JWTFilter</code> validates user JWTs via JWKS; <strong>Authorisation</strong> maps to NJI roles</td>
+<td>Every service's <code>JWTFilter</code> validates user JWTs via JWKS; <strong>Authorisation</strong> maps to RAM Pathfinder roles</td>
 <td>OIDC <code>authorization_code</code> for human users; JWT signature validation via JWKS (<code>io.jsonwebtoken:jjwt</code>); cross-service calls forward the user's JWT (Pattern 1). <strong>Pre-Phase-9 dependency only</strong> — mock auth covers Phase 0–8; cutover is a Spring profile change.</td>
 </tr>
 <tr>
 <td>HMCTS IdP / Azure Workload Identity (production issuer per G7.1)</td>
 <td>inbound (service-principal authN for batch)</td>
 <td><code>JWTFilter</code> validates batch service tokens via the same JWKS path</td>
-<td>OAuth 2.0 <code>client_credentials</code> for <code>nji-payment-batch</code>; <strong>non-prod via <code>nji-mock-auth</code> (mock_oauth_clients)</strong>. (Pattern 2.)</td>
+<td>OAuth 2.0 <code>client_credentials</code> for <code>ram-payment-batch</code>; <strong>non-prod via <code>ram-mock-auth</code> (mock_oauth_clients)</strong>. (Pattern 2.)</td>
 </tr>
 <tr>
 <td>JFEPS / Liberata</td>
@@ -1087,7 +1087,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td>APEX (during rollout window)</td>
 <td>inbound (read-only for migrated users)</td>
 <td>None — APEX served separately</td>
-<td>Out-of-band; not an NJI integration</td>
+<td>Out-of-band; not an RAM Pathfinder integration</td>
 </tr>
 <tr>
 <td>DA&amp;I</td>
@@ -1110,8 +1110,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </ol>
 <p><strong>Batch / external half</strong> — see <a href="./architecture/sequence-diagrams/payment-batch-flow.html"><code>./architecture/sequence-diagrams/payment-batch-flow.md</code></a></p>
 <ol type="1">
-<li><strong>Scheduler</strong> (Kubernetes CronJob or Spring <code>@Scheduled</code>) triggers <code>nji-payment-batch</code> on its configured cadence.</li>
-<li>The batch authenticates as a service principal via OAuth <code>client_credentials</code> against <code>nji-mock-auth</code> (non-prod; production issuer per <a href="./architecture/gaps.html"><code>./architecture/gaps.md</code> G7.1</a>).</li>
+<li><strong>Scheduler</strong> (Kubernetes CronJob or Spring <code>@Scheduled</code>) triggers <code>ram-payment-batch</code> on its configured cadence.</li>
+<li>The batch authenticates as a service principal via OAuth <code>client_credentials</code> against <code>ram-mock-auth</code> (non-prod; production issuer per <a href="./architecture/gaps.html"><code>./architecture/gaps.md</code> G7.1</a>).</li>
 <li>The batch SQL-JOINs over confirmed bookings + sittings without an existing payment record, generates the JFEPS Excel, and persists <code>payments</code> + <code>payment_schedules</code> (FR41–FR45). Bookings flagged <code>payment_requested</code>.</li>
 <li>The batch calls Notification (with bearer service token) to dispatch the schedule to the configured Payment Authoriser (FR43).</li>
 <li>The <strong>Payment Authoriser</strong> uploads the schedule to JFEPS / Liberata (out-of-band).</li>
@@ -1138,8 +1138,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>Mock-first authentication + OIDC for humans + two inter-service patterns (JWT propagation, service-principal <code>client_credentials</code> for batch)</strong> — issuer-agnostic OIDC contract; mock-to-real cutover is a configuration change.</li>
 <li><strong>GOV.UK Design System + WCAG 2.2 AA + axe-core</strong> — GDS components are built to WCAG 2.2 AA.</li>
 </ul>
-<p><strong>Pattern consistency:</strong> Step 5 patterns match Step 4 decisions — DB naming (<code>snake_case</code>, plural tables, <code>uuid</code> PKs); API naming (<code>camelCase</code> JSON, plural resources, <code>/v1/</code>, RFC 9457 problem-details, ISO 8601); Java package layout (<code>uk.gov.hmcts.nji.{service}.{layer}</code>); communication (typed clients, correlation-ID propagation, native DB retry safety).</p>
-<p><strong>Structure alignment:</strong> per-service repos enable phased rollout and independent deployment; per-environment Helm values + zone-redundant AKS provide HA for NFR34/NFR35/NFR37; NFR38 is satisfied at the app tier via FR58; Postman collections per phase satisfy NFR42; <code>nji-architecture</code> holds ADRs and scaffolding without runtime coupling; <code>nji-mock-auth</code> is isolated so production never references it.</p>
+<p><strong>Pattern consistency:</strong> Step 5 patterns match Step 4 decisions — DB naming (<code>snake_case</code>, plural tables, <code>uuid</code> PKs); API naming (<code>camelCase</code> JSON, plural resources, <code>/v1/</code>, RFC 9457 problem-details, ISO 8601); Java package layout (<code>uk.gov.hmcts.ram.{service}.{layer}</code>); communication (typed clients, correlation-ID propagation, native DB retry safety).</p>
+<p><strong>Structure alignment:</strong> per-service repos enable phased rollout and independent deployment; per-environment Helm values + zone-redundant AKS provide HA for NFR34/NFR35/NFR37; NFR38 is satisfied at the app tier via FR58; Postman collections per phase satisfy NFR42; <code>ram-architecture</code> holds ADRs and scaffolding without runtime coupling; <code>ram-mock-auth</code> is isolated so production never references it.</p>
 <p>No contradictions found.</p>
 <h3 id="requirements-coverage-validation-white_check_mark">Requirements Coverage Validation ✅</h3>
 <ul>
@@ -1149,7 +1149,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p>All 61 FRs and 42 NFRs have explicit architectural support.</p>
 <h3 id="implementation-readiness-validation-white_check_mark">Implementation Readiness Validation ✅</h3>
 <p>All 7 architecture-phase TBDs from the PRD are resolved (see <em>TBDs Resolved by This Step</em>).</p>
-<p><strong>Structure:</strong> 15 repos with per-repo trees; per-service standard layout to file level; two UI repos (<code>nji-ui</code> business + <code>nji-admin-ui</code> admin) with per-module structure; architecture repo with ADRs/scaffolding/aggregated specs; isolated mock-auth repo; integration points mapped; requirements-to-structure mapping covers all 9 FR capability areas.</p>
+<p><strong>Structure:</strong> 15 repos with per-repo trees; per-service standard layout to file level; two UI repos (<code>ram-ui</code> business + <code>ram-admin-ui</code> admin) with per-module structure; architecture repo with ADRs/scaffolding/aggregated specs; isolated mock-auth repo; integration points mapped; requirements-to-structure mapping covers all 9 FR capability areas.</p>
 <p><strong>Patterns:</strong> naming, structure, format, communication, and process conventions defined with examples. Enforcement: CI lint, ArchUnit, Spectral, Pact, code review checklist.</p>
 <h3 id="documented-gaps">Documented Gaps</h3>
 <p>See <a href="./architecture/gaps.html"><code>./architecture/gaps.md</code></a>. Critical gaps: none — no gap blocks implementation.</p>
@@ -1175,7 +1175,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>Manual UAT in the rollout gate</strong> — <code>docs/uat/</code> per service; APEX-experienced users sign off per role per region as the wave-cutover gate.</li>
 <li><strong>Mock-first authentication</strong> decouples the build from the HMCTS IdP roadmap.</li>
 </ul>
-<p><strong>Post-MVP enhancements (not blocking):</strong> Mermaid / C4 diagrams in <code>nji-architecture/diagrams/</code>; sample ADRs; per-service OpenAPI snippets; service mesh (only if observability or mTLS demands grow); caching (only if measurement shows the need); App Configuration for runtime tuning.</p>
+<p><strong>Post-MVP enhancements (not blocking):</strong> Mermaid / C4 diagrams in <code>ram-architecture/diagrams/</code>; sample ADRs; per-service OpenAPI snippets; service mesh (only if observability or mTLS demands grow); caching (only if measurement shows the need); App Configuration for runtime tuning.</p>
 <h3 id="implementation-handoff">Implementation Handoff</h3>
 <p><strong>For AI agents:</strong></p>
 <ul>
@@ -1183,15 +1183,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li>Use the patterns in <a href="./architecture/conventions.html"><code>./architecture/conventions.md</code></a> across all 11 services and the UI.</li>
 <li>Apply the two foundational principles: (1) API for workflows; shared DB for simple data access; (2) no premature optimisation. No shared runtime library.</li>
 <li>Per-service work happens in the service's own repo. Cross-service work happens via API contracts.</li>
-<li>Phase 0–8 authentication is <code>nji-mock-auth</code> only (<code>authorization_code</code> for humans; <code>client_credentials</code> for the payment batch). Real HMCTS IdP starts at the pre-Phase-9 cutover.</li>
+<li>Phase 0–8 authentication is <code>ram-mock-auth</code> only (<code>authorization_code</code> for humans; <code>client_credentials</code> for the payment batch). Real HMCTS IdP starts at the pre-Phase-9 cutover.</li>
 <li>Raise gaps via PR against this document.</li>
 </ul>
 <p><strong>First implementation steps:</strong></p>
 <ol type="1">
 <li>Confirm Phase 0 prerequisites: Azure subscription + UK regions; HMCTS Java/Spring Boot starter; HMCTS Email transport.</li>
-<li>Build the NJI scaffolding script at <code>nji-architecture/scaffolding/nji-scaffold.sh</code>, layered on the HMCTS starter, with NJI conventions baked in.</li>
-<li>Ship <code>nji-mock-auth</code> (Spring Authorization Server; refuses to start with <code>production</code> profile; supports <code>authorization_code</code> and <code>client_credentials</code>).</li>
-<li>Ship the three Phase 0 cross-cutting services: Reference Data, Authorisation, Notification. The shared <code>configuration_values</code> table is created by <code>nji-architecture</code>'s Flyway baseline. In parallel, build the Phase 0 Data Migration ETL at <code>nji-architecture/migration/</code> to load Reference Data + Users/Roles via the APIs.</li>
+<li>Build the RAM Pathfinder scaffolding script at <code>ram-architecture/scaffolding/ram-scaffold.sh</code>, layered on the HMCTS starter, with RAM Pathfinder conventions baked in.</li>
+<li>Ship <code>ram-mock-auth</code> (Spring Authorization Server; refuses to start with <code>production</code> profile; supports <code>authorization_code</code> and <code>client_credentials</code>).</li>
+<li>Ship the three Phase 0 cross-cutting services: Reference Data, Authorisation, Notification. The shared <code>configuration_values</code> table is created by <code>ram-architecture</code>'s Flyway baseline. In parallel, build the Phase 0 Data Migration ETL at <code>ram-architecture/migration/</code> to load Reference Data + Users/Roles via the APIs.</li>
 <li>Deploy Phase 0 to dev. Exercise API-as-Product standards (versioning, OpenAPI, RFC 9457 problem-details, deprecation signalling). Validate Postman collections. Run automated tests. Manual UAT starts in Phase 1.</li>
 <li>Resolve programme-management dependencies before Phase 9.</li>
 <li>Begin Phase 1 (Judge service). Expand across Phases 2–8 in dependency order.</li>
@@ -1265,7 +1265,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </div></details>
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture.md</code></p>
 </main>
-<aside class="toc"><h4>On this page</h4><ul><li><a href="#contents">Contents</a></li><li><a href="#system-context--at-a-glance">System context — at a glance</a></li><li><a href="#how-this-document-is-structured">How this document is structured</a></li><li><a href="#project-context-analysis">Project Context Analysis</a></li><li class="h3"><a href="#requirements-overview">Requirements Overview</a></li><li class="h3"><a href="#technical-constraints--dependencies">Technical Constraints &amp; Dependencies</a></li><li class="h3"><a href="#cross-cutting-concerns-identified">Cross-Cutting Concerns Identified</a></li><li class="h3"><a href="#architecture-phase-decisions-still-open">Architecture-phase decisions still open</a></li><li><a href="#starter-template-evaluation">Starter Template Evaluation</a></li><li class="h3"><a href="#foundational-principles">Foundational Principles</a></li><li class="h3"><a href="#primary-technology-domain">Primary Technology Domain</a></li><li class="h3"><a href="#starter-options--selection">Starter Options &amp; Selection</a></li><li class="h3"><a href="#initialisation-flow-build-tool-dependency-inventory-per-service-conventions">Initialisation Flow, Build Tool, Dependency Inventory, Per-service Conventions</a></li><li><a href="#core-architectural-decisions">Core Architectural Decisions</a></li><li class="h3"><a href="#decision-priority-analysis">Decision Priority Analysis</a></li><li class="h3"><a href="#data-architecture">Data Architecture</a></li><li class="h3"><a href="#authoritative-table-ownership-mapping">Authoritative Table Ownership Mapping</a></li><li class="h3"><a href="#authentication--security">Authentication &amp; Security</a></li><li class="h3"><a href="#api--communication-patterns">API &amp; Communication Patterns</a></li><li class="h3"><a href="#frontend-architecture">Frontend Architecture</a></li><li class="h3"><a href="#infrastructure--deployment">Infrastructure &amp; Deployment</a></li><li class="h3"><a href="#deployment-topology--single-azure-region-multi-az-ha">Deployment topology — single Azure region, multi-AZ HA</a></li><li class="h3"><a href="#decision-impact-analysis">Decision Impact Analysis</a></li><li class="h3"><a href="#tbds-resolved-by-this-step">TBDs Resolved by This Step</a></li><li><a href="#implementation-patterns--consistency-rules">Implementation Patterns &amp; Consistency Rules</a></li><li><a href="#project-structure--boundaries">Project Structure &amp; Boundaries</a></li><li class="h3"><a href="#repository-strategy--list">Repository Strategy &amp; List</a></li><li class="h3"><a href="#complete-project-directory-structures-per-service--ui--nji-architecture">Complete Project Directory Structures (per-service / UI / nji-architecture)</a></li><li class="h3"><a href="#architectural-boundaries">Architectural Boundaries</a></li><li class="h3"><a href="#requirements-to-structure-mapping">Requirements to Structure Mapping</a></li><li class="h3"><a href="#cross-cutting-concerns-to-file-locations">Cross-Cutting Concerns to File Locations</a></li><li class="h3"><a href="#integration-points--internal-communication">Integration Points — Internal Communication</a></li><li class="h3"><a href="#integration-points--external">Integration Points — External</a></li><li class="h3"><a href="#data-flow--canonical-operational-cycle-journey-1-from-prd">Data Flow — Canonical Operational Cycle (Journey 1 from PRD)</a></li><li class="h3"><a href="#file-organisation-development-workflow-deployment-pipeline">File Organisation, Development Workflow, Deployment Pipeline</a></li><li class="h3"><a href="#region-rollout-flow-phase-9">Region rollout flow (Phase 9+)</a></li><li><a href="#architecture-validation-results">Architecture Validation Results</a></li><li class="h3"><a href="#coherence-validation-white_check_mark">Coherence Validation ✅</a></li><li class="h3"><a href="#requirements-coverage-validation-white_check_mark">Requirements Coverage Validation ✅</a></li><li class="h3"><a href="#implementation-readiness-validation-white_check_mark">Implementation Readiness Validation ✅</a></li><li class="h3"><a href="#documented-gaps">Documented Gaps</a></li><li class="h3"><a href="#assumptions">Assumptions</a></li><li class="h3"><a href="#architecture-readiness-assessment">Architecture Readiness Assessment</a></li><li class="h3"><a href="#implementation-handoff">Implementation Handoff</a></li><li><a href="#external-references">External References</a></li><li><a href="#changelog">Changelog</a></li></ul></aside>
+<aside class="toc"><h4>On this page</h4><ul><li><a href="#contents">Contents</a></li><li><a href="#system-context--at-a-glance">System context — at a glance</a></li><li><a href="#how-this-document-is-structured">How this document is structured</a></li><li><a href="#project-context-analysis">Project Context Analysis</a></li><li class="h3"><a href="#requirements-overview">Requirements Overview</a></li><li class="h3"><a href="#technical-constraints--dependencies">Technical Constraints &amp; Dependencies</a></li><li class="h3"><a href="#cross-cutting-concerns-identified">Cross-Cutting Concerns Identified</a></li><li class="h3"><a href="#architecture-phase-decisions-still-open">Architecture-phase decisions still open</a></li><li><a href="#starter-template-evaluation">Starter Template Evaluation</a></li><li class="h3"><a href="#foundational-principles">Foundational Principles</a></li><li class="h3"><a href="#primary-technology-domain">Primary Technology Domain</a></li><li class="h3"><a href="#starter-options--selection">Starter Options &amp; Selection</a></li><li class="h3"><a href="#initialisation-flow-build-tool-dependency-inventory-per-service-conventions">Initialisation Flow, Build Tool, Dependency Inventory, Per-service Conventions</a></li><li><a href="#core-architectural-decisions">Core Architectural Decisions</a></li><li class="h3"><a href="#decision-priority-analysis">Decision Priority Analysis</a></li><li class="h3"><a href="#data-architecture">Data Architecture</a></li><li class="h3"><a href="#authoritative-table-ownership-mapping">Authoritative Table Ownership Mapping</a></li><li class="h3"><a href="#authentication--security">Authentication &amp; Security</a></li><li class="h3"><a href="#api--communication-patterns">API &amp; Communication Patterns</a></li><li class="h3"><a href="#frontend-architecture">Frontend Architecture</a></li><li class="h3"><a href="#infrastructure--deployment">Infrastructure &amp; Deployment</a></li><li class="h3"><a href="#deployment-topology--single-azure-region-multi-az-ha">Deployment topology — single Azure region, multi-AZ HA</a></li><li class="h3"><a href="#decision-impact-analysis">Decision Impact Analysis</a></li><li class="h3"><a href="#tbds-resolved-by-this-step">TBDs Resolved by This Step</a></li><li><a href="#implementation-patterns--consistency-rules">Implementation Patterns &amp; Consistency Rules</a></li><li><a href="#project-structure--boundaries">Project Structure &amp; Boundaries</a></li><li class="h3"><a href="#repository-strategy--list">Repository Strategy &amp; List</a></li><li class="h3"><a href="#complete-project-directory-structures-per-service--ui--ram-architecture">Complete Project Directory Structures (per-service / UI / ram-architecture)</a></li><li class="h3"><a href="#architectural-boundaries">Architectural Boundaries</a></li><li class="h3"><a href="#requirements-to-structure-mapping">Requirements to Structure Mapping</a></li><li class="h3"><a href="#cross-cutting-concerns-to-file-locations">Cross-Cutting Concerns to File Locations</a></li><li class="h3"><a href="#integration-points--internal-communication">Integration Points — Internal Communication</a></li><li class="h3"><a href="#integration-points--external">Integration Points — External</a></li><li class="h3"><a href="#data-flow--canonical-operational-cycle-journey-1-from-prd">Data Flow — Canonical Operational Cycle (Journey 1 from PRD)</a></li><li class="h3"><a href="#file-organisation-development-workflow-deployment-pipeline">File Organisation, Development Workflow, Deployment Pipeline</a></li><li class="h3"><a href="#region-rollout-flow-phase-9">Region rollout flow (Phase 9+)</a></li><li><a href="#architecture-validation-results">Architecture Validation Results</a></li><li class="h3"><a href="#coherence-validation-white_check_mark">Coherence Validation ✅</a></li><li class="h3"><a href="#requirements-coverage-validation-white_check_mark">Requirements Coverage Validation ✅</a></li><li class="h3"><a href="#implementation-readiness-validation-white_check_mark">Implementation Readiness Validation ✅</a></li><li class="h3"><a href="#documented-gaps">Documented Gaps</a></li><li class="h3"><a href="#assumptions">Assumptions</a></li><li class="h3"><a href="#architecture-readiness-assessment">Architecture Readiness Assessment</a></li><li class="h3"><a href="#implementation-handoff">Implementation Handoff</a></li><li><a href="#external-references">External References</a></li><li><a href="#changelog">Changelog</a></li></ul></aside>
 <script>
 (function(){
   // 1. Sidebar accordion: persist user's group open/close preference per group.

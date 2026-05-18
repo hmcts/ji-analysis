@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>User Types — NJI Documentation</title>
+<title>User Types — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../architecture.html">Architecture (index)</a></li>
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference" data-current="true" open>
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference" data-current="true" open>
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html" class="current">User types</a></li>
 <li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../architecture/gaps.html">Gaps</a></li>
 <li><a href="../architecture/assumptions.html">Assumptions</a></li>
@@ -189,11 +189,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="user-types">User Types</h1>
 <blockquote>
-<p>Sibling of <a href="../architecture.html"><code>../architecture.md</code></a>. The as-is JI catalogue (<code>docs/architecture/asis/JI user types - 2.xlsx</code>, Feb 2026 snapshot) is authoritative for the role taxonomy. NJI carries these access types over 1:1; this document is the binding taxonomy reference for <code>nji-authorisation</code>, the Phase 0 user migration (D9), and the per-phase manual UAT scripts (FR61). Authentication is owned by HMCTS IdP (FR1); role + Region/Area mapping and effective-permission lookup live in <code>nji-authorisation</code> (FR2, FR3). See <a href="./sequence-diagrams/user-authentication-and-authorisation.html"><code>./sequence-diagrams/user-authentication-and-authorisation.md</code></a> for the call path.</p>
+<p>Sibling of <a href="../architecture.html"><code>../architecture.md</code></a>. The as-is JI catalogue (<code>docs/architecture/asis/JI user types - 2.xlsx</code>, Feb 2026 snapshot) is authoritative for the role taxonomy. RAM Pathfinder carries these access types over 1:1; this document is the binding taxonomy reference for <code>ram-authorisation</code>, the Phase 0 user migration (D9), and the per-phase manual UAT scripts (FR61). Authentication is owned by HMCTS IdP (FR1); role + Region/Area mapping and effective-permission lookup live in <code>ram-authorisation</code> (FR2, FR3). See <a href="./sequence-diagrams/user-authentication-and-authorisation.html"><code>./sequence-diagrams/user-authentication-and-authorisation.md</code></a> for the call path.</p>
 <p><strong>Baseline capability for every access type:</strong> access to standard reports. The capability lists below add to this baseline rather than repeat it.</p>
 </blockquote>
 <details class="section" id="at-a-glance"><summary><span class="section-title">At a glance</span></summary><div class="section-body">
-<p>NJI inherits <strong>17 application access types</strong> across four groups, plus <strong>1 configuration entry</strong> (Payment Authoriser) that is not an application access type. The as-is catalogue records <strong>2,818 active users</strong> as of Feb 2026.</p>
+<p>RAM Pathfinder inherits <strong>17 application access types</strong> across four groups, plus <strong>1 configuration entry</strong> (Payment Authoriser) that is not an application access type. The as-is catalogue records <strong>2,818 active users</strong> as of Feb 2026.</p>
 <table>
 <thead>
 <tr>
@@ -307,11 +307,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Capabilities:</strong></p>
 <ol type="1">
 <li>All capabilities of Regional (Full Access).</li>
-<li>Send user-creation requests to the Advice Point (operational process to create new NJI users for the region).</li>
+<li>Send user-creation requests to the Advice Point (operational process to create new RAM Pathfinder users for the region).</li>
 <li>Re-open verified sittings / bookings (FR40, MVP-only privileged action). Mandatory justification, must differ from original confirmer (SIT-NFR-02), fully audited.</li>
 </ol>
 <blockquote>
-<p>Q11 from the xlsx (whether Regional Admin should create users directly without an external operational process) is parked as an NJI design question. See <a href="./gaps.html"><code>./gaps.md</code></a>.</p>
+<p>Q11 from the xlsx (whether Regional Admin should create users directly without an external operational process) is parked as an RAM Pathfinder design question. See <a href="./gaps.html"><code>./gaps.md</code></a>.</p>
 </blockquote>
 <h3 id="regional-full-access--68-active-users">Regional (Full Access) — 68 active users</h3>
 <p>Standard access level for regional users.</p>
@@ -349,7 +349,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li>Verify confirmed bookings for all courts in the region.</li>
 </ol>
 <blockquote>
-<p>Q12 from the xlsx (national-level access): no national-level access type exists in the as-is catalogue except Finance. All other roles are scoped by Region/Area or by judge linkage. Recorded for NJI parity.</p>
+<p>Q12 from the xlsx (national-level access): no national-level access type exists in the as-is catalogue except Finance. All other roles are scoped by Region/Area or by judge linkage. Recorded for RAM Pathfinder parity.</p>
 </blockquote>
 </div></details><details class="section" id="judicial-access-types"><summary><span class="section-title">Judicial access types</span></summary><div class="section-body">
 <p>6 access types, 386 active users. Scope varies — see each entry.</p>
@@ -370,7 +370,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li>Same capability surface as Judge, but exercised on behalf of the linked judge(s).</li>
 </ol>
 <blockquote>
-<p>Q7 from the xlsx (whether Judge's Clerk differs from Judge): the as-is catalogue records them as functionally identical from an access-control standpoint — the only distinction is <em>which</em> judge's record(s) the principal is linked to. NJI maintains the separation for audit clarity (the Clerk acts on someone else's behalf).</p>
+<p>Q7 from the xlsx (whether Judge's Clerk differs from Judge): the as-is catalogue records them as functionally identical from an access-control standpoint — the only distinction is <em>which</em> judge's record(s) the principal is linked to. RAM Pathfinder maintains the separation for audit clarity (the Clerk acts on someone else's behalf).</p>
 </blockquote>
 <h3 id="presiding-judge--2-active-users">Presiding Judge — 2 active users</h3>
 <p>Leadership judge with oversight of a group of judges (typically a Circuit's salaried judges).</p>
@@ -380,7 +380,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li>Same capability surface as Judge, exercised across all judges under their leadership.</li>
 </ol>
 <blockquote>
-<p>Q9 from the xlsx (why so few users): low headcount is structurally expected — there are very few presiding judges nationally. No NJI design implication.</p>
+<p>Q9 from the xlsx (why so few users): low headcount is structurally expected — there are very few presiding judges nationally. No RAM Pathfinder design implication.</p>
 </blockquote>
 <h3 id="presiding-judges-clerk--0-active-users">Presiding Judge's Clerk — 0 active users</h3>
 <p>Clerk to a Presiding Judge.</p>
@@ -390,7 +390,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li>Same capability surface as Presiding Judge, exercised on behalf of the linked Presiding Judge.</li>
 </ol>
 <blockquote>
-<p><strong>No active users in the as-is catalogue (Feb 2026).</strong> Retained in the NJI taxonomy for as-is parity (Q6 confirmed). The access type is provisioned but currently unused. Whether to retire it is an operational decision deferred to post-MVP review.</p>
+<p><strong>No active users in the as-is catalogue (Feb 2026).</strong> Retained in the RAM Pathfinder taxonomy for as-is parity (Q6 confirmed). The access type is provisioned but currently unused. Whether to retire it is an operational decision deferred to post-MVP review.</p>
 </blockquote>
 <h3 id="judge-itin-view-only--107-active-users">Judge Itin View Only — 107 active users</h3>
 <p>CTSC (Courts and Tribunals Service Centre) operational users who need to know whether and where a judge is working.</p>
@@ -431,17 +431,17 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p>Q4 from the xlsx (scope of payment schedules): confirmed national — a Finance user can produce schedules across all areas (2026-05-12).</p>
 </blockquote>
 </div></details><details class="section" id="payment-authoriser-configuration-not-an-access-type"><summary><span class="section-title">Payment Authoriser (configuration, not an access type)</span></summary><div class="section-body">
-<p>The Payment Authoriser is <strong>not an NJI application access type</strong>. It is a <strong>configuration entry</strong> — the addressable identity (name + email) to whom Finance-generated JFEPS payment schedules are emailed for forwarding to Liberata.</p>
-<p><strong>Modelling in NJI:</strong></p>
+<p>The Payment Authoriser is <strong>not an RAM Pathfinder application access type</strong>. It is a <strong>configuration entry</strong> — the addressable identity (name + email) to whom Finance-generated JFEPS payment schedules are emailed for forwarding to Liberata.</p>
+<p><strong>Modelling in RAM Pathfinder:</strong></p>
 <ol type="1">
 <li>Stored as configuration, not as an authenticated principal.</li>
 <li>The list of valid Payment Authoriser recipients is administrable (Phase 0 design decision: most likely the shared <code>configuration_values</code> infrastructure table or an admin-maintained reference list — to be finalised in the Payment service's design).</li>
 <li>Finance users select a Payment Authoriser from this list when generating a payment schedule (FR43).</li>
-<li>The recipient does <strong>not</strong> log into NJI. They receive the JFEPS Excel by email and forward it to Liberata out-of-system (D6, unchanged from APEX).</li>
-<li>The 2 individuals recorded against this entry in the as-is catalogue (Feb 2026) are tracked operationally but are not migrated as NJI users in Phase 0 (D9).</li>
+<li>The recipient does <strong>not</strong> log into RAM Pathfinder. They receive the JFEPS Excel by email and forward it to Liberata out-of-system (D6, unchanged from APEX).</li>
+<li>The 2 individuals recorded against this entry in the as-is catalogue (Feb 2026) are tracked operationally but are not migrated as RAM Pathfinder users in Phase 0 (D9).</li>
 </ol>
 </div></details><details class="section" id="administrative--cross-cutting-roles"><summary><span class="section-title">Administrative / cross-cutting roles</span></summary><div class="section-body">
-<p>These are not user-facing access types in the as-is catalogue; they are NJI-specific permissions overlaid on the taxonomy above.</p>
+<p>These are not user-facing access types in the as-is catalogue; they are RAM Pathfinder-specific permissions overlaid on the taxonomy above.</p>
 <table>
 <thead>
 <tr>
@@ -455,7 +455,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td><strong>System Administrator</strong></td>
 <td>(1) Create users. (2) Update role and Region/Area assignments for migrated and new users. (3) Manage per-user activation flags for per-region rollout (FR58).</td>
-<td>New in NJI — partially overlaps with Regional (Admin)'s Advice-Point request capability.</td>
+<td>New in RAM Pathfinder — partially overlaps with Regional (Admin)'s Advice-Point request capability.</td>
 <td>FR4, FR58</td>
 </tr>
 <tr>
@@ -474,11 +474,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </table>
 </div></details><details class="section" id="authorisation-model-summary"><summary><span class="section-title">Authorisation model (summary)</span></summary><div class="section-body">
 <ul>
-<li><strong>Authentication:</strong> HMCTS IdP via OIDC <code>authorization_code</code> (FR1). NJI does not own password, session, or account lifecycle.</li>
-<li><strong>Authorisation state:</strong> <code>nji-authorisation</code> owns <code>auth_users</code>, <code>auth_roles</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, <code>auth_user_activation_flags</code>. Authoritative table ownership is recorded in <a href="./data-tables.html"><code>./data-tables.md</code></a>.</li>
+<li><strong>Authentication:</strong> HMCTS IdP via OIDC <code>authorization_code</code> (FR1). RAM Pathfinder does not own password, session, or account lifecycle.</li>
+<li><strong>Authorisation state:</strong> <code>ram-authorisation</code> owns <code>auth_users</code>, <code>auth_roles</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, <code>auth_user_activation_flags</code>. Authoritative table ownership is recorded in <a href="./data-tables.html"><code>./data-tables.md</code></a>.</li>
 <li><strong>Enforcement:</strong> every API call resolves principal → role(s) + Region/Area scope through Authorisation; implemented as per-service middleware (FR2). Effective-permission lookup is <code>POST /authz/check</code> (FR3).</li>
-<li><strong>Phase 0 migration:</strong> active APEX users + role/Region-Area scope assignments are loaded into NJI via the Authorisation API and mapped to IdP principals (D9, Risk #14). Unmatched records get an explicit decision — drop / hold / manual map. Zero ambiguous migrations.</li>
-<li><strong>Per-user activation flag:</strong> rollout gating uses <code>auth_user_activation_flags</code> (FR58) — migrated users do not use APEX; non-migrated users do not use NJI (D8).</li>
+<li><strong>Phase 0 migration:</strong> active APEX users + role/Region-Area scope assignments are loaded into RAM Pathfinder via the Authorisation API and mapped to IdP principals (D9, Risk #14). Unmatched records get an explicit decision — drop / hold / manual map. Zero ambiguous migrations.</li>
+<li><strong>Per-user activation flag:</strong> rollout gating uses <code>auth_user_activation_flags</code> (FR58) — migrated users do not use APEX; non-migrated users do not use RAM Pathfinder (D8).</li>
 <li><strong>Verifier separation of duties:</strong> confirmation and verification of sittings/bookings must be performed by different principals — enforced at the application tier on the sitting/booking row's <code>confirmed_by</code> field. Re-open enforces a similar constraint (FR40).</li>
 </ul>
 </div></details><details class="section" id="manual-uat-mapping-fr61"><summary><span class="section-title">Manual UAT mapping (FR61)</span></summary><div class="section-body">
@@ -530,7 +530,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><code>docs/architecture/asis/JI user types - 2.xlsx</code> — authoritative as-is catalogue (Feb 2026)</li>
 <li><a href="../prd.html"><code>../prd.md</code></a> — <em>Target users</em>, <em>User Journeys</em>, FR1–FR5, FR40, FR58, FR61</li>
 <li><a href="./sequence-diagrams/user-authentication-and-authorisation.html"><code>./sequence-diagrams/user-authentication-and-authorisation.md</code></a> — authn / authz call path</li>
-<li><a href="./data-tables.html"><code>./data-tables.md</code></a> — <code>nji-authorisation</code> table inventory</li>
+<li><a href="./data-tables.html"><code>./data-tables.md</code></a> — <code>ram-authorisation</code> table inventory</li>
 <li><a href="./gaps.html"><code>./gaps.md</code></a> — open questions inherited from the as-is catalogue</li>
 <li><a href="./functional-requirements-coverage.html"><code>./functional-requirements-coverage.md</code></a> — per-FR architectural coverage</li>
 </ul>

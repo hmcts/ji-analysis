@@ -6,8 +6,8 @@ sequenceDiagram
     actor Ver as Verifier
     actor Admin as RSU Admin
 
-    participant UI as nji-ui sitting module
-    participant Sit as nji-sitting
+    participant UI as ram-ui sitting module
+    participant Sit as ram-sitting
 
     rect rgb(232, 240, 250)
         Note over Court,Sit: Phase 1 — List daily sittings awaiting confirmation
@@ -44,11 +44,11 @@ sequenceDiagram
         Note right of Admin: At MVP the sitting re-open permission is granted to RSU Admin only. The re-opener must be different from the original confirmer per SIT-NFR-02 and from a standard Verifier. No external RFC process.
         Admin->>UI: open Re-open Verified Sitting screen, select sittings, enter mandatory justification
         UI->>Sit: POST /v1/sittings/{id}/re-open with justification body
-        Sit->>Sit: check permission sitting:re-open via nji-authorisation
+        Sit->>Sit: check permission sitting:re-open via ram-authorisation
         Sit->>Sit: revert sittings from verified to confirmed
         Sit->>Sit: persist audit entry — who, when, justification, affected sittings
         Sit-->>UI: 200 re-opened
         UI-->>Admin: confirmation toast with audit reference
     end
 
-    Note over Court,Sit: Confirmed and verified sittings are picked up by nji-payment-batch eligibility and by nji-itinerary / nji-mi-feed read federation.
+    Note over Court,Sit: Confirmed and verified sittings are picked up by ram-payment-batch eligibility and by ram-itinerary / ram-mi-feed read federation.

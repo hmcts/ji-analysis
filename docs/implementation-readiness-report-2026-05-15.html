@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Implementation Readiness Assessment Report — NJI Documentation</title>
+<title>Implementation Readiness Assessment Report — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="./index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="./prd.html">PRD (NJI)</a></li>
+<li><a href="./prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="./architecture.html">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
@@ -221,63 +221,63 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><code>implementation-readiness-report-2026-05-06.md</code></li>
 </ul>
 </div></details><details class="section" id="2-prd-analysis"><summary><span class="section-title">2. PRD Analysis</span></summary><div class="section-body">
-<p>PRD: <code>prd.md</code>, 728 lines, completed 2026-05-05 (<code>workflowCompleted: true</code>), with revisions on 2026-05-06, 2026-05-07, and 2026-05-11 marked inline. Project codename <strong>NJI</strong>, release mode <code>phased</code>, project type <code>api_backend</code> with UX override per D4.</p>
+<p>PRD: <code>prd.md</code>, 728 lines, completed 2026-05-05 (<code>workflowCompleted: true</code>), with revisions on 2026-05-06, 2026-05-07, and 2026-05-11 marked inline. Project codename <strong>RAM Pathfinder</strong>, release mode <code>phased</code>, project type <code>api_backend</code> with UX override per D4.</p>
 <h3 id="functional-requirements-fr1fr61-total-61">Functional Requirements (FR1–FR61, total: 61)</h3>
 <p><strong>Identity &amp; Authorisation</strong></p>
 <ul>
-<li><strong>FR1</strong> — Authenticated users access NJI via HMCTS IdP single sign-on; password, session, and account lifecycle owned by the IdP, not duplicated in NJI.</li>
-<li><strong>FR2</strong> — NJI's Authorisation service maps each authenticated principal to one or more roles and a Region/Area scope, and authorises every system call against that mapping.</li>
+<li><strong>FR1</strong> — Authenticated users access RAM Pathfinder via HMCTS IdP single sign-on; password, session, and account lifecycle owned by the IdP, not duplicated in RAM Pathfinder.</li>
+<li><strong>FR2</strong> — RAM Pathfinder's Authorisation service maps each authenticated principal to one or more roles and a Region/Area scope, and authorises every system call against that mapping.</li>
 <li><strong>FR3</strong> — Authorised users can retrieve their effective permissions for their authenticated session.</li>
 <li><strong>FR4</strong> — System administrators can update role and Region/Area assignments for migrated and new users.</li>
-<li><strong>FR5</strong> <em>(reframed v2.5, 2026-05-07 as post-MVP)</em> — External machine-to-machine consumer authentication mechanism. <strong>At MVP, no M2M consumers in scope</strong> — every NJI runtime request is user-initiated. Genuine service-principal auth is a post-MVP open question (architecture gap G7); options to evaluate later: NJI-internal service-auth issuer, Azure Workload Identity, mTLS, HMCTS IdP <code>client_credentials</code>.</li>
+<li><strong>FR5</strong> <em>(reframed v2.5, 2026-05-07 as post-MVP)</em> — External machine-to-machine consumer authentication mechanism. <strong>At MVP, no M2M consumers in scope</strong> — every RAM Pathfinder runtime request is user-initiated. Genuine service-principal auth is a post-MVP open question (architecture gap G7); options to evaluate later: RAM Pathfinder-internal service-auth issuer, Azure Workload Identity, mTLS, HMCTS IdP <code>client_credentials</code>.</li>
 </ul>
 <p><strong>Foundational Data Management</strong></p>
 <ul>
 <li><strong>FR6</strong> — RSU users can view and maintain Reference Data lists (Regions, Offices, judicial vocabularies, calendar / financial-year boundaries) with named-owner sign-off on changes.</li>
-<li><strong>FR7</strong> <em>(revised 2026-05-11)</em> — Every NJI service reads Reference Data via <strong>direct SQL</strong> on the shared schema's Reference Data tables (15 tables, SELECT-granted to each service's DB role) — no client class, no API fan-out, no cache. Reference Data is the single writer; writes (Phase 0 ETL load + ongoing RSU maintenance) go through the versioned Reference Data API. No service holds duplicate or cached copies.</li>
-<li><strong>FR8</strong> <em>(revised v2.2, 2026-05-07)</em> — Cross-service runtime policy values stored in a shared <code>configuration_values</code> infrastructure table managed by <code>nji-architecture</code>'s Flyway baseline; SELECT-granted to every NJI service DB role. Updates via Flyway migrations or direct admin SQL — no API service. Per-service config uses Spring profiles + <code>application.yml</code> + Azure Key Vault.</li>
-<li><strong>FR9</strong> — NJI dispatches transactional emails (booking acks, absence acks, payment schedules) via HMCTS email infrastructure with a delivery log retained.</li>
+<li><strong>FR7</strong> <em>(revised 2026-05-11)</em> — Every RAM Pathfinder service reads Reference Data via <strong>direct SQL</strong> on the shared schema's Reference Data tables (15 tables, SELECT-granted to each service's DB role) — no client class, no API fan-out, no cache. Reference Data is the single writer; writes (Phase 0 ETL load + ongoing RSU maintenance) go through the versioned Reference Data API. No service holds duplicate or cached copies.</li>
+<li><strong>FR8</strong> <em>(revised v2.2, 2026-05-07)</em> — Cross-service runtime policy values stored in a shared <code>configuration_values</code> infrastructure table managed by <code>ram-architecture</code>'s Flyway baseline; SELECT-granted to every RAM Pathfinder service DB role. Updates via Flyway migrations or direct admin SQL — no API service. Per-service config uses Spring profiles + <code>application.yml</code> + Azure Key Vault.</li>
+<li><strong>FR9</strong> — RAM Pathfinder dispatches transactional emails (booking acks, absence acks, payment schedules) via HMCTS email infrastructure with a delivery log retained.</li>
 </ul>
 <p><strong>Judge Records &amp; Working Patterns</strong></p>
 <ul>
 <li><strong>FR10</strong> — RSU users can search and filter judges by name, base location, location type, and judge type.</li>
 <li><strong>FR11</strong> — RSU users can maintain judge profiles (personal details, judge type, base office, active/inactive, payroll number, retirement date, fee entitlement, London weighting, name-for-itinerary, heading).</li>
 <li><strong>FR12</strong> — Authorised users can define and update Working Patterns (None / Daily / Weekly) with target sit %, jurisdictional split, and per-day work-type pattern.</li>
-<li><strong>FR13</strong> — NJI auto-populates judge itineraries up to the next 31st March from the working pattern, preserving prior absences.</li>
+<li><strong>FR13</strong> — RAM Pathfinder auto-populates judge itineraries up to the next 31st March from the working pattern, preserving prior absences.</li>
 <li><strong>FR14</strong> — RSU users can convert salaried judges between full-time and part-time, adjusting mandatory sitting days.</li>
 <li><strong>FR15</strong> — RSU users can maintain ticket information per judge role, requiring start date and ticket type.</li>
-<li><strong>FR16</strong> — NJI validates jurisdictional split percentages total 100% before saving.</li>
+<li><strong>FR16</strong> — RAM Pathfinder validates jurisdictional split percentages total 100% before saving.</li>
 <li><strong>FR17</strong> — RSU users can switch a judge's base location to another office within the same Region; cross-Region changes require OPT Advice Point and are out-of-system.</li>
 <li><strong>FR18</strong> — Authorised users can link to judges managed by other offices (off-circuit / cross-Region) for booking purposes.</li>
 </ul>
 <p><strong>Absence Workflow</strong></p>
 <ul>
 <li><strong>FR19</strong> — Authorised users (RSU, Court, Judges where permitted) can record absence requests with start/end date, partial-day option (full / AM / PM), type from a controlled list, and an NTBF flag.</li>
-<li><strong>FR20</strong> — NJI distinguishes auto-confirmed absences from those requiring confirmation; confirmation can trigger an acknowledgement email.</li>
+<li><strong>FR20</strong> — RAM Pathfinder distinguishes auto-confirmed absences from those requiring confirmation; confirmation can trigger an acknowledgement email.</li>
 <li><strong>FR21</strong> — Sickness absences can be extended without creating a new record; non-sickness extensions require a new absence record.</li>
 <li><strong>FR22</strong> — Authorised users can mark absences as <em>Not To Be Filled</em> (NTBF) or as <em>needs fee-paid cover</em>.</li>
 </ul>
 <p><strong>Vacancy &amp; Cover</strong></p>
 <ul>
-<li><strong>FR23</strong> — NJI auto-creates a vacancy when an approved absence requires fee-paid cover, pre-populated with judge type, work type, ticket, and dates.</li>
+<li><strong>FR23</strong> — RAM Pathfinder auto-creates a vacancy when an approved absence requires fee-paid cover, pre-populated with judge type, work type, ticket, and dates.</li>
 <li><strong>FR24</strong> — Authorised users can create standalone vacancies independent of any absence.</li>
 <li><strong>FR25</strong> — Authorised users can edit a vacancy's daily breakdown (cancel days with reason; extend/shorten the period).</li>
-<li><strong>FR26</strong> — NJI marks a vacancy as filled when a booking is created against it; vacancy days cannot be cancelled once a booking is recorded.</li>
-<li><strong>FR27</strong> — NJI surfaces fee-paid judges matching a vacancy's filter as a hint for advertising; advertising itself is out-of-system.</li>
+<li><strong>FR26</strong> — RAM Pathfinder marks a vacancy as filled when a booking is created against it; vacancy days cannot be cancelled once a booking is recorded.</li>
+<li><strong>FR27</strong> — RAM Pathfinder surfaces fee-paid judges matching a vacancy's filter as a hint for advertising; advertising itself is out-of-system.</li>
 <li><strong>FR28</strong> — Authorised users can cancel or close vacancies (e.g. when parent absence becomes NTBF).</li>
 </ul>
 <p><strong>Booking Management</strong></p>
 <ul>
 <li><strong>FR29</strong> — Authorised users can create fee-paid bookings (linked to vacancy or standalone), capturing judge, court, date, session type, booking type, work type.</li>
 <li><strong>FR30</strong> — Booking creation marks the linked vacancy as filled within the same transaction when <code>vacancyId</code> is supplied. <em>(Implementation: in-process direct DB update via per-service DB role grant — architecture Principle 1.)</em></li>
-<li><strong>FR31</strong> — NJI tracks booking status (planned, provisional, confirmed, cancelled, rejected) with reason capture for cancellation.</li>
-<li><strong>FR32</strong> — NJI sends booking acknowledgement emails to fee-paid judges (batched overnight or <em>Create and Email Now</em>).</li>
-<li><strong>FR33</strong> — NJI requires a Y/N answer at booking time when a judge's fee entitlement is <em>Ask when booking</em>.</li>
-<li><strong>FR34</strong> — NJI prevents double-booking of fee-paid judges for overlapping sessions.</li>
+<li><strong>FR31</strong> — RAM Pathfinder tracks booking status (planned, provisional, confirmed, cancelled, rejected) with reason capture for cancellation.</li>
+<li><strong>FR32</strong> — RAM Pathfinder sends booking acknowledgement emails to fee-paid judges (batched overnight or <em>Create and Email Now</em>).</li>
+<li><strong>FR33</strong> — RAM Pathfinder requires a Y/N answer at booking time when a judge's fee entitlement is <em>Ask when booking</em>.</li>
+<li><strong>FR34</strong> — RAM Pathfinder prevents double-booking of fee-paid judges for overlapping sessions.</li>
 </ul>
 <p><strong>Sitting Management</strong></p>
 <ul>
-<li><strong>FR35</strong> — NJI generates planned sittings for salaried judges from their working patterns, court, date, and work type.</li>
+<li><strong>FR35</strong> — RAM Pathfinder generates planned sittings for salaried judges from their working patterns, court, date, and work type.</li>
 <li><strong>FR36</strong> — Authorised users can filter sitting records by Region/Office, judge type, judge, and date range.</li>
 <li><strong>FR37</strong> — Authorised users can confirm that a sitting took place, updating outcome (confirmed, cancelled, rejected) and actual work type.</li>
 <li><strong>FR38</strong> — Authorised users can split a sitting into AM/PM with different work types within a single day.</li>
@@ -287,12 +287,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Payment &amp; Reconciliation</strong></p>
 <ul>
 <li><strong>FR41</strong> <em>(revised v2.6, 2026-05-07)</em> — Authorised users can list confirmed bookings and salaried sittings, filterable by Region/Office, judge, date range, and payment lifecycle status. Payment-eligible subset = read-only union of confirmed bookings + sittings without an existing payment record.</li>
-<li><strong>FR42</strong> <em>(revised v2.6)</em> — NJI's <strong>payment-processing batch</strong> (<code>nji-payment-batch</code>, scheduled cron, typically end-of-week) automatically marks eligible bookings as <em>payment requested</em> and creates <code>payments</code> + <code>payment_schedules</code> records. <strong>No user click required.</strong></li>
+<li><strong>FR42</strong> <em>(revised v2.6)</em> — RAM Pathfinder's <strong>payment-processing batch</strong> (<code>ram-payment-batch</code>, scheduled cron, typically end-of-week) automatically marks eligible bookings as <em>payment requested</em> and creates <code>payments</code> + <code>payment_schedules</code> records. <strong>No user click required.</strong></li>
 <li><strong>FR43</strong> <em>(revised v2.6)</em> — The <strong>payment batch</strong> generates JFEPS-compatible payment schedules and dispatches as Excel attachments to a configured Payment Authoriser via email (Notification API, batch service-principal); Authoriser forwards to Liberata out-of-system.</li>
-<li><strong>FR44</strong> — NJI exposes the payment schedule via API with content-type negotiation (<code>application/vnd.hmcts.jfeps+json</code> or <code>+xlsx</code>).</li>
-<li><strong>FR45</strong> — NJI prevents double submission of the same booking for payment via natural-key unique constraint on <code>(payment_cycle_id, booking_id)</code>; re-runs of the same cycle are idempotent.</li>
+<li><strong>FR44</strong> — RAM Pathfinder exposes the payment schedule via API with content-type negotiation (<code>application/vnd.hmcts.jfeps+json</code> or <code>+xlsx</code>).</li>
+<li><strong>FR45</strong> — RAM Pathfinder prevents double submission of the same booking for payment via natural-key unique constraint on <code>(payment_cycle_id, booking_id)</code>; re-runs of the same cycle are idempotent.</li>
 <li><strong>FR46</strong> — Authorised users (Finance, RSU) can flag payments as reconciled with notes for mismatches; fully reconciled payments cannot be re-requested.</li>
-<li><strong>FR47</strong> — NJI does not store or expose bank details for any judge.</li>
+<li><strong>FR47</strong> — RAM Pathfinder does not store or expose bank details for any judge.</li>
 </ul>
 <p><strong>Itineraries &amp; Reporting (Read Models)</strong></p>
 <ul>
@@ -301,17 +301,17 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><strong>FR50</strong> — Authorised users can use the Forward Look view across a Region with paged or filtered access for performance.</li>
 <li><strong>FR51</strong> — Itinerary cells are clickable and drill into the underlying record.</li>
 <li><strong>FR52</strong> — Authorised users can copy/export Itinerary and Report contents to Excel and PDF.</li>
-<li><strong>FR53</strong> — NJI provides a fixed catalogue of standard Reports (weekly sitting projections, weekly vacancies, absence analysis, vacancy by court, confirmed sittings/bookings by judge or judge type, judge utilisation, jurisdictional split, summary by court / work type).</li>
-<li><strong>FR54</strong> — NJI exposes aggregated MI Feed APIs for external consumers (DA&amp;I, future programmes); aggregate-only by contract, no case-level data.</li>
+<li><strong>FR53</strong> — RAM Pathfinder provides a fixed catalogue of standard Reports (weekly sitting projections, weekly vacancies, absence analysis, vacancy by court, confirmed sittings/bookings by judge or judge type, judge utilisation, jurisdictional split, summary by court / work type).</li>
+<li><strong>FR54</strong> — RAM Pathfinder exposes aggregated MI Feed APIs for external consumers (DA&amp;I, future programmes); aggregate-only by contract, no case-level data.</li>
 </ul>
 <p><strong>Platform Operations &amp; Migration</strong></p>
 <ul>
 <li><strong>FR55</strong> — Authenticated users land on a Home page with role-scoped navigation, Region/Area selector, summary tiles, and contextual help.</li>
-<li><strong>FR56</strong> — NJI's UI replicates the functional surface of the as-is APEX UI on a modern UI stack and meets WCAG 2.2 Level AA.</li>
-<li><strong>FR57</strong> — Phase 0 Data Migration ETL takes Reference Data and active user records from APEX, transforms to NJI shape, and loads via the NJI Reference Data API and Authorisation API. Keyed to HMCTS IdP principals (email primary, employee number fallback). Lives at <code>nji-architecture/migration/</code>, separate from Flyway DDL.</li>
-<li><strong>FR58</strong> — NJI supports per-region phased activation — region's user accounts activated when feature-parity gate passed; activation is a flag flip on <code>auth_user_activation_flags</code>, not a data migration.</li>
-<li><strong>FR59</strong> — Every NJI service exposes a versioned API contract, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details, published OpenAPI spec, and <code>Deprecation</code> (<a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a>) + <code>Sunset</code> (<a href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a>) headers.</li>
-<li><strong>FR60</strong> — Every NJI service emits structured logs with correlation IDs and consistent error categorisation, retained for pilot incident triage.</li>
+<li><strong>FR56</strong> — RAM Pathfinder's UI replicates the functional surface of the as-is APEX UI on a modern UI stack and meets WCAG 2.2 Level AA.</li>
+<li><strong>FR57</strong> — Phase 0 Data Migration ETL takes Reference Data and active user records from APEX, transforms to RAM Pathfinder shape, and loads via the RAM Pathfinder Reference Data API and Authorisation API. Keyed to HMCTS IdP principals (email primary, employee number fallback). Lives at <code>ram-architecture/migration/</code>, separate from Flyway DDL.</li>
+<li><strong>FR58</strong> — RAM Pathfinder supports per-region phased activation — region's user accounts activated when feature-parity gate passed; activation is a flag flip on <code>auth_user_activation_flags</code>, not a data migration.</li>
+<li><strong>FR59</strong> — Every RAM Pathfinder service exposes a versioned API contract, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details, published OpenAPI spec, and <code>Deprecation</code> (<a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a>) + <code>Sunset</code> (<a href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a>) headers.</li>
+<li><strong>FR60</strong> — Every RAM Pathfinder service emits structured logs with correlation IDs and consistent error categorisation, retained for pilot incident triage.</li>
 <li><strong>FR61</strong> <em>(revised 2026-05-06)</em> — Every domain service has a <strong>manual UAT script</strong> capturing workflows and edge cases for APEX-experienced users to verify against APEX. UAT performed by RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, MI users; recorded with explicit per-role sign-off. No automated APEX-comparison harness.</li>
 </ul>
 <h3 id="non-functional-requirements-nfr1nfr42-total-42">Non-Functional Requirements (NFR1–NFR42, total: 42)</h3>
@@ -331,7 +331,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <ul>
 <li><strong>NFR10</strong> — Latest TLS only on every endpoint; HTTP-only rejected.</li>
 <li><strong>NFR11</strong> — All personal data encrypted at rest.</li>
-<li><strong>NFR12</strong> <em>(revised v2.6, 2026-05-07)</em> — Human users authenticated via HMCTS IdP SSO. <strong>Inter-service auth for user-initiated calls is JWT propagation</strong> validated against IdP's JWKS endpoint. <strong>Inter-service auth for batch / scheduled components is OAuth 2.0 <code>client_credentials</code></strong> against <code>nji-mock-auth</code> non-prod; production issuer deferred per gap G7.1 (recommendation: Azure Workload Identity).</li>
+<li><strong>NFR12</strong> <em>(revised v2.6, 2026-05-07)</em> — Human users authenticated via HMCTS IdP SSO. <strong>Inter-service auth for user-initiated calls is JWT propagation</strong> validated against IdP's JWKS endpoint. <strong>Inter-service auth for batch / scheduled components is OAuth 2.0 <code>client_credentials</code></strong> against <code>ram-mock-auth</code> non-prod; production issuer deferred per gap G7.1 (recommendation: Azure Workload Identity).</li>
 <li><strong>NFR13</strong> — Every API call resolves principal's roles + Region/Area scope through Authorisation; no operation bypasses.</li>
 <li><strong>NFR14</strong> — No bank details stored or exposed; no case-level data in any read model or report.</li>
 <li><strong>NFR15</strong> — Aligns with HMCTS / MoJ Government Functional Standard 7 — Security.</li>
@@ -362,14 +362,14 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Data Privacy &amp; Sovereignty (NFR30–NFR33)</strong></p>
 <ul>
 <li><strong>NFR30</strong> — UK GDPR / DPA 2018 compliance; personal data scope limited; no case-level data.</li>
-<li><strong>NFR31</strong> — All NJI services and data hosted in Azure UK regions only.</li>
+<li><strong>NFR31</strong> — All RAM Pathfinder services and data hosted in Azure UK regions only.</li>
 <li><strong>NFR32</strong> — Retention per HMCTS schedules; migrated transactional history stays in APEX (D3).</li>
 <li><strong>NFR33</strong> — Aggregate data FOI-exposable; case-level forbidden by contract (REP-BR-NFR-03).</li>
 </ul>
 <p><strong>Reliability &amp; Availability (NFR34–NFR38)</strong></p>
 <ul>
 <li><strong>NFR34</strong> — Available during HMCTS operational hours (~07:00–19:00 UK weekdays); out-of-hours best-effort.</li>
-<li><strong>NFR35</strong> — Zero failed JFEPS payment cycles attributable to NJI. Manual fallback within a cycle is contingency, not normal mode.</li>
+<li><strong>NFR35</strong> — Zero failed JFEPS payment cycles attributable to RAM Pathfinder. Manual fallback within a cycle is contingency, not normal mode.</li>
 <li><strong>NFR36</strong> — Each rollout wave has documented rollback path within one operational cycle.</li>
 <li><strong>NFR37</strong> — Strategy A degraded-mode falls back to Strategy C cached projection rather than failing; cache freshness in OpenAPI spec metadata + response headers.</li>
 <li><strong>NFR38</strong> <em>(disambiguated 2026-05-06)</em> — HMCTS-judicial-region rollout isolation: wave activation in one region does not affect users in others. Enforced at application tier via <code>auth_user_activation_flags</code> (FR58), <strong>not</strong> at infrastructure tier. Production runs in single Azure region (UK South) with multi-AZ HA. DR scope is an open gap (G3.6).</li>
@@ -385,14 +385,14 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Decisions Log (D1–D9) — locked programme-level decisions</strong></p>
 <ul>
 <li><strong>D1</strong> — Phase 0 scope locked: Reference Data, Authorisation+SSO, Notification, API contracts, deployment platform, structured logging, shared <code>configuration_values</code> table (no configuration service per v2.2). Audit/metrics/trace observability post-MVP.</li>
-<li><strong>D2</strong> — Phased rollout; migrated users don't use APEX; non-migrated users don't use NJI. No dual-write coexistence.</li>
-<li><strong>D3</strong> — Migration scope: Reference Data only (extended by D9). No transactional data migration. Phase 0 ETL: APEX dumps → transform → load via NJI Reference Data API. Lives in <code>nji-architecture/migration/</code>, separate from Flyway DDL.</li>
+<li><strong>D2</strong> — Phased rollout; migrated users don't use APEX; non-migrated users don't use RAM Pathfinder. No dual-write coexistence.</li>
+<li><strong>D3</strong> — Migration scope: Reference Data only (extended by D9). No transactional data migration. Phase 0 ETL: APEX dumps → transform → load via RAM Pathfinder Reference Data API. Lives in <code>ram-architecture/migration/</code>, separate from Flyway DDL.</li>
 <li><strong>D4</strong> — Feature-parity gate is functional + UI-replicates-APEX (modern UI stack, no redesign). UX/visual_design/user_journeys in scope (override on <code>api_backend</code>).</li>
 <li><strong>D5</strong> <em>(revised 2026-05-06)</em> — APEX is behavioural reference verified by <strong>manual UAT performed by APEX-experienced users</strong>; not a migration host. Earlier "automated comparison reference" framing retracted.</li>
 <li><strong>D6</strong> — APEX maintenance out of project scope (not co-managed).</li>
 <li><strong>D7</strong> — Audit/observability MVP minimum: log-based. User-action audit post-MVP.</li>
 <li><strong>D8</strong> — Rollout boundary: by region, all applicable user roles. Region migrates only when every in-region role's functionality is complete.</li>
-<li><strong>D9</strong> — Active users + role/scope mappings extracted from APEX, transformed, loaded into NJI Authorisation tables via NJI Authorisation API in Phase 0. Each user keyed to HMCTS IdP principal (email primary, employee number fallback).</li>
+<li><strong>D9</strong> — Active users + role/scope mappings extracted from APEX, transformed, loaded into RAM Pathfinder Authorisation tables via RAM Pathfinder Authorisation API in Phase 0. Each user keyed to HMCTS IdP principal (email primary, employee number fallback).</li>
 </ul>
 <p><strong>Service decomposition (11 services in 3 clusters):</strong></p>
 <ul>
@@ -448,7 +448,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <ul>
 <li>✅ Phase × Area summary table with FR/NFR coverage at the Area level</li>
 <li>✅ Scope description per Area</li>
-<li>✅ Component identification (<code>nji-judge</code>, <code>nji-payment-batch</code>, etc.)</li>
+<li>✅ Component identification (<code>ram-judge</code>, <code>ram-payment-batch</code>, etc.)</li>
 <li>✅ Demo gate identification per phase</li>
 <li>✅ Architecture-derived additional requirements (AR1–AR50)</li>
 </ul>
@@ -477,14 +477,14 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td>Identity &amp; Authorisation</td>
 <td>0</td>
 <td>✅ Covered</td>
-<td>HMCTS IdP SSO via <code>nji-mock-auth</code></td>
+<td>HMCTS IdP SSO via <code>ram-mock-auth</code></td>
 </tr>
 <tr>
 <td>FR2</td>
 <td>Identity &amp; Authorisation</td>
 <td>0</td>
 <td>✅ Covered</td>
-<td><code>nji-authorisation</code> + JWTFilter</td>
+<td><code>ram-authorisation</code> + JWTFilter</td>
 </tr>
 <tr>
 <td>FR3</td>
@@ -533,42 +533,42 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td>Notification</td>
 <td>0</td>
 <td>✅ Covered</td>
-<td><code>nji-notification</code></td>
+<td><code>ram-notification</code></td>
 </tr>
 <tr>
 <td>FR10–FR18</td>
 <td>Judge</td>
 <td>1</td>
 <td>✅ Covered</td>
-<td><code>nji-judge</code> + UI module</td>
+<td><code>ram-judge</code> + UI module</td>
 </tr>
 <tr>
 <td>FR19–FR22</td>
 <td>Absence</td>
 <td>2</td>
 <td>✅ Covered</td>
-<td><code>nji-absence</code> + UI module</td>
+<td><code>ram-absence</code> + UI module</td>
 </tr>
 <tr>
 <td>FR23–FR28</td>
 <td>Vacancy</td>
 <td>3</td>
 <td>✅ Covered</td>
-<td><code>nji-vacancy</code> + UI module</td>
+<td><code>ram-vacancy</code> + UI module</td>
 </tr>
 <tr>
 <td>FR29–FR34</td>
 <td>Booking</td>
 <td>4</td>
 <td>✅ Covered</td>
-<td><code>nji-booking</code> + UI module</td>
+<td><code>ram-booking</code> + UI module</td>
 </tr>
 <tr>
 <td>FR35–FR40</td>
 <td>Sitting</td>
 <td>5</td>
 <td>✅ Covered</td>
-<td><code>nji-sitting</code> + UI module</td>
+<td><code>ram-sitting</code> + UI module</td>
 </tr>
 <tr>
 <td>FR41</td>
@@ -582,7 +582,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td>Payment Batch</td>
 <td>6</td>
 <td>✅ Covered</td>
-<td><code>nji-payment-batch</code></td>
+<td><code>ram-payment-batch</code></td>
 </tr>
 <tr>
 <td>FR43</td>
@@ -624,7 +624,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td>Itineraries</td>
 <td>7</td>
 <td>✅ Covered</td>
-<td><code>nji-itinerary</code> read model</td>
+<td><code>ram-itinerary</code> read model</td>
 </tr>
 <tr>
 <td>FR53</td>
@@ -659,7 +659,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td>Data Migration ETL</td>
 <td>0</td>
 <td>✅ Covered</td>
-<td><code>nji-architecture/migration/</code> ETL</td>
+<td><code>ram-architecture/migration/</code> ETL</td>
 </tr>
 <tr>
 <td>FR58</td>
@@ -923,7 +923,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>PRD FR56</td>
-<td>NJI's UI replicates the functional surface of as-is APEX UI on a modern UI stack and meets WCAG 2.2 AA</td>
+<td>RAM Pathfinder's UI replicates the functional surface of as-is APEX UI on a modern UI stack and meets WCAG 2.2 AA</td>
 </tr>
 <tr>
 <td>PRD NFR17–NFR19</td>
@@ -935,7 +935,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Epics doc AR42</td>
-<td>Two UI repos (<code>nji-ui</code> + <code>nji-admin-ui</code>), React + TypeScript + Vite + Vitest + Playwright stack</td>
+<td>Two UI repos (<code>ram-ui</code> + <code>ram-admin-ui</code>), React + TypeScript + Vite + Vitest + Playwright stack</td>
 </tr>
 <tr>
 <td>Epics doc AR43–AR45b</td>
@@ -967,7 +967,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td>UI repo strategy</td>
 <td>Not specified</td>
-<td>Two UI repos: <code>nji-ui</code> + <code>nji-admin-ui</code> (architecture/repository-strategy v2.2+)</td>
+<td>Two UI repos: <code>ram-ui</code> + <code>ram-admin-ui</code> (architecture/repository-strategy v2.2+)</td>
 <td>AR42–AR45b explicit</td>
 </tr>
 <tr>
@@ -1116,7 +1116,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td>Phase 9+ Pilot Rollout</td>
 <td>✅ User value</td>
-<td>Region migrates onto NJI.</td>
+<td>Region migrates onto RAM Pathfinder.</td>
 </tr>
 </tbody>
 </table>
@@ -1127,7 +1127,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </ul>
 <h3 id="b-epic-independence-test">B. Epic Independence Test</h3>
 <p>Per create-epics-and-stories: Epic N cannot require Epic N+1 to work.</p>
-<p>NJI's phase structure has <strong>deliberate, architecture-driven forward references</strong> that need scrutiny:</p>
+<p>RAM Pathfinder's phase structure has <strong>deliberate, architecture-driven forward references</strong> that need scrutiny:</p>
 <table>
 <thead>
 <tr>
@@ -1203,12 +1203,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Phase 0 Identity</td>
-<td>"Set up <code>nji-mock-auth</code>" tempting</td>
-<td>Write as "User authenticates against <code>nji-mock-auth</code> and reaches stub Home page" — vertical slice.</td>
+<td>"Set up <code>ram-mock-auth</code>" tempting</td>
+<td>Write as "User authenticates against <code>ram-mock-auth</code> and reaches stub Home page" — vertical slice.</td>
 </tr>
 <tr>
 <td>Phase 0 Data Migration ETL</td>
-<td>"Load APEX dumps into NJI tables" sounds technical</td>
+<td>"Load APEX dumps into RAM Pathfinder tables" sounds technical</td>
 <td>Write as "RSU sign-off on Reference Data migration (Risk #13)" — named-owner sign-off is the user outcome.</td>
 </tr>
 <tr>
@@ -1224,22 +1224,22 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tbody>
 </table>
 <h3 id="d-database--entity-creation-timing">D. Database / Entity Creation Timing</h3>
-<p>Architecture mandates per-service Flyway migrations owning that service's tables (AR18, AR19, AR20). 39 NJI tables total, grouped by owning service. <strong>This is the right pattern</strong> and aligns with create-epics-and-stories best practice of creating tables when first needed.</p>
-<p>⚠️ <strong>Watch when storied:</strong> the shared <code>configuration_values</code> baseline (AR19, FR8) is owned by <code>nji-architecture</code>'s Flyway, not by any specific service. The story for "establish shared <code>configuration_values</code> baseline" should live in <strong>Phase 0 Platform &amp; DevEx as a single story</strong> and not be repeated. Its rows are added by per-service stories as policy values are introduced.</p>
+<p>Architecture mandates per-service Flyway migrations owning that service's tables (AR18, AR19, AR20). 39 RAM Pathfinder tables total, grouped by owning service. <strong>This is the right pattern</strong> and aligns with create-epics-and-stories best practice of creating tables when first needed.</p>
+<p>⚠️ <strong>Watch when storied:</strong> the shared <code>configuration_values</code> baseline (AR19, FR8) is owned by <code>ram-architecture</code>'s Flyway, not by any specific service. The story for "establish shared <code>configuration_values</code> baseline" should live in <strong>Phase 0 Platform &amp; DevEx as a single story</strong> and not be repeated. Its rows are added by per-service stories as policy values are introduced.</p>
 <h3 id="e-starter-template-requirement">E. Starter Template Requirement</h3>
 <p>Architecture <strong>explicitly mandates</strong> the HMCTS Crime SpringBoot template (AR2, AR3, AR4):</p>
 <blockquote>
-<p>"Initial commit for every new service is <em>'Scaffold NJI {service-name} from HMCTS starter'</em> — this is the first implementation story per service."</p>
+<p>"Initial commit for every new service is <em>'Scaffold RAM Pathfinder {service-name} from HMCTS starter'</em> — this is the first implementation story per service."</p>
 </blockquote>
 <p>✅ <strong>Compliant</strong> — the standard create-epics-and-stories requirement is met by AR4. Every backend service epic will have Story 1 = scaffold from template.</p>
-<p>⚠️ <strong>However</strong>, the Helm chart is <strong>not</strong> in the HMCTS template baseline (per AR24 — added by <code>nji-scaffold.sh</code>). The scaffold story per service must therefore include both:</p>
+<p>⚠️ <strong>However</strong>, the Helm chart is <strong>not</strong> in the HMCTS template baseline (per AR24 — added by <code>ram-scaffold.sh</code>). The scaffold story per service must therefore include both:</p>
 <ul>
 <li>Clone from HMCTS template</li>
-<li>Run <code>nji-scaffold.sh</code> to apply NJI conventions (Helm chart, Spectral, ArchUnit, Spotless+Checkstyle, Pact, etc.)</li>
+<li>Run <code>ram-scaffold.sh</code> to apply RAM Pathfinder conventions (Helm chart, Spectral, ArchUnit, Spotless+Checkstyle, Pact, etc.)</li>
 </ul>
 <p>Stories should call out both steps explicitly.</p>
 <h3 id="f-greenfield-indicators">F. Greenfield Indicators</h3>
-<p>✅ Initial project setup stories — covered by AR2–AR4 (per-service scaffolding) and <code>nji-architecture</code> (programme-level setup). ✅ Development environment configuration — covered by AR13 (docker-compose) + AR25 (Key Vault) + AR26 (Spring profiles). ✅ CI/CD pipeline setup early — covered by AR28 (per-service GitHub Actions; <code>ci.yml</code> + per-env deploy workflows). ✅ Migration / compatibility stories — Phase 0 Data Migration ETL + FR57 + FR58 — APEX-side coexistence is operational (per D2/D6), not application-level.</p>
+<p>✅ Initial project setup stories — covered by AR2–AR4 (per-service scaffolding) and <code>ram-architecture</code> (programme-level setup). ✅ Development environment configuration — covered by AR13 (docker-compose) + AR25 (Key Vault) + AR26 (Spring profiles). ✅ CI/CD pipeline setup early — covered by AR28 (per-service GitHub Actions; <code>ci.yml</code> + per-env deploy workflows). ✅ Migration / compatibility stories — Phase 0 Data Migration ETL + FR57 + FR58 — APEX-side coexistence is operational (per D2/D6), not application-level.</p>
 <p>All greenfield indicators present in the framework.</p>
 <h3 id="g-best-practices-compliance-checklist-framework-level">G. Best Practices Compliance Checklist (Framework-level)</h3>
 <p>For the Phase × Area framework as proto-epics:</p>
@@ -1283,8 +1283,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </div></details><details class="section" id="6-summary-and-recommendations"><summary><span class="section-title">6. Summary and Recommendations</span></summary><div class="section-body">
 <h3 id="overall-readiness-status">Overall Readiness Status</h3>
 <h1 id="orange_circle-needs-work">🟠 NEEDS WORK</h1>
-<p>NJI's planning artefacts are <strong>mature on PRD and architecture</strong> but <strong>structurally incomplete on epics</strong>. The epics document is at framework stage (Phase × Area mapping), not implementation-ready (no stories, no acceptance criteria). A developer agent cannot begin implementation today because there is nothing for them to pick up.</p>
-<p>This is one specific gap with a known path to closure. Once that gap is closed, NJI moves to <strong>READY</strong> status.</p>
+<p>RAM Pathfinder's planning artefacts are <strong>mature on PRD and architecture</strong> but <strong>structurally incomplete on epics</strong>. The epics document is at framework stage (Phase × Area mapping), not implementation-ready (no stories, no acceptance criteria). A developer agent cannot begin implementation today because there is nothing for them to pick up.</p>
+<p>This is one specific gap with a known path to closure. Once that gap is closed, RAM Pathfinder moves to <strong>READY</strong> status.</p>
 <h3 id="status-by-artefact">Status by Artefact</h3>
 <table>
 <thead>
@@ -1356,7 +1356,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 [Then] bmad-sprint-planning → kicks off implementation</code></pre>
 <h3 id="final-note">Final Note</h3>
 <p>This assessment identified <strong>1 blocker, 2 major issues, 1 medium issue</strong>, and a series of pre-emptive remediations for story-design time. The blocker has a clear, single-skill remediation (<code>bmad-create-epics-and-stories</code>).</p>
-<p><strong>The good news:</strong> PRD and architecture are in strong shape. NJI's planning is roughly 70% to implementation-ready. The remaining 30% is one focused workstream — turning the Phase × Area framework into stories with acceptance criteria.</p>
+<p><strong>The good news:</strong> PRD and architecture are in strong shape. RAM Pathfinder's planning is roughly 70% to implementation-ready. The remaining 30% is one focused workstream — turning the Phase × Area framework into stories with acceptance criteria.</p>
 <p>These findings can be used to advance the artefacts; you may also choose to proceed as-is, with the understanding that sprint planning and story creation cannot be meaningfully run until the epics gap is closed.</p>
 <hr />
 <p><strong>Report generated:</strong> 2026-05-15 <strong>Assessor:</strong> Claude (bmad-check-implementation-readiness) <strong>Output file:</strong> <code>_bmad-output/planning-artifacts/implementation-readiness-report-2026-05-15.md</code> <strong>Previous reports for comparison:</strong> <code>2026-05-05</code>, <code>2026-05-06</code></p>

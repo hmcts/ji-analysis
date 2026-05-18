@@ -1,6 +1,6 @@
 ---
 projectName: 'ji-analysis'
-productCodename: 'NJI'
+productCodename: 'RAM Pathfinder'
 sharded: true
 shardedAt: '2026-05-15'
 shardedFrom: 'epics.md (1566-line monolith — superseded by this folder)'
@@ -19,13 +19,13 @@ stepsCompleted:
 phase0Status: 'validated-ready-for-implementation'
 ---
 
-# ji-analysis (NJI) — Epic Breakdown
+# ji-analysis (RAM Pathfinder) — Epic Breakdown
 
-This is the **sharded entry point** for the NJI epic and story breakdown. Each section below lives in its own file for maintainability — the prior single-file `epics.md` reached ~1,500 lines covering Phase 0 alone, and Phases 1–9+ would push it past 4,000 lines.
+This is the **sharded entry point** for the RAM Pathfinder epic and story breakdown. Each section below lives in its own file for maintainability — the prior single-file `epics.md` reached ~1,500 lines covering Phase 0 alone, and Phases 1–9+ would push it past 4,000 lines.
 
 ## Overview
 
-NJI (New JI) is the greenfield rebuild of HMCTS's Judicial Itineraries system. This document decomposes the requirements from the PRD (61 FRs, 42 NFRs, D1–D9) and the Architecture (HMCTS Crime SpringBoot starter, polyrepo, shared-DB + per-service DB roles, Kubernetes on Azure AKS) into implementable stories.
+RAM Pathfinder is the greenfield rebuild of HMCTS's Judicial Itineraries system. This document decomposes the requirements from the PRD (61 FRs, 42 NFRs, D1–D9) and the Architecture (HMCTS Crime SpringBoot starter, polyrepo, shared-DB + per-service DB roles, Kubernetes on Azure AKS) into implementable stories.
 
 UX Design document is not present; downstream epics inherit UI requirements directly from PRD FRs (FR55, FR56) and architecture conventions (GOV.UK Design System base, WCAG 2.2 AA per NFR17). This gap is documented in the 2026-05-06 readiness report.
 

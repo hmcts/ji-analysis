@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NJI Architecture Summary — NJI Documentation</title>
+<title>RAM Pathfinder Architecture Summary — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="./index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="./prd.html">PRD (NJI)</a></li>
+<li><a href="./prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture" data-current="true" open>
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture" data-current="true" open>
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="./architecture.html">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html" class="current">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
@@ -187,11 +187,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </details></aside>
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
-<h1 id="nji-architecture-summary">NJI Architecture Summary</h1>
-<p>NJI (New Judicial Itineraries) — HMCTS's API-driven greenfield rebuild of the Oracle APEX Judicial Itineraries platform.</p>
+<h1 id="ram-architecture-summary">RAM Pathfinder Architecture Summary</h1>
+<p>RAM Pathfinder (New Judicial Itineraries) — HMCTS's API-driven greenfield rebuild of the Oracle APEX Judicial Itineraries platform.</p>
 <p>This file describes what is built and how it runs. For rationale, alternatives, gap and assumption registers, data-table inventory, conventions, repo structure, changelog, and build sequence, see <a href="./architecture.html"><code>./architecture.md</code></a> and the siblings under <a href="./architecture/"><code>./architecture/</code></a>.</p>
 <details class="section" id="system-context"><summary><span class="section-title">System context</span></summary><div class="section-body">
-<p><img src="./architecture/diagrams/system-context.png" alt="NJI System Context — high-level service map and key interactions" /></p>
+<p><img src="./architecture/diagrams/system-context.png" alt="RAM Pathfinder System Context — high-level service map and key interactions" /></p>
 </div></details><details class="section" id="service-decomposition-11-services--ui"><summary><span class="section-title">Service decomposition (11 services + UI)</span></summary><div class="section-body">
 <h3 id="domain-services">Domain services</h3>
 <table>
@@ -203,27 +203,27 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </thead>
 <tbody>
 <tr>
-<td><code>nji-judge</code></td>
+<td><code>ram-judge</code></td>
 <td>Judges, working patterns, tickets, jurisdictional split</td>
 </tr>
 <tr>
-<td><code>nji-absence</code></td>
+<td><code>ram-absence</code></td>
 <td>Absence records + approval workflow; triggers vacancy creation</td>
 </tr>
 <tr>
-<td><code>nji-vacancy</code></td>
+<td><code>ram-vacancy</code></td>
 <td>Cover-required vacancies; <code>filled</code> flag UPDATE-granted to Booking</td>
 </tr>
 <tr>
-<td><code>nji-booking</code></td>
+<td><code>ram-booking</code></td>
 <td>Fee-paid bookings + verification; row-locks target vacancy in-transaction</td>
 </tr>
 <tr>
-<td><code>nji-sitting</code></td>
+<td><code>ram-sitting</code></td>
 <td>Salaried-judge sittings; verification; AM/PM split</td>
 </tr>
 <tr>
-<td><code>nji-payment</code></td>
+<td><code>ram-payment</code></td>
 <td>Payments + reconciliation; JFEPS-shaped Excel schedule via Notification</td>
 </tr>
 </tbody>
@@ -238,15 +238,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </thead>
 <tbody>
 <tr>
-<td><code>nji-authorisation</code></td>
+<td><code>ram-authorisation</code></td>
 <td>Per-request authz authority; users, roles, Region/Area scope, activation flags</td>
 </tr>
 <tr>
-<td><code>nji-reference-data</code></td>
+<td><code>ram-reference-data</code></td>
 <td>Regions, offices, calendar periods, 12 vocabularies (read directly via SQL by other services; written via API)</td>
 </tr>
 <tr>
-<td><code>nji-notification</code></td>
+<td><code>ram-notification</code></td>
 <td>Outbound transactional email (booking / absence acks; JFEPS schedule emails)</td>
 </tr>
 </tbody>
@@ -261,11 +261,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </thead>
 <tbody>
 <tr>
-<td><code>nji-itinerary</code></td>
+<td><code>ram-itinerary</code></td>
 <td>Court + Judge itinerary; Forward Look; SQL JOINs over the shared schema (no own tables)</td>
 </tr>
 <tr>
-<td><code>nji-mi-feed</code></td>
+<td><code>ram-mi-feed</code></td>
 <td>Aggregate reports; DA&amp;I consumer feed (post-MVP); SQL JOINs over the shared schema (no own tables); aggregate-only — no case-level data</td>
 </tr>
 </tbody>
@@ -280,7 +280,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </thead>
 <tbody>
 <tr>
-<td><code>nji-ui</code></td>
+<td><code>ram-ui</code></td>
 <td>Single SPA; per-domain modules; GOV.UK Design System; WCAG 2.2 AA; HMCTS IdP SSO</td>
 </tr>
 </tbody>
@@ -295,7 +295,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </thead>
 <tbody>
 <tr>
-<td><code>nji-mock-auth</code></td>
+<td><code>ram-mock-auth</code></td>
 <td>OIDC issuer for dev / CI / integration environments only — <strong>never deployed to production</strong></td>
 </tr>
 </tbody>
@@ -323,7 +323,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Schema evolution</td>
-<td>Flyway (NJI DDL only)</td>
+<td>Flyway (RAM Pathfinder DDL only)</td>
 </tr>
 <tr>
 <td>Container orchestration</td>
@@ -335,15 +335,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Identity provider</td>
-<td>HMCTS IdP via OIDC <code>authorization_code</code> (production, human users only); <code>nji-mock-auth</code> in dev / CI / integration; JWKS endpoint provides JWT-signature public keys to every NJI service</td>
+<td>HMCTS IdP via OIDC <code>authorization_code</code> (production, human users only); <code>ram-mock-auth</code> in dev / CI / integration; JWKS endpoint provides JWT-signature public keys to every RAM Pathfinder service</td>
 </tr>
 <tr>
 <td>Service-to-service auth</td>
-<td><strong>User-initiated</strong>: JWT propagation via <code>RestClient</code> interceptor (forward inbound user JWT). <strong>Batch / scheduled</strong> (payment batch only at MVP): OAuth <code>client_credentials</code> against <code>nji-mock-auth</code>; production issuer per G7.1 (default recommendation: Azure Workload Identity).</td>
+<td><strong>User-initiated</strong>: JWT propagation via <code>RestClient</code> interceptor (forward inbound user JWT). <strong>Batch / scheduled</strong> (payment batch only at MVP): OAuth <code>client_credentials</code> against <code>ram-mock-auth</code>; production issuer per G7.1 (default recommendation: Azure Workload Identity).</td>
 </tr>
 <tr>
 <td>Per-request auth</td>
-<td>Custom <code>JWTFilter</code> (HMCTS Crime template pattern, <code>io.jsonwebtoken:jjwt</code>) — validates JWT signature against IdP JWKS, then calls <code>nji-authorisation</code> for authz</td>
+<td>Custom <code>JWTFilter</code> (HMCTS Crime template pattern, <code>io.jsonwebtoken:jjwt</code>) — validates JWT signature against IdP JWKS, then calls <code>ram-authorisation</code> for authz</td>
 </tr>
 <tr>
 <td>Secrets</td>
@@ -367,7 +367,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <ul>
 <li>One PostgreSQL Flexible Server instance in UK South. One shared schema. Zone-redundant HA (primary + standby in different AZs; synchronous replication; automatic failover &lt;60 s).</li>
 <li>37 tables: 34 service-owned production + 1 shared infrastructure (<code>configuration_values</code>) + 2 dev-only (mock-auth).</li>
-<li>Per-service DB roles (<code>nji_judge</code>, <code>nji_booking</code>, <code>nji_payment</code>, …) with explicit grants. A service has <code>ALL</code> on its own tables; only the specific grants it needs on others.</li>
+<li>Per-service DB roles (<code>ram_judge</code>, <code>ram_booking</code>, <code>ram_payment</code>, …) with explicit grants. A service has <code>ALL</code> on its own tables; only the specific grants it needs on others.</li>
 <li><strong>Cross-service reads</strong> — direct SQL JOIN using SELECT grants. No caching at MVP.</li>
 <li><strong>Cross-service simple writes</strong> — direct UPDATE on UPDATE-granted columns within the writer's transaction (e.g. Booking writes <code>vacancies.filled</code>).</li>
 <li><strong>Cross-service workflows</strong> — REST API call to the owning service.</li>
@@ -375,33 +375,33 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </ul>
 <p>Full per-table inventory: <a href="./architecture/data-tables.html"><code>./architecture/data-tables.md</code></a>.</p>
 </div></details><details class="section" id="authentication--authorisation"><summary><span class="section-title">Authentication &amp; Authorisation</span></summary><div class="section-body">
-<p>Most runtime requests are user-initiated. The one exception is the payment-processing batch (<code>nji-payment-batch</code>), which runs on a schedule and authenticates as a service principal.</p>
+<p>Most runtime requests are user-initiated. The one exception is the payment-processing batch (<code>ram-payment-batch</code>), which runs on a schedule and authenticates as a service principal.</p>
 <p>The auth flow:</p>
 <ol type="1">
 <li>User authenticates at HMCTS IdP (SSO). IdP issues a JWT.</li>
-<li>User calls <code>nji-ui</code> with the JWT; UI forwards the bearer token through APIM to the target service.</li>
-<li>The service's <code>JWTFilter</code> validates the JWT against HMCTS IdP's JWKS, then calls <code>nji-authorisation</code> for authz scope.</li>
+<li>User calls <code>ram-ui</code> with the JWT; UI forwards the bearer token through APIM to the target service.</li>
+<li>The service's <code>JWTFilter</code> validates the JWT against HMCTS IdP's JWKS, then calls <code>ram-authorisation</code> for authz scope.</li>
 <li>Cross-service calls forward the user's JWT — the upstream service copies the inbound <code>Authorization</code> header onto outbound calls. The downstream <code>JWTFilter</code> validates the same JWT.</li>
 </ol>
 <p>Details:</p>
 <ul>
-<li><strong>End-user authentication</strong> — HMCTS IdP, OIDC <code>authorization_code</code>. SSO. JWT issued. <code>nji-mock-auth</code> (Spring Authorization Server) is the OIDC issuer in non-production. Mock-to-real cutover is a Spring profile change (issuer-url + JWKS URL flip; no code change).</li>
+<li><strong>End-user authentication</strong> — HMCTS IdP, OIDC <code>authorization_code</code>. SSO. JWT issued. <code>ram-mock-auth</code> (Spring Authorization Server) is the OIDC issuer in non-production. Mock-to-real cutover is a Spring profile change (issuer-url + JWKS URL flip; no code change).</li>
 <li><strong>JWT signature validation</strong> — each service's <code>JWTFilter</code> (HMCTS Crime template, <code>io.jsonwebtoken:jjwt</code>) validates signature and issuer using the IdP's JWKS endpoint (<code>/oauth2/jwks</code> on mock; HMCTS IdP's JWKS URL in production). Validation runs before any controller. Public keys cached per the issuer's cache headers.</li>
-<li><strong>End-user authorisation</strong> — after JWT validation, <code>JWTFilter</code> calls <code>POST /authz/check</code> against <code>nji-authorisation</code> for role + Region/Area scope + activation flag (FR58). Result stored in a request-scoped <code>AuthDetails</code> bean.</li>
+<li><strong>End-user authorisation</strong> — after JWT validation, <code>JWTFilter</code> calls <code>POST /authz/check</code> against <code>ram-authorisation</code> for role + Region/Area scope + activation flag (FR58). Result stored in a request-scoped <code>AuthDetails</code> bean.</li>
 <li><strong>JWT propagation (user-initiated cross-service calls)</strong> — the <code>RestClient</code> interceptor copies the inbound <code>Authorization: Bearer &lt;user-jwt&gt;</code> header onto outbound calls. The downstream <code>JWTFilter</code> validates the same JWT.</li>
-<li><strong>Service-principal auth (batch)</strong> — the payment batch authenticates against <code>nji-mock-auth</code> (non-prod) via OAuth <code>client_credentials</code>, then attaches the service JWT to outbound calls (e.g. Notification). Production issuer is deferred (default: Azure Workload Identity — <code>architecture/gaps.md</code> G7.1).</li>
+<li><strong>Service-principal auth (batch)</strong> — the payment batch authenticates against <code>ram-mock-auth</code> (non-prod) via OAuth <code>client_credentials</code>, then attaches the service JWT to outbound calls (e.g. Notification). Production issuer is deferred (default: Azure Workload Identity — <code>architecture/gaps.md</code> G7.1).</li>
 <li><strong>APEX ⇄ IdP reconciliation</strong> — email primary, employee number fallback. Performed by Phase 0 dev/CI scripts and the production ETL.</li>
 </ul>
 <p><strong>MVP non-user-initiated flows:</strong></p>
 <ul>
-<li>Payment batch (<code>nji-payment-batch</code>) — scheduled (e.g. weekly), authenticates as a service principal, picks up confirmed bookings/sittings without payment records, generates the JFEPS Excel, dispatches via Notification → HMCTS Email → Payment Authoriser. Sequence: <a href="./architecture/sequence-diagrams/payment-batch-flow.html"><code>./architecture/sequence-diagrams/payment-batch-flow.md</code></a>.</li>
+<li>Payment batch (<code>ram-payment-batch</code>) — scheduled (e.g. weekly), authenticates as a service principal, picks up confirmed bookings/sittings without payment records, generates the JFEPS Excel, dispatches via Notification → HMCTS Email → Payment Authoriser. Sequence: <a href="./architecture/sequence-diagrams/payment-batch-flow.html"><code>./architecture/sequence-diagrams/payment-batch-flow.md</code></a>.</li>
 </ul>
 <p><strong>Out of scope at MVP:</strong></p>
 <ul>
 <li>Other non-user-initiated flows (more scheduled jobs, async messaging, event bus) — would use the same service-principal pattern.</li>
 <li>DA&amp;I post-MVP MI Feed integration — auth model TBD. See <a href="./architecture/gaps.html"><code>./architecture/gaps.md</code> G7.2</a>.</li>
 <li>Production data migration via operator-initiated ETL — works at MVP; flagged for post-MVP refinement. See <a href="./architecture/gaps.html"><code>./architecture/gaps.md</code> G4.7</a>.</li>
-<li>Production service-auth issuer — <code>nji-mock-auth</code> covers Phase 0–8; deferred per G7.1.</li>
+<li>Production service-auth issuer — <code>ram-mock-auth</code> covers Phase 0–8; deferred per G7.1.</li>
 </ul>
 </div></details><details class="section" id="api-patterns"><summary><span class="section-title">API patterns</span></summary><div class="section-body">
 <table>
@@ -426,7 +426,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>OpenAPI</td>
-<td>Generated via Swagger Core; published per-service as Maven artefacts (<code>uk.gov.hmcts.nji:api-nji-{service}:{version}</code>). The OpenAPI document is the API's contract surface.</td>
+<td>Generated via Swagger Core; published per-service as Maven artefacts (<code>uk.gov.hmcts.ram:api-ram-{service}:{version}</code>). The OpenAPI document is the API's contract surface.</td>
 </tr>
 <tr>
 <td>Pagination</td>
@@ -461,11 +461,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>User request</td>
-<td>User (with JWT) → <code>nji-ui</code> → APIM (rate limits, routing) → service</td>
+<td>User (with JWT) → <code>ram-ui</code> → APIM (rate limits, routing) → service</td>
 </tr>
 <tr>
 <td>Per-request JWT validation</td>
-<td>Each NJI service's <code>JWTFilter</code> validates the inbound JWT signature against <strong>HMCTS IdP's JWKS endpoint</strong> before any controller is invoked</td>
+<td>Each RAM Pathfinder service's <code>JWTFilter</code> validates the inbound JWT signature against <strong>HMCTS IdP's JWKS endpoint</strong> before any controller is invoked</td>
 </tr>
 <tr>
 <td>Cross-service call (within a user request)</td>
@@ -473,11 +473,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Batch / scheduled flow (no user context)</td>
-<td>Batch component (e.g. <code>nji-payment-batch</code>) authenticates as a service principal via OAuth <code>client_credentials</code> against the OIDC issuer (<code>nji-mock-auth</code> non-prod); attaches the resulting service JWT to outbound calls (Notification, etc.); receiving services validate via the same JWKS path. <strong>MVP scope: payment batch only.</strong></td>
+<td>Batch component (e.g. <code>ram-payment-batch</code>) authenticates as a service principal via OAuth <code>client_credentials</code> against the OIDC issuer (<code>ram-mock-auth</code> non-prod); attaches the resulting service JWT to outbound calls (Notification, etc.); receiving services validate via the same JWKS path. <strong>MVP scope: payment batch only.</strong></td>
 </tr>
 <tr>
 <td>Per-request authz</td>
-<td>After JWT validation, the same <code>JWTFilter</code> calls <code>POST /authz/check</code> against <code>nji-authorisation</code></td>
+<td>After JWT validation, the same <code>JWTFilter</code> calls <code>POST /authz/check</code> against <code>ram-authorisation</code></td>
 </tr>
 <tr>
 <td>Reference Data reads</td>
@@ -485,7 +485,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Reference Data writes</td>
-<td>Via <code>nji-reference-data</code> API (admin / Phase 0 seeding)</td>
+<td>Via <code>ram-reference-data</code> API (admin / Phase 0 seeding)</td>
 </tr>
 <tr>
 <td>Cross-service workflow</td>
@@ -501,7 +501,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Outbound email</td>
-<td>Domain service → <code>nji-notification</code> → HMCTS Email → recipient (or, for Payment, → JFEPS via authoriser upload)</td>
+<td>Domain service → <code>ram-notification</code> → HMCTS Email → recipient (or, for Payment, → JFEPS via authoriser upload)</td>
 </tr>
 <tr>
 <td>Configuration</td>
@@ -533,11 +533,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </div></details><details class="section" id="phase-0-data-migration-etl"><summary><span class="section-title">Phase 0 Data Migration ETL</span></summary><div class="section-body">
 <p>A programme deliverable, not a runtime service:</p>
 <ul>
-<li>Lives at <code>nji-architecture/migration/</code>.</li>
-<li>Reads APEX SQL dumps; transforms rows to NJI shape; loads via the Reference Data API and Authorisation API.</li>
+<li>Lives at <code>ram-architecture/migration/</code>.</li>
+<li>Reads APEX SQL dumps; transforms rows to RAM Pathfinder shape; loads via the Reference Data API and Authorisation API.</li>
 <li>Migrates Reference Data and active user records + role/Region-Area scope mappings. No transactional data.</li>
 <li>Re-runs per rollout wave for incremental user activation.</li>
-<li>APEX is the source. NJI's schema is set by NJI design.</li>
+<li>APEX is the source. RAM Pathfinder's schema is set by RAM Pathfinder design.</li>
 </ul>
 </div></details><details class="section" id="external-integrations"><summary><span class="section-title">External integrations</span></summary><div class="section-body">
 <table>
@@ -551,8 +551,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tbody>
 <tr>
 <td>HMCTS IdP</td>
-<td>inbound (human authN only) + JWKS used by NJI services for JWT signature validation</td>
-<td>OIDC <code>authorization_code</code> flow for human users; every NJI service's <code>JWTFilter</code> validates inbound user JWTs against IdP JWKS before allowing access to NJI APIs. <strong>Service-principal token issuance</strong> for the payment batch is handled by <code>nji-mock-auth</code> in non-prod; production decision per G7.1.</td>
+<td>inbound (human authN only) + JWKS used by RAM Pathfinder services for JWT signature validation</td>
+<td>OIDC <code>authorization_code</code> flow for human users; every RAM Pathfinder service's <code>JWTFilter</code> validates inbound user JWTs against IdP JWKS before allowing access to RAM Pathfinder APIs. <strong>Service-principal token issuance</strong> for the payment batch is handled by <code>ram-mock-auth</code> in non-prod; production decision per G7.1.</td>
 </tr>
 <tr>
 <td>HMCTS Email</td>
@@ -607,7 +607,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td><a href="./architecture/data-tables.html"><code>./architecture/data-tables.md</code></a></td>
 </tr>
 <tr>
-<td>HMCTS Crime SpringBoot starter, dependencies, NJI overlay</td>
+<td>HMCTS Crime SpringBoot starter, dependencies, RAM Pathfinder overlay</td>
 <td><a href="./architecture/starter-template.html"><code>./architecture/starter-template.md</code></a></td>
 </tr>
 <tr>

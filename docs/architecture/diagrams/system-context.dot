@@ -1,4 +1,4 @@
-// NJI — System Context (high-level birds-eye view)
+// RAM Pathfinder — System Context (high-level birds-eye view)
 //
 // Render with:
 //   scripts/render_diagram.sh \
@@ -29,7 +29,7 @@
 //   - Dashed arrow = transport / authN / external boundary
 //   - Dotted arrow = non-prod / post-MVP runtime
 
-digraph nji_system_context {
+digraph ram_system_context {
   rankdir=TB;
   compound=true;
   newrank=true;
@@ -42,7 +42,7 @@ digraph nji_system_context {
   fontname="Helvetica";
   fontsize=18;
   labelloc="t";
-  label=<<b>NJI — System Context</b><br/><font point-size="11">High-level service map and key interactions · v2.1 · 2026-05-07</font>>;
+  label=<<b>RAM Pathfinder — System Context</b><br/><font point-size="11">High-level service map and key interactions · v2.1 · 2026-05-07</font>>;
 
   node [fontname="Helvetica", fontsize=10, shape=box, style="filled,rounded", margin="0.18,0.10"];
   edge [fontname="Helvetica", fontsize=9, color="#404040"];
@@ -74,7 +74,7 @@ digraph nji_system_context {
 
   // ============== Tier 2: UI ==============
 
-  ui [label=<<b>nji-ui</b> — SPA · GOV.UK Design System<br/>role-scoped Home + per-domain modules>, fillcolor="#fff4c8"];
+  ui [label=<<b>ram-ui</b> — SPA · GOV.UK Design System<br/>role-scoped Home + per-domain modules>, fillcolor="#fff4c8"];
 
   // ============== Tier 3: Ingress ==============
 
@@ -89,9 +89,9 @@ digraph nji_system_context {
     fontcolor="#1f4f70";
     bgcolor="#eaf3fb";
 
-    authz   [label=<<b>nji-authorisation</b><br/>per-request authz authority<br/>users · roles · region scope · activation>, fillcolor="#cfe6f7"];
-    refdata [label=<<b>nji-reference-data</b><br/>regions · offices · calendar periods<br/>+ 12 vocabularies>, fillcolor="#cfe6f7"];
-    notify  [label=<<b>nji-notification</b><br/>outbound transactional email>, fillcolor="#cfe6f7"];
+    authz   [label=<<b>ram-authorisation</b><br/>per-request authz authority<br/>users · roles · region scope · activation>, fillcolor="#cfe6f7"];
+    refdata [label=<<b>ram-reference-data</b><br/>regions · offices · calendar periods<br/>+ 12 vocabularies>, fillcolor="#cfe6f7"];
+    notify  [label=<<b>ram-notification</b><br/>outbound transactional email>, fillcolor="#cfe6f7"];
 
     // Grid: 1 row × 3 columns
     { rank=same; authz; refdata; notify; }
@@ -106,12 +106,12 @@ digraph nji_system_context {
     fontcolor="#1f5028";
     bgcolor="#eef9f0";
 
-    judge   [label=<<b>nji-judge</b><br/>profiles · working patterns<br/>tickets · jurisdictional split>, fillcolor="#d8eede"];
-    absence [label=<<b>nji-absence</b><br/>absences + approval<br/>triggers vacancy creation>, fillcolor="#d8eede"];
-    vacancy [label=<<b>nji-vacancy</b><br/>cover-required vacancies<br/>filled flag UPDATE-granted to Booking>, fillcolor="#d8eede"];
-    booking [label=<<b>nji-booking</b><br/>fee-paid bookings + verification<br/>row-locks target vacancy in-tx>, fillcolor="#d8eede"];
-    sitting [label=<<b>nji-sitting</b><br/>salaried-judge sittings<br/>verification · AM/PM split>, fillcolor="#d8eede"];
-    payment [label=<<b>nji-payment</b><br/>payments + reconciliation<br/>JFEPS Excel via Notification>, fillcolor="#d8eede"];
+    judge   [label=<<b>ram-judge</b><br/>profiles · working patterns<br/>tickets · jurisdictional split>, fillcolor="#d8eede"];
+    absence [label=<<b>ram-absence</b><br/>absences + approval<br/>triggers vacancy creation>, fillcolor="#d8eede"];
+    vacancy [label=<<b>ram-vacancy</b><br/>cover-required vacancies<br/>filled flag UPDATE-granted to Booking>, fillcolor="#d8eede"];
+    booking [label=<<b>ram-booking</b><br/>fee-paid bookings + verification<br/>row-locks target vacancy in-tx>, fillcolor="#d8eede"];
+    sitting [label=<<b>ram-sitting</b><br/>salaried-judge sittings<br/>verification · AM/PM split>, fillcolor="#d8eede"];
+    payment [label=<<b>ram-payment</b><br/>payments + reconciliation<br/>JFEPS Excel via Notification>, fillcolor="#d8eede"];
 
     // Grid: row 1 = judge, absence, vacancy; row 2 = booking, sitting, payment
     { rank=same; judge; absence; vacancy; }
@@ -130,8 +130,8 @@ digraph nji_system_context {
     fontcolor="#4a1c70";
     bgcolor="#f3e8f9";
 
-    itinerary [label=<<b>nji-itinerary</b><br/>Court + Judge itinerary · Forward Look<br/>SQL JOINs (no own tables)>, fillcolor="#e6d5ed"];
-    mifeed    [label=<<b>nji-mi-feed</b><br/>aggregate reports · DA&amp;I feed<br/>SQL JOINs (no own tables)>, fillcolor="#e6d5ed"];
+    itinerary [label=<<b>ram-itinerary</b><br/>Court + Judge itinerary · Forward Look<br/>SQL JOINs (no own tables)>, fillcolor="#e6d5ed"];
+    mifeed    [label=<<b>ram-mi-feed</b><br/>aggregate reports · DA&amp;I feed<br/>SQL JOINs (no own tables)>, fillcolor="#e6d5ed"];
 
     { rank=same; itinerary; mifeed; }
   }
@@ -139,18 +139,18 @@ digraph nji_system_context {
   // ============== Tier 7: Data ==============
 
   subgraph cluster_data {
-    label=<<b>Data tier</b><br/><font point-size="9">shared by every NJI service via JPA</font>>;
+    label=<<b>Data tier</b><br/><font point-size="9">shared by every RAM Pathfinder service via JPA</font>>;
     style="rounded";
     color="#a06030";
     fontcolor="#6a3a14";
     bgcolor="#fbf3e8";
-    db [label=<<b>PostgreSQL Flexible Server</b><br/>single instance · single shared schema · zone-redundant HA in UK South<br/>37 NJI tables (35 prod + 2 dev-only)>, fillcolor="#f3dfbf"];
+    db [label=<<b>PostgreSQL Flexible Server</b><br/>single instance · single shared schema · zone-redundant HA in UK South<br/>37 RAM Pathfinder tables (35 prod + 2 dev-only)>, fillcolor="#f3dfbf"];
   }
 
   // ============== Side artefacts (no rank constraint — let them float) ==============
 
   subgraph cluster_external {
-    label=<<b>External systems</b><br/><font point-size="9">not co-managed by NJI</font>>;
+    label=<<b>External systems</b><br/><font point-size="9">not co-managed by RAM Pathfinder</font>>;
     style="rounded,dashed";
     color="#808080";
     bgcolor="#f7f7f7";
@@ -167,9 +167,9 @@ digraph nji_system_context {
     jfeps -> dai   [style=invis, weight=200];
   }
 
-  mockauth [label=<<b>nji-mock-auth</b><br/>OIDC issuer (dev/CI/integration only)<br/>NEVER deployed to production>, fillcolor="#f5dede", style="filled,rounded,dashed"];
+  mockauth [label=<<b>ram-mock-auth</b><br/>OIDC issuer (dev/CI/integration only)<br/>NEVER deployed to production>, fillcolor="#f5dede", style="filled,rounded,dashed"];
 
-  // Pin mock-auth on the same row as nji-ui (it is an alternative IdP for non-prod)
+  // Pin mock-auth on the same row as ram-ui (it is an alternative IdP for non-prod)
   { rank=same; ui; mockauth; }
   ui -> mockauth [style=invis, weight=200];
 
@@ -199,7 +199,7 @@ digraph nji_system_context {
   //   - "Read-models → Data tier" subsumes: itinerary→db SQL JOIN,
   //     mifeed→db SQL JOIN aggregate.
   //   - "Cross-cutting → HMCTS Email" subsumes: notify→email SMTP/Graph.
-  //   - "Cross-cutting → HMCTS IdP" subsumes: every NJI service's JWTFilter
+  //   - "Cross-cutting → HMCTS IdP" subsumes: every RAM Pathfinder service's JWTFilter
   //     validating inbound user JWTs against IdP's JWKS endpoint.
   //   - Inter-service auth is via JWT propagation (token forwarding) — the
   //     upstream service copies the inbound Authorization header to its
@@ -215,11 +215,11 @@ digraph nji_system_context {
   users -> ui   [label="HTTPS + JWT"];
   ui    -> apim [label="HTTPS + bearer"];
 
-  // Ingress — APIM is the gateway for user-facing NJI APIs (Domain primarily;
+  // Ingress — APIM is the gateway for user-facing RAM Pathfinder APIs (Domain primarily;
   // Read-models also have a user-facing surface for Itinerary, but that is
   // implicit at this granularity)
   apim -> judge [style=dashed, color="#9090c0", lhead=cluster_domain,
-                 label="user-facing NJI APIs\nrouted via APIM"];
+                 label="user-facing RAM Pathfinder APIs\nrouted via APIM"];
 
   // Cluster-level dependency: Domain services depend on Cross-cutting
   // services for authz, reference data, notifications.
@@ -235,13 +235,13 @@ digraph nji_system_context {
                    label="Read-models federate\nvia SQL JOIN over\nshared schema",
                    color="#7030a0", penwidth=2.0];
 
-  // Cluster-level dependency: every NJI service validates inbound user JWTs
+  // Cluster-level dependency: every RAM Pathfinder service validates inbound user JWTs
   // against HMCTS IdP's JWKS endpoint (via its custom JWTFilter, per the
   // HMCTS Crime template pattern) before the request reaches the controller
   // layer. At MVP all runtime calls are user-initiated and inter-service auth
   // is via JWT propagation — no service principals, no client_credentials.
   authz -> idp [ltail=cluster_xcutting,
-                label="every NJI service validates\nuser JWTs against JWKS\n(human authN only)",
+                label="every RAM Pathfinder service validates\nuser JWTs against JWKS\n(human authN only)",
                 style=dashed, color="#3070a0", constraint=false];
 
   // Cluster-level dependency: Cross-cutting (specifically Notification) sends

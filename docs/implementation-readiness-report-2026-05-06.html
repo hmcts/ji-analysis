@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Implementation Readiness Assessment Report (Re-run) — NJI Documentation</title>
+<title>Implementation Readiness Assessment Report (Re-run) — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="./index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="./index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="./prd.html">PRD (NJI)</a></li>
+<li><a href="./prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="./architecture.html">Architecture (index)</a></li>
 <li><a href="./architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="./architecture/user-types.html">User types</a></li>
 <li><a href="./architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="./architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="./architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="./architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="./architecture/gaps.html">Gaps</a></li>
 <li><a href="./architecture/assumptions.html">Assumptions</a></li>
@@ -188,7 +188,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="implementation-readiness-assessment-report-re-run">Implementation Readiness Assessment Report (Re-run)</h1>
-<p><strong>Date:</strong> 2026-05-06 <strong>Project:</strong> ji-analysis (NJI — New JI) <strong>Supersedes:</strong> the 2026-05-05 readiness report</p>
+<p><strong>Date:</strong> 2026-05-06 <strong>Project:</strong> ji-analysis (RAM Pathfinder — RAM Pathfinder) <strong>Supersedes:</strong> the 2026-05-05 readiness report</p>
 <details class="section" id="what-changed-since-the-previous-run"><summary><span class="section-title">What changed since the previous run</span></summary><div class="section-body">
 <p>The 2026-05-05 readiness report concluded <strong>NEEDS WORK — for downstream artefact generation</strong>, with three of four expected artefacts missing (Architecture, UX, Epics). Since then:</p>
 <ul>
@@ -273,7 +273,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tr>
 <td>Service-to-service auth</td>
 <td>Resolved v2.6 (2026-05-07)</td>
-<td><strong>Two patterns at MVP</strong>: (1) <strong>JWT propagation</strong> for user-initiated flows — outbound calls forward the inbound user JWT; (2) <strong>Service-principal OAuth <code>client_credentials</code></strong> for the <strong>payment-processing batch</strong> (<code>nji-payment-batch</code>) which has no upstream user — non-prod via <code>nji-mock-auth</code> (<code>mock_oauth_clients</code>), production issuer per <code>gaps.md</code> G7.1 (default recommendation: Azure Workload Identity). No mTLS at MVP. <em>(v2.5 had narrowed this to JWT propagation only; v2.6 widened it again to support the batch.)</em></td>
+<td><strong>Two patterns at MVP</strong>: (1) <strong>JWT propagation</strong> for user-initiated flows — outbound calls forward the inbound user JWT; (2) <strong>Service-principal OAuth <code>client_credentials</code></strong> for the <strong>payment-processing batch</strong> (<code>ram-payment-batch</code>) which has no upstream user — non-prod via <code>ram-mock-auth</code> (<code>mock_oauth_clients</code>), production issuer per <code>gaps.md</code> G7.1 (default recommendation: Azure Workload Identity). No mTLS at MVP. <em>(v2.5 had narrowed this to JWT propagation only; v2.6 widened it again to support the batch.)</em></td>
 </tr>
 <tr>
 <td>Log retention</td>
@@ -309,11 +309,11 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <tbody>
 <tr>
 <td>Identity &amp; Authorisation (FR1–FR5)</td>
-<td>Authorisation service + per-service custom JWTFilter (HMCTS template pattern) + OIDC integration for human users (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + JWT propagation interceptor on outbound HTTP clients for user-initiated flows + OAuth <code>client_credentials</code> (via <code>nji-mock-auth</code>) for the payment batch service principal (<code>nji-payment-batch</code>) per v2.6. FR5 (full programmatic service-account directory) remains post-MVP.</td>
+<td>Authorisation service + per-service custom JWTFilter (HMCTS template pattern) + OIDC integration for human users (mock auth in Phase 0–8; real HMCTS IdP from pre-Phase-9) + JWT propagation interceptor on outbound HTTP clients for user-initiated flows + OAuth <code>client_credentials</code> (via <code>ram-mock-auth</code>) for the payment batch service principal (<code>ram-payment-batch</code>) per v2.6. FR5 (full programmatic service-account directory) remains post-MVP.</td>
 </tr>
 <tr>
 <td>Foundational Data Management (FR6–FR9)</td>
-<td>Reference Data and Notification services; direct SQL access to Reference Data tables (no caching at MVP per Principle 2). Configuration: per-service Spring profiles + Key Vault; shared <code>configuration_values</code> infrastructure table (no API) for cross-service policy values, schema-managed by <code>nji-architecture</code> Flyway baseline. <em>(Revised v2.2, 2026-05-07.)</em></td>
+<td>Reference Data and Notification services; direct SQL access to Reference Data tables (no caching at MVP per Principle 2). Configuration: per-service Spring profiles + Key Vault; shared <code>configuration_values</code> infrastructure table (no API) for cross-service policy values, schema-managed by <code>ram-architecture</code> Flyway baseline. <em>(Revised v2.2, 2026-05-07.)</em></td>
 </tr>
 <tr>
 <td>Judge Records &amp; Working Patterns (FR10–FR18)</td>
@@ -337,7 +337,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Payment &amp; Reconciliation (FR41–FR47)</td>
-<td>Payment service (Phase 6) — <strong>scheduled batch</strong> (<code>nji-payment-batch</code>) authenticates as a service principal via OAuth <code>client_credentials</code>, picks up confirmed-but-unpaid bookings/sittings, generates the JFEPS-shaped Excel, dispatches it to the Payment Authoriser via Notification → HMCTS Email; reconciliation marked manually by RSU at MVP (per v2.6 reframing — FR41–45 are batch-driven, not user-initiated). See <code>architecture/sequence-diagrams/payment-batch-flow.md</code>.</td>
+<td>Payment service (Phase 6) — <strong>scheduled batch</strong> (<code>ram-payment-batch</code>) authenticates as a service principal via OAuth <code>client_credentials</code>, picks up confirmed-but-unpaid bookings/sittings, generates the JFEPS-shaped Excel, dispatches it to the Payment Authoriser via Notification → HMCTS Email; reconciliation marked manually by RSU at MVP (per v2.6 reframing — FR41–45 are batch-driven, not user-initiated). See <code>architecture/sequence-diagrams/payment-batch-flow.md</code>.</td>
 </tr>
 <tr>
 <td>Itineraries &amp; Reporting (FR48–FR54)</td>
@@ -388,7 +388,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Maintainability (NFR39–NFR42)</td>
-<td>API-as-Product standards (versioned, OpenAPI spec, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details, <a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a> <code>Deprecation</code> + <a href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a> <code>Sunset</code> for deprecation signalling); per-service deployment unit; <strong>manual UAT scripts per domain service</strong> (FR61 / NFR41 revised 2026-05-06 — APEX-experienced users compare NJI vs APEX side-by-side, sign-off per role per region as wave-cutover gate); Postman collections per phase. <em>(There is no automated APEX-comparison test suite — automated CI tests are unit, integration with Testcontainers, and contract tests only.)</em></td>
+<td>API-as-Product standards (versioned, OpenAPI spec, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details, <a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a> <code>Deprecation</code> + <a href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a> <code>Sunset</code> for deprecation signalling); per-service deployment unit; <strong>manual UAT scripts per domain service</strong> (FR61 / NFR41 revised 2026-05-06 — APEX-experienced users compare RAM Pathfinder vs APEX side-by-side, sign-off per role per region as wave-cutover gate); Postman collections per phase. <em>(There is no automated APEX-comparison test suite — automated CI tests are unit, integration with Testcontainers, and contract tests only.)</em></td>
 </tr>
 </tbody>
 </table>
@@ -403,8 +403,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p>The Architecture's Step 7 surfaces 27 gaps across 6 categories (G1–G6), each with mitigation, fallback, and named owner. None are critical (none block implementation). Most pertinent to this readiness assessment:</p>
 <ul>
 <li><strong>G1.4</strong> confirmed via HMCTS Crime template review (2026-05-06) — Java 25, Spring Boot 4.0.6, Gradle Groovy DSL, Flyway, OpenTelemetry, Logstash, JWTFilter, Lombok, MapStruct, OWASP encoder, JaCoCo, CycloneDX, Swagger Core all present.</li>
-<li><strong>G1.4a</strong> Helm chart not in template baseline; NJI scaffolding script must add.</li>
-<li><strong>G1.4b</strong> Spring Cloud Azure Key Vault not in template baseline; NJI scaffolding script must add.</li>
+<li><strong>G1.4a</strong> Helm chart not in template baseline; RAM Pathfinder scaffolding script must add.</li>
+<li><strong>G1.4b</strong> Spring Cloud Azure Key Vault not in template baseline; RAM Pathfinder scaffolding script must add.</li>
 <li><strong>G6.1–G6.5</strong> Shared-DB topology risks (schema-evolution coordination, single-DB blast radius, cross-region rollout, DB role grant maintenance, Flyway migration versioning across schema boundaries).</li>
 </ul>
 <h3 id="architectures-documented-assumptions-carry-forward">Architecture's documented assumptions (carry forward)</h3>
@@ -456,67 +456,67 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td>Identity &amp; Authorisation (incl. Phase 0 user/role migration)</td>
 <td>FR1–FR5, FR57, FR58</td>
 <td>Phase 0</td>
-<td><code>nji-authorisation</code> repo + per-service <code>JWTFilter</code> + <code>nji-mock-auth</code> repo</td>
+<td><code>ram-authorisation</code> repo + per-service <code>JWTFilter</code> + <code>ram-mock-auth</code> repo</td>
 </tr>
 <tr>
 <td>Reference Data + Notification + shared <code>configuration_values</code> table</td>
 <td>FR6–FR9</td>
 <td>Phase 0</td>
-<td><code>nji-reference-data</code>, <code>nji-notification</code> repos + shared infrastructure table managed by <code>nji-architecture</code> Flyway baseline (no separate configuration service per arch v2.2)</td>
+<td><code>ram-reference-data</code>, <code>ram-notification</code> repos + shared infrastructure table managed by <code>ram-architecture</code> Flyway baseline (no separate configuration service per arch v2.2)</td>
 </tr>
 <tr>
 <td>API Platform + Deployment + Logging</td>
 <td>FR59, FR60, NFR25–NFR28, NFR39, NFR40</td>
 <td>Phase 0</td>
-<td>NJI scaffolding script + per-service Helm + OpenTelemetry config</td>
+<td>RAM Pathfinder scaffolding script + per-service Helm + OpenTelemetry config</td>
 </tr>
 <tr>
 <td>Judge Records &amp; Working Patterns</td>
 <td>FR10–FR18</td>
 <td>Phase 1</td>
-<td><code>nji-judge</code> repo</td>
+<td><code>ram-judge</code> repo</td>
 </tr>
 <tr>
 <td>Absence Workflow</td>
 <td>FR19–FR22</td>
 <td>Phase 2</td>
-<td><code>nji-absence</code> repo</td>
+<td><code>ram-absence</code> repo</td>
 </tr>
 <tr>
 <td>Vacancy &amp; Cover</td>
 <td>FR23–FR28</td>
 <td>Phase 3</td>
-<td><code>nji-vacancy</code> repo</td>
+<td><code>ram-vacancy</code> repo</td>
 </tr>
 <tr>
 <td>Booking Management</td>
 <td>FR29–FR34</td>
 <td>Phase 4</td>
-<td><code>nji-booking</code> repo</td>
+<td><code>ram-booking</code> repo</td>
 </tr>
 <tr>
 <td>Sitting Management</td>
 <td>FR35–FR40</td>
 <td>Phase 5</td>
-<td><code>nji-sitting</code> repo</td>
+<td><code>ram-sitting</code> repo</td>
 </tr>
 <tr>
 <td>Payment &amp; Reconciliation</td>
 <td>FR41–FR47</td>
 <td>Phase 6</td>
-<td><code>nji-payment</code> repo</td>
+<td><code>ram-payment</code> repo</td>
 </tr>
 <tr>
 <td>Itineraries (Court, Judge, Forward Look)</td>
 <td>FR48–FR52</td>
 <td>Phase 7</td>
-<td><code>nji-itinerary</code> repo with SQL-based read model</td>
+<td><code>ram-itinerary</code> repo with SQL-based read model</td>
 </tr>
 <tr>
 <td>Reports + MI Feed</td>
 <td>FR53, FR54</td>
 <td>Phase 8</td>
-<td><code>nji-mi-feed</code> repo with SQL-based read model</td>
+<td><code>ram-mi-feed</code> repo with SQL-based read model</td>
 </tr>
 <tr>
 <td>Real HMCTS IdP Integration</td>
@@ -536,9 +536,9 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <h3 id="pre-emptive-failure-mode-flags-refreshed">Pre-emptive failure-mode flags (refreshed)</h3>
 <p>When epics are authored, watch for:</p>
 <ul>
-<li><strong>Phase 0 cross-cutting epics</strong> (Identity &amp; Authorisation, Reference Data, API Platform) tend to look like technical milestones. Frame them as user-value (e.g. "RSU users can log in to NJI via SSO and see their authorised regions" rather than "Setup SSO").</li>
+<li><strong>Phase 0 cross-cutting epics</strong> (Identity &amp; Authorisation, Reference Data, API Platform) tend to look like technical milestones. Frame them as user-value (e.g. "RSU users can log in to RAM Pathfinder via SSO and see their authorised regions" rather than "Setup SSO").</li>
 <li><strong>Mock-to-real-IdP cutover</strong> belongs in its own pre-Phase-9 epic, not bolted onto Phase 9 rollout.</li>
-<li><strong>Behavioural-parity UAT stories</strong> (FR61 / NFR41 revised 2026-05-06): per-service manual UAT script authoring (under <code>docs/uat/</code>) and per-wave UAT execution belong inside each domain epic, not as a separate technical epic. UAT is performed by APEX-experienced users (RSU, Court, Judge, Clerks, Finance, MI) comparing NJI vs APEX side-by-side; sign-off per role per region is the wave-cutover gate. There is no automated APEX-comparison test work to schedule.</li>
+<li><strong>Behavioural-parity UAT stories</strong> (FR61 / NFR41 revised 2026-05-06): per-service manual UAT script authoring (under <code>docs/uat/</code>) and per-wave UAT execution belong inside each domain epic, not as a separate technical epic. UAT is performed by APEX-experienced users (RSU, Court, Judge, Clerks, Finance, MI) comparing RAM Pathfinder vs APEX side-by-side; sign-off per role per region is the wave-cutover gate. There is no automated APEX-comparison test work to schedule.</li>
 <li><strong>UI replication stories</strong> (per D4) should be co-located with the API stories of the same phase.</li>
 <li><strong>Data migration stories</strong> (Reference Data + Users/Roles) belong in Phase 0; stories should reference the APEX-export → Flyway migration sequence.</li>
 <li><strong>Whitelisted-table grant stories</strong> (per Architecture Principle 1) belong in the table-owning service's epic — when Service B grants Service A access to one of its tables, Service B owns the grant story.</li>

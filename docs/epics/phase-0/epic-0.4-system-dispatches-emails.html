@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Epic 0.4: Notification service is scaffolded and contractually ready — NJI Documentation</title>
+<title>Epic 0.4: Notification service is scaffolded and contractually ready — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="">
-<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../../prd.html">PRD (NJI)</a></li>
+<li><a href="../../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../../architecture.html">Architecture (index)</a></li>
 <li><a href="../../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../../architecture/user-types.html">User types</a></li>
 <li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../../architecture/gaps.html">Gaps</a></li>
 <li><a href="../../architecture/assumptions.html">Assumptions</a></li>
@@ -188,10 +188,10 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <main class="content">
 
 <h1 id="epic-04-notification-service-is-scaffolded-and-contractually-ready">Epic 0.4: Notification service is scaffolded and contractually ready</h1>
-<p><strong>User outcome:</strong> The <code>nji-notification</code> service is deployed with its API contract published, delivery-log table created, SMTP integration to HMCTS email infrastructure configured, and <code>POST /v1/notifications/send</code> endpoint operational. The contract is consumable from Phase 2+ (Absence acknowledgement, Booking acknowledgement) via JWT propagation — the user-initiated flow. Service-token (<code>client_credentials</code>) auth for non-user-initiated callers is <strong>deferred to Phase 6</strong> when <code>nji-payment-batch</code> arrives as the first consumer. <strong>No admin UI in MVP</strong> — the test-send / verification flow happens via Postman during Phase 0 integration testing, not via a deployed UI.</p>
+<p><strong>User outcome:</strong> The <code>ram-notification</code> service is deployed with its API contract published, delivery-log table created, SMTP integration to HMCTS email infrastructure configured, and <code>POST /v1/notifications/send</code> endpoint operational. The contract is consumable from Phase 2+ (Absence acknowledgement, Booking acknowledgement) via JWT propagation — the user-initiated flow. Service-token (<code>client_credentials</code>) auth for non-user-initiated callers is <strong>deferred to Phase 6</strong> when <code>ram-payment-batch</code> arrives as the first consumer. <strong>No admin UI in MVP</strong> — the test-send / verification flow happens via Postman during Phase 0 integration testing, not via a deployed UI.</p>
 <p><strong>Vertical slice:</strong></p>
 <ul>
-<li><code>nji-notification</code> backend service scaffolded (per AR2–AR4)</li>
+<li><code>ram-notification</code> backend service scaffolded (per AR2–AR4)</li>
 <li><code>notification_delivery_log</code> table with service-owned Flyway migration (per AR18)</li>
 <li>SMTP integration with HMCTS email infrastructure (Mailpit in non-prod)</li>
 <li>Retry-on-transient-failure pattern (DB row locking / optimistic locking per AR21 — no custom idempotency tables)</li>
@@ -205,35 +205,35 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Key NFRs:</strong> NFR12 (JWT propagation for user-initiated), NFR15 (delivery log = audit), NFR22 (HMCTS email infrastructure), NFR25–NFR28 (observability), NFR39 (API-as-Product), NFR42 (Postman)</p>
 <p><strong>Out of scope for Phase 0 (deferred to other phases):</strong></p>
 <ul>
-<li>OAuth <code>client_credentials</code> flow for batch / scheduled callers — <strong>deferred to Phase 6</strong> (the flow is established alongside <code>nji-payment-batch</code>, the first non-user-initiated consumer; was Story 0.4.3 in the prior plan, now moved out of Phase 0)</li>
+<li>OAuth <code>client_credentials</code> flow for batch / scheduled callers — <strong>deferred to Phase 6</strong> (the flow is established alongside <code>ram-payment-batch</code>, the first non-user-initiated consumer; was Story 0.4.3 in the prior plan, now moved out of Phase 0)</li>
 <li>Admin "Send Test Email" UI utility — <strong>deferred post-MVP</strong> (no admin UI in MVP per the 2026-05-15 scope decision; was Story 0.4.4 in the prior plan, removed)</li>
 <li>Delivery-log viewer UI — <strong>deferred post-MVP</strong> (Postman queries cover the gap during integration testing in MVP)</li>
 </ul>
 <hr />
-<h2 id="story-041-scaffold-nji-notification-service--delivery-log-table--smtp-integration">Story 0.4.1: Scaffold <code>nji-notification</code> service + delivery log table + SMTP integration</h2>
-<p>As a <strong>platform engineer</strong>, I want to scaffold <code>nji-notification</code> following the established pattern, create the delivery log table via Flyway, and configure SMTP integration with HMCTS email infrastructure, So that <strong>downstream phases</strong> (Phase 2 absence ack, Phase 4 booking ack, Phase 6 payment schedule) <strong>can dispatch transactional emails</strong> via a consistent contract from day one of consuming them.</p>
+<h2 id="story-041-scaffold-ram-notification-service--delivery-log-table--smtp-integration">Story 0.4.1: Scaffold <code>ram-notification</code> service + delivery log table + SMTP integration</h2>
+<p>As a <strong>platform engineer</strong>, I want to scaffold <code>ram-notification</code> following the established pattern, create the delivery log table via Flyway, and configure SMTP integration with HMCTS email infrastructure, So that <strong>downstream phases</strong> (Phase 2 absence ack, Phase 4 booking ack, Phase 6 payment schedule) <strong>can dispatch transactional emails</strong> via a consistent contract from day one of consuming them.</p>
 <p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> the engineer has manually pre-created the private GitHub repo <code>nji-notification</code> with branch protection on <code>main</code> via the GitHub web UI (per <code>nji-architecture/runbooks/github-setup.md</code>; the <code>gh</code> CLI is <strong>not</strong> available — see Story 0.1.1 for the canonical manual-setup pattern)<br/><strong>And</strong> runs <code>nji-scaffold.sh nji-notification</code><br/><strong>When</strong> the scaffold completes<br/><strong>Then</strong> the new repo has the same baseline as Stories 0.1.1 / 0.2.1 (Spring Boot 4, Helm chart, GitHub Actions, Actuator, structured logs, OpenAPI tooling, Spectral, ArchUnit, Spotless, Checkstyle, Pact, Postman)<br/><strong>And</strong> Group ID is <code>uk.gov.hmcts.nji</code>, artefact is <code>nji-notification</code>, package is <code>uk.gov.hmcts.nji.notification</code>, default port is 8082<br/><strong>And</strong> initial commit is <em>"Scaffold NJI notification from HMCTS starter"</em> (per AR4).</p>
-<p><strong>Given</strong> the engineer adds Flyway migration <code>V1__init_notification_schema.sql</code><br/><strong>When</strong> the migration runs<br/><strong>Then</strong> a <code>notification_delivery_log</code> table exists with columns: <code>id</code> (UUID PK), <code>template_id</code>, <code>recipient</code>, <code>payload</code> (JSONB), <code>status</code> (queued / sending / sent / failed / dead-lettered), <code>attempt_count</code>, <code>last_attempt_at</code>, <code>last_error</code>, <code>created_at</code>, <code>sent_at</code>, <code>created_by_principal</code> (the IdP principal that initiated the send — for audit), <code>version</code> (for <code>@Version</code> optimistic locking per AR21)<br/><strong>And</strong> <code>nji_notification</code> DB role owns the table<br/><strong>And</strong> the schema is documented in <code>architecture/data-tables.md</code>.</p>
+<p><strong>Given</strong> the engineer has manually pre-created the private GitHub repo <code>ram-notification</code> with branch protection on <code>main</code> via the GitHub web UI (per <code>ram-architecture/runbooks/github-setup.md</code>; the <code>gh</code> CLI is <strong>not</strong> available — see Story 0.1.1 for the canonical manual-setup pattern)<br/><strong>And</strong> runs <code>ram-scaffold.sh ram-notification</code><br/><strong>When</strong> the scaffold completes<br/><strong>Then</strong> the new repo has the same baseline as Stories 0.1.1 / 0.2.1 (Spring Boot 4, Helm chart, GitHub Actions, Actuator, structured logs, OpenAPI tooling, Spectral, ArchUnit, Spotless, Checkstyle, Pact, Postman)<br/><strong>And</strong> Group ID is <code>uk.gov.hmcts.ram</code>, artefact is <code>ram-notification</code>, package is <code>uk.gov.hmcts.ram.notification</code>, default port is 8082<br/><strong>And</strong> initial commit is <em>"Scaffold RAM Pathfinder notification from HMCTS starter"</em> (per AR4).</p>
+<p><strong>Given</strong> the engineer adds Flyway migration <code>V1__init_notification_schema.sql</code><br/><strong>When</strong> the migration runs<br/><strong>Then</strong> a <code>notification_delivery_log</code> table exists with columns: <code>id</code> (UUID PK), <code>template_id</code>, <code>recipient</code>, <code>payload</code> (JSONB), <code>status</code> (queued / sending / sent / failed / dead-lettered), <code>attempt_count</code>, <code>last_attempt_at</code>, <code>last_error</code>, <code>created_at</code>, <code>sent_at</code>, <code>created_by_principal</code> (the IdP principal that initiated the send — for audit), <code>version</code> (for <code>@Version</code> optimistic locking per AR21)<br/><strong>And</strong> <code>ram_notification</code> DB role owns the table<br/><strong>And</strong> the schema is documented in <code>architecture/data-tables.md</code>.</p>
 <p><strong>Given</strong> the engineer configures SMTP<br/><strong>When</strong> the service starts in dev profile<br/><strong>Then</strong> SMTP settings are loaded from Spring profiles + Azure Key Vault (per AR25, NFR16)<br/><strong>And</strong> in non-prod environments a SMTP mock (Mailpit container in docker-compose) intercepts outbound mail<br/><strong>And</strong> in production the configuration points to HMCTS email infrastructure (per NFR22).</p>
 <p><strong>Given</strong> the service is deployed to dev AKS<br/><strong>When</strong> <code>/actuator/health</code> is queried<br/><strong>Then</strong> the response is <code>200 OK</code> with SMTP health-check status<br/><strong>And</strong> the response includes a degraded status if SMTP is unreachable.</p>
 <p><strong>References:</strong> FR9, FR8 (consumes <code>configuration_values</code> for rate-limit policy), FR59, FR60; NFR16, NFR22, NFR25–NFR28, NFR40; AR2–AR22.</p>
 <hr />
 <h2 id="story-042-post-v1notificationssend-endpoint-with-jwt-propagation-retry-semantics-delivery-logging-rfc-9457-errors">Story 0.4.2: <code>POST /v1/notifications/send</code> endpoint with JWT propagation, retry semantics, delivery logging, RFC 9457 errors</h2>
-<p>As a <strong>calling service</strong> (Phase 2 Absence flow, Phase 4 Booking flow — both user-initiated), I want a <code>POST /v1/notifications/send</code> endpoint that accepts a template + recipient + payload, validates the caller's user JWT, persists a delivery log entry, dispatches via SMTP with retry on transient failure, and returns RFC 9457 errors on validation failure, So that <strong>transactional email dispatch is a single, observable, retry-safe contract</strong> (per FR9, NFR22) that the user-initiated downstream phases consume consistently. The OAuth <code>client_credentials</code> flow for non-user-initiated callers (batch / scheduled) is <strong>out of scope for Phase 0</strong> — it will be added in Phase 6 when <code>nji-payment-batch</code> arrives.</p>
+<p>As a <strong>calling service</strong> (Phase 2 Absence flow, Phase 4 Booking flow — both user-initiated), I want a <code>POST /v1/notifications/send</code> endpoint that accepts a template + recipient + payload, validates the caller's user JWT, persists a delivery log entry, dispatches via SMTP with retry on transient failure, and returns RFC 9457 errors on validation failure, So that <strong>transactional email dispatch is a single, observable, retry-safe contract</strong> (per FR9, NFR22) that the user-initiated downstream phases consume consistently. The OAuth <code>client_credentials</code> flow for non-user-initiated callers (batch / scheduled) is <strong>out of scope for Phase 0</strong> — it will be added in Phase 6 when <code>ram-payment-batch</code> arrives.</p>
 <p><strong>Acceptance Criteria:</strong></p>
-<p><strong>Given</strong> <code>nji-notification</code> is deployed per Story 0.4.1<br/><strong>When</strong> the engineer implements the send endpoint<br/><strong>Then</strong> <code>POST /v1/notifications/send</code> accepts a body with <code>{templateId, recipient, payload}</code> where <code>payload</code> is a JSON object<br/><strong>And</strong> the endpoint is protected by <code>JWTFilter</code> and accepts user JWTs from the SSO/IdP (per NFR12 — JWT propagation for user-initiated calls; the caller is a downstream NJI service that has propagated the user's token)<br/><strong>And</strong> the caller's role is checked against the template's permitted-callers list (e.g. only <code>RSU</code> and <code>system-admin</code> may send <code>absence-ack</code> template in MVP)<br/><strong>And</strong> on a valid request, the endpoint inserts a row in <code>notification_delivery_log</code> with status <code>queued</code> and the user's principal in <code>created_by_principal</code>, then returns <code>202 Accepted</code> with <code>{deliveryId, status}</code>.</p>
+<p><strong>Given</strong> <code>ram-notification</code> is deployed per Story 0.4.1<br/><strong>When</strong> the engineer implements the send endpoint<br/><strong>Then</strong> <code>POST /v1/notifications/send</code> accepts a body with <code>{templateId, recipient, payload}</code> where <code>payload</code> is a JSON object<br/><strong>And</strong> the endpoint is protected by <code>JWTFilter</code> and accepts user JWTs from the SSO/IdP (per NFR12 — JWT propagation for user-initiated calls; the caller is a downstream RAM Pathfinder service that has propagated the user's token)<br/><strong>And</strong> the caller's role is checked against the template's permitted-callers list (e.g. only <code>RSU</code> and <code>system-admin</code> may send <code>absence-ack</code> template in MVP)<br/><strong>And</strong> on a valid request, the endpoint inserts a row in <code>notification_delivery_log</code> with status <code>queued</code> and the user's principal in <code>created_by_principal</code>, then returns <code>202 Accepted</code> with <code>{deliveryId, status}</code>.</p>
 <p><strong>Given</strong> a worker (in-process Spring <code>@Scheduled</code> task picking <code>queued</code> rows with <code>FOR UPDATE SKIP LOCKED</code> per AR21) processes queued rows<br/><strong>When</strong> the worker picks a row<br/><strong>Then</strong> it transitions to <code>sending</code><br/><strong>And</strong> invokes SMTP send<br/><strong>And</strong> on success transitions to <code>sent</code> with <code>sent_at</code> populated<br/><strong>And</strong> on transient failure increments <code>attempt_count</code>, populates <code>last_error</code>, and resets status to <code>queued</code> (retry budget: 5 attempts at exponential backoff)<br/><strong>And</strong> on exhausted retry budget transitions to <code>dead-lettered</code> with <code>last_error</code> retained for inspection.</p>
 <p><strong>Given</strong> an invalid request body reaches the send endpoint<br/><strong>When</strong> validation fails (missing template, invalid recipient, payload schema mismatch)<br/><strong>Then</strong> the response is <code>400 Bad Request</code> with RFC 9457 problem-details including field-level errors (per AR37)<br/><strong>And</strong> no delivery log row is created.</p>
 <p><strong>Given</strong> an unauthenticated request reaches the send endpoint<br/><strong>When</strong> the JWT is missing or invalid<br/><strong>Then</strong> the response is <code>401 Unauthorized</code> with RFC 9457 problem-details<br/><strong>And</strong> no delivery log row is created.</p>
-<p><strong>Given</strong> a request arrives with a service-principal JWT (from <code>client_credentials</code> flow)<br/><strong>When</strong> the JWTFilter validates the token<br/><strong>Then</strong> the request is <strong>rejected</strong> at Phase 0 with <code>403 Forbidden</code> and an RFC 9457 body explaining "service-principal callers are not in scope until Phase 6 (<code>nji-payment-batch</code> arrives). Use user JWT propagation for Phase 2+ user-initiated flows."<br/><strong>And</strong> the rejection is logged with the client identifier for visibility.</p>
+<p><strong>Given</strong> a request arrives with a service-principal JWT (from <code>client_credentials</code> flow)<br/><strong>When</strong> the JWTFilter validates the token<br/><strong>Then</strong> the request is <strong>rejected</strong> at Phase 0 with <code>403 Forbidden</code> and an RFC 9457 body explaining "service-principal callers are not in scope until Phase 6 (<code>ram-payment-batch</code> arrives). Use user JWT propagation for Phase 2+ user-initiated flows."<br/><strong>And</strong> the rejection is logged with the client identifier for visibility.</p>
 <p><strong>Given</strong> a <code>GET /v1/notifications/delivery-log</code> endpoint is added<br/><strong>When</strong> the caller is authenticated with a <code>system-admin</code> role<br/><strong>Then</strong> the response returns paginated delivery log entries with filters (recipient, status, date range, principal)<br/><strong>And</strong> non-admin callers get <code>403 Forbidden</code> with RFC 9457.</p>
-<p><strong>Given</strong> the OpenAPI spec is regenerated<br/><strong>When</strong> <code>uk.gov.hmcts.nji:api-nji-notification:1.0.0</code> is published<br/><strong>Then</strong> Spectral lint passes<br/><strong>And</strong> the spec documents the send + delivery-log endpoints<br/><strong>And</strong> the spec explicitly annotates "service-principal auth deferred to v2 (Phase 6) — Phase 0 / 1 only accept user-JWT".</p>
-<p><strong>Given</strong> a Postman collection is published<br/><strong>When</strong> <code>postman/nji-notification-phase0.postman_collection.json</code> runs in CI<br/><strong>Then</strong> it covers happy path + 400 + 401 + 403 (admin-only) + 403 (service-principal rejected pre-Phase-6) + retry behaviour (via a fault-injection test endpoint, removable post-Phase-0)<br/><strong>And</strong> Phase 0 manual integration test consists of: open Postman → authenticate as test user → POST send → poll delivery-log until <code>sent</code> → open Mailpit → verify rendered email. (No admin UI for this flow in MVP per the 2026-05-15 scope decision.)</p>
+<p><strong>Given</strong> the OpenAPI spec is regenerated<br/><strong>When</strong> <code>uk.gov.hmcts.ram:api-ram-notification:1.0.0</code> is published<br/><strong>Then</strong> Spectral lint passes<br/><strong>And</strong> the spec documents the send + delivery-log endpoints<br/><strong>And</strong> the spec explicitly annotates "service-principal auth deferred to v2 (Phase 6) — Phase 0 / 1 only accept user-JWT".</p>
+<p><strong>Given</strong> a Postman collection is published<br/><strong>When</strong> <code>postman/ram-notification-phase0.postman_collection.json</code> runs in CI<br/><strong>Then</strong> it covers happy path + 400 + 401 + 403 (admin-only) + 403 (service-principal rejected pre-Phase-6) + retry behaviour (via a fault-injection test endpoint, removable post-Phase-0)<br/><strong>And</strong> Phase 0 manual integration test consists of: open Postman → authenticate as test user → POST send → poll delivery-log until <code>sent</code> → open Mailpit → verify rendered email. (No admin UI for this flow in MVP per the 2026-05-15 scope decision.)</p>
 <p><strong>References:</strong> FR9, FR59, FR60; NFR12, NFR13, NFR15, NFR22, NFR25, NFR28, NFR39, NFR42; AR17, AR21, AR34, AR37, AR38, AR41.</p>
 <p><strong>Explicitly NOT in scope (deferred to other phases):</strong></p>
 <ul>
-<li>OAuth <code>client_credentials</code> flow for batch / scheduled callers — <strong>moved to Phase 6</strong> alongside <code>nji-payment-batch</code> (was Story 0.4.3 in the prior plan)</li>
+<li>OAuth <code>client_credentials</code> flow for batch / scheduled callers — <strong>moved to Phase 6</strong> alongside <code>ram-payment-batch</code> (was Story 0.4.3 in the prior plan)</li>
 <li>Admin "Send Test Email" UI — <strong>deferred post-MVP</strong> (was Story 0.4.4)</li>
 <li>Delivery-log viewer UI — <strong>deferred post-MVP</strong> (Postman covers the gap)</li>
 </ul>

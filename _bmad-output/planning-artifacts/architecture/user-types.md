@@ -9,13 +9,13 @@ sources:
 
 # User Types
 
-> Sibling of [`../architecture.md`](../architecture.md). The as-is JI catalogue (`docs/architecture/asis/JI user types - 2.xlsx`, Feb 2026 snapshot) is authoritative for the role taxonomy. NJI carries these access types over 1:1; this document is the binding taxonomy reference for `nji-authorisation`, the Phase 0 user migration (D9), and the per-phase manual UAT scripts (FR61). Authentication is owned by HMCTS IdP (FR1); role + Region/Area mapping and effective-permission lookup live in `nji-authorisation` (FR2, FR3). See [`./sequence-diagrams/user-authentication-and-authorisation.md`](./sequence-diagrams/user-authentication-and-authorisation.md) for the call path.
+> Sibling of [`../architecture.md`](../architecture.md). The as-is JI catalogue (`docs/architecture/asis/JI user types - 2.xlsx`, Feb 2026 snapshot) is authoritative for the role taxonomy. RAM Pathfinder carries these access types over 1:1; this document is the binding taxonomy reference for `ram-authorisation`, the Phase 0 user migration (D9), and the per-phase manual UAT scripts (FR61). Authentication is owned by HMCTS IdP (FR1); role + Region/Area mapping and effective-permission lookup live in `ram-authorisation` (FR2, FR3). See [`./sequence-diagrams/user-authentication-and-authorisation.md`](./sequence-diagrams/user-authentication-and-authorisation.md) for the call path.
 >
 > **Baseline capability for every access type:** access to standard reports. The capability lists below add to this baseline rather than repeat it.
 
 ## At a glance
 
-NJI inherits **17 application access types** across four groups, plus **1 configuration entry** (Payment Authoriser) that is not an application access type. The as-is catalogue records **2,818 active users** as of Feb 2026.
+RAM Pathfinder inherits **17 application access types** across four groups, plus **1 configuration entry** (Payment Authoriser) that is not an application access type. The as-is catalogue records **2,818 active users** as of Feb 2026.
 
 | Group | Access types | Active users (Feb 2026) |
 |---|---|---|
@@ -109,10 +109,10 @@ Regional user with elevated administrative powers.
 **Capabilities:**
 
 1. All capabilities of Regional (Full Access).
-2. Send user-creation requests to the Advice Point (operational process to create new NJI users for the region).
+2. Send user-creation requests to the Advice Point (operational process to create new RAM Pathfinder users for the region).
 3. Re-open verified sittings / bookings (FR40, MVP-only privileged action). Mandatory justification, must differ from original confirmer (SIT-NFR-02), fully audited.
 
-> Q11 from the xlsx (whether Regional Admin should create users directly without an external operational process) is parked as an NJI design question. See [`./gaps.md`](./gaps.md).
+> Q11 from the xlsx (whether Regional Admin should create users directly without an external operational process) is parked as an RAM Pathfinder design question. See [`./gaps.md`](./gaps.md).
 
 ### Regional (Full Access) — 68 active users
 
@@ -157,7 +157,7 @@ Verifier access at Regional scope.
 2. Verify confirmed sittings for all courts in the region.
 3. Verify confirmed bookings for all courts in the region.
 
-> Q12 from the xlsx (national-level access): no national-level access type exists in the as-is catalogue except Finance. All other roles are scoped by Region/Area or by judge linkage. Recorded for NJI parity.
+> Q12 from the xlsx (national-level access): no national-level access type exists in the as-is catalogue except Finance. All other roles are scoped by Region/Area or by judge linkage. Recorded for RAM Pathfinder parity.
 
 ## Judicial access types
 
@@ -185,7 +185,7 @@ Clerk to a salaried judge, acting on the judge's behalf.
 
 1. Same capability surface as Judge, but exercised on behalf of the linked judge(s).
 
-> Q7 from the xlsx (whether Judge's Clerk differs from Judge): the as-is catalogue records them as functionally identical from an access-control standpoint — the only distinction is *which* judge's record(s) the principal is linked to. NJI maintains the separation for audit clarity (the Clerk acts on someone else's behalf).
+> Q7 from the xlsx (whether Judge's Clerk differs from Judge): the as-is catalogue records them as functionally identical from an access-control standpoint — the only distinction is *which* judge's record(s) the principal is linked to. RAM Pathfinder maintains the separation for audit clarity (the Clerk acts on someone else's behalf).
 
 ### Presiding Judge — 2 active users
 
@@ -197,7 +197,7 @@ Leadership judge with oversight of a group of judges (typically a Circuit's sala
 
 1. Same capability surface as Judge, exercised across all judges under their leadership.
 
-> Q9 from the xlsx (why so few users): low headcount is structurally expected — there are very few presiding judges nationally. No NJI design implication.
+> Q9 from the xlsx (why so few users): low headcount is structurally expected — there are very few presiding judges nationally. No RAM Pathfinder design implication.
 
 ### Presiding Judge's Clerk — 0 active users
 
@@ -209,7 +209,7 @@ Clerk to a Presiding Judge.
 
 1. Same capability surface as Presiding Judge, exercised on behalf of the linked Presiding Judge.
 
-> **No active users in the as-is catalogue (Feb 2026).** Retained in the NJI taxonomy for as-is parity (Q6 confirmed). The access type is provisioned but currently unused. Whether to retire it is an operational decision deferred to post-MVP review.
+> **No active users in the as-is catalogue (Feb 2026).** Retained in the RAM Pathfinder taxonomy for as-is parity (Q6 confirmed). The access type is provisioned but currently unused. Whether to retire it is an operational decision deferred to post-MVP review.
 
 ### Judge Itin View Only — 107 active users
 
@@ -259,33 +259,33 @@ Users within HMCTS finance who generate JFEPS payment schedules.
 
 ## Payment Authoriser (configuration, not an access type)
 
-The Payment Authoriser is **not an NJI application access type**. It is a **configuration entry** — the addressable identity (name + email) to whom Finance-generated JFEPS payment schedules are emailed for forwarding to Liberata.
+The Payment Authoriser is **not an RAM Pathfinder application access type**. It is a **configuration entry** — the addressable identity (name + email) to whom Finance-generated JFEPS payment schedules are emailed for forwarding to Liberata.
 
-**Modelling in NJI:**
+**Modelling in RAM Pathfinder:**
 
 1. Stored as configuration, not as an authenticated principal.
 2. The list of valid Payment Authoriser recipients is administrable (Phase 0 design decision: most likely the shared `configuration_values` infrastructure table or an admin-maintained reference list — to be finalised in the Payment service's design).
 3. Finance users select a Payment Authoriser from this list when generating a payment schedule (FR43).
-4. The recipient does **not** log into NJI. They receive the JFEPS Excel by email and forward it to Liberata out-of-system (D6, unchanged from APEX).
-5. The 2 individuals recorded against this entry in the as-is catalogue (Feb 2026) are tracked operationally but are not migrated as NJI users in Phase 0 (D9).
+4. The recipient does **not** log into RAM Pathfinder. They receive the JFEPS Excel by email and forward it to Liberata out-of-system (D6, unchanged from APEX).
+5. The 2 individuals recorded against this entry in the as-is catalogue (Feb 2026) are tracked operationally but are not migrated as RAM Pathfinder users in Phase 0 (D9).
 
 ## Administrative / cross-cutting roles
 
-These are not user-facing access types in the as-is catalogue; they are NJI-specific permissions overlaid on the taxonomy above.
+These are not user-facing access types in the as-is catalogue; they are RAM Pathfinder-specific permissions overlaid on the taxonomy above.
 
 | Role | Capabilities | Mapped to as-is access type | Key FRs |
 |---|---|---|---|
-| **System Administrator** | (1) Create users. (2) Update role and Region/Area assignments for migrated and new users. (3) Manage per-user activation flags for per-region rollout (FR58). | New in NJI — partially overlaps with Regional (Admin)'s Advice-Point request capability. | FR4, FR58 |
+| **System Administrator** | (1) Create users. (2) Update role and Region/Area assignments for migrated and new users. (3) Manage per-user activation flags for per-region rollout (FR58). | New in RAM Pathfinder — partially overlaps with Regional (Admin)'s Advice-Point request capability. | FR4, FR58 |
 | **Re-opener** *(permission, not a separate role at MVP)* | (1) Re-open a verified sitting via the UI re-open action. (2) Must be different from the original confirmer (SIT-NFR-02). (3) Captures mandatory justification. (4) Fully audited. | Granted to **Regional (Admin)** only at MVP. | FR40 |
 | **Reference Data Owner** *(business role overlaid on Regional)* | (1) Named-owner sign-off on Reference Data list changes (FR6). (2) Sign-off on Phase 0 ETL migration of in-scope lists. | Overlaid on Regional (Admin) / Regional (Full Access). | FR6, Phase 0 D3 |
 
 ## Authorisation model (summary)
 
-- **Authentication:** HMCTS IdP via OIDC `authorization_code` (FR1). NJI does not own password, session, or account lifecycle.
-- **Authorisation state:** `nji-authorisation` owns `auth_users`, `auth_roles`, `auth_user_roles`, `auth_user_region_scopes`, `auth_user_activation_flags`. Authoritative table ownership is recorded in [`./data-tables.md`](./data-tables.md).
+- **Authentication:** HMCTS IdP via OIDC `authorization_code` (FR1). RAM Pathfinder does not own password, session, or account lifecycle.
+- **Authorisation state:** `ram-authorisation` owns `auth_users`, `auth_roles`, `auth_user_roles`, `auth_user_region_scopes`, `auth_user_activation_flags`. Authoritative table ownership is recorded in [`./data-tables.md`](./data-tables.md).
 - **Enforcement:** every API call resolves principal → role(s) + Region/Area scope through Authorisation; implemented as per-service middleware (FR2). Effective-permission lookup is `POST /authz/check` (FR3).
-- **Phase 0 migration:** active APEX users + role/Region-Area scope assignments are loaded into NJI via the Authorisation API and mapped to IdP principals (D9, Risk #14). Unmatched records get an explicit decision — drop / hold / manual map. Zero ambiguous migrations.
-- **Per-user activation flag:** rollout gating uses `auth_user_activation_flags` (FR58) — migrated users do not use APEX; non-migrated users do not use NJI (D8).
+- **Phase 0 migration:** active APEX users + role/Region-Area scope assignments are loaded into RAM Pathfinder via the Authorisation API and mapped to IdP principals (D9, Risk #14). Unmatched records get an explicit decision — drop / hold / manual map. Zero ambiguous migrations.
+- **Per-user activation flag:** rollout gating uses `auth_user_activation_flags` (FR58) — migrated users do not use APEX; non-migrated users do not use RAM Pathfinder (D8).
 - **Verifier separation of duties:** confirmation and verification of sittings/bookings must be performed by different principals — enforced at the application tier on the sitting/booking row's `confirmed_by` field. Re-open enforces a similar constraint (FR40).
 
 ## Manual UAT mapping (FR61)
@@ -308,6 +308,6 @@ Each domain service has a manual UAT script walked by APEX-experienced users fro
 - `docs/architecture/asis/JI user types - 2.xlsx` — authoritative as-is catalogue (Feb 2026)
 - [`../prd.md`](../prd.md) — *Target users*, *User Journeys*, FR1–FR5, FR40, FR58, FR61
 - [`./sequence-diagrams/user-authentication-and-authorisation.md`](./sequence-diagrams/user-authentication-and-authorisation.md) — authn / authz call path
-- [`./data-tables.md`](./data-tables.md) — `nji-authorisation` table inventory
+- [`./data-tables.md`](./data-tables.md) — `ram-authorisation` table inventory
 - [`./gaps.md`](./gaps.md) — open questions inherited from the as-is catalogue
 - [`./functional-requirements-coverage.md`](./functional-requirements-coverage.md) — per-FR architectural coverage

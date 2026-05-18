@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MI Feed / Reports consumption — NJI Documentation</title>
+<title>MI Feed / Reports consumption — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../../prd.html">PRD (NJI)</a></li>
+<li><a href="../../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../../architecture.html">Architecture (index)</a></li>
 <li><a href="../../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference">
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference">
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../../architecture/user-types.html">User types</a></li>
 <li><a href="../../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams" data-current="true" open>
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams" data-current="true" open>
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../../architecture/gaps.html">Gaps</a></li>
 <li><a href="../../architecture/assumptions.html">Assumptions</a></li>
@@ -188,20 +188,20 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <main class="content">
 <div class="section-controls"><span class="label">Sections:</span><button data-section-action="expand">Expand all</button><button data-section-action="collapse">Collapse all</button></div>
 <h1 id="mi-feed--reports-consumption">MI Feed / Reports consumption</h1>
-<p>Sequence diagram of how aggregate management-information is consumed from <code>nji-mi-feed</code>, by two distinct actors:</p>
+<p>Sequence diagram of how aggregate management-information is consumed from <code>ram-mi-feed</code>, by two distinct actors:</p>
 <ol type="1">
-<li><strong>Internal MI / Reporting users</strong> — at MVP, open the Reports module in <code>nji-ui</code>, pick a standard report (utilisation, sitting analysis, jurisdictional split, etc.), apply parameter filters, render results, and export to Excel or PDF.</li>
+<li><strong>Internal MI / Reporting users</strong> — at MVP, open the Reports module in <code>ram-ui</code>, pick a standard report (utilisation, sitting analysis, jurisdictional split, etc.), apply parameter filters, render results, and export to Excel or PDF.</li>
 <li><strong>External DA&amp;I consumer</strong> — post-MVP, calls the MI Feed REST API directly as a service principal to ingest aggregate data into their own pipelines, replacing today's manual export-and-transform chain.</li>
 </ol>
-<p>Both paths hit the same backend (<code>nji-mi-feed</code>) and are bound by the <strong>same aggregate-only contract</strong>: no case-level data anywhere in the response, ever (REP-BR-NFR-03 / FR54 / NFR23). This contract is the most important architectural invariant in the read-model layer — it bounds FOI scope (NFR33), protects against the data-scope concerns flagged in the PRD, and is enforced both at the schema level (no case-level columns exist in any NJI table that MI Feed reads from) and at the API-contract level (no case-level field in any response shape).</p>
-<p><code>nji-mi-feed</code> holds <strong>no own tables</strong> — it SQL-JOINs aggregates from the shared schema, the same Strategy A pattern as <code>nji-itinerary</code> (<a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>), but with aggregation projections rather than per-record cells.</p>
-<p>The as-is equivalents are Module 12 <em>Reports</em> in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a> and Integration Flow 7 <em>Management Information &amp; Reporting (JI → DA&amp;I)</em> in <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>. The as-is flow is export-and-transform (Excel/PDF copied out of JI, transformed in DA&amp;I); the NJI MI Feed API is the post-MVP replacement.</p>
+<p>Both paths hit the same backend (<code>ram-mi-feed</code>) and are bound by the <strong>same aggregate-only contract</strong>: no case-level data anywhere in the response, ever (REP-BR-NFR-03 / FR54 / NFR23). This contract is the most important architectural invariant in the read-model layer — it bounds FOI scope (NFR33), protects against the data-scope concerns flagged in the PRD, and is enforced both at the schema level (no case-level columns exist in any RAM Pathfinder table that MI Feed reads from) and at the API-contract level (no case-level field in any response shape).</p>
+<p><code>ram-mi-feed</code> holds <strong>no own tables</strong> — it SQL-JOINs aggregates from the shared schema, the same Strategy A pattern as <code>ram-itinerary</code> (<a href="./itinerary-federated-read.html"><code>./itinerary-federated-read.md</code></a>), but with aggregation projections rather than per-record cells.</p>
+<p>The as-is equivalents are Module 12 <em>Reports</em> in <a href="../../../../docs/architecture/asis/functional-modules.html"><code>../../../docs/architecture/asis/functional-modules.md</code></a> and Integration Flow 7 <em>Management Information &amp; Reporting (JI → DA&amp;I)</em> in <a href="../../../../docs/architecture/asis/integration-dependencies.html"><code>../../../docs/architecture/asis/integration-dependencies.md</code></a>. The as-is flow is export-and-transform (Excel/PDF copied out of JI, transformed in DA&amp;I); the RAM Pathfinder MI Feed API is the post-MVP replacement.</p>
 <p>Three phases: (1) internal MI user runs a report; (2) post-MVP external DA&amp;I consumer calls the same API; (3) shared aggregation + contract enforcement.</p>
 <details class="section" id="not-in-this-diagram"><summary><span class="section-title">Not in this diagram</span></summary><div class="section-body">
 <ul>
 <li><strong>External consumer onboarding</strong> (service-principal credential issuance, OAuth scopes, rate-limit policy assignment) — programme-management activity, not a runtime flow.</li>
 <li><strong>MI Feed cache</strong> — none at MVP per architecture Principle 2. Considered if NFR8-like measurement shows reports breaching ≤ 30 s.</li>
-<li><strong>Tribunals data extension</strong> — flagged as a strategic gap in <a href="../../../../docs/architecture/asis/data-dependencies.html"><code>../../../docs/architecture/asis/data-dependencies.md</code></a> and the as-is Reports module; out of scope for NJI MVP.</li>
+<li><strong>Tribunals data extension</strong> — flagged as a strategic gap in <a href="../../../../docs/architecture/asis/data-dependencies.html"><code>../../../docs/architecture/asis/data-dependencies.md</code></a> and the as-is Reports module; out of scope for RAM Pathfinder MVP.</li>
 <li><strong>Per-report parameter validation detail</strong> — varies per report; handled by the controller as standard request validation. Not drawn.</li>
 </ul>
 </div></details><details class="section" id="cross-cutting-steps-omitted-for-clarity"><summary><span class="section-title">Cross-cutting steps omitted for clarity</span></summary><div class="section-body">
@@ -226,7 +226,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <td>1 — Internal MI user runs a report</td>
 <td>MI / Reporting User</td>
 <td>FR53 — fixed catalogue of standard reports with parameter filters per report. Region/Office/judge-type/date-range scoped per FR49 / R2.</td>
-<td>Tabular report rendered in <code>nji-ui</code>; copy/export to Excel or PDF via FR52</td>
+<td>Tabular report rendered in <code>ram-ui</code>; copy/export to Excel or PDF via FR52</td>
 </tr>
 <tr>
 <td>2 — External DA&amp;I consumer calls MI Feed API (post-MVP)</td>
@@ -236,7 +236,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>3 — Shared aggregation + contract enforcement</td>
-<td><code>nji-mi-feed</code> (no own tables)</td>
+<td><code>ram-mi-feed</code> (no own tables)</td>
 <td>Principle 1 + 2 — SQL JOIN over the shared schema with aggregation projections; <strong>no case-level data in any response shape</strong> (REP-BR-NFR-03 / FR54 / NFR23); contract enforced at schema (no case-level columns) and at API shape (no case-level fields)</td>
 <td>Aggregated result with no case-level identifiers; serialised per content-type negotiation (JSON for API; Excel/PDF for internal export)</td>
 </tr>
@@ -252,7 +252,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </thead>
 <tbody>
 <tr>
-<td><code>nji-mi-feed</code> repo purpose and key functions (no own tables — SQL JOINs)</td>
+<td><code>ram-mi-feed</code> repo purpose and key functions (no own tables — SQL JOINs)</td>
 <td><a href="../repository-strategy.html"><code>../repository-strategy.md</code></a> Phase 8 row</td>
 </tr>
 <tr>
@@ -265,7 +265,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </tr>
 <tr>
 <td>Reports UI module structure</td>
-<td><a href="../repo-structure.html"><code>../repo-structure.md</code> → <code>nji-ui/src/modules/reports/</code></a></td>
+<td><a href="../repo-structure.html"><code>../repo-structure.md</code> → <code>ram-ui/src/modules/reports/</code></a></td>
 </tr>
 <tr>
 <td>Service-principal auth for external consumers (open question; pre-Phase-9 decision)</td>

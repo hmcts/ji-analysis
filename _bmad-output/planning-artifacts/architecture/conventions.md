@@ -17,11 +17,11 @@ This document is the consistency contract for the 11 services and the UI. Patter
 
 **Database (PostgreSQL):**
 
-- **Schema:** single shared schema (e.g. `nji` or default `public`). All NJI tables live in this schema. Per-service DB roles enforce write boundaries; the team that writes the Flyway migration owns the table.
+- **Schema:** single shared schema (e.g. `ram` or default `public`). All RAM Pathfinder tables live in this schema. Per-service DB roles enforce write boundaries; the team that writes the Flyway migration owns the table.
 - **Tables:** `snake_case`, plural. Two naming variants:
   - **Primary domain entities** use entity-plural without prefix. Full inventory in [`./data-tables.md`](./data-tables.md). Owner is unambiguous from the inventory.
   - **Service-internal or potentially-ambiguous tables** use service-prefix: `payment_reconciliations`, `notification_dispatches`, `auth_user_roles`, `auth_user_region_scopes`. Use the prefix when the table name alone wouldn't disclose its owner, or when there's a credible risk of collision.
-- **Authoritative ownership mapping** is documented in [`./data-tables.md`](./data-tables.md) (table-ownership table maps every NJI table → owning service-role). The team that authors the Flyway migration is the owning team.
+- **Authoritative ownership mapping** is documented in [`./data-tables.md`](./data-tables.md) (table-ownership table maps every RAM Pathfinder table → owning service-role). The team that authors the Flyway migration is the owning team.
 - **Fitness function in CI** verifies: (a) no two services' Flyway migrations create overlapping table names; (b) DB role grants align with the documented ownership; (c) tables not in the ownership mapping are flagged.
 - **Columns:** `snake_case` — `id`, `created_at`, `updated_at`, `payroll_number`, `is_active`.
 - **Primary keys:** `id`, type `uuid`. UUIDs avoid integer-range coupling and "guess the next ID" patterns. Cost over bigint is negligible at this scale. PK generation detail in [`../architecture.md`](../architecture.md) → *Data Architecture*.
@@ -43,7 +43,7 @@ This document is the consistency contract for the 11 services and the UI. Patter
 
 **Java code:**
 
-- **Package:** `uk.gov.hmcts.nji.{service}.{layer}` — e.g. `uk.gov.hmcts.nji.judge.controller`, `uk.gov.hmcts.nji.booking.service`.
+- **Package:** `uk.gov.hmcts.ram.{service}.{layer}` — e.g. `uk.gov.hmcts.ram.judge.controller`, `uk.gov.hmcts.ram.booking.service`.
 - **Classes:** `PascalCase` — `Judge`, `JudgeController`, `JudgeService`, `JudgeRepository`, `JudgeNotFoundException`.
 - **Methods / fields:** `camelCase` — `getJudgeById`, `firstName`, `isActive`.
 - **Constants:** `SCREAMING_SNAKE_CASE` — `MAX_BOOKING_DAYS_PER_VACANCY`, `DEFAULT_PESSIMISTIC_LOCK_TIMEOUT_MS`.
@@ -64,15 +64,15 @@ This document is the consistency contract for the 11 services and the UI. Patter
 **Per-service Java structure (Spring Boot conventional, no shared parent):**
 
 ```
-nji-{service}/
-├── src/main/java/uk/gov/hmcts/nji/{service}/
+ram-{service}/
+├── src/main/java/uk/gov/hmcts/ram/{service}/
 │   ├── {Service}Application.java       (Spring Boot @SpringBootApplication)
 │   ├── controller/                     (REST controllers, @RestController)
 │   ├── service/                        (business logic, @Service)
 │   ├── repository/                     (Spring Data JPA, @Repository)
 │   ├── domain/                         (entities + value objects, @Entity)
 │   ├── dto/                            (request/response DTOs)
-│   ├── client/                         (clients to other NJI services)
+│   ├── client/                         (clients to other RAM Pathfinder services)
 │   ├── config/                         (Spring config: JWTFilter, AuthDetails, OpenAPI Swagger Core)
 │   ├── error/                          (RFC 9457 ControllerAdvice, problem-detail factories)
 │   └── exception/                      (domain exceptions extending base classes)
@@ -80,10 +80,10 @@ nji-{service}/
 │   ├── application.yml                 (defaults)
 │   ├── application-{profile}.yml       (dev/staging/production overrides)
 │   └── db/migration/                   (Flyway V1__init.sql, V2__add_x.sql, ...)
-├── src/test/java/uk/gov/hmcts/nji/{service}/
+├── src/test/java/uk/gov/hmcts/ram/{service}/
 │   └── {layer}/                        (mirrors src/main package layout — unit + integration tests)
 ├── docs/
-│   └── uat/                            (manual UAT scripts: APEX-vs-NJI behavioural-parity walkthroughs per FR61 / NFR41 revised)
+│   └── uat/                            (manual UAT scripts: APEX-vs-RAM Pathfinder behavioural-parity walkthroughs per FR61 / NFR41 revised)
 ├── helm/                                (Kubernetes Helm chart)
 ├── postman/                             (Postman collections per phase)
 ├── build.gradle                     (Gradle Groovy DSL (per HMCTS template))
@@ -91,12 +91,12 @@ nji-{service}/
 └── README.md                            (service-specific docs)
 ```
 
-> Full per-service / UI / `nji-architecture` directory trees with the inventory of every file: see [`./repo-structure.md`](./repo-structure.md).
+> Full per-service / UI / `ram-architecture` directory trees with the inventory of every file: see [`./repo-structure.md`](./repo-structure.md).
 
 **UI repo structure (single repo, modules per domain):**
 
 ```
-nji-ui/
+ram-ui/
 ├── src/
 │   ├── main.tsx                         (entry point)
 │   ├── App.tsx                          (router root + auth wrapper)
@@ -185,7 +185,7 @@ nji-ui/
 **Inter-service authentication at MVP — two patterns:**
 
 1. **JWT propagation (token forwarding)** — for **user-initiated** flows (the majority at MVP). The user's JWT (issued by HMCTS IdP at SSO) is the relevant security context end-to-end. Inter-service calls forward that JWT as-is.
-2. **Service-principal authentication (OAuth `client_credentials`)** — for **batch / scheduled** components without an upstream user. The MVP-relevant case is `nji-payment-batch`.
+2. **Service-principal authentication (OAuth `client_credentials`)** — for **batch / scheduled** components without an upstream user. The MVP-relevant case is `ram-payment-batch`.
 
 **JWT propagation (token forwarding) — for user-initiated flows:**
 
@@ -199,12 +199,12 @@ nji-ui/
 
 **Service-principal authentication (for batch / scheduled components):**
 
-The MVP-relevant case is the **payment-processing batch** (`nji-payment-batch`), which runs on a schedule and has no upstream user context. It uses OAuth `client_credentials`:
+The MVP-relevant case is the **payment-processing batch** (`ram-payment-batch`), which runs on a schedule and has no upstream user context. It uses OAuth `client_credentials`:
 
-- **Client registration**: a service-principal entry exists in the OIDC issuer's client store. In non-prod that's `mock_oauth_clients` on `nji-mock-auth`; in production it's whichever issuer is chosen per [`./gaps.md` G7.1](./gaps.md) (default recommendation: Azure Workload Identity, which substitutes managed-identity tokens for client-secret-based ones).
+- **Client registration**: a service-principal entry exists in the OIDC issuer's client store. In non-prod that's `mock_oauth_clients` on `ram-mock-auth`; in production it's whichever issuer is chosen per [`./gaps.md` G7.1](./gaps.md) (default recommendation: Azure Workload Identity, which substitutes managed-identity tokens for client-secret-based ones).
 - **Token acquisition**: at run start (or on token expiry), the batch component does `POST /oauth2/token` with `grant_type=client_credentials`. Spring Boot 4's `OAuth2AuthorizedClientManager` handles caching + refresh.
 - **Outbound calls**: the resulting service JWT is attached as `Authorization: Bearer …` to outbound HTTP calls (e.g. to the Notification API). The receiving service's `JWTFilter` validates it via the same JWKS path used for human user JWTs — same code path; only the principal's "kind" claim differs.
-- **Authorisation**: service principals have records in `auth_users` with a kind flag (e.g. `principal_kind = service`) distinguishing them from humans. `nji-authorisation` resolves their permissions the same way as human users.
+- **Authorisation**: service principals have records in `auth_users` with a kind flag (e.g. `principal_kind = service`) distinguishing them from humans. `ram-authorisation` resolves their permissions the same way as human users.
 - **Scheduling**: implementation choice between Spring `@Scheduled` (in-process; runs inside the same JVM as the synchronous service API) and a Kubernetes CronJob (separate pod; scales independently). Either is acceptable at MVP — the batch's external observable behaviour is the same.
 
 **Correlation ID propagation:**
@@ -263,7 +263,7 @@ The MVP-relevant case is the **payment-processing batch** (`nji-payment-batch`),
 - Integration tests: `*IT.java`, Testcontainers for PostgreSQL, run on every commit.
 - Contract tests (Pact or equivalent): per-consumer / per-provider, run on every commit.
 - E2E tests (UI): Playwright, one suite per phase, run as a phase gate.
-- **Manual UAT — APEX-vs-NJI behavioural parity (FR61 / NFR41 revised 2026-05-06):** scripted walkthroughs maintained under `docs/uat/` per service. Performed by APEX-experienced users (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, MI) opening APEX side-by-side with NJI, comparing behaviour for the workflows + edge cases the script enumerates, and signing off per role per region. Sign-off is the wave-cutover gate; there is no automated APEX-comparison harness in CI.
+- **Manual UAT — APEX-vs-RAM Pathfinder behavioural parity (FR61 / NFR41 revised 2026-05-06):** scripted walkthroughs maintained under `docs/uat/` per service. Performed by APEX-experienced users (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, MI) opening APEX side-by-side with RAM Pathfinder, comparing behaviour for the workflows + edge cases the script enumerates, and signing off per role per region. Sign-off is the wave-cutover gate; there is no automated APEX-comparison harness in CI.
 - **Coverage target:** behaviour coverage, not line coverage. PRs include behaviour-test rationale, not coverage stats.
 
 **Logging conventions (per HMCTS Crime template):**
@@ -285,14 +285,14 @@ The MVP-relevant case is the **payment-processing batch** (`nji-payment-batch`),
 
 ## Enforcement Guidelines
 
-**All NJI services MUST:**
+**All RAM Pathfinder services MUST:**
 
 - Use the HMCTS Crime SpringBoot template as scaffold (per [`./starter-template.md`](./starter-template.md)) and customise per service.
-- Follow the package layout `uk.gov.hmcts.nji.{service}.{layer}`.
+- Follow the package layout `uk.gov.hmcts.ram.{service}.{layer}`.
 - Use Gradle Groovy DSL (per HMCTS Crime SpringBoot template) with Gradle Wrapper.
 - Implement RFC 9457 errors via per-service `@ControllerAdvice` (no shared library).
-- Implement Authorisation enforcement via per-service custom `JWTFilter` + `AuthDetails` request-scoped bean (HMCTS template pattern); the filter calls NJI Authorisation per request to resolve role + Region/Area scope (NJI variance from template's claims-only approach — required by FR58).
-- Generate OpenAPI 3.x specs via Swagger Core; publish per-service spec as a Maven artefact (`uk.gov.hmcts.nji:api-nji-{service}:{version}`).
+- Implement Authorisation enforcement via per-service custom `JWTFilter` + `AuthDetails` request-scoped bean (HMCTS template pattern); the filter calls RAM Pathfinder Authorisation per request to resolve role + Region/Area scope (RAM Pathfinder variance from template's claims-only approach — required by FR58).
+- Generate OpenAPI 3.x specs via Swagger Core; publish per-service spec as a Maven artefact (`uk.gov.hmcts.ram:api-ram-{service}:{version}`).
 - Emit structured JSON logs (Logstash encoder) with correlation IDs; export traces via OpenTelemetry.
 - Use Flyway migrations in `src/main/resources/db/migration/` (per HMCTS Crime SpringBoot template).
 - Use Lombok and MapStruct (per HMCTS Crime SpringBoot template) for boilerplate reduction and DTO/entity mapping.
@@ -310,7 +310,7 @@ The MVP-relevant case is the **payment-processing batch** (`nji-payment-batch`),
 | **CI lint** | Spotless + Checkstyle (Java); ESLint + Prettier (TypeScript); SQL formatting via SQLFluff. Build fails on violation. |
 | **ArchUnit fitness functions** | Per-service ArchUnit tests enforce package layout, dependency rules, naming conventions. Run as part of unit-test suite. |
 | **Consumer-driven contract tests (Pact)** | Verify API conventions are honoured between consumers and providers. |
-| **OpenAPI lint (Spectral)** | OpenAPI specs validated against an NJI-specific ruleset (consistent error envelope, versioning prefix, RFC 9457 references). |
+| **OpenAPI lint (Spectral)** | OpenAPI specs validated against an RAM Pathfinder-specific ruleset (consistent error envelope, versioning prefix, RFC 9457 references). |
 | **JaCoCo + CycloneDX** | Code coverage reports + SBOM generation per HMCTS Crime template. Build emits artefacts for security/audit review. |
 
 **When patterns evolve:**

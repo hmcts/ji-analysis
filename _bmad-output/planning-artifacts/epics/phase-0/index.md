@@ -40,19 +40,19 @@ Phase 0 stories reduce from 18 → 11. Phase 0 epics still number 4.
 
 ### Epic 0.1: User authenticates and lands on a role-scoped Home page (5 stories, unchanged scope)
 
-**User outcome:** A judicial user (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, or MI/Reporting user) opens NJI, signs in via SSO, has their roles and Region/Area scope resolved by `nji-authorisation`'s **read-only** API, and lands on a Home page showing the navigation and tiles they're authorised to see.
+**User outcome:** A judicial user (RSU, Court, Judge, Judges' Clerks, Finance/Payment Authoriser, or MI/Reporting user) opens RAM Pathfinder, signs in via SSO, has their roles and Region/Area scope resolved by `ram-authorisation`'s **read-only** API, and lands on a Home page showing the navigation and tiles they're authorised to see.
 
 **FRs covered:** FR1, FR2, FR3, FR55, FR56 (business stack portion)
 
 **Key NFRs first exercised here:** NFR10, NFR11, NFR12, NFR13, NFR15, NFR16, NFR17–NFR19 (business UI WCAG), NFR20, NFR25–NFR28, NFR31, NFR40
 
-**2026-05-15 change:** Story 0.1.3 reworded slightly to make explicit that `nji-authorisation` is read-only — its planned admin write endpoints (was Story 0.3.1 in the prior plan) are removed from MVP. The auth tables are still created here in Phase 0 — they're populated by Epic 0.3's SQL ETL.
+**2026-05-15 change:** Story 0.1.3 reworded slightly to make explicit that `ram-authorisation` is read-only — its planned admin write endpoints (was Story 0.3.1 in the prior plan) are removed from MVP. The auth tables are still created here in Phase 0 — they're populated by Epic 0.3's SQL ETL.
 
 → [Full epic with stories](epic-0.1-user-authenticates.md)
 
 ### Epic 0.2: Reference data is SQL-loaded and served read-only (3 stories, was 5)
 
-**User outcome:** Reference Data (Regions, Offices, judicial vocabularies, calendar / financial-year boundaries) is loaded into NJI via a direct-SQL ETL with named-owner sign-off, and is queryable read-only by downstream NJI services via a versioned REST API. Named owners approve via versioned git commits — **no admin UI** in MVP.
+**User outcome:** Reference Data (Regions, Offices, judicial vocabularies, calendar / financial-year boundaries) is loaded into RAM Pathfinder via a direct-SQL ETL with named-owner sign-off, and is queryable read-only by downstream RAM Pathfinder services via a versioned REST API. Named owners approve via versioned git commits — **no admin UI** in MVP.
 
 **FRs covered (Phase 0 surface):** FR7, FR57 (Reference Data portion via SQL), FR59, FR60
 
@@ -66,7 +66,7 @@ Phase 0 stories reduce from 18 → 11. Phase 0 epics still number 4.
 
 ### Epic 0.3: Users, roles, and activation flags are SQL-loaded (1 story, was 4)
 
-**User outcome:** Active APEX users and their role/Region/Area assignments are loaded into the NJI Authorisation tables via a direct-SQL ETL, with named-owner sign-off and explicit handling of unmatched records via versioned CSV decision files. Per-region activation flags are initialised all-FALSE and flipped per region during Phase 9+ cutover via direct SQL. **No admin UI.**
+**User outcome:** Active APEX users and their role/Region/Area assignments are loaded into the RAM Pathfinder Authorisation tables via a direct-SQL ETL, with named-owner sign-off and explicit handling of unmatched records via versioned CSV decision files. Per-region activation flags are initialised all-FALSE and flipped per region during Phase 9+ cutover via direct SQL. **No admin UI.**
 
 **FRs covered (Phase 0 surface):** FR57 (Users/Roles portion via SQL), FR58 (initial flag state via ETL)
 
@@ -80,13 +80,13 @@ Phase 0 stories reduce from 18 → 11. Phase 0 epics still number 4.
 
 ### Epic 0.4: Notification service is scaffolded and contractually ready (2 stories, was 4)
 
-**User outcome:** `nji-notification` is deployed with its API contract published, delivery log table created, SMTP integration configured, and `POST /v1/notifications/send` working. The contract is consumable from Phase 2+ via **user-JWT propagation**. Integration testing in MVP happens via Postman — **no admin UI**.
+**User outcome:** `ram-notification` is deployed with its API contract published, delivery log table created, SMTP integration configured, and `POST /v1/notifications/send` working. The contract is consumable from Phase 2+ via **user-JWT propagation**. Integration testing in MVP happens via Postman — **no admin UI**.
 
 **FRs covered:** FR9
 
 **Key NFRs:** NFR12 (JWT propagation), NFR15, NFR22, NFR25–NFR28, NFR39, NFR42
 
-**2026-05-15 change:** Story 0.4.3 (OAuth `client_credentials` flow) **moved to Phase 6** — that's when `nji-payment-batch` arrives as the first non-user-initiated consumer that needs it. Story 0.4.4 (admin "Send Test Email" UI) **removed**, deferred post-MVP — Postman covers the integration-test gap.
+**2026-05-15 change:** Story 0.4.3 (OAuth `client_credentials` flow) **moved to Phase 6** — that's when `ram-payment-batch` arrives as the first non-user-initiated consumer that needs it. Story 0.4.4 (admin "Send Test Email" UI) **removed**, deferred post-MVP — Postman covers the integration-test gap.
 
 → [Full epic with stories](epic-0.4-system-dispatches-emails.md)
 
@@ -106,18 +106,18 @@ Phase 0 stories reduce from 18 → 11. Phase 0 epics still number 4.
 
 The following surfaces were removed from Phase 0 / MVP and now sit on the post-MVP roadmap:
 
-1. **`nji-admin-ui` repo** — scaffolding + auth wrapper + GOV.UK Design System admin theme
-2. **Reference Data admin module** in `nji-admin-ui` — list/edit/create flows with named-owner sign-off workflow
-3. **Users & Roles admin module** in `nji-admin-ui` — search, edit roles, edit Region/Area scope, toggle activation flag
-4. **Migration Reports admin module** in `nji-admin-ui` — view reconciliation reports, apply decisions to unmatched records, sign off via UI
+1. **`ram-admin-ui` repo** — scaffolding + auth wrapper + GOV.UK Design System admin theme
+2. **Reference Data admin module** in `ram-admin-ui` — list/edit/create flows with named-owner sign-off workflow
+3. **Users & Roles admin module** in `ram-admin-ui` — search, edit roles, edit Region/Area scope, toggle activation flag
+4. **Migration Reports admin module** in `ram-admin-ui` — view reconciliation reports, apply decisions to unmatched records, sign off via UI
 5. **Reference Data API write endpoints** — `POST/PUT/PATCH/DELETE`, admin-gated
-6. **`nji-authorisation` admin write endpoints** — `PUT /v1/admin/users/{id}/roles`, `PUT /v1/admin/users/{id}/region-scopes`, `PUT /v1/admin/users/{id}/activation`
-7. **Admin "Send Test Email" UI** in `nji-admin-ui`
+6. **`ram-authorisation` admin write endpoints** — `PUT /v1/admin/users/{id}/roles`, `PUT /v1/admin/users/{id}/region-scopes`, `PUT /v1/admin/users/{id}/activation`
+7. **Admin "Send Test Email" UI** in `ram-admin-ui`
 8. **Delivery-log viewer UI**
 
 What's NOT in this post-MVP list (because it migrated out of Phase 0 to a different MVP phase rather than post-MVP):
 
-- **OAuth `client_credentials` flow** for batch / scheduled callers — moved to **Phase 6** alongside `nji-payment-batch`. Still MVP, just later.
+- **OAuth `client_credentials` flow** for batch / scheduled callers — moved to **Phase 6** alongside `ram-payment-batch`. Still MVP, just later.
 
 ## Validation
 

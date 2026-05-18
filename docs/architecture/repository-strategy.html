@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Repository Strategy & List — NJI Documentation</title>
+<title>Repository Strategy & List — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../architecture.html">Architecture (index)</a></li>
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference" data-current="true" open>
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference" data-current="true" open>
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html">User types</a></li>
 <li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/non-functional-requirements-coverage.html">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../architecture/gaps.html">Gaps</a></li>
 <li><a href="../architecture/assumptions.html">Assumptions</a></li>
@@ -193,7 +193,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </blockquote>
 <h2 id="repository-strategy-polyrepo">Repository Strategy: Polyrepo</h2>
 <p><strong>Decision:</strong> 11 service repos + 1 mock-auth repo + 2 UI repos (business + admin) + 1 architecture/scaffolding repo. No monorepo, no Gradle root project.</p>
-<p>A monorepo would either share <code>build.gradle</code> config (breaks no-shared-coupling), coordinate releases (breaks per-region phased rollout independence), or add Bazel-style hermetic build complexity that NJI's requirements don't need.</p>
+<p>A monorepo would either share <code>build.gradle</code> config (breaks no-shared-coupling), coordinate releases (breaks per-region phased rollout independence), or add Bazel-style hermetic build complexity that RAM Pathfinder's requirements don't need.</p>
 <p>Polyrepo gives each service its own repo, pipeline, release cadence, CODEOWNERS, branch protection, and review policy. What stays cross-repo: API contracts (OpenAPI specs), the architecture documents and ADRs, the scaffolding script, the Phase 0 Data Migration ETL.</p>
 <h2 id="repository-list">Repository List</h2>
 <table>
@@ -207,98 +207,98 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </thead>
 <tbody>
 <tr>
-<td><strong><code>nji-architecture</code></strong></td>
+<td><strong><code>ram-architecture</code></strong></td>
 <td>0</td>
 <td>Architecture index + siblings, ADRs, scaffolding script, <strong>Phase 0 Data Migration ETL</strong> under <code>migration/</code>.</td>
-<td>Maintain architecture docs and ADRs; generate new service repos via <code>nji-scaffold.sh</code>; run the APEX → NJI ETL via NJI APIs; produce reconciliation reports.</td>
+<td>Maintain architecture docs and ADRs; generate new service repos via <code>ram-scaffold.sh</code>; run the APEX → RAM Pathfinder ETL via RAM Pathfinder APIs; produce reconciliation reports.</td>
 </tr>
 <tr>
-<td><strong><code>nji-mock-auth</code></strong></td>
+<td><strong><code>ram-mock-auth</code></strong></td>
 <td>0</td>
 <td>OIDC issuer for dev / CI / integration (human users <strong>and</strong> batch service principals). <strong>Never deployed to production.</strong></td>
-<td>Issue JWTs via OIDC <code>authorization_code</code> for human users; <strong>issue service tokens via OAuth <code>client_credentials</code></strong> for batch components (initially <code>nji-payment-batch</code>); refuse to start with <code>production</code> profile (G5.3).</td>
+<td>Issue JWTs via OIDC <code>authorization_code</code> for human users; <strong>issue service tokens via OAuth <code>client_credentials</code></strong> for batch components (initially <code>ram-payment-batch</code>); refuse to start with <code>production</code> profile (G5.3).</td>
 </tr>
 <tr>
-<td><strong><code>nji-reference-data</code></strong></td>
+<td><strong><code>ram-reference-data</code></strong></td>
 <td>0</td>
 <td>Owns the 15 Reference Data tables.</td>
 <td>CRUD for <code>regions</code> / <code>offices</code> / <code>calendar_periods</code> and the 12 vocabulary tables; accept Phase 0 ETL writes; reads happen via direct SQL by other services.</td>
 </tr>
 <tr>
-<td><strong><code>nji-authorisation</code></strong></td>
+<td><strong><code>ram-authorisation</code></strong></td>
 <td>0</td>
 <td>Owns the 5 Authorisation tables; <strong>the per-request authz authority</strong>.</td>
 <td>Manage <code>auth_users</code>, the 12 <code>auth_roles</code>, <code>auth_user_roles</code>, <code>auth_user_region_scopes</code>, <code>auth_user_activation_flags</code>; expose <code>POST /authz/check</code>; enforce per-region phased activation (FR58); reconcile principals to HMCTS IdP by email + employee number (D9).</td>
 </tr>
 <tr>
-<td><strong><code>nji-notification</code></strong></td>
+<td><strong><code>ram-notification</code></strong></td>
 <td>0</td>
 <td>Outbound transactional email dispatch.</td>
 <td>Send booking ack (FR32) / absence ack / JFEPS-shaped payment-schedule emails (FR43); record dispatch log; retry on transient failure.</td>
 </tr>
 <tr>
-<td><strong><code>nji-judge</code></strong></td>
+<td><strong><code>ram-judge</code></strong></td>
 <td>1</td>
 <td>Judge profile + working patterns + tickets + jurisdictional split.</td>
 <td>CRUD judge profiles (FR10, FR11); manage working patterns (FR12); generate forward sittings; manage tickets (FR15); jurisdictional splits with 100% sum constraint (FR16).</td>
 </tr>
 <tr>
-<td><strong><code>nji-absence</code></strong></td>
+<td><strong><code>ram-absence</code></strong></td>
 <td>2</td>
 <td>Absence records + approval workflow.</td>
 <td>Create / approve / NTBF-flag / sickness-extend (FR19–FR22); on approval, call Vacancy to create cover-required vacancies (R4); send acknowledgements via Notification.</td>
 </tr>
 <tr>
-<td><strong><code>nji-vacancy</code></strong></td>
+<td><strong><code>ram-vacancy</code></strong></td>
 <td>3</td>
 <td>Cover-requirement records + per-day breakdown.</td>
 <td>Create vacancies (FR23, FR24); manage <code>vacancy_days</code> (FR25); accept <code>filled</code> / <code>filled_at</code> UPDATEs from Booking.</td>
 </tr>
 <tr>
-<td><strong><code>nji-booking</code></strong></td>
+<td><strong><code>ram-booking</code></strong></td>
 <td>4</td>
 <td>Fee-paid bookings + verification.</td>
 <td>Create / verify / cancel fee-paid bookings (FR29, FR31); within the booking transaction, mark the target vacancy as filled (R5, Principle 1); retry-safe via native DB primitives (see <a href="../architecture.html"><code>../architecture.md</code></a> → <em>Data Architecture</em>).</td>
 </tr>
 <tr>
-<td><strong><code>nji-sitting</code></strong></td>
+<td><strong><code>ram-sitting</code></strong></td>
 <td>5</td>
 <td>Salaried-judge sittings + verification.</td>
 <td>Maintain sitting records (generated from working patterns); confirm and verify sittings (FR37); AM/PM session split (FR38); post-verification re-open via RBAC (FR40 — RSU Admin only at MVP, with mandatory justification + audit; no external RFC process); work-type override on confirmation.</td>
 </tr>
 <tr>
-<td><strong><code>nji-payment</code></strong></td>
+<td><strong><code>ram-payment</code></strong></td>
 <td>6</td>
-<td>Payment processing + reconciliation. JFEPS-shaped Excel output. <strong>Two parts: a synchronous API (RSU reconciliation) and a scheduled batch component (<code>nji-payment-batch</code>).</strong></td>
-<td><strong>Batch component</strong> (scheduled; runs as service principal <code>nji-payment-batch</code> per v2.6): SQL JOIN read across confirmed bookings + sittings without an existing payment record; generate JFEPS Excel (FR41–FR44); persist payments and schedules; call Notification with bearer service token to dispatch the schedule (FR43). <strong>Synchronous API</strong>: RSU lists unreconciled payments and marks them reconciled (FR46). FR45 retry safety via native DB primitives (see <a href="../architecture.html"><code>../architecture.md</code></a> → <em>Data Architecture</em>). <strong>Never stores bank details</strong> (NFR14).</td>
+<td>Payment processing + reconciliation. JFEPS-shaped Excel output. <strong>Two parts: a synchronous API (RSU reconciliation) and a scheduled batch component (<code>ram-payment-batch</code>).</strong></td>
+<td><strong>Batch component</strong> (scheduled; runs as service principal <code>ram-payment-batch</code> per v2.6): SQL JOIN read across confirmed bookings + sittings without an existing payment record; generate JFEPS Excel (FR41–FR44); persist payments and schedules; call Notification with bearer service token to dispatch the schedule (FR43). <strong>Synchronous API</strong>: RSU lists unreconciled payments and marks them reconciled (FR46). FR45 retry safety via native DB primitives (see <a href="../architecture.html"><code>../architecture.md</code></a> → <em>Data Architecture</em>). <strong>Never stores bank details</strong> (NFR14).</td>
 </tr>
 <tr>
-<td><strong><code>nji-itinerary</code></strong></td>
+<td><strong><code>ram-itinerary</code></strong></td>
 <td>7</td>
 <td>Operational read model. <strong>No own tables</strong> — SQL JOINs across judges, absences, vacancies, bookings, sittings.</td>
 <td>Court itinerary view; Judge itinerary view (scoped to own profile per R2); Forward Look (≤ 30 s p95 — NFR8).</td>
 </tr>
 <tr>
-<td><strong><code>nji-mi-feed</code></strong></td>
+<td><strong><code>ram-mi-feed</code></strong></td>
 <td>8</td>
 <td>Aggregate MI read model. <strong>No own tables</strong>.</td>
 <td>Standard reports (utilisation, sittings, payments) with same parameter shape as APEX; aggregate-only — <strong>no case-level data</strong> (NFR23); Excel/PDF export; DA&amp;I consumer interface (post-MVP).</td>
 </tr>
 <tr>
-<td><strong><code>nji-ui</code></strong></td>
+<td><strong><code>ram-ui</code></strong></td>
 <td>0–8</td>
 <td><strong>Business-user-facing SPA</strong>, modules per domain. Excludes admin workflows.</td>
 <td>Per-phase UI module replicating APEX functional surface for business roles (RSU operational work, Court users, Judges, Judges' Clerks, Finance/Payment Authoriser, MI); role-scoped Home with Outstanding-Actions tiles (FR55); SSO via HMCTS IdP / mock auth; GOV.UK Design System with WCAG 2.2 AA (NFR17).</td>
 </tr>
 <tr>
-<td><strong><code>nji-admin-ui</code></strong></td>
+<td><strong><code>ram-admin-ui</code></strong></td>
 <td>0</td>
-<td><strong>Admin-facing SPA</strong>, separated from business workflows. Same stack as <code>nji-ui</code> but distinct repo, pipeline, and deployment.</td>
-<td>Reference Data maintenance (FR6 — Regions, Offices, judicial vocabularies, calendar / financial-year boundaries with named-owner sign-off); User &amp; Role admin (FR4 — system administrators update role and Region/Area assignments for migrated and new users). Future admin surfaces reserved: per-region activation flag dashboard (FR58), Phase 0 migration reconciliation report viewer (FR57), post-MVP user-action audit viewer (D7 roadmap). Same SSO + Authorisation pattern as <code>nji-ui</code>.</td>
+<td><strong>Admin-facing SPA</strong>, separated from business workflows. Same stack as <code>ram-ui</code> but distinct repo, pipeline, and deployment.</td>
+<td>Reference Data maintenance (FR6 — Regions, Offices, judicial vocabularies, calendar / financial-year boundaries with named-owner sign-off); User &amp; Role admin (FR4 — system administrators update role and Region/Area assignments for migrated and new users). Future admin surfaces reserved: per-region activation flag dashboard (FR58), Phase 0 migration reconciliation report viewer (FR57), post-MVP user-action audit viewer (D7 roadmap). Same SSO + Authorisation pattern as <code>ram-ui</code>.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>15 repos total</strong> (11 production services + 2 UI + architecture + mock-auth). <code>nji-mock-auth</code> is dev/integration-only and never deploys to production.</p>
+<p><strong>15 repos total</strong> (11 production services + 2 UI + architecture + mock-auth). <code>ram-mock-auth</code> is dev/integration-only and never deploys to production.</p>
 <p><strong>Why split admin and business UI:</strong> business operational workflows (judges, absences, vacancies, bookings, sittings, payments, itineraries, reports) are continuously evolving with HMCTS judicial process. Admin work (managing the controlled vocabularies and user role assignments those workflows depend on) is lower-cadence, higher-stakes (a wrong Region rename or role flip cascades into operational chaos), and has a different audience (system administrators, not RSU/Court/Judges). Keeping them in separate repos gives independent CI/CD, independent rollout, distinct CODEOWNERS, and prevents accidental coupling — for example, admin-only screens cannot leak into a business user's nav by misconfiguration. Same as the backend's per-service polyrepo discipline: minimise shared code, accept duplication, gain independence.</p>
 
 <p class="source-note">Source: <code>_bmad-output/planning-artifacts/architecture/repository-strategy.md</code></p>

@@ -6,7 +6,7 @@ last_updated: 2026-05-07
 
 # Absence → Vacancy → Booking → Sitting → Reconciliation
 
-Sequence diagram of the user-initiated NJI operational cycle: a Court User logs an absence for a salaried judge; the absence triggers a vacancy; RSU fills the vacancy with a fee-paid booking; the Court User confirms the sitting (marking it ready for payment); RSU reconciles the payment after the batch and external systems complete.
+Sequence diagram of the user-initiated RAM Pathfinder operational cycle: a Court User logs an absence for a salaried judge; the absence triggers a vacancy; RSU fills the vacancy with a fee-paid booking; the Court User confirms the sitting (marking it ready for payment); RSU reconciles the payment after the batch and external systems complete.
 
 Five phases, each driven by a user action. Phases are colour-tinted in the diagram.
 
@@ -24,7 +24,7 @@ Apply to every Court / RSU → service call:
 
 - All UI → service calls flow through Azure API Management.
 - Each service's `JWTFilter` validates the JWT signature against HMCTS IdP's JWKS before the controller runs.
-- The same `JWTFilter` calls `POST /authz/check` against `nji-authorisation` for role + Region/Area scope + activation flag (FR58).
+- The same `JWTFilter` calls `POST /authz/check` against `ram-authorisation` for role + Region/Area scope + activation flag (FR58).
 - Cross-service calls forward the user's JWT.
 
 ![Absence → Vacancy → Booking → Sitting → Reconciliation sequence](./absence-to-reconciliation.png)

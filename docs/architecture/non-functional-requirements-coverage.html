@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Non-Functional Requirements Coverage (NFR1–NFR42) — NJI Documentation</title>
+<title>Non-Functional Requirements Coverage (NFR1–NFR42) — RAM Pathfinder Documentation</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,7 +79,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 </style>
 </head>
 <body class="has-toc has-sections">
-<aside class="nav"><h2 class="site-title"><a href="../index.html">NJI Documentation</a></h2>
+<aside class="nav"><h2 class="site-title"><a href="../index.html">RAM Pathfinder Documentation</a></h2>
 <div class="nav-controls"><button data-nav-action="expand" title="Expand all groups">Expand all</button> <button data-nav-action="collapse" title="Collapse all groups">Collapse all</button></div>
 <details class="nav-group" data-group="overview">
 <summary>Overview</summary>
@@ -90,7 +90,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <details class="nav-group" data-group="product">
 <summary>Product</summary>
 <ul>
-<li><a href="../prd.html">PRD (NJI)</a></li>
+<li><a href="../prd.html">PRD (RAM Pathfinder)</a></li>
 </ul>
 </details>
 <details class="nav-group" data-group="as-is-ji-architecture-views">
@@ -114,15 +114,15 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../asis/database/ji_schema_companion.html">Companion reference (triggers, FKs, externals)</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-architecture">
-<summary>To-be — NJI Architecture</summary>
+<details class="nav-group" data-group="to-be-ram-architecture">
+<summary>To-be — RAM Pathfinder Architecture</summary>
 <ul>
 <li><a href="../architecture.html">Architecture (index)</a></li>
 <li><a href="../architecture-summary.html">Architecture summary</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-reference" data-current="true" open>
-<summary>To-be — NJI Reference</summary>
+<details class="nav-group" data-group="to-be-ram-reference" data-current="true" open>
+<summary>To-be — RAM Pathfinder Reference</summary>
 <ul>
 <li><a href="../architecture/user-types.html">User types</a></li>
 <li><a href="../architecture/data-tables.html">Authoritative table ownership</a></li>
@@ -134,8 +134,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/non-functional-requirements-coverage.html" class="current">Non-functional requirements coverage</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-sequence-diagrams">
-<summary>To-be — NJI Sequence Diagrams</summary>
+<details class="nav-group" data-group="to-be-ram-sequence-diagrams">
+<summary>To-be — RAM Pathfinder Sequence Diagrams</summary>
 <ul>
 <li><a href="../architecture/sequence-diagrams/user-authentication-and-authorisation.html">Authentication & authorisation</a></li>
 <li><a href="../architecture/sequence-diagrams/judge-onboarding-and-sitting-generation.html">Judge onboarding & sitting gen.</a></li>
@@ -147,8 +147,8 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <li><a href="../architecture/sequence-diagrams/admin-maintenance-flows.html">Admin maintenance flows</a></li>
 </ul>
 </details>
-<details class="nav-group" data-group="to-be-nji-open-items">
-<summary>To-be — NJI Open Items</summary>
+<details class="nav-group" data-group="to-be-ram-open-items">
+<summary>To-be — RAM Pathfinder Open Items</summary>
 <ul>
 <li><a href="../architecture/gaps.html">Gaps</a></li>
 <li><a href="../architecture/assumptions.html">Assumptions</a></li>
@@ -210,10 +210,10 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <ul>
 <li><strong>NFR10 — Transport encryption:</strong> Latest TLS only on every endpoint; HTTP-only endpoints rejected.</li>
 <li><strong>NFR11 — Data-at-rest encryption:</strong> All personal data (judge records, user/role records, working patterns, payroll numbers, payment metadata) encrypted at rest.</li>
-<li><strong>NFR12 — Authentication</strong> <em>(revised v2.6)</em>: All human users authenticated via HMCTS IdP SSO (per FR1). <strong>Inter-service authentication for user-initiated calls is via JWT propagation</strong> — the user's JWT is forwarded by the upstream service's outbound HTTP client and validated by the downstream service's <code>JWTFilter</code> against the IdP's JWKS endpoint. <strong>Inter-service authentication for batch / scheduled components</strong> (initially <code>nji-payment-batch</code>) is via OAuth 2.0 <code>client_credentials</code> against <code>nji-mock-auth</code> in non-prod; production issuer per <code>gaps.md</code> G7.1 (default recommendation: Azure Workload Identity).</li>
+<li><strong>NFR12 — Authentication</strong> <em>(revised v2.6)</em>: All human users authenticated via HMCTS IdP SSO (per FR1). <strong>Inter-service authentication for user-initiated calls is via JWT propagation</strong> — the user's JWT is forwarded by the upstream service's outbound HTTP client and validated by the downstream service's <code>JWTFilter</code> against the IdP's JWKS endpoint. <strong>Inter-service authentication for batch / scheduled components</strong> (initially <code>ram-payment-batch</code>) is via OAuth 2.0 <code>client_credentials</code> against <code>ram-mock-auth</code> in non-prod; production issuer per <code>gaps.md</code> G7.1 (default recommendation: Azure Workload Identity).</li>
 <li><strong>NFR13 — Authorisation enforcement:</strong> Every API call resolves the principal's roles + Region/Area scope through the Authorisation service; no operation bypasses this check.</li>
 <li><strong>NFR14 — Forbidden data scope:</strong> No bank details stored or exposed by any service. No case-level data in any read model or report.</li>
-<li><strong>NFR15 — Government Functional Standard 7 alignment:</strong> NJI aligns with HMCTS / MoJ GFS 7 — Security, including protective marking, access control, and secure development practices.</li>
+<li><strong>NFR15 — Government Functional Standard 7 alignment:</strong> RAM Pathfinder aligns with HMCTS / MoJ GFS 7 — Security, including protective marking, access control, and secure development practices.</li>
 <li><strong>NFR16 — Secret management:</strong> Service credentials, signing keys, and integration secrets stored in a managed secret store (Azure Key Vault); never in source control or environment-baked images.</li>
 </ul>
 <p><strong>Architectural support:</strong> TLS 1.3 ingress; PostgreSQL encryption-at-rest; per-service custom <code>JWTFilter</code> (HMCTS template pattern); per-service DB roles; Azure Key Vault via Spring Cloud Azure Key Vault; GFS-7 alignment via HMCTS starter security defaults; NFR12 covers both inter-service patterns (JWT propagation + service-principal <code>client_credentials</code> for batch).</p>
@@ -221,12 +221,12 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <ul>
 <li><strong>NFR17 — WCAG 2.2 Level AA:</strong> Every UI page meets WCAG 2.2 Level AA accessibility standards; tested per UI page in each domain phase before that phase's gate is passed.</li>
 <li><strong>NFR18 — Assistive technology compatibility:</strong> Keyboard navigation, ARIA labels for tabbed and dynamic content, and screen-reader compatibility per HMCTS accessibility standards.</li>
-<li><strong>NFR19 — Public Sector Bodies Accessibility Regulations 2018:</strong> NJI complies with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018, including publication of an accessibility statement.</li>
+<li><strong>NFR19 — Public Sector Bodies Accessibility Regulations 2018:</strong> RAM Pathfinder complies with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018, including publication of an accessibility statement.</li>
 </ul>
 <p><strong>Architectural support:</strong> GOV.UK Design System component library; axe-core in CI (Vitest + Playwright runs); React Hook Form for accessible form validation.</p>
 </div></details><details class="section" id="integration-nfr20nfr24"><summary><span class="section-title">Integration (NFR20–NFR24)</span></summary><div class="section-body">
 <ul>
-<li><strong>NFR20 — HMCTS IdP integration:</strong> Hard pre-Phase-9 dependency. NJI integrates with whichever AuthN protocol the HMCTS IdP exposes (OIDC or SAML).</li>
+<li><strong>NFR20 — HMCTS IdP integration:</strong> Hard pre-Phase-9 dependency. RAM Pathfinder integrates with whichever AuthN protocol the HMCTS IdP exposes (OIDC or SAML).</li>
 <li><strong>NFR21 — JFEPS / Liberata integration unchanged:</strong> Payment schedule format (JFEPS-compatible Excel), email-to-Authoriser delivery, and authoriser-forwards-to-Liberata workflow are preserved exactly as in APEX.</li>
 <li><strong>NFR22 — HMCTS email infrastructure:</strong> Outbound transactional emails (booking ack, absence ack, payment schedules) dispatch via HMCTS email; delivery is reliable but not low-latency-critical.</li>
 <li><strong>NFR23 — DA&amp;I MI Feed:</strong> Aggregate-only REST API contract; no case-level data exposed under any consumer authorisation.</li>
@@ -244,18 +244,18 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <p><strong>Architectural support:</strong> Logback + Logstash JSON encoder → OpenTelemetry → Application Insights (per HMCTS Crime template); correlation-ID MDC; Spring Actuator probes (<code>/actuator/health</code>, <code>/actuator/info</code>, <code>/actuator/readiness</code>); 30-day hot + 90-day cold retention. User-action audit + metrics deferred per D7.</p>
 </div></details><details class="section" id="data-privacy--sovereignty-nfr30nfr33"><summary><span class="section-title">Data Privacy &amp; Sovereignty (NFR30–NFR33)</span></summary><div class="section-body">
 <ul>
-<li><strong>NFR30 — UK GDPR / Data Protection Act 2018 compliance:</strong> Personal data scope is limited to user/judge identity, contact details, payroll numbers, and operational metadata. No case-level data anywhere in NJI.</li>
-<li><strong>NFR31 — Data residency:</strong> All NJI services and data hosted in Azure UK regions only. No personal data leaves the UK.</li>
-<li><strong>NFR32 — Retention:</strong> Data retention per HMCTS retention schedules. Migrated transactional history remains in APEX (D3); NJI retains only data created in NJI from migration onward.</li>
+<li><strong>NFR30 — UK GDPR / Data Protection Act 2018 compliance:</strong> Personal data scope is limited to user/judge identity, contact details, payroll numbers, and operational metadata. No case-level data anywhere in RAM Pathfinder.</li>
+<li><strong>NFR31 — Data residency:</strong> All RAM Pathfinder services and data hosted in Azure UK regions only. No personal data leaves the UK.</li>
+<li><strong>NFR32 — Retention:</strong> Data retention per HMCTS retention schedules. Migrated transactional history remains in APEX (D3); RAM Pathfinder retains only data created in RAM Pathfinder from migration onward.</li>
 <li><strong>NFR33 — FOI scope:</strong> Aggregate operational data exposable per FOI requests; case-level data is forbidden by contract and therefore outside FOI scope by construction.</li>
 </ul>
 <p><strong>Architectural support:</strong> Azure UK regions only; PostgreSQL Flexible Server in UK South; case-level data forbidden by schema (no fields exist); FOI scope by contract.</p>
 </div></details><details class="section" id="reliability--availability-nfr34nfr38"><summary><span class="section-title">Reliability &amp; Availability (NFR34–NFR38)</span></summary><div class="section-body">
 <ul>
-<li><strong>NFR34 — Operational availability:</strong> NJI is available during HMCTS operational hours (typically 07:00–19:00 UK weekdays). Out-of-hours availability is best-effort.</li>
-<li><strong>NFR35 — Payment-cycle continuity:</strong> Zero failed JFEPS payment cycles attributable to NJI deployment, rollout, or runtime issues. Payment generation can fall back to manual handling within a payment cycle if NJI is unavailable.</li>
+<li><strong>NFR34 — Operational availability:</strong> RAM Pathfinder is available during HMCTS operational hours (typically 07:00–19:00 UK weekdays). Out-of-hours availability is best-effort.</li>
+<li><strong>NFR35 — Payment-cycle continuity:</strong> Zero failed JFEPS payment cycles attributable to RAM Pathfinder deployment, rollout, or runtime issues. Payment generation can fall back to manual handling within a payment cycle if RAM Pathfinder is unavailable.</li>
 <li><strong>NFR36 — Per-wave rollback:</strong> Each rollout wave has a documented rollback path returning the affected region to APEX within one operational cycle if the wave's gate is breached post-cutover.</li>
-<li><strong>NFR37 — Strategy A degraded-mode contract:</strong> If federated read latency breaches NFR8, NJI degrades to Strategy C cached projection rather than failing; cache freshness window is published in the service's OpenAPI spec metadata and surfaced in response headers (e.g. <code>Cache-Control</code>, <code>Age</code>).</li>
+<li><strong>NFR37 — Strategy A degraded-mode contract:</strong> If federated read latency breaches NFR8, RAM Pathfinder degrades to Strategy C cached projection rather than failing; cache freshness window is published in the service's OpenAPI spec metadata and surfaced in response headers (e.g. <code>Cache-Control</code>, <code>Age</code>).</li>
 <li><strong>NFR38 — HMCTS-judicial-region rollout isolation:</strong> A wave activation or feature change targeting one HMCTS judicial region does not affect users in other HMCTS regions. <em>("Region" here means HMCTS judicial region per D8 — not Azure region. Architectural enforcement is at the application tier via per-user <code>auth_user_activation_flags</code> (FR58), not at the infrastructure tier.)</em></li>
 </ul>
 <p><strong>Architectural support:</strong> Operational hours availability; per-wave rollback via region activation flag (FR58); <strong>single AKS cluster in UK South with multi-AZ node pools</strong> (zone-redundant HA at app tier); <strong>PostgreSQL Flexible Server zone-redundant HA</strong> in UK South; HMCTS-judicial-region isolation (NFR38) enforced at app tier via FR58 activation flags. Disaster recovery is an open gap — see <a href="./gaps.html"><code>./gaps.md</code> G3.6</a>.</p>
@@ -263,7 +263,7 @@ main .section-body>h3:first-child,main .section-body>p:first-child,main .section
 <ul>
 <li><strong>NFR39 — API-as-Product standards:</strong> Every service exposes versioned contracts, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details error envelopes, and a published OpenAPI specification (per FR59). Versioning and deprecation policy is a Phase 0 deliverable. Deprecation signalling uses <a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a> <code>Deprecation</code> + <a href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a> <code>Sunset</code> headers.</li>
 <li><strong>NFR40 — Per-service deployment unit:</strong> Each of the 11 services is independently deployable on Kubernetes; rolling updates per service per region without coupling.</li>
-<li><strong>NFR41 — Behavioural-parity UAT suite</strong> <em>(revised 2026-05-06)</em>: Every domain service has a <strong>manual UAT script</strong> (per FR61) maintained alongside the service. APEX-experienced users walk through the script comparing NJI vs APEX before each rollout wave's cutover; sign-off (per role per region) is the wave gate. There is no automated parity test suite — automated CI tests are unit, integration (Testcontainers), and contract tests only.</li>
+<li><strong>NFR41 — Behavioural-parity UAT suite</strong> <em>(revised 2026-05-06)</em>: Every domain service has a <strong>manual UAT script</strong> (per FR61) maintained alongside the service. APEX-experienced users walk through the script comparing RAM Pathfinder vs APEX before each rollout wave's cutover; sign-off (per role per region) is the wave gate. There is no automated parity test suite — automated CI tests are unit, integration (Testcontainers), and contract tests only.</li>
 <li><strong>NFR42 — Postman collections:</strong> Each phase produces a Postman collection that exercises the phase's endpoints; collections are versioned alongside the services.</li>
 </ul>
 <p><strong>Architectural support:</strong> API-as-Product standards (versioned, OpenAPI spec, <a href="https://datatracker.ietf.org/doc/html/rfc9457">RFC 9457</a> problem-details, <a href="https://datatracker.ietf.org/doc/html/rfc9745">RFC 9745</a> <code>Deprecation</code> + <a href="https://datatracker.ietf.org/doc/html/rfc8594">RFC 8594</a> <code>Sunset</code> for deprecation signalling); per-service deployment unit (one Spring Boot app, one container, one Helm chart); manual UAT scripts under <code>docs/uat/</code> per service; per-phase Postman collections.</p>
