@@ -1,0 +1,246 @@
+// JI — System Context (v2)
+//
+// Variant of JI-SystemContext.png with the following corrections:
+//
+//   1. The combined "Finance / Payment Authoriser" role is split into
+//      two distinct roles, and the payment file path is corrected:
+//        - Finance — interacts with the JI application directly
+//          (reviews + authorises payment exports, reconciles
+//          payments). Once authorised in JI, the payment file is
+//          dispatched directly by JI to the Payment Authoriser by
+//          email (SMTP) — Finance does NOT relay the file.
+//        - Payment Authoriser — receives the authorised payment
+//          file from JI by email and uploads it to JFEPS. Does NOT
+//          interact with the JI application.
+//
+//   2. eLinks and HR / Administrative Records have been removed. These
+//      systems do not exist as integrations in reality — the underlying
+//      judiciary and working-pattern data is set up manually within JI
+//      through off-system interactions.
+//
+//   3. The HMCTS Email node has been removed. It was pure transport;
+//      where two systems talk via email the transport is now shown as
+//      an [SMTP] annotation on the direct system-to-system edge.
+//
+// Render with:
+//   scripts/render_diagram.sh \
+//     docs/architecture/asis/JI-SystemContext2.dot \
+//     docs/architecture/asis/JI-SystemContext2.png \
+//     --dpi 150
+
+digraph ji_system_context_v2 {
+  rankdir=LR;
+  compound=true;
+  newrank=true;
+  splines=line;
+  bgcolor="white";
+  pad="0.4";
+  nodesep=0.25;
+  ranksep=3.6;
+
+  fontname="Helvetica";
+  fontsize=22;
+  labelloc="t";
+  label=<<b>Judicial Itineraries (JI) – System Context</b><br/><font point-size="12">v2 · Finance and Payment Authoriser are separate roles</font>>;
+
+  node [fontname="Helvetica", fontsize=10, shape=box, style="filled,rounded", margin="0.18,0.12", color="#0b2d4d"];
+  edge [fontname="Helvetica", fontsize=9, color="#404040"];
+
+  // ============================================================
+  //   rankdir=LR means each `rank=same` set forms a vertical column.
+  //
+  //   col_left  : actors that interact with JI directly
+  //   col_mid   : JI (system under context)
+  //   col_right : external systems + Payment Authoriser
+  //
+  //   Within each column the vertical order is enforced with invisible
+  //   high-weight edges.
+  // ============================================================
+
+  // ===================== Persons (actors) — LEFT column =====================
+  // Dark blue fill — matches the persons in the original.
+
+  finance [fillcolor="#1d4f86", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>Finance</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Reviews JFEPS payment exports in JI,<br/>authorises payment runs and<br/>reconciles payments. Once authorised,<br/>JI dispatches the payment file directly<br/>to the Payment Authoriser by email<br/>(SMTP) — Finance does not handle<br/>the file outside JI.</font></td></tr>
+    </table>>];
+
+  regional [fillcolor="#1d4f86", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>Regional / RSU Users</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Regional Support Unit — Admin, Full<br/>Access and Verifier variants. Maintain<br/>judges, working patterns, itineraries,<br/>absences, vacancies and bookings<br/>regionally. Also enters judiciary data<br/>and working-pattern records manually<br/>(no eLinks / HR integration).</font></td></tr>
+    </table>>];
+
+  court [fillcolor="#1d4f86", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>Court Users</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Local court/tribunal office staff —<br/>Full Access, Enhanced CJ and<br/>Read-only variants. Confirm sittings<br/>and bookings.</font></td></tr>
+    </table>>];
+
+  judges [fillcolor="#1d4f86", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>Judges &amp; Clerks</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Salaried + fee-paid judicial office<br/>holders and their clerks. Includes<br/>Judge, Judge's Clerk, Presiding<br/>Judge, Presiding Judge's Clerk.</font></td></tr>
+    </table>>];
+
+  mi_users [fillcolor="#1d4f86", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>MI / Reporting Users</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Run and export Reports (utilisation,<br/>vacancies, sitting-day projections).</font></td></tr>
+    </table>>];
+
+  sysadmin [fillcolor="#1d4f86", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>System Administrator /<br/>OPT Support</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Back-end configuration and<br/>diagnostics.</font></td></tr>
+    </table>>];
+
+  // ===================== JI — CENTRE =====================
+
+  ji [fillcolor="#143a63", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="3">
+      <tr><td align="center"><font point-size="14"><b>Judicial Itineraries (JI)</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Legacy HMCTS system for planning +<br/>managing judicial time (sittings,<br/>absences, vacancies, fee-paid<br/>bookings, payments, MI). Live since<br/>01/04/2015. OPT deprecation Dec 2028;<br/>cloud migration target Apr 2030.<br/><br/><i>Also emits itinerary, absence and<br/>booking notification emails to users<br/>via SMTP (not drawn as separate edges<br/>at this granularity).</i></font></td></tr>
+    </table>>];
+
+  // ===================== RIGHT column =====================
+
+  payment_authoriser [fillcolor="#1d4f86", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>Payment Authoriser</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Receives the authorised JFEPS<br/>payment file from JI by email (SMTP)<br/>and uploads it to JFEPS.<br/><b>Does not interact with JI.</b></font></td></tr>
+    </table>>];
+
+  jfeps [fillcolor="#4889c3", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>JFEPS / JFEBS</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">External finance system. Receives<br/>JFEPS-compatible Excel exports<br/>(validated for dates, court codes,<br/>booking IDs). Payment Authoriser<br/>uploads after review.</font></td></tr>
+    </table>>];
+
+  // (HMCTS Email node removed: it was pure transport. Email flows are now
+  //  shown as direct system-to-system edges with [SMTP] in the protocol
+  //  annotation.)
+
+  common_platform [fillcolor="#4889c3", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>Common Platform</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Criminal case management. NOT<br/>integrated with JI — documented gap.</font></td></tr>
+    </table>>];
+
+  caseman [fillcolor="#4889c3", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>CaseMan / FamilyMan</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Civil + Family case management. NOT<br/>integrated with JI — documented gap.</font></td></tr>
+    </table>>];
+
+  dai [fillcolor="#4889c3", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>DA&amp;I (Data, Analysis &amp; Insight)</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Consumes extracted JI data for<br/>management information. Extraction<br/>mechanism NOT documented.</font></td></tr>
+    </table>>];
+
+  opt [fillcolor="#4889c3", fontcolor="white", label=<
+    <table border="0" cellborder="0" cellspacing="0" cellpadding="2">
+      <tr><td align="center"><font point-size="11"><b>OPT / Oracle APEX Platform</b></font></td></tr>
+      <tr><td align="center"><font point-size="9">Host platform providing APEX runtime,<br/>authentication, session timeout<br/>plug-in, shared JS (opt.common.js,<br/>opt.ji.js). Managed under DAI<br/>outside DTS; deprecated by Dec 2028.</font></td></tr>
+    </table>>];
+
+  // ===================== Force three columns =====================
+  // With rankdir=LR, rank=same forces vertical alignment (a column).
+  // Use min/max ranks to push the columns to the left and right edges.
+
+  { rank=min; finance; regional; court; judges; mi_users; sysadmin; }
+  { rank=max; payment_authoriser; jfeps; common_platform; caseman; dai; opt; }
+
+  // ===================== Vertical order within each column =====================
+  // Invisible high-weight edges enforce top→bottom order.
+
+  finance  -> regional [style=invis, weight=500];
+  regional -> court    [style=invis, weight=500];
+  court    -> judges   [style=invis, weight=500];
+  judges   -> mi_users [style=invis, weight=500];
+  mi_users -> sysadmin [style=invis, weight=500];
+
+  payment_authoriser -> jfeps           [style=invis, weight=500];
+  jfeps              -> common_platform [style=invis, weight=500];
+  common_platform    -> caseman         [style=invis, weight=500];
+  caseman            -> dai             [style=invis, weight=500];
+  dai                -> opt             [style=invis, weight=500];
+
+  // ===================== Edges =====================
+  // Solid arrow  — primary runtime interaction
+  // Dashed arrow — manual / out-of-band / undocumented transport
+  // Dotted arrow — gap (NOT integrated)
+
+  // --- Finance → JI (user-initiated interaction; one-directional) ---
+  finance -> ji [taillabel=<<table border="0" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="#FFFFFFC0"><tr><td><font point-size="9"><b><font point-size="13" color="#143a63">①</font></b>  Review payment exports;<br/>authorise payment runs;<br/>mark payments reconciled<br/><i>[HTTPS]</i></font></td></tr></table>>,
+                  labeldistance=5.5, labelangle=0];
+
+  // --- JI → Payment Authoriser (NEW: direct edge replacing the old
+  //     JI → HMCTS Email → Payment Authoriser two-hop) ---
+  // HMCTS Email has been collapsed into the protocol annotation [SMTP].
+  ji -> payment_authoriser [label=<<font point-size="9"><b><font point-size="13" color="#143a63">②</font></b>  Sends authorised<br/>JFEPS payment file<br/><i>[SMTP]</i></font>>,
+                             color="#1d4f86", penwidth=2.0];
+
+  // --- Payment Authoriser → JFEPS (PA, not Finance/PA combined) ---
+  payment_authoriser -> jfeps [label=<<font point-size="9"><b><font point-size="13" color="#143a63">③</font></b>  Uploads authorised<br/>JFEPS Excel file<br/><i>[Manual upload]</i></font>>,
+                                color="#1d4f86", penwidth=2.0];
+
+  // (JI → JFEPS conceptual end-to-end edge removed: the full chain is
+  //  already shown by ② JI → Payment Authoriser and ③ Payment Authoriser
+  //  → JFEPS. A single conceptual hop would have been redundant and
+  //  could be misread as a direct system-to-system integration that
+  //  does not exist.)
+
+  // --- Regional / RSU Users → JI (user-initiated; one-directional) ---
+  regional -> ji [taillabel=<<table border="0" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="#FFFFFFC0"><tr><td><font point-size="9"><b><font point-size="13" color="#143a63">⑤</font></b>  Maintain judges, working patterns,<br/>absences, vacancies, bookings regionally<br/><i>[HTTPS]</i></font></td></tr></table>>,
+                   labeldistance=5.5, labelangle=0];
+
+  // (eLinks and HR / Administrative Records edges removed: no real
+  //  integration exists — that data is keyed into JI manually via
+  //  off-system interactions, captured by the Regional / RSU edge above.)
+
+  // --- Court Users → JI (user-initiated; one-directional) ---
+  court -> ji [taillabel=<<table border="0" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="#FFFFFFC0"><tr><td><font point-size="9"><b><font point-size="13" color="#143a63">⑥</font></b>  Maintain court itinerary;<br/>confirm sittings/bookings;<br/>record local absences<br/><i>[HTTPS]</i></font></td></tr></table>>,
+                labeldistance=5.5, labelangle=0];
+
+  // --- Judges &amp; Clerks → JI (user-initiated; one-directional) ---
+  judges -> ji [taillabel=<<table border="0" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="#FFFFFFC0"><tr><td><font point-size="9"><b><font point-size="13" color="#143a63">⑦</font></b>  View own itinerary;<br/>request/view absences<br/><i>[HTTPS]</i></font></td></tr></table>>,
+                 labeldistance=5.5, labelangle=0];
+
+  // --- MI / Reporting Users → JI (user-initiated; one-directional) ---
+  mi_users -> ji [taillabel=<<table border="0" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="#FFFFFFC0"><tr><td><font point-size="9"><b><font point-size="13" color="#143a63">⑧</font></b>  Run + export Reports<br/><i>[HTTPS]</i></font></td></tr></table>>,
+                   labeldistance=5.5, labelangle=0];
+
+  // --- System Administrator / OPT Support → JI ---
+  sysadmin -> ji [taillabel=<<table border="0" cellborder="0" cellspacing="0" cellpadding="3" bgcolor="#FFFFFFC0"><tr><td><font point-size="9"><b><font point-size="13" color="#143a63">④</font></b>  Create users, assign roles,<br/>configure reference data<br/><i>[HTTPS]</i></font></td></tr></table>>,
+                   labeldistance=5.5, labelangle=0];
+
+  // --- JI → Common Platform / CaseMan (documented gap) ---
+  ji -> common_platform [label=<<font point-size="9"><b><font point-size="13" color="#143a63">⑪</font></b>  NOT integrated<br/>(documented gap)<br/><i>[None]</i></font>>,
+                          style=dotted, color="#a04040"];
+  ji -> caseman [label=<<font point-size="9"><b><font point-size="13" color="#143a63">⑫</font></b>  NOT integrated<br/>(documented gap)<br/><i>[None]</i></font>>,
+                  style=dotted, color="#a04040"];
+
+  // --- JI → DA&I ---
+  ji -> dai [label=<<font point-size="9"><b><font point-size="13" color="#143a63">⑨</font></b>  Data extracted for MI<br/><i>[Undocumented]</i></font>>,
+              style=dashed];
+
+  // --- JI → OPT (runs on) ---
+  ji -> opt [label=<<font point-size="9"><b><font point-size="13" color="#143a63">⑩</font></b>  Runs on<br/><i>[Oracle APEX runtime +<br/>session management]</i></font>>];
+
+  // ===================== Legend =====================
+
+  legend [shape=box, style="rounded,filled", fillcolor="#fafafa", color="#a0a0a0",
+          fontsize=9, margin="0.1,0.06",
+          label=<<table border="0" cellborder="0" cellspacing="1">
+                   <tr><td align="left" colspan="2"><b>Legend</b></td></tr>
+                   <tr><td align="left"><font color="#1d4f86"><b>■</b></font></td><td align="left">person / role</td></tr>
+                   <tr><td align="left"><font color="#4889c3"><b>■</b></font></td><td align="left">external system</td></tr>
+                   <tr><td align="left"><font color="#143a63"><b>■</b></font></td><td align="left">JI (system under context)</td></tr>
+                   <tr><td align="left">—</td><td align="left">solid: primary runtime interaction</td></tr>
+                   <tr><td align="left">- -</td><td align="left">dashed: manual / out-of-band / undocumented</td></tr>
+                   <tr><td align="left">. .</td><td align="left">dotted: NOT integrated (documented gap)</td></tr>
+                 </table>>];
+}

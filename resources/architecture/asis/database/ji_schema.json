@@ -1,0 +1,4761 @@
+{
+  "tables": {
+    "TBL_JI_ABS_OB": {
+      "name": "TBL_JI_ABS_OB",
+      "columns": [
+        {
+          "name": "JI_ABS_OB_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "START_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "END_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "WORKING_DAYS",
+          "type": "NUMBER(5,2)",
+          "nullable": false
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CONFIRMED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CONFIRMED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "ACKNOWLEDGED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "ACKNOWLEDGED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "START_SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "END_SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_CHANGE_FROM_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_CHANGE_TO_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "ABS_OB_LENGTH_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_OTHER_REASON",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "VAC_COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "EMAIL_SENT",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "FILL_ACTION_ID",
+          "type": "NUMBER(1,0)",
+          "nullable": true
+        },
+        {
+          "name": "VAC_JUDGE_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "CANCEL_EMAIL",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "CANCEL_ACKN_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "FEE_PAYABLE",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "TOTAL_FEE_AMT",
+          "type": "NUMBER(8,2)",
+          "nullable": true
+        },
+        {
+          "name": "LINKED_SITTING_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "LINKED_BOOKING_DETAIL_ID",
+          "type": "NUMBER",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_ABS_OB_PK",
+        "columns": [
+          "JI_ABS_OB_ID"
+        ]
+      },
+      "indexes": [
+        {
+          "name": "TBL_JI_ABS_OB_IDX1",
+          "unique": false,
+          "columns": [
+            "JUDGE_CODE",
+            "JI_ABS_OB_TYPE_ID"
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "name": "BI_TBL_JI_ABS_OB",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JI_ABS_OB_ID\" is null then\n     select \"TBL_JI_ABS_OB_SEQ\".nextval into :NEW.\"JI_ABS_OB_ID\" from dual;\n  end if;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JI_ABS_OB_CATS": {
+      "name": "TBL_JI_ABS_OB_CATS",
+      "columns": [
+        {
+          "name": "JI_ABS_OB_CAT_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_CAT_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "ABBR_NAME",
+          "type": "VARCHAR2(10)",
+          "nullable": false,
+          "default": "Abbr"
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_ABS_OB_CATS_PK",
+        "columns": [
+          "JI_ABS_OB_CAT_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_ABS_OB_DETAIL": {
+      "name": "TBL_JI_ABS_OB_DETAIL",
+      "columns": [
+        {
+          "name": "JI_ABS_OB_DETAIL_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "ABS_OB_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "YEARMONTH",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "ABS_OB_STATUS_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "CANCELLED",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "CANCELLED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_CONFIRMED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_CONFIRMED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_AUTH_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "FEE_AMT",
+          "type": "NUMBER(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "T_AND_S_AMT",
+          "type": "NUMBER(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_RECONCILED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_RECONCILED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "BE_CODE_OVERRIDE",
+          "type": "VARCHAR2(5)",
+          "nullable": true
+        },
+        {
+          "name": "BOOKING_CONFIRMED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "BOOKING_CONFIRMED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "JI_ACTUAL_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "COST_CENTRE_CODE_OVERRIDE",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_ABS_OB_DETAIL_PK",
+        "columns": [
+          "JI_ABS_OB_DETAIL_ID"
+        ]
+      },
+      "indexes": [
+        {
+          "name": "TBL_JI_ABS_OB_DETAIL_IDX1",
+          "unique": false,
+          "columns": [
+            "JI_ABS_OB_ID"
+          ]
+        },
+        {
+          "name": "TBL_JI_ABS_OB_DETAIL_IDX2",
+          "unique": false,
+          "columns": [
+            "ABS_OB_DATE",
+            "YEARMONTH",
+            "ABS_OB_STATUS_ID"
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "name": "BI_TBL_JI_ABS_OB_DETAIL",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JI_ABS_OB_DETAIL_ID\" is null then\n     select \"TBL_JI_ABS_OB_DETAIL_SEQ\".nextval into\n:NEW.\"JI_ABS_OB_DETAIL_ID\" from dual;\n  end if;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JI_ABS_OB_TYPES": {
+      "name": "TBL_JI_ABS_OB_TYPES",
+      "columns": [
+        {
+          "name": "JI_ABS_OB_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "SD_STATUS",
+          "type": "NUMBER(1,0)",
+          "nullable": false,
+          "default": "1"
+        },
+        {
+          "name": "INCL_IN_ITIN",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "Y"
+        },
+        {
+          "name": "ABS_OB_CAT_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "1"
+        },
+        {
+          "name": "ALLOW_WEEKEND",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "FEE_PAYABLE",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "ACTIVITY_DESC",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "INCL_IN_ITIN_FP",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "MI_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "3"
+        },
+        {
+          "name": "SD_STATUS_FP",
+          "type": "NUMBER(1,0)",
+          "nullable": false,
+          "default": "0"
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_ABS_OB_TYPES_PK",
+        "columns": [
+          "JI_ABS_OB_TYPE_ID"
+        ]
+      },
+      "indexes": [
+        {
+          "name": "TBL_JI_ABS_OB_TYPES_IDX1",
+          "unique": false,
+          "columns": [
+            "ABS_OB_CAT_ID"
+          ]
+        }
+      ],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_ABS_OB_VAC_OPTS": {
+      "name": "TBL_JI_ABS_OB_VAC_OPTS",
+      "columns": [
+        {
+          "name": "JI_ABS_OB_VAC_OPTS_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "VAC_BLOCK_NO",
+          "type": "NUMBER(5,2)",
+          "nullable": false
+        },
+        {
+          "name": "VACANCY_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "VACANCY_STATUS_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "APPROVED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "APPROVED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JI_VACANCY_GROUP_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "VAC_JUDGE_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_DETAIL_ID",
+          "type": "NUMBER",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_ABS_OB_VAC_OPTS_PK",
+        "columns": [
+          "JI_ABS_OB_VAC_OPTS_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [
+        {
+          "name": "BI_TBL_JI_ABS_OB_VAC_OPTS",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JI_ABS_OB_VAC_OPTS_ID\" is null then\n     select \"TBL_JI_ABS_OB_VAC_OPTS_SEQ\".nextval into\n:NEW.\"JI_ABS_OB_VAC_OPTS_ID\" from dual;\n  end if;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JI_ACTUAL_WORK_CATS": {
+      "name": "TBL_JI_ACTUAL_WORK_CATS",
+      "columns": [
+        {
+          "name": "JI_ACTUAL_WORK_CAT_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_ACTUAL_WORK_CAT_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_ACTUAL_WORK_CATS_PK",
+        "columns": [
+          "JI_ACTUAL_WORK_CAT_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_ACTUAL_WORK_TYPES": {
+      "name": "TBL_JI_ACTUAL_WORK_TYPES",
+      "columns": [
+        {
+          "name": "JI_ACTUAL_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_ACTUAL_WORK_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "JI_ACTUAL_WORK_CAT_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "1"
+        },
+        {
+          "name": "SECTION_9",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "JI_PLANNED_WORK_CAT_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "1"
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_ACTUAL_WORK_TYPES_PK",
+        "columns": [
+          "JI_ACTUAL_WORK_TYPE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_AREAS": {
+      "name": "TBL_JI_AREAS",
+      "columns": [
+        {
+          "name": "JI_AREA_ID",
+          "type": "NUMBER(4,0)",
+          "nullable": true
+        },
+        {
+          "name": "JI_AREA_NAME",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "JI_AREA_NAME_ABBR",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "REGION_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "SORT",
+          "type": "NUMBER(4,0)",
+          "nullable": false,
+          "default": "1"
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_AREAS_PK",
+        "columns": [
+          "JI_AREA_ID"
+        ]
+      },
+      "indexes": [
+        {
+          "name": "TBL_JI_AREAS_IDX1",
+          "unique": false,
+          "columns": [
+            "REGION_ID"
+          ]
+        }
+      ],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_CHANGE_TYPES": {
+      "name": "TBL_JI_CHANGE_TYPES",
+      "columns": [
+        {
+          "name": "JI_CHANGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_CHANGE_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_CHANGE_TYPES_PK",
+        "columns": [
+          "JI_CHANGE_TYPE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_CHANGES": {
+      "name": "TBL_JI_CHANGES",
+      "columns": [
+        {
+          "name": "JI_CHANGE_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_CHANGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_CHANGES_PK",
+        "columns": [
+          "JI_CHANGE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [
+        {
+          "name": "BI_TBL_JI_CHANGES",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JI_CHANGE_ID\" is null then\n     select \"TBL_JI_CHANGES_SEQ\".nextval into :NEW.\"JI_CHANGE_ID\" from dual;\n  end if;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JI_EXTRA_NWDS": {
+      "name": "TBL_JI_EXTRA_NWDS",
+      "columns": [
+        {
+          "name": "NON_WORKING_DAY",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_CIRCUIT_CODE",
+          "type": "VARCHAR2(2)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_EXTRA_NWDS_PK",
+        "columns": [
+          "NON_WORKING_DAY",
+          "JUDGE_TYPE_ID",
+          "JUDGE_CIRCUIT_CODE"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_FP_BOOKING_DETAIL": {
+      "name": "TBL_JI_FP_BOOKING_DETAIL",
+      "columns": [
+        {
+          "name": "JI_FP_BOOKING_DETAIL_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_FP_BOOKING_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "FP_BOOKING_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "YEARMONTH",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "ABS_OB_JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JI_VACANCY_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "CONFIRMED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CONFIRMED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "JI_ACTUAL_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "FEE_AMT",
+          "type": "NUMBER(6,2)",
+          "nullable": true
+        },
+        {
+          "name": "T_AND_S_AMT",
+          "type": "NUMBER(6,2)",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_CONFIRMED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_CONFIRMED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_AUTH_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "SEND_AMEND_EMAIL",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "AMEND_ACKN_SENT",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_OTHER_REASON",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JI_FP_CANCELLER_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "CANCEL_EMAIL_SENT",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "CANCEL_ACKN_SENT",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "LATE_CANCELLATION",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "CANCELLED",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "VERIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "VERIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "VERIFIED_FLAG",
+          "type": "NUMBER(1,0)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "PAYROLL_NO",
+          "type": "NUMBER(8,0)",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_RECONCILED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "PAYMENT_RECONCILED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "HEARING_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "HEARING_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "BE_CODE_OVERRIDE",
+          "type": "VARCHAR2(5)",
+          "nullable": true
+        },
+        {
+          "name": "BOOKED_OVER_MAX",
+          "type": "CHAR(1)",
+          "nullable": true
+        },
+        {
+          "name": "EXTRA_ITIN_TEXT",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "COST_CENTRE_CODE_OVERRIDE",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_CODE_OVERRIDE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_FP_BOOKING_DETAIL_PK",
+        "columns": [
+          "JI_FP_BOOKING_DETAIL_ID"
+        ]
+      },
+      "indexes": [
+        {
+          "name": "TBL_JI_FP_BOOKING_DETAIL_IDX1",
+          "unique": false,
+          "columns": [
+            "JI_FP_BOOKING_ID"
+          ]
+        },
+        {
+          "name": "TBL_JI_FP_BOOKING_DETAIL_IDX2",
+          "unique": false,
+          "columns": [
+            "FP_BOOKING_DATE",
+            "YEARMONTH",
+            "JI_PLANNED_WORK_TYPE_ID",
+            "SITTING_DUR_ID"
+          ]
+        },
+        {
+          "name": "TBL_JI_FP_BOOKING_DETAIL_IDX3",
+          "unique": false,
+          "columns": [
+            "LOC_ID",
+            "LOC_TYPE_ID",
+            "CUT_OWNER_ID",
+            "JI_PLANNED_WORK_TYPE_ID"
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "name": "BU_TBL_JI_FP_BOOKING_DETAIL",
+          "timing": "before",
+          "event": "update",
+          "body": "for each row\nbegin\n  :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.fp_booking_date, 'YYYYMM'));\n  IF :NEW.verified_by IS NOT NULL AND :NEW.verified_date IS NOT NULL THEN\n     :NEW.verified_flag := 1;\n  ELSE\n     :NEW.verified_flag := 0;\n  END IF;\nend;"
+        },
+        {
+          "name": "BI_TBL_JI_FP_BOOKING_DETAIL",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JI_FP_BOOKING_DETAIL_ID\" is null then\n     select \"TBL_JI_FP_BOOKING_DETAIL_SEQ\".nextval into\n:NEW.\"JI_FP_BOOKING_DETAIL_ID\" from dual;\n  end if;\n  :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.fp_booking_date, 'YYYYMM'));\n  IF :NEW.verified_by IS NOT NULL AND :NEW.verified_date IS NOT NULL THEN\n     :NEW.verified_flag := 1;\n  ELSE\n     :NEW.verified_flag := 0;\n  END IF;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JI_FP_BOOKING_TYPES": {
+      "name": "TBL_JI_FP_BOOKING_TYPES",
+      "columns": [
+        {
+          "name": "JI_FP_BOOKING_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_FP_BOOKING_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_FP_BOOKING_TYPES_PK",
+        "columns": [
+          "JI_FP_BOOKING_TYPE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_FP_BOOKINGS": {
+      "name": "TBL_JI_FP_BOOKINGS",
+      "columns": [
+        {
+          "name": "JI_FP_BOOKING_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "START_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "END_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "START_SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "END_SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "WORKING_DAYS",
+          "type": "NUMBER(5,2)",
+          "nullable": false
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CONFIRMED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CONFIRMED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "ACKNOWLEDGED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "ACKNOWLEDGED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_OTHER_REASON",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JI_CHANGE_FROM_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_CHANGE_TO_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_FP_BOOKING_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "1"
+        },
+        {
+          "name": "JI_FP_CANCELLER_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "EMAIL_SENT",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "CANCEL_EMAIL_SENT",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "CANCEL_ACKN_SENT",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "FEE_PAYABLE",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "Y"
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "LATE_CANCELLATION",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "SEND_AMEND_EMAIL",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "AMEND_ACKN_SENT",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "APPRAISAL",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "HEARING_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "HEARING_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "TOTAL_FEE_AMT",
+          "type": "NUMBER(8,2)",
+          "nullable": true
+        },
+        {
+          "name": "BOOKED_OVER_MAX",
+          "type": "CHAR(1)",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_FP_BOOKINGS_PK",
+        "columns": [
+          "JI_FP_BOOKING_ID"
+        ]
+      },
+      "indexes": [
+        {
+          "name": "TBL_JI_FP_BOOKINGS_IDX1",
+          "unique": false,
+          "columns": [
+            "JUDGE_CODE",
+            "LOC_ID",
+            "LOC_TYPE_ID",
+            "CUT_OWNER_ID",
+            "JI_PLANNED_WORK_TYPE_ID"
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "name": "BI_TBL_JI_FP_BOOKINGS",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JI_FP_BOOKING_ID\" is null then\n     select \"TBL_JI_FP_BOOKINGS_SEQ\".nextval into :NEW.\"JI_FP_BOOKING_ID\"\nfrom dual;\n  end if;\nend;\n\f/\nALTER TRIGGER \"BI_TBL_JI_FP_BOOKINGS\" ENABLE;\n\n\n  GRANT SELECT ON \"TBL_JI_FP_BOOKINGS\" TO \"OPTLIVE_RO\";\n\f  CREATE TABLE \"TBL_JI_FP_CANCELLERS\"\n   ( \"JI_FP_CANCELLER_ID\" NUMBER(2,0) NOT NULL ENABLE,\n       \"JI_FP_CANCELLER_NAME\" VARCHAR2(100) NOT NULL ENABLE,\n       \"IN_USE\" CHAR(1) NOT NULL ENABLE,\n        CONSTRAINT \"TBL_JI_FP_CANCELLERS_PK\" PRIMARY KEY\n(\"JI_FP_CANCELLER_ID\")\n  USING INDEX ENABLE\n   ) ;\n\n\n  GRANT SELECT ON \"TBL_JI_FP_CANCELLERS\" TO \"OPTLIVE_RO\";\n\f  CREATE TABLE \"TBL_JI_LOC_JT_AWD_LINKS\"\n   ( \"LOC_TYPE_ID\" NUMBER(6,0) NOT NULL ENABLE,\n       \"JUDGE_TYPE_ID\" NUMBER(2,0) NOT NULL ENABLE,\n       \"JI_ACTUAL_WORK_TYPE_ID\" NUMBER(3,0) NOT NULL ENABLE,\n       \"ROLE_SPECIFIC\" CHAR(1) DEFAULT 'N' NOT NULL ENABLE,\n        CONSTRAINT \"TBL_JI_LOC_JT_AWD_LINKS_PK\" PRIMARY KEY (\"LOC_TYPE_ID\",\n\"JUDGE_TYPE_ID\", \"JI_ACTUAL_WORK_TYPE_ID\")\n  USING INDEX ENABLE\n   ) ;\n\n\n  GRANT SELECT ON \"TBL_JI_LOC_JT_AWD_LINKS\" TO \"OPTLIVE_RO\";\n\f  CREATE TABLE \"TBL_JI_LOC_JT_PWD_LINKS\"\n   ( \"LOC_TYPE_ID\" NUMBER(6,0) NOT NULL ENABLE,\n       \"JUDGE_TYPE_ID\" NUMBER(2,0) NOT NULL ENABLE,\n       \"JI_PLANNED_WORK_TYPE_ID\" NUMBER(3,0) NOT NULL ENABLE,\n       \"ROLE_SPECIFIC\" CHAR(1) DEFAULT 'N' NOT NULL ENABLE,\n        CONSTRAINT \"TBL_JI_LOC_JT_PWD_LINKS_PK\" PRIMARY KEY (\"LOC_TYPE_ID\",\n\"JUDGE_TYPE_ID\", \"JI_PLANNED_WORK_TYPE_ID\")\n  USING INDEX ENABLE\n   ) ;\n\n\n  GRANT SELECT ON \"TBL_JI_LOC_JT_PWD_LINKS\" TO \"OPTLIVE_RO\";\n\f  CREATE TABLE \"TBL_JI_LOC_JT_SD_LINKS\"\n   ( \"LOC_TYPE_ID\" NUMBER(6,0) NOT NULL ENABLE,\n       \"JUDGE_TYPE_ID\" NUMBER(2,0) NOT NULL ENABLE,\n       \"JI_SITTING_DUR_ID\" NUMBER(2,0) NOT NULL ENABLE,\n        CONSTRAINT \"TBL_JI_LOC_JT_SD_LINKS_PK\" PRIMARY KEY (\"LOC_TYPE_ID\",\n\"JUDGE_TYPE_ID\", \"JI_SITTING_DUR_ID\")\n  USING INDEX ENABLE\n   ) ;\n\n\n  GRANT SELECT ON \"TBL_JI_LOC_JT_SD_LINKS\" TO \"OPTLIVE_RO\";\n\f  CREATE TABLE \"TBL_JI_PLANNED_SITTINGS\"\n   ( \"JI_PLANNED_SITTING_ID\" NUMBER NOT NULL ENABLE,\n       \"JI_PLANNED_WORK_TYPE_ID\" NUMBER(3,0) NOT NULL ENABLE,\n       \"LOC_TYPE_ID\" NUMBER(2,0) NOT NULL ENABLE,\n       \"LOC_ID\" NUMBER(6,0) NOT NULL ENABLE,\n       \"CUT_COURTROOM_ID\" NUMBER,\n       \"JUDGE_CODE\" NUMBER(6,0) NOT NULL ENABLE,\n       \"SITTING_DATE\" DATE NOT NULL ENABLE,\n       \"SITTING_DUR_ID\" NUMBER(2,0) NOT NULL ENABLE,\n       \"COMMENTS\" VARCHAR2(4000),\n       \"CREATED_BY\" VARCHAR2(255) NOT NULL ENABLE,\n       \"CREATED_DATE\" DATE NOT NULL ENABLE,\n       \"LAST_MODIFIED_BY\" VARCHAR2(255),\n       \"LAST_MODIFIED_DATE\" DATE,\n       \"CANCELLED\" CHAR(1) NOT NULL ENABLE,\n       \"ACKNOWLEDGED_BY\" VARCHAR2(255),\n       \"ACKNOWLEDGED_DATE\" DATE,\n       \"CANCELLED_BY\" VARCHAR2(255),\n       \"CANCELLED_DATE\" DATE,\n       \"CANCELLED_OTHER_REASON\" VARCHAR2(4000),\n       \"JI_CHANGE_FROM_ID\" NUMBER,\n       \"JI_CHANGE_TO_ID\" NUMBER,\n       \"CUT_OWNER_ID\" NUMBER,\n       \"YEARMONTH\" NUMBER(6,0) NOT NULL ENABLE,\n       \"JI_ACTUAL_WORK_TYPE_ID\" NUMBER(3,0),\n       \"CONFIRMED_BY\" VARCHAR2(255),\n       \"CONFIRMED_DATE\" DATE,\n       \"SEND_AMEND_EMAIL\" CHAR(1) DEFAULT 'N' NOT NULL ENABLE,\n       \"AMEND_ACKN_SENT\" DATE,\n       \"SITTING_TYPE_ID\" NUMBER(2,0) DEFAULT 1 NOT NULL ENABLE,\n       \"VERIFIED_BY\" VARCHAR2(255),\n       \"VERIFIED_DATE\" DATE,\n       \"VERIFIED_FLAG\" NUMBER(1,0) DEFAULT 0 NOT NULL ENABLE,\n       \"HEARING_LOC_TYPE_ID\" NUMBER(2,0),\n       \"HEARING_LOC_ID\" NUMBER(6,0),\n       \"EXTRA_ITIN_TEXT\" VARCHAR2(4000),\n       \"LEGAL_ADV_WITH_MAGS\" CHAR(1),\n       \"LEGAL_ADV_SIT_TYPE\" NUMBER(1,0),\n        CONSTRAINT \"TBL_JI_PLANNED_SITTINGS_PK\" PRIMARY KEY\n(\"JI_PLANNED_SITTING_ID\")\n  USING INDEX ENABLE\n   ) ;\n\n  CREATE INDEX \"TBL_JI_PLANNED_SITTINGS_IDX1\" ON \"TBL_JI_PLANNED_SITTINGS\"\n(\"SITTING_DATE\", \"YEARMONTH\", \"LOC_ID\", \"LOC_TYPE_ID\", \"CUT_OWNER_ID\",\n\"JI_PLANNED_WORK_TYPE_ID\", \"SITTING_DUR_ID\")\n  ;\n\n  CREATE INDEX \"TBL_JI_PLANNED_SITTINGS_IDX2\" ON \"TBL_JI_PLANNED_SITTINGS\"\n(\"JUDGE_CODE\", \"LOC_ID\", \"LOC_TYPE_ID\")\n  ;\n\n  CREATE INDEX \"TBL_JI_PLANNED_SITTINGS_IDX3\" ON \"TBL_JI_PLANNED_SITTINGS\"\n(\"YEARMONTH\", \"LOC_ID\", \"JUDGE_CODE\")\n  ;\n\n  CREATE OR REPLACE EDITIONABLE TRIGGER \"BU_TBL_JI_PLANNED_SITTINGS\"\n  before UPDATE on \"TBL_JI_PLANNED_SITTINGS\"\n  for each row\nbegin\n  :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.sitting_date, 'YYYYMM'));\n\f  IF :NEW.verified_by IS NOT NULL AND :NEW.verified_date IS NOT NULL THEN\n     :NEW.verified_flag := 1;\n  ELSE\n     :NEW.verified_flag := 0;\n  END IF;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JI_FP_CANCELLERS": {
+      "name": "TBL_JI_FP_CANCELLERS",
+      "columns": [
+        {
+          "name": "JI_FP_CANCELLER_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_FP_CANCELLER_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_FP_CANCELLERS_PK",
+        "columns": [
+          "JI_FP_CANCELLER_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_LOC_JT_AWD_LINKS": {
+      "name": "TBL_JI_LOC_JT_AWD_LINKS",
+      "columns": [
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_ACTUAL_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "ROLE_SPECIFIC",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_LOC_JT_AWD_LINKS_PK",
+        "columns": [
+          "LOC_TYPE_ID",
+          "JUDGE_TYPE_ID",
+          "JI_ACTUAL_WORK_TYPE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_LOC_JT_PWD_LINKS": {
+      "name": "TBL_JI_LOC_JT_PWD_LINKS",
+      "columns": [
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "ROLE_SPECIFIC",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_LOC_JT_PWD_LINKS_PK",
+        "columns": [
+          "LOC_TYPE_ID",
+          "JUDGE_TYPE_ID",
+          "JI_PLANNED_WORK_TYPE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_LOC_JT_SD_LINKS": {
+      "name": "TBL_JI_LOC_JT_SD_LINKS",
+      "columns": [
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_LOC_JT_SD_LINKS_PK",
+        "columns": [
+          "LOC_TYPE_ID",
+          "JUDGE_TYPE_ID",
+          "JI_SITTING_DUR_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_PLANNED_SITTINGS": {
+      "name": "TBL_JI_PLANNED_SITTINGS",
+      "columns": [
+        {
+          "name": "JI_PLANNED_SITTING_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "CUT_COURTROOM_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "SITTING_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "ACKNOWLEDGED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "ACKNOWLEDGED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_OTHER_REASON",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JI_CHANGE_FROM_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_CHANGE_TO_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "YEARMONTH",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_ACTUAL_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "CONFIRMED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CONFIRMED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "SEND_AMEND_EMAIL",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "AMEND_ACKN_SENT",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "SITTING_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "1"
+        },
+        {
+          "name": "VERIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "VERIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "VERIFIED_FLAG",
+          "type": "NUMBER(1,0)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "HEARING_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "HEARING_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "EXTRA_ITIN_TEXT",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "LEGAL_ADV_WITH_MAGS",
+          "type": "CHAR(1)",
+          "nullable": true
+        },
+        {
+          "name": "LEGAL_ADV_SIT_TYPE",
+          "type": "NUMBER(1,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_PLANNED_SITTINGS_PK",
+        "columns": [
+          "JI_PLANNED_SITTING_ID"
+        ]
+      },
+      "indexes": [
+        {
+          "name": "TBL_JI_PLANNED_SITTINGS_IDX1",
+          "unique": false,
+          "columns": [
+            "SITTING_DATE",
+            "YEARMONTH",
+            "LOC_ID",
+            "LOC_TYPE_ID",
+            "CUT_OWNER_ID",
+            "JI_PLANNED_WORK_TYPE_ID",
+            "SITTING_DUR_ID"
+          ]
+        },
+        {
+          "name": "TBL_JI_PLANNED_SITTINGS_IDX2",
+          "unique": false,
+          "columns": [
+            "JUDGE_CODE",
+            "LOC_ID",
+            "LOC_TYPE_ID"
+          ]
+        },
+        {
+          "name": "TBL_JI_PLANNED_SITTINGS_IDX3",
+          "unique": false,
+          "columns": [
+            "YEARMONTH",
+            "LOC_ID",
+            "JUDGE_CODE"
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "name": "BU_TBL_JI_PLANNED_SITTINGS",
+          "timing": "before",
+          "event": "update",
+          "body": "for each row\nbegin\n  :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.sitting_date, 'YYYYMM'));\n\f  IF :NEW.verified_by IS NOT NULL AND :NEW.verified_date IS NOT NULL THEN\n     :NEW.verified_flag := 1;\n  ELSE\n     :NEW.verified_flag := 0;\n  END IF;\nend;"
+        },
+        {
+          "name": "BI_TBL_JI_PLANNED_SITTINGS",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JI_PLANNED_SITTING_ID\" is null then\n     select \"TBL_JI_PLANNED_SITTINGS_SEQ\".nextval into\n:NEW.\"JI_PLANNED_SITTING_ID\" from dual;\n  end if;\n  :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.sitting_date, 'YYYYMM'));\n  IF :NEW.verified_by IS NOT NULL AND :NEW.verified_date IS NOT NULL THEN\n     :NEW.verified_flag := 1;\n  ELSE\n     :NEW.verified_flag := 0;\n  END IF;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JI_PLANNED_WORK_CATS": {
+      "name": "TBL_JI_PLANNED_WORK_CATS",
+      "columns": [
+        {
+          "name": "JI_PLANNED_WORK_CAT_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_PLANNED_WORK_CAT_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_PLANNED_WORK_CATS_PK",
+        "columns": [
+          "JI_PLANNED_WORK_CAT_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_PLANNED_WORK_TYPES": {
+      "name": "TBL_JI_PLANNED_WORK_TYPES",
+      "columns": [
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "JI_PLANNED_WORK_CAT_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "1"
+        },
+        {
+          "name": "JI_ACTUAL_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "SECTION_9",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "LINKED_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false,
+          "default": "-1"
+        },
+        {
+          "name": "JI_ACTUAL_WORK_CAT_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "2"
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_PLANNED_WORK_TYPES_PK",
+        "columns": [
+          "JI_PLANNED_WORK_TYPE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_RESTR_ITIN_USERS": {
+      "name": "TBL_JI_RESTR_ITIN_USERS",
+      "columns": [
+        {
+          "name": "USER_ID",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "REGION_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_RESTR_ITIN_USERS_PK",
+        "columns": [
+          "USER_ID",
+          "REGION_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_SITTING_DURS": {
+      "name": "TBL_JI_SITTING_DURS",
+      "columns": [
+        {
+          "name": "JI_SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_SITTING_DUR_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "DAYS",
+          "type": "NUMBER(4,2)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE_ABS_OB",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE_SITTINGS",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_SITTING_DURS_PK",
+        "columns": [
+          "JI_SITTING_DUR_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_UA_JT_LINKS": {
+      "name": "TBL_JI_UA_JT_LINKS",
+      "columns": [
+        {
+          "name": "USER_ACCESS_LEVEL",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_UA_JT_LINKS_PK",
+        "columns": [
+          "USER_ACCESS_LEVEL",
+          "JUDGE_TYPE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_VAC_CANCEL_REASONS": {
+      "name": "TBL_JI_VAC_CANCEL_REASONS",
+      "columns": [
+        {
+          "name": "JI_VAC_CANCEL_REASON_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_VAC_CANCEL_REASON_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_VAC_CANCEL_REASONS_PK",
+        "columns": [
+          "JI_VAC_CANCEL_REASON_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JI_VACANCIES": {
+      "name": "TBL_JI_VACANCIES",
+      "columns": [
+        {
+          "name": "JI_VACANCY_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_DETAIL_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "VACANCY_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "YEARMONTH",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "ABS_OB_JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "CANCELLED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_OTHER_REASON",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "VACANCY_STATUS_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JI_VACANCY_GROUP_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "CANCELLED_REASON_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "WORKING_DAYS_NOTICE",
+          "type": "NUMBER(4,0)",
+          "nullable": true
+        },
+        {
+          "name": "HEARING_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "HEARING_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "BOOKING_DATE",
+          "type": "DATE",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_VACANCIES_PK",
+        "columns": [
+          "JI_VACANCY_ID"
+        ]
+      },
+      "indexes": [
+        {
+          "name": "TBL_JI_VACANCIES_IDX1",
+          "unique": false,
+          "columns": [
+            "JI_VACANCY_GROUP_ID"
+          ]
+        },
+        {
+          "name": "TBL_JI_VACANCIES_IDX2",
+          "unique": false,
+          "columns": [
+            "VACANCY_DATE",
+            "YEARMONTH",
+            "JUDGE_TICKET_TYPE_ID",
+            "JI_PLANNED_WORK_TYPE_ID"
+          ]
+        },
+        {
+          "name": "TBL_JI_VACANCIES_IDX3",
+          "unique": false,
+          "columns": [
+            "LOC_ID",
+            "LOC_TYPE_ID",
+            "CUT_OWNER_ID"
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "name": "BI_TBL_JI_VACANCIES",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JI_VACANCY_ID\" is null then\n     select \"TBL_JI_VACANCIES_SEQ\".nextval into :NEW.\"JI_VACANCY_ID\" from\ndual;\n  end if;\n  :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.vacancy_date, 'YYYYMM'));\nend;"
+        },
+        {
+          "name": "BU_TBL_JI_VACANCIES",
+          "timing": "before",
+          "event": "update",
+          "body": "for each row\nbegin\n  :NEW.yearmonth := TO_NUMBER(TO_CHAR(:NEW.vacancy_date, 'YYYYMM'));\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JI_VACANCY_GROUPS": {
+      "name": "TBL_JI_VACANCY_GROUPS",
+      "columns": [
+        {
+          "name": "JI_VACANCY_GROUP_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "START_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "END_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "WORKING_DAYS",
+          "type": "NUMBER(5,2)",
+          "nullable": false
+        },
+        {
+          "name": "START_SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "END_SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "VAC_LENGTH_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "ABS_OB_JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "CANCELLED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_OTHER_REASON",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JI_CHANGE_FROM_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_CHANGE_TO_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "VACANCY_STATUS_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "VAC_JUDGE_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "CANCELLED_REASON_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "REQUESTED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "HEARING_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "HEARING_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "BOOKING_DATE",
+          "type": "DATE",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JI_VACANCY_GROUPS_PK",
+        "columns": [
+          "JI_VACANCY_GROUP_ID"
+        ]
+      },
+      "indexes": [
+        {
+          "name": "TBL_JI_VACANCY_GROUPS_IDX1",
+          "unique": false,
+          "columns": [
+            "LOC_ID",
+            "LOC_TYPE_ID",
+            "VAC_JUDGE_TYPE_ID"
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "name": "BI_TBL_JI_VACANCY_GROUPS",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JI_VACANCY_GROUP_ID\" is null then\n     select \"TBL_JI_VACANCY_GROUPS_SEQ\".nextval into\n:NEW.\"JI_VACANCY_GROUP_ID\" from dual;\n  end if;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TMP_JI_ABS_OB_DETAIL": {
+      "name": "TMP_JI_ABS_OB_DETAIL",
+      "columns": [
+        {
+          "name": "SESSION_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_DETAIL_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "ABS_OB_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "YEARMONTH",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TMP_JI_ABS_OB_DETAIL_PK",
+        "columns": [
+          "SESSION_ID",
+          "JI_ABS_OB_DETAIL_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TMP_JI_ABS_OB_LINKS": {
+      "name": "TMP_JI_ABS_OB_LINKS",
+      "columns": [
+        {
+          "name": "REGION_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "SRC_ABS_OB_TYPE_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "SRC_ABS_OB_TYPE_CODE",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "SRC_ABS_OB_TYPE_NAME",
+          "type": "VARCHAR2(4000)",
+          "nullable": false
+        },
+        {
+          "name": "OPT_ABS_OB_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TMP_JI_FP_BOOKINGS": {
+      "name": "TMP_JI_FP_BOOKINGS",
+      "columns": [
+        {
+          "name": "SESSION_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_VACANCY_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_FP_BOOKING_DETAIL_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "FP_BOOKING_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "ABS_OB_JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JI_ACTUAL_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "FEE_AMT",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "T_AND_S_AMT",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "JI_VACANCY_GROUP_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "APPRAISAL",
+          "type": "CHAR(1)",
+          "nullable": true
+        },
+        {
+          "name": "HEARING_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "HEARING_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "BE_CODE_OVERRIDE",
+          "type": "VARCHAR2(5)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TMP_JI_JUDGE_LINKS": {
+      "name": "TMP_JI_JUDGE_LINKS",
+      "columns": [
+        {
+          "name": "REGION_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "SOURCE_JUDGE_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "SOURCE_JUDGE_CODE",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "OPT_MASTER_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "OPT_JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TMP_JI_LOC_LINKS": {
+      "name": "TMP_JI_LOC_LINKS",
+      "columns": [
+        {
+          "name": "REGION_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "SRC_LOC_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "SRC_LOC_CODE",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "SRC_LOC_NAME",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "SPLIT",
+          "type": "CHAR(1)",
+          "nullable": true
+        },
+        {
+          "name": "OPT_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "OPT_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "JI_ABS_OB_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "OPT_ALT_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "OPT_ALT_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TMP_JI_PLANNED_SITTINGS": {
+      "name": "TMP_JI_PLANNED_SITTINGS",
+      "columns": [
+        {
+          "name": "SESSION_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_PLANNED_SITTING_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "SITTING_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JI_ACTUAL_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TMP_JI_VAC_BLOCKS": {
+      "name": "TMP_JI_VAC_BLOCKS",
+      "columns": [
+        {
+          "name": "SESSION_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "ABS_OB_JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "ABS_OB_STATUS_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "DATES_TEXT",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "DAYS",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "VAC_JUDGE_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TMP_JI_VAC_BLOCKS_PK",
+        "columns": [
+          "SESSION_ID",
+          "JI_ABS_OB_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TMP_JI_VACANCIES": {
+      "name": "TMP_JI_VACANCIES",
+      "columns": [
+        {
+          "name": "SESSION_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_DETAIL_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JI_ABS_OB_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "ABS_OB_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "YEARMONTH",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "SITTING_DUR_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "ABS_OB_JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "ABS_OB_STATUS_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "CREATE_VACANCY",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "Y"
+        },
+        {
+          "name": "VACANCY_BLOCK",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID2",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID2",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "VAC_JUDGE_TYPE_ID2",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGE_CIRCUITS": {
+      "name": "TBL_JUDGE_CIRCUITS",
+      "columns": [
+        {
+          "name": "JUDGE_CIRCUIT_CODE",
+          "type": "VARCHAR2(2)",
+          "nullable": false
+        },
+        {
+          "name": "CIRCUIT_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "CIRCUIT_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_CIRCUIT_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": null,
+      "indexes": [
+        {
+          "name": "TBL_JUDGE_CIRCUITS_UK1",
+          "unique": true,
+          "columns": [
+            "JUDGE_CIRCUIT_NAME"
+          ]
+        },
+        {
+          "name": "TBL_JUDGE_CIRCUITS_PK",
+          "unique": true,
+          "columns": [
+            "JUDGE_CIRCUIT_CODE"
+          ]
+        }
+      ],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGE_COURTS_LINK": {
+      "name": "TBL_JUDGE_COURTS_LINK",
+      "columns": [
+        {
+          "name": "JUDGE_COURTS_LINK_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "COURT_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "AREA_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "REGION_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [
+        {
+          "name": "TBL_JUDGE_COURTS_LINK_UK1",
+          "unique": true,
+          "columns": [
+            "JUDGE_CODE",
+            "COURT_ID"
+          ]
+        },
+        {
+          "name": "TBL_JUDGE_COURTS_LINK_PK",
+          "unique": true,
+          "columns": [
+            "JUDGE_COURTS_LINK_ID"
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "name": "BI_TBL_JUDGE_COURTS_LINK",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  select \"TBL_JUDGE_COURTS_LINK_SEQ\".nextval into\n:NEW.\"JUDGE_COURTS_LINK_ID\" from dual;\n  :new.CREATED_BY := nvl(wwv_flow.g_user,user);\n  :new.CREATED_DATE := trunc(sysdate);\nend;"
+        },
+        {
+          "name": "BU_TBL_JUDGE_COURTS_LINK",
+          "timing": "before",
+          "event": "update",
+          "body": "for each row\nbegin\n  :new.last_modified_BY := nvl(wwv_flow.g_user,user);\n  :new.last_modified_DATE := trunc(sysdate);\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JUDGE_FEE_RATES": {
+      "name": "TBL_JUDGE_FEE_RATES",
+      "columns": [
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "DATE_FROM",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "DATE_TO",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "DAILY_FEE_AMT",
+          "type": "NUMBER(7,2)",
+          "nullable": false
+        },
+        {
+          "name": "DAILY_FEE_AMT_LW",
+          "type": "NUMBER(7,2)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGE_FEE_RATES_PK",
+        "columns": [
+          "JUDGE_TYPE_ID",
+          "DATE_FROM"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGE_JURIS": {
+      "name": "TBL_JUDGE_JURIS",
+      "columns": [
+        {
+          "name": "JUDGE_JURIS_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_JURIS_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGE_JURIS_PK",
+        "columns": [
+          "JUDGE_JURIS_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGE_STATUSES": {
+      "name": "TBL_JUDGE_STATUSES",
+      "columns": [
+        {
+          "name": "JUDGE_STATUS_CODE",
+          "type": "VARCHAR2(5)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_STATUS_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGE_STATUSES_PK",
+        "columns": [
+          "JUDGE_STATUS_CODE"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGE_TICKET_TYPES": {
+      "name": "TBL_JUDGE_TICKET_TYPES",
+      "columns": [
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ABBR",
+          "type": "VARCHAR2(5)",
+          "nullable": false,
+          "default": "TBC"
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGE_TICKET_TYPES_PK",
+        "columns": [
+          "JUDGE_TICKET_TYPE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGE_TYPE_PROMOTION": {
+      "name": "TBL_JUDGE_TYPE_PROMOTION",
+      "columns": [
+        {
+          "name": "CURRENT_JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "PROMOTED_JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGE_TYPES": {
+      "name": "TBL_JUDGE_TYPES",
+      "columns": [
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "COUNTY",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "CROWN",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "RCJ",
+          "type": "CHAR(1)",
+          "nullable": false
+        },
+        {
+          "name": "PROFILE_JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "MINIMUM",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "MAGS",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "FWR",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "SHORT_TYPE_NAME",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "SALARIED",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "Y"
+        },
+        {
+          "name": "FP_TYPE_ID",
+          "type": "NUMBER(1,0)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "LOCALLY_MANAGED",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "TRIBS",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "DAILY_FEE_AMT",
+          "type": "NUMBER(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "DAILY_FEE_AMT_LW",
+          "type": "NUMBER(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ANN_SITTING_COMM",
+          "type": "NUMBER(5,2)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "SORT",
+          "type": "NUMBER(3,0)",
+          "nullable": false,
+          "default": "999"
+        },
+        {
+          "name": "ROUNDING_FACTOR",
+          "type": "NUMBER(3,2)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "JUDGE_LEVEL",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "1"
+        },
+        {
+          "name": "GENERIC_FWR_TEXT",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "CAN_SIT_IN_RETIREMENT",
+          "type": "CHAR(1)",
+          "nullable": true,
+          "default": "N"
+        }
+      ],
+      "primary_key": null,
+      "indexes": [
+        {
+          "name": "TBL_JUDGE_TYPES_UK1",
+          "unique": true,
+          "columns": [
+            "JUDGE_TYPE_NAME"
+          ]
+        },
+        {
+          "name": "TBL_JUDGE_TYPES_PK",
+          "unique": true,
+          "columns": [
+            "JUDGE_TYPE_ID"
+          ]
+        }
+      ],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGES": {
+      "name": "TBL_JUDGES",
+      "columns": [
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_NAME",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "STATUS",
+          "type": "VARCHAR2(3)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "REGION_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_CIRCUIT_CODE",
+          "type": "VARCHAR2(2)",
+          "nullable": true
+        },
+        {
+          "name": "SEARCH",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "HMCS_LEGAL_TIER_CODE",
+          "type": "VARCHAR2(2)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGES_MASTER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "ROLE_START_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "ROLE_END_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "ROLE_TITLE_PREFIX",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "ROLE_TITLE_SUFFIX",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "ITIN_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "NEXT_STATUS",
+          "type": "VARCHAR2(3)",
+          "nullable": true
+        },
+        {
+          "name": "MIN_ANN_SITTING_DAYS",
+          "type": "NUMBER(4,1)",
+          "nullable": true
+        },
+        {
+          "name": "MAX_ANN_SITTING_DAYS",
+          "type": "NUMBER(4,1)",
+          "nullable": true
+        },
+        {
+          "name": "ITIN_SORT_NAME",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "PAYROLL_NO",
+          "type": "NUMBER(8,0)",
+          "nullable": true
+        },
+        {
+          "name": "FP_STATUS_ID",
+          "type": "NUMBER(1,0)",
+          "nullable": false,
+          "default": "1"
+        },
+        {
+          "name": "RETIREMENT_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "LONDON_WT_STATUS_ID",
+          "type": "NUMBER(1,0)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "ALT_JUDGE_CODE",
+          "type": "NUMBER(8,0)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "RENEWAL_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "ROLE_SALUTATION",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "IS_SITTING_IN_RETIREMENT",
+          "type": "CHAR(1)",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [
+        {
+          "name": "TBL_JUDGES_IDX1",
+          "unique": false,
+          "columns": [
+            "JUDGE_TYPE_ID"
+          ]
+        },
+        {
+          "name": "TBL_JUDGES_IDX2",
+          "unique": false,
+          "columns": [
+            "JUDGES_MASTER_ID"
+          ]
+        },
+        {
+          "name": "TBL_JUDGES_IDX3",
+          "unique": false,
+          "columns": [
+            "BASE_LOC_ID",
+            "BASE_LOC_TYPE_ID"
+          ]
+        },
+        {
+          "name": "TBL_JUDGES_PK",
+          "unique": true,
+          "columns": [
+            "JUDGE_CODE"
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "name": "BI_TBL_JUDGES",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  :NEW.last_modified_by := NVL(wwv_flow.g_user,USER);\n  :NEW.last_modified_date := TRUNC(SYSDATE);\n  :NEW.search := SUBSTR(TO_CHAR(:NEW.judge_code,\npkg_const.JUDGE_CODE_CHAR_FORMAT)\n    || LOWER(:NEW.itin_name)\n    || LOWER(:NEW.payroll_no)\n    || LOWER(:NEW.itin_sort_name)\n    || LOWER(:NEW.role_title_prefix)\n    || LOWER(:NEW.role_title_suffix)\n    || LOWER(:NEW.judge_name), 1, 4000);\n\fend;"
+        },
+        {
+          "name": "BU_TBL_JUDGES",
+          "timing": "before",
+          "event": "update",
+          "body": "for each row\nbegin\n  :NEW.last_modified_by := NVL(wwv_flow.g_user,USER);\n  :NEW.last_modified_date := TRUNC(SYSDATE);\n  :NEW.search := SUBSTR(TO_CHAR(:NEW.judge_code,\npkg_const.JUDGE_CODE_CHAR_FORMAT)\n     || LOWER(:NEW.itin_name)\n     || LOWER(:NEW.payroll_no)\n     || LOWER(:NEW.itin_sort_name)\n     || LOWER(:NEW.role_title_prefix)\n     || LOWER(:NEW.role_title_suffix)\n     || LOWER(:NEW.judge_name), 1, 4000);\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JUDGES_ANNUAL_LEAVE": {
+      "name": "TBL_JUDGES_ANNUAL_LEAVE",
+      "columns": [
+        {
+          "name": "JUDGES_MASTER_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "START_YEARMONTH",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "LEAVE_BF",
+          "type": "NUMBER(5,2)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "SITTING_COMMITMENT",
+          "type": "NUMBER(5,2)",
+          "nullable": false
+        },
+        {
+          "name": "WORKING_DAYS_IN_YEAR",
+          "type": "NUMBER(5,2)",
+          "nullable": false
+        },
+        {
+          "name": "DAYS_IN_LIEU",
+          "type": "NUMBER(5,2)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "LEAVE_CF",
+          "type": "NUMBER(5,2)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "LEAVE_AT_START",
+          "type": "NUMBER(5,2)",
+          "nullable": false
+        },
+        {
+          "name": "LEAVE_BAL",
+          "type": "NUMBER(5,2)",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "AVAIL_LEAVE_FOR_YEAR",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGES_ANNUAL_LEAVE_PK",
+        "columns": [
+          "JUDGES_MASTER_ID",
+          "START_YEARMONTH"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGES_BOOKING_STATS": {
+      "name": "TBL_JUDGES_BOOKING_STATS",
+      "columns": [
+        {
+          "name": "START_YEARMONTH",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "MIN_ANN_SITTING_DAYS",
+          "type": "NUMBER(4,1)",
+          "nullable": true
+        },
+        {
+          "name": "MAX_ANN_SITTING_DAYS",
+          "type": "NUMBER(4,1)",
+          "nullable": true
+        },
+        {
+          "name": "DAYS_SAT_TO_DATE",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "DAYS_BOOKED_IN_YEAR",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGES_BOOKING_STATS_PK",
+        "columns": [
+          "START_YEARMONTH",
+          "JUDGE_CODE"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGES_JURIS_SPLIT": {
+      "name": "TBL_JUDGES_JURIS_SPLIT",
+      "columns": [
+        {
+          "name": "JUDGES_JURIS_SPLIT_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JUDGES_WORK_PATTERN_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_JURIS_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "SPLIT_PC",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGES_JURIS_SPLIT_PK",
+        "columns": [
+          "JUDGES_JURIS_SPLIT_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [
+        {
+          "name": "BI_TBL_JUDGES_JURIS_SPLIT",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JUDGES_JURIS_SPLIT_ID\" is null then\n     select \"TBL_JUDGES_JURIS_SPLIT_SEQ\".nextval into\n:NEW.\"JUDGES_JURIS_SPLIT_ID\" from dual;\n  end if;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JUDGES_MASTER": {
+      "name": "TBL_JUDGES_MASTER",
+      "columns": [
+        {
+          "name": "JUDGES_MASTER_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "TITLE_PREFIX",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "FORENAME",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "INITIALS",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "SURNAME",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "TITLE_SUFFIX",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "SALUTATION",
+          "type": "VARCHAR2(4000)",
+          "nullable": false
+        },
+        {
+          "name": "EMAIL",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "PHONE1",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "PHONE2",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "PAYROLL_NO",
+          "type": "NUMBER(8,0)",
+          "nullable": true
+        },
+        {
+          "name": "CURRENT_JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "CURRENT_STATUS",
+          "type": "VARCHAR2(3)",
+          "nullable": false
+        },
+        {
+          "name": "CURRENT_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "CURRENT_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "OTHER_CONTACT_TYPE",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "OTHER_CONTACT_NAME",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "OTHER_CONTACT_EMAIL",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "OTHER_CONTACT_PHONE1",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "OTHER_CONTACT_PHONE2",
+          "type": "VARCHAR2(30)",
+          "nullable": true
+        },
+        {
+          "name": "RETIREMENT_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "SEARCH",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "CURRENT_MAIN_JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "CURRENT_REGION_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false,
+          "default": "0"
+        },
+        {
+          "name": "MASTER_JUDGE_NAME",
+          "type": "VARCHAR2(4000)",
+          "nullable": true,
+          "default": "Judge"
+        },
+        {
+          "name": "LEAVE_CF",
+          "type": "NUMBER(4,1)",
+          "nullable": true
+        },
+        {
+          "name": "LEAVE_BAL",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "CURRENT_SITTING_COMMITMENT",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "CURRENT_MAIN_ITIN_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGES_MASTER_PK",
+        "columns": [
+          "JUDGES_MASTER_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [
+        {
+          "name": "BU_TBL_JUDGES_MASTER",
+          "timing": "before",
+          "event": "update",
+          "body": "for each row\nbegin\n  IF :NEW.last_modified_by IS NULL THEN\n    :NEW.last_modified_by := NVL(wwv_flow.g_user,USER);\n  END IF;\n  IF :NEW.last_modified_date IS NULL THEN\n    :NEW.last_modified_date := TRUNC(SYSDATE);\n  END IF;\n  :NEW.master_judge_name := TRIM(:NEW.title_prefix || ' ' || :NEW.surname\n|| ' ' || :NEW.initials || ' ' || :NEW.title_suffix);\n  :NEW.search := SUBSTR(TO_CHAR(:NEW.current_main_judge_code,\npkg_const.JUDGE_CODE_CHAR_FORMAT)\n    || LOWER(:NEW.title_prefix)\n    || LOWER(:NEW.forename)\n    || LOWER(:NEW.surname)\n    || LOWER(:NEW.title_suffix)\n    || LOWER(:NEW.email)\n    || LOWER(:NEW.phone1)\n    || LOWER(:NEW.other_contact_name)\n\f       || LOWER(:NEW.other_contact_email)\n       || LOWER(:NEW.other_contact_phone1)\n       || LOWER(:NEW.comments)\n       , 1, 4000);\nend;"
+        },
+        {
+          "name": "BI_TBL_JUDGES_MASTER",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  IF :NEW.created_by IS NULL THEN\n     :NEW.created_by := NVL(wwv_flow.g_user,USER);\n  END IF;\n  IF :NEW.created_date IS NULL THEN\n     :NEW.created_date := TRUNC(SYSDATE);\n  END IF;\n  IF :NEW.master_judge_name IS NULL THEN\n     :NEW.master_judge_name := TRIM(:NEW.title_prefix || ' ' || :NEW.surname\n|| ' ' || :NEW.initials || ' ' || :NEW.title_suffix);\n  END IF;\n  :NEW.search := SUBSTR(TO_CHAR(:NEW.current_main_judge_code,\npkg_const.JUDGE_CODE_CHAR_FORMAT)\n     || LOWER(:NEW.title_prefix)\n     || LOWER(:NEW.forename)\n     || LOWER(:NEW.surname)\n     || LOWER(:NEW.title_suffix)\n     || LOWER(:NEW.email)\n     || LOWER(:NEW.phone1)\n     || LOWER(:NEW.other_contact_name)\n     || LOWER(:NEW.other_contact_email)\n     || LOWER(:NEW.other_contact_phone1)\n     || LOWER(:NEW.comments)\n     , 1, 4000);\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JUDGES_MONTHLY_STATS": {
+      "name": "TBL_JUDGES_MONTHLY_STATS",
+      "columns": [
+        {
+          "name": "YEARMONTH",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGES_MASTER_ID",
+          "type": "NUMBER(7,0)",
+          "nullable": true
+        },
+        {
+          "name": "CURRENT_MAIN_JUDGE_CODE",
+          "type": "NUMBER(7,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_LOC_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_LOC_ID",
+          "type": "NUMBER(4,0)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_LOC_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_CLUSTER_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_CLUSTER_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_REGION_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_REGION_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": true
+        },
+        {
+          "name": "WEEKDAYS_IN_MNTH",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "NATIONAL_NON_WORK_DAYS_IN_MNTH",
+          "type": "NUMBER(3,1)",
+          "nullable": true
+        },
+        {
+          "name": "LOCAL_NON_WORK_DAYS_IN_MNTH",
+          "type": "NUMBER(3,1)",
+          "nullable": true
+        },
+        {
+          "name": "WORK_DAYS_IN_MNTH_FOR_JUDGE",
+          "type": "NUMBER(3,1)",
+          "nullable": true
+        },
+        {
+          "name": "FY_SIT_REQUIREMENT_FOR_JUDGE",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "ANN_SIT_REQUIREMENT_FOR_ROLE",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CRIME",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_CRIME",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_CIVIL",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_CIVIL_SCT",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_CIVIL_FT",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_CIVIL_IT",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_CIVIL_MT",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_CIVIL_OTHER",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_PRIVATE_LAW",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_PUBLIC_LAW",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_FAM_OTHER",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_QB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_FAM",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_CH",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_TCC",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_ADMIN",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_DIV_ADMIN",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_AC",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_HC_COP",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_APP_CIVIL",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_APP_CRIMINAL",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_SERIOUS_SEXUAL",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_UTIAC",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_FAM_DIVORCE",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_CIVIL_POSS",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_BOX_WORK_CIV",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_BOX_WORK_FAM",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "SAL_SIT_DAYS_CTY_BOX_WORK_COP",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CRIME",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_CRIME",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_CIVIL",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_CIVIL_SCT",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_CIVIL_FT",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_CIVIL_IT",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_CIVIL_MT",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_CIVIL_OTHER",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_PRIVATE_LAW",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_PUBLIC_LAW",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_FAM_OTHER",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_QB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_FAM",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_CH",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_TCC",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_ADMIN",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_DIV_ADMIN",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_AC",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_HC_COP",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_APP_CIVIL",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_APP_CRIMINAL",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_SERIOUS_SEXUAL",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_UTIAC",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_FAM_DIVORCE",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_CIVIL_POSS",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_BOX_WORK_CIV",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_BOX_WORK_FAM",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "FP_SIT_DAYS_CTY_BOX_WORK_COP",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "PARENTAL_LEAVE_ABS_OB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "HEALTH_RELATED_ABS_OB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "MEETINGS_EVENTS_ABS_OB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "TRAINING_ABS_OB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "LEADERSHIP_ABS_OB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "JAC_ASSISTANCE_ABS_OB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "OTHER_JURIS_SITTINGS_ABS_OB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "OTHER_ABS_OB",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "ROLE_STATUS",
+          "type": "VARCHAR2(3)",
+          "nullable": true
+        }
+      ],
+      "primary_key": null,
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    },
+    "TBL_JUDGES_TICKETS": {
+      "name": "TBL_JUDGES_TICKETS",
+      "columns": [
+        {
+          "name": "JUDGES_TICKET_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_TICKET_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "START_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "END_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGES_TICKETS_PK",
+        "columns": [
+          "JUDGES_TICKET_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [
+        {
+          "name": "BI_TBL_JUDGES_TICKETS",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JUDGES_TICKET_ID\" is null then\n     select \"TBL_JUDGES_TICKETS_SEQ\".nextval into :NEW.\"JUDGES_TICKET_ID\"\nfrom dual;\n  end if;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JUDGES_USER_LINKS": {
+      "name": "TBL_JUDGES_USER_LINKS",
+      "columns": [
+        {
+          "name": "JUDGES_USER_LINKS_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JUDGES_MASTER_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "USER_ID",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "LAST_MODIFIED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "LAST_MODIFIED_DATE",
+          "type": "DATE",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGES_USER_LINKS_PK",
+        "columns": [
+          "JUDGES_USER_LINKS_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [
+        {
+          "name": "BU_TBL_JUDGES_USER_LINKS",
+          "timing": "before",
+          "event": "update",
+          "body": "for each row\nbegin\n  :new.last_modified_BY := nvl(wwv_flow.g_user,user);\n  :new.last_modified_DATE := trunc(sysdate);\nend;"
+        },
+        {
+          "name": "BI_TBL_JUDGES_USER_LINKS",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  select \"TBL_JUDGES_USER_LINKS_SEQ\".nextval into\n:NEW.\"JUDGES_USER_LINKS_ID\" from dual;\n  :new.CREATED_BY := nvl(wwv_flow.g_user,user);\n  :new.CREATED_DATE := trunc(sysdate);\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JUDGES_WORK_PATTERNS": {
+      "name": "TBL_JUDGES_WORK_PATTERNS",
+      "columns": [
+        {
+          "name": "JUDGES_WORK_PATTERN_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JUDGES_MASTER_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "WORK_PATTERN_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "START_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "END_DATE",
+          "type": "DATE",
+          "nullable": true
+        },
+        {
+          "name": "COMMENTS",
+          "type": "VARCHAR2(4000)",
+          "nullable": true
+        },
+        {
+          "name": "CREATED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": false
+        },
+        {
+          "name": "CREATED_DATE",
+          "type": "DATE",
+          "nullable": false
+        },
+        {
+          "name": "JUDGE_CODE",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "TARGET_ANN_SITTING_DAYS",
+          "type": "NUMBER(4,1)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": true
+        },
+        {
+          "name": "BASE_LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        },
+        {
+          "name": "FTE_PERC",
+          "type": "NUMBER(5,2)",
+          "nullable": true
+        },
+        {
+          "name": "DELETED",
+          "type": "CHAR(1)",
+          "nullable": false,
+          "default": "N"
+        },
+        {
+          "name": "DELETED_BY",
+          "type": "VARCHAR2(255)",
+          "nullable": true
+        },
+        {
+          "name": "DELETED_DATE",
+          "type": "DATE",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGES_WORK_PATTERNS_PK",
+        "columns": [
+          "JUDGES_WORK_PATTERN_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [
+        {
+          "name": "BI_TBL_JUDGES_WORK_PATTERNS",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JUDGES_WORK_PATTERN_ID\" is null then\n     select \"TBL_JUDGES_WORK_PATTERNS_SEQ\".nextval into\n:NEW.\"JUDGES_WORK_PATTERN_ID\" from dual;\n  end if;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_JUDGES_WP_DETAIL": {
+      "name": "TBL_JUDGES_WP_DETAIL",
+      "columns": [
+        {
+          "name": "JUDGES_WP_DETAIL_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "JUDGES_WORK_PATTERN_ID",
+          "type": "NUMBER",
+          "nullable": false
+        },
+        {
+          "name": "LOC_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "LOC_ID",
+          "type": "NUMBER(6,0)",
+          "nullable": false
+        },
+        {
+          "name": "WEEK_SORT",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "DAY_SORT",
+          "type": "NUMBER(3,0)",
+          "nullable": false
+        },
+        {
+          "name": "JI_PLANNED_WORK_TYPE_ID",
+          "type": "NUMBER(3,0)",
+          "nullable": true
+        },
+        {
+          "name": "CUT_OWNER_ID",
+          "type": "NUMBER",
+          "nullable": true
+        },
+        {
+          "name": "JUDGE_CODE_OVERRIDE",
+          "type": "NUMBER(6,0)",
+          "nullable": true
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_JUDGES_WP_DETAIL_PK",
+        "columns": [
+          "JUDGES_WP_DETAIL_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [
+        {
+          "name": "BI_TBL_JUDGES_WP_DETAIL",
+          "timing": "before",
+          "event": "insert",
+          "body": "for each row\nbegin\n  if :NEW.\"JUDGES_WP_DETAIL_ID\" is null then\n     select \"TBL_JUDGES_WP_DETAIL_SEQ\".nextval into\n:NEW.\"JUDGES_WP_DETAIL_ID\" from dual;\n  end if;\nend;"
+        }
+      ],
+      "grants": []
+    },
+    "TBL_LEADERSHIP_JUDGE_TYPES": {
+      "name": "TBL_LEADERSHIP_JUDGE_TYPES",
+      "columns": [
+        {
+          "name": "LEADERSHIP_JUDGE_TYPE_ID",
+          "type": "NUMBER(2,0)",
+          "nullable": false
+        },
+        {
+          "name": "LEADERSHIP_JUDGE_TYPE_NAME",
+          "type": "VARCHAR2(100)",
+          "nullable": false
+        },
+        {
+          "name": "IN_USE",
+          "type": "CHAR(1)",
+          "nullable": false
+        }
+      ],
+      "primary_key": {
+        "name": "TBL_LEADERSHIP_JUDGE_TYPES_PK",
+        "columns": [
+          "LEADERSHIP_JUDGE_TYPE_ID"
+        ]
+      },
+      "indexes": [],
+      "triggers": [],
+      "grants": []
+    }
+  },
+  "table_count": 54
+}
